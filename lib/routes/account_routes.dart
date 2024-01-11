@@ -15,6 +15,16 @@ class AccountRoutes {
     });
   }
 
+  static Future<AccountModel?> pushEdit(BuildContext context, {AccountModel? account}) async {
+    AccountModel? result;
+    await Navigator.of(context).pushNamed(AccountRoutes.edit).then((value) {
+      if (value is AccountModel) {
+        result = value;
+      }
+    });
+    return result;
+  }
+
   static Future<AccountModel?> showAccountListButtomSheet(
     BuildContext context, {
     required AccountModel currentAccount,

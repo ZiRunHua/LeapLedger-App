@@ -6,6 +6,7 @@ class TransactionCategoryRoutes {
   static String edit = '$_base/edit';
   static String fatherEdit = '$_base/father/edit';
   static String mapping = '$_base/mapping';
+  static String template = '$_base/template';
   static void init() {
     Routes.routes[setting] = (context) => const TransactionCategoryTree();
     Routes.routes[edit] = (context) => TransactionCategoryEdit(
@@ -27,6 +28,8 @@ class TransactionCategoryRoutes {
         ptcList: ptcList,
       );
     };
+
+    Routes.routes[template] = (context) => const TransactionCategoryTemplate();
   }
 
   static RichText getNoDataRichText(BuildContext context) {
@@ -60,5 +63,15 @@ class TransactionCategoryRoutes {
     List<ProductTransactionCategoryModel>? ptcList,
   }) {
     return {'product': product, 'categoryTree': categoryTree, 'ptcList': ptcList};
+  }
+
+  static Future<AccountModel?> pushTemplate(BuildContext context) async {
+    AccountModel? result;
+    await Navigator.pushNamed(context, template).then((value) {
+      if (value is AccountModel) {
+        result = value;
+      }
+    });
+    return result;
   }
 }

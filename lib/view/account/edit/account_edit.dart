@@ -5,32 +5,37 @@ import 'package:keepaccount_app/view/account/bloc/account_bloc.dart';
 import 'package:keepaccount_app/widget/form/form.dart';
 
 class AccountEdit extends StatelessWidget {
-  const AccountEdit({super.key});
+  const AccountEdit({super.key, this.account});
+  final AccountModel? account;
+
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-
-    final AccountModel accountModel = args?['accountModel'] ?? AccountModel.fromJson({});
-    return BlocProvider<AccountBloc>(create: (context) => AccountBloc(), child: EditForm(accountModel));
+    return BlocProvider<AccountBloc>(
+      create: (context) => AccountBloc(),
+      child: _AccountEdit(account: account),
+    );
   }
 }
 
-class EditForm extends StatefulWidget {
-  final AccountModel _accountMode;
-  const EditForm(
-    this._accountMode, {
-    Key? key,
-  }) : super(key: key);
-
+class _AccountEdit extends StatefulWidget {
+  const _AccountEdit({this.account});
+  final AccountModel? account;
   @override
-  // ignore: library_private_types_in_public_api
-  _EditFormState createState() => _EditFormState();
+  _AccountEditState createState() => _AccountEditState();
 }
 
-class _EditFormState extends State<EditForm> {
+class _AccountEditState extends State<_AccountEdit> {
   final _formKey = GlobalKey<FormState>();
-  void pop(BuildContext context, AccountModel? result) {
-    Navigator.pop(context, result);
+  late AccountModel account;
+
+  @override
+  void initState() {
+    if (widget.account == null) {
+      account = AccountModel.fromJson({});
+    } else {
+      account = widget.account!;
+    }
+    super.initState();
   }
 
   @override
@@ -38,7 +43,7 @@ class _EditFormState extends State<EditForm> {
     return BlocListener<AccountBloc, AccountState>(
         listener: (context, state) {
           if (state is AccountSaveSuccessState) {
-            pop(context, widget._accountMode);
+            Navigator.pop(context, state.accountModel);
           }
         },
         child: Scaffold(
@@ -46,12 +51,11 @@ class _EditFormState extends State<EditForm> {
               title: const Text('编辑账本'),
               actions: <Widget>[
                 IconButton(
-                  icon: const Icon(
-                    Icons.save,
-                    size: 24,
-                  ),
-                  onPressed: () => BlocProvider.of<AccountBloc>(context).add(AccountSaveEvent(widget._accountMode)),
-                ),
+                    icon: const Icon(
+                      Icons.save,
+                      size: 24,
+                    ),
+                    onPressed: _onSave),
               ],
             ),
             body: buildForm()));
@@ -63,7 +67,9 @@ class _EditFormState extends State<EditForm> {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              _buildRadio(),
               Container(
                 decoration: BoxDecoration(
                   color: Colors.blue,
@@ -73,25 +79,59 @@ class _EditFormState extends State<EditForm> {
                 width: 64,
                 height: 64,
                 child: Icon(
-                  widget._accountMode.icon,
+                  account.icon,
                   size: 32,
                   color: Colors.black87,
                 ),
               ),
-              FormInputField.string('名称', widget._accountMode.name, (text) => widget._accountMode.name = text),
+              FormInputField.string('名称', account.name, (text) => account.name = text),
               const SizedBox(
                 height: 16,
               ),
-              FormSelecter.accountIcon(widget._accountMode.icon, onChanged: _onSelectIcon),
+              FormSelecter.accountIcon(account.icon, onChanged: _onSelectIcon),
             ],
           ),
         ));
   }
 
+  Widget _buildRadio() {
+    return Row(
+      children: [
+        RadioListTile(
+          title: const Text("独立"),
+          value: AccountType.independent,
+          groupValue: account.type,
+          onChanged: _onClickRadio,
+        ),
+        RadioListTile(
+          title: const Text("共享"),
+          value: AccountType.share,
+          groupValue: account.type,
+          onChanged: _onClickRadio,
+        ),
+      ],
+    );
+  }
+
+  void _onClickRadio(AccountType? value) {
+    if (value == null) {
+      return;
+    }
+    setState(() {
+      account.type = value;
+    });
+  }
+
   void _onSelectIcon(IconData selectValue) {
     setState(() {
-      widget._accountMode.icon = selectValue;
+      account.icon = selectValue;
     });
+  }
+
+  void _onSave() {
+    if (account.type == AccountType.independent) {
+      BlocProvider.of<AccountBloc>(context).add(AccountSaveEvent(account));
+    }
   }
 }
 
@@ -100,6 +140,6 @@ class TestAccountEdit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const AccountEdit();
+    return const _AccountEdit();
   }
 }

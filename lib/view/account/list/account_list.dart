@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:keepaccount_app/bloc/user/user_bloc.dart';
+import 'package:keepaccount_app/common/global.dart';
 import 'package:keepaccount_app/model/account/model.dart';
 
 import 'package:keepaccount_app/routes/routes.dart';
@@ -58,12 +59,12 @@ class _AccountListState extends State<_AccountList> {
             icon: const Icon(Icons.add_circle_outline),
             onPressed: () async {
               //添加
-              Navigator.of(context).pushNamed(AccountRoutes.edit).then((value) {
-                if (value is AccountModel) {
-                  setState(() {
-                    list.insert(list.length, value);
-                  });
-                }
+              var result = await AccountRoutes.pushEdit(context);
+              if (result == null) {
+                return;
+              }
+              setState(() {
+                list.insert(list.length, result);
               });
             })
       ]),
@@ -109,15 +110,15 @@ class _AccountListState extends State<_AccountList> {
         //详情
         Navigator.pushReplacementNamed(context, AccountRoutes.detail, arguments: {'accountModel': account});
       },
-      (BuildContext context, AccountModel account) {
+      (BuildContext context, AccountModel account) async {
         //编辑
-        Navigator.pushReplacementNamed(context, AccountRoutes.edit, arguments: {'accountModel': account}).then((value) {
-          if (value is AccountModel) {
-            setState(() {
-              int index = list.indexWhere((element) => element.id == value.id);
-              list[index] = value;
-            });
-          }
+        var result = await AccountRoutes.pushEdit(context, account: account);
+        if (result == null) {
+          return;
+        }
+        setState(() {
+          int index = list.indexWhere((element) => element.id == result.id);
+          list[index] = result;
         });
       },
       (BuildContext context, AccountModel account) {
@@ -139,9 +140,30 @@ class _AccountListState extends State<_AccountList> {
             leading: _buildLeading(account),
             contentPadding: const EdgeInsets.only(left: 16, right: 8), // 设置左右侧填充
             horizontalTitleGap: 0,
-            title: Text(
-              account.name,
-              style: const TextStyle(fontSize: 20),
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  account.name,
+                  style: const TextStyle(fontSize: ConstantFontSize.largeHeadline),
+                ),
+                Padding(
+                    padding: const EdgeInsets.only(left: Constant.margin),
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        borderRadius: ConstantDecoration.borderRadius,
+                        color: Colors.white,
+                        border: Border.all(width: 1, strokeAlign: BorderSide.strokeAlignOutside),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.fromLTRB(Constant.smallPadding, 0, Constant.smallPadding, 0),
+                        child: Text(
+                          "共享账本",
+                          style: TextStyle(fontSize: ConstantFontSize.bodySmall),
+                        ),
+                      ),
+                    )),
+              ],
             ),
             subtitle: Text('建立时间：${DateFormat('yyyy-MM-dd HH:mm:ss').format(account.createdAt)}'),
             trailing: IconButton(
