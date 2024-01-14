@@ -46,6 +46,13 @@ class FormSelecter {
           Icons.directions_bus_outlined,
           Icons.apartment_outlined,
           Icons.run_circle_outlined,
+          Icons.casino_outlined,
+          Icons.local_hospital_outlined,
+          Icons.movie_outlined,
+          Icons.home_outlined,
+          Icons.medical_information_outlined,
+          Icons.luggage_outlined,
+          Icons.grid_view_outlined,
         ],
         onChanged: onChanged);
   }
