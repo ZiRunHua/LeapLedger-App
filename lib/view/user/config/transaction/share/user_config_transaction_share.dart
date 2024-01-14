@@ -58,9 +58,9 @@ class _UserConfigTransactionShareState extends State<UserConfigTransactionShare>
           onChanged: (bool value) {
             BlocProvider.of<UserConfigBloc>(context)
                 .add(UserTransactionShareConfigUpdate(UserTransactionShareConfigFlag.account, value));
-            setState(() {
-              config!.account = value;
-            });
+            // setState(() {
+            //   config!.account = value;
+            // });
           }),
       _buildStatusSwitch(
           name: "记录时间",
@@ -68,9 +68,9 @@ class _UserConfigTransactionShareState extends State<UserConfigTransactionShare>
           onChanged: (bool value) {
             BlocProvider.of<UserConfigBloc>(context)
                 .add(UserTransactionShareConfigUpdate(UserTransactionShareConfigFlag.createTime, value));
-            setState(() {
-              config!.createTime = value;
-            });
+            // setState(() {
+            //   config!.createTime = value;
+            // });
           }),
       _buildStatusSwitch(
           name: "更新时间",
@@ -78,9 +78,9 @@ class _UserConfigTransactionShareState extends State<UserConfigTransactionShare>
           onChanged: (bool value) {
             BlocProvider.of<UserConfigBloc>(context)
                 .add(UserTransactionShareConfigUpdate(UserTransactionShareConfigFlag.updateTime, value));
-            setState(() {
-              config!.updateTime = value;
-            });
+            // setState(() {
+            //   config!.updateTime = value;
+            // });
           }),
       _buildStatusSwitch(
           name: "备注",
@@ -88,9 +88,9 @@ class _UserConfigTransactionShareState extends State<UserConfigTransactionShare>
           onChanged: (bool value) {
             BlocProvider.of<UserConfigBloc>(context)
                 .add(UserTransactionShareConfigUpdate(UserTransactionShareConfigFlag.remark, value));
-            setState(() {
-              config!.remark = value;
-            });
+            // setState(() {
+            //   config!.remark = value;
+            // });
           }),
     ];
   }

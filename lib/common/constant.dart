@@ -53,6 +53,13 @@ class _ConstantWidgetDivider {
     height: 0.5,
     thickness: 0.5,
   );
+  final Divider indented = const Divider(
+    color: ConstantColor.listDividerColor,
+    indent: Constant.margin,
+    endIndent: Constant.margin,
+    height: 0.5,
+    thickness: 0.5,
+  );
 }
 
 class ConstantColor {

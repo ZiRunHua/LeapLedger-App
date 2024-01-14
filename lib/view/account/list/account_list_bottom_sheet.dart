@@ -4,6 +4,8 @@ import 'package:keepaccount_app/common/global.dart';
 import 'package:keepaccount_app/model/account/model.dart';
 import 'package:keepaccount_app/view/account/list/bloc/account_list_bloc.dart';
 
+import 'widget/enter.dart';
+
 class AccountListBottomSheet extends StatefulWidget {
   const AccountListBottomSheet({required this.currentAccount, super.key});
   final AccountModel currentAccount;
@@ -69,10 +71,13 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
                           height: double.infinity,
                           color: account.id == currentAccount.id ? Colors.blue : Colors.white,
                         ),
-                        Icon(account.icon)
+                        Icon(account.icon),
                       ],
                     ),
-                    title: Text(account.name),
+                    title: Row(children: [
+                      Text(account.name),
+                      Visibility(visible: account.type == AccountType.share, child: const ShareLabel()),
+                    ]),
                     contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
                     onTap: () {
                       onUpdateAccount(account);

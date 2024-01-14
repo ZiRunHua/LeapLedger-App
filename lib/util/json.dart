@@ -70,5 +70,6 @@ const Map<String, IconData> _iconMap = {
   'handshake': Icons.handshake_outlined,
   'content_paste': Icons.content_paste_outlined,
   'receipt_long': Icons.receipt_long_outlined,
-  'auto_stories': Icons.auto_stories_outlined
+  'auto_stories': Icons.auto_stories_outlined,
+  'restaurant_outlined': Icons.restaurant_outlined,
 };

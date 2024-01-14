@@ -7,6 +7,7 @@ import 'package:keepaccount_app/model/account/model.dart';
 
 import 'package:keepaccount_app/routes/routes.dart';
 import 'package:keepaccount_app/view/account/bloc/account_bloc.dart';
+import 'package:keepaccount_app/view/account/list/widget/enter.dart';
 import 'package:keepaccount_app/widget/common/common.dart';
 
 import 'package:keepaccount_app/view/account/list/bloc/account_list_bloc.dart';
@@ -147,22 +148,7 @@ class _AccountListState extends State<_AccountList> {
                   account.name,
                   style: const TextStyle(fontSize: ConstantFontSize.largeHeadline),
                 ),
-                Padding(
-                    padding: const EdgeInsets.only(left: Constant.margin),
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        borderRadius: ConstantDecoration.borderRadius,
-                        color: Colors.white,
-                        border: Border.all(width: 1, strokeAlign: BorderSide.strokeAlignOutside),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.fromLTRB(Constant.smallPadding, 0, Constant.smallPadding, 0),
-                        child: Text(
-                          "共享账本",
-                          style: TextStyle(fontSize: ConstantFontSize.bodySmall),
-                        ),
-                      ),
-                    )),
+                Visibility(visible: account.type == AccountType.share, child: const ShareLabel()),
               ],
             ),
             subtitle: Text('建立时间：${DateFormat('yyyy-MM-dd HH:mm:ss').format(account.createdAt)}'),
@@ -174,7 +160,7 @@ class _AccountListState extends State<_AccountList> {
           );
         },
         separatorBuilder: (BuildContext context, int index) {
-          return Divider(color: Colors.grey.shade400, height: 1);
+          return ConstantWidget.divider.indented;
         });
   }
 

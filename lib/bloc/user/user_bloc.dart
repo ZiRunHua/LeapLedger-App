@@ -145,11 +145,14 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       Future.delayed(Duration.zero, () {
         Navigator.pushNamed(context, UserRoutes.login);
       });
+      return false;
     } else if (currentAccount.id == 0) {
       //初始化账本
       Future.delayed(Duration.zero, () {
         Navigator.pushNamed(context, AccountRoutes.templateList);
       });
+      return false;
     }
+    return true;
   }
 }

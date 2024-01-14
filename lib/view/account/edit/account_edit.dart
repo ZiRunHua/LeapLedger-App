@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:keepaccount_app/common/global.dart';
 import 'package:keepaccount_app/model/account/model.dart';
 import 'package:keepaccount_app/view/account/bloc/account_bloc.dart';
 import 'package:keepaccount_app/widget/form/form.dart';
@@ -58,58 +59,73 @@ class _AccountEditState extends State<_AccountEdit> {
                     onPressed: _onSave),
               ],
             ),
-            body: buildForm()));
+            body: Padding(
+              padding: const EdgeInsets.all(Constant.padding),
+              child: buildForm(),
+            )));
   }
 
   Widget buildForm() {
     return Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              _buildRadio(),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(90),
-                ),
-                margin: const EdgeInsets.only(bottom: 16),
-                width: 64,
-                height: 64,
-                child: Icon(
-                  account.icon,
-                  size: 32,
-                  color: Colors.black87,
-                ),
-              ),
-              FormInputField.string('名称', account.name, (text) => account.name = text),
-              const SizedBox(
-                height: 16,
-              ),
-              FormSelecter.accountIcon(account.icon, onChanged: _onSelectIcon),
-            ],
+      key: _formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          _buildRadio(),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(90),
+            ),
+            margin: const EdgeInsets.only(bottom: 16),
+            width: 64,
+            height: 64,
+            child: Icon(
+              account.icon,
+              size: 32,
+              color: Colors.black87,
+            ),
           ),
-        ));
+          FormInputField.string('名称', account.name, (text) => account.name = text),
+          const SizedBox(
+            height: 16,
+          ),
+          FormSelecter.accountIcon(account.icon, onChanged: _onSelectIcon),
+        ],
+      ),
+    );
   }
 
   Widget _buildRadio() {
-    return Row(
-      children: [
-        RadioListTile(
-          title: const Text("独立"),
-          value: AccountType.independent,
-          groupValue: account.type,
-          onChanged: _onClickRadio,
-        ),
-        RadioListTile(
-          title: const Text("共享"),
-          value: AccountType.share,
-          groupValue: account.type,
-          onChanged: _onClickRadio,
-        ),
-      ],
+    return SizedBox(
+      width: MediaQuery.sizeOf(context).width,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          SizedBox(
+            width: 100,
+            child: RadioListTile<AccountType>(
+              contentPadding: EdgeInsets.zero,
+              title: const Text("独立"),
+              value: AccountType.independent,
+              groupValue: account.type,
+              onChanged: _onClickRadio,
+            ),
+          ),
+          SizedBox(
+            width: 100,
+            child: RadioListTile<AccountType>(
+              title: const Text("共享"),
+              contentPadding: EdgeInsets.zero,
+              value: AccountType.share,
+              groupValue: account.type,
+              onChanged: _onClickRadio,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -129,9 +145,7 @@ class _AccountEditState extends State<_AccountEdit> {
   }
 
   void _onSave() {
-    if (account.type == AccountType.independent) {
-      BlocProvider.of<AccountBloc>(context).add(AccountSaveEvent(account));
-    }
+    BlocProvider.of<AccountBloc>(context).add(AccountSaveEvent(account));
   }
 }
 

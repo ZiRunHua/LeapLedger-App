@@ -21,8 +21,8 @@ Future<void> init() async {
   Current.env = ENV.values.firstWhere((e) => e.toString().split('.').last == envName);
   await initCache();
   Routes.init();
-  await Global.init();
-  //await Global.init().then((value) => Global.cache.clear());
+  //await Global.init();
+  await Global.init().then((value) => Global.cache.clear());
   await Current.init();
 }
 

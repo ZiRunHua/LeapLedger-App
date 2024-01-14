@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keepaccount_app/api/model/model.dart';
 import 'package:keepaccount_app/bloc/transaction/transaction_bloc.dart';
+import 'package:keepaccount_app/bloc/user/user_bloc.dart';
 import 'package:keepaccount_app/common/global.dart';
 import 'package:keepaccount_app/model/account/model.dart';
 
@@ -47,6 +48,12 @@ class Routes {
   static const String home = 'home';
   static const String login = 'login';
   static Route<dynamic>? generateRoute(RouteSettings settings) {
+    if (UserBloc.token == "") {
+      return LeftSlideRoute(page: const UserLogin());
+    }
+    if (UserBloc.currentAccount.id == 0) {
+      return LeftSlideRoute(page: const AccountTemplateList());
+    }
     switch (settings.name) {
       case UserRoutes.login:
         return LeftSlideRoute(page: const UserLogin());
@@ -68,6 +75,7 @@ class Routes {
   }
 
   static Widget buildloginPermissionRoute(BuildContext context, Widget widget) {
+    UserBloc.checkUserState(context);
     return widget;
   }
 

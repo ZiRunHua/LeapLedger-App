@@ -40,9 +40,11 @@ class UserLoginState extends State<UserLogin> {
       child: BlocListener<UserBloc, UserState>(
         listener: (context, state) {
           if (state is UserLoginedState) {
-            UserBloc.checkUserState(context);
-            tipToast("登录成功");
-            Navigator.pop(context, true);
+            if (UserBloc.currentAccount.id > 0) {
+              Navigator.pop(context, true);
+            } else {
+              Navigator.pushReplacementNamed(context, AccountRoutes.templateList);
+            }
           }
         },
         child: Padding(
