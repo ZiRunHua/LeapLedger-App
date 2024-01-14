@@ -74,4 +74,6 @@ class ConstantColor {
   static const Color greyButton = Color.fromRGBO(238, 238, 238, 1);
 
   static const Color listDividerColor = Color.fromRGBO(238, 238, 238, 1);
+
+  static const Color secondaryTextColor = Color.fromRGBO(117, 117, 117, 1);
 }

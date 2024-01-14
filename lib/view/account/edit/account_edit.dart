@@ -5,6 +5,11 @@ import 'package:keepaccount_app/model/account/model.dart';
 import 'package:keepaccount_app/view/account/bloc/account_bloc.dart';
 import 'package:keepaccount_app/widget/form/form.dart';
 
+enum AccountEditMode {
+  add,
+  update,
+}
+
 class AccountEdit extends StatelessWidget {
   const AccountEdit({super.key, this.account});
   final AccountModel? account;
@@ -28,13 +33,15 @@ class _AccountEdit extends StatefulWidget {
 class _AccountEditState extends State<_AccountEdit> {
   final _formKey = GlobalKey<FormState>();
   late AccountModel account;
-
+  late final AccountEditMode mode;
   @override
   void initState() {
     if (widget.account == null) {
       account = AccountModel.fromJson({});
+      mode = AccountEditMode.add;
     } else {
       account = widget.account!;
+      mode = AccountEditMode.update;
     }
     super.initState();
   }
@@ -44,12 +51,16 @@ class _AccountEditState extends State<_AccountEdit> {
     return BlocListener<AccountBloc, AccountState>(
         listener: (context, state) {
           if (state is AccountSaveSuccessState) {
-            Navigator.pop(context, state.accountModel);
+            if (mode == AccountEditMode.add) {
+              //Navigator.pushReplacementNamed(context, routeName)
+            } else {
+              Navigator.pop(context, state.accountModel);
+            }
           }
         },
         child: Scaffold(
             appBar: AppBar(
-              title: const Text('编辑账本'),
+              title: Text(mode == AccountEditMode.add ? "添加账本" : "编辑账本"),
               actions: <Widget>[
                 IconButton(
                     icon: const Icon(
@@ -102,8 +113,13 @@ class _AccountEditState extends State<_AccountEdit> {
       width: MediaQuery.sizeOf(context).width,
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          const Text(
+            "类型：",
+            style: TextStyle(color: ConstantColor.secondaryTextColor, fontSize: ConstantFontSize.body),
+          ),
           SizedBox(
             width: 100,
             child: RadioListTile<AccountType>(
