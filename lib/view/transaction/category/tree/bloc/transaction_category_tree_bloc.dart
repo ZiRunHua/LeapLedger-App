@@ -48,7 +48,7 @@ class TransactionCategoryTreeBloc extends Bloc<TransactionCategoryTreeEvent, Tra
     if (event.newChildIndex >= 1) {
       responseBody = await TransactionCategoryApi.moveCategoryChild(
           _list[event.oldFatherIndex].children[event.oldChildIndex].id,
-          previous: category.children[event.newChildIndex].id);
+          previous: category.children[event.newChildIndex - 1].id);
     } else {
       responseBody = await TransactionCategoryApi.moveCategoryChild(
           _list[event.oldFatherIndex].children[event.oldChildIndex].id,

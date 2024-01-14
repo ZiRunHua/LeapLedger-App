@@ -48,21 +48,36 @@ class Routes {
   static const String home = 'home';
   static const String login = 'login';
   static Route<dynamic>? generateRoute(RouteSettings settings) {
+    // 公共路由
+    Route<dynamic>? publicRoute = publicRoutes(settings);
+    if (publicRoute != null) {
+      return publicRoute;
+    }
+
+    // 鉴权
     if (UserBloc.token == "") {
       return LeftSlideRoute(page: const UserLogin());
     }
-    if (UserBloc.currentAccount.id == 0) {
+    if (UserBloc.currentAccount.id == 0 && settings.name != AccountRoutes.templateList) {
       return LeftSlideRoute(page: const AccountTemplateList());
     }
+
+    switch (settings.name) {
+      case UserRoutes.home:
+        return LeftSlideRoute(page: UserHome());
+      default:
+        return errorRoute('Route not found');
+    }
+  }
+
+  static Route<dynamic>? publicRoutes(RouteSettings settings) {
     switch (settings.name) {
       case UserRoutes.login:
         return LeftSlideRoute(page: const UserLogin());
       case UserRoutes.register:
         return LeftSlideRoute(page: const UserRegister());
-      case UserRoutes.home:
-        return LeftSlideRoute(page: UserHome());
       default:
-        return errorRoute('Route not found');
+        return null;
     }
   }
 

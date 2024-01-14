@@ -26,6 +26,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   static DateTime startTime = Time.getFirstSecondOfMonth(date: DateTime.now());
   static DateTime endTime = Time.getLastSecondOfMonth(date: DateTime.now());
   _fetchData(HomeFetchDataEvent event, emit) async {
+    if (false == UserBloc.checkAccount()) {
+      return;
+    }
     startTime = Time.getFirstSecondOfMonth(date: DateTime.now());
     endTime = Time.getLastSecondOfMonth(date: DateTime.now());
     await Future.wait([

@@ -11,7 +11,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     on<AccountDeleteEvent>(_deleteAccount);
   }
 
-  _deleteAccount(AccountDeleteEvent event, Emitter<AccountState> emit) async* {
+  _deleteAccount(AccountDeleteEvent event, Emitter<AccountState> emit) async {
     if ((await AccountApi.delete(event.accountModel.id)).isSuccess) {
       emit(AccountDeleteSuccessState());
     } else {

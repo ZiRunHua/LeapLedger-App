@@ -155,4 +155,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     }
     return true;
   }
+
+  static bool checkAccount() {
+    return currentAccount.id > 0;
+  }
 }

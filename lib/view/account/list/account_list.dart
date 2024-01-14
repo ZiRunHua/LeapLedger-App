@@ -124,13 +124,7 @@ class _AccountListState extends State<_AccountList> {
       },
       (BuildContext context, AccountModel account) {
         //删除
-        showDeleteConfirmationDialog(context, () {
-          BlocProvider.of<AccountBloc>(context).add(AccountDeleteEvent(account));
-          setState(() {
-            list.removeWhere((element) => element.id == account.id);
-            Navigator.pop(context);
-          });
-        });
+        showDeleteConfirmationDialog(context, () => _onDelete(account));
       }
     ];
     return ListView.separated(
@@ -241,5 +235,13 @@ class _AccountListState extends State<_AccountList> {
         );
       },
     );
+  }
+
+  void _onDelete(AccountModel account) {
+    BlocProvider.of<AccountBloc>(context).add(AccountDeleteEvent(account));
+    setState(() {
+      list.removeWhere((element) => element.id == account.id);
+      Navigator.pop(context);
+    });
   }
 }
