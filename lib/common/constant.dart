@@ -75,5 +75,6 @@ class ConstantColor {
 
   static const Color listDividerColor = Color.fromRGBO(238, 238, 238, 1);
 
-  static const Color secondaryTextColor = Color.fromRGBO(117, 117, 117, 1);
+  static const Color secondaryTextColor = Color.fromRGBO(117, 117, 117, 1); //Colors.grey.shade800
+  static const Color borderColor = Color.fromRGBO(189, 189, 189, 1); //Colors.grey.shade400
 }

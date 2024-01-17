@@ -5,13 +5,13 @@ abstract class AccountState {}
 class AccountInitial extends AccountState {}
 
 class AccountSaveSuccessState extends AccountState {
-  final AccountModel accountModel;
-  AccountSaveSuccessState(this.accountModel);
+  final AccountModel account;
+  AccountSaveSuccessState(this.account);
 }
 
 class AccountSaveFailState extends AccountState {
-  final AccountModel accountModel;
-  AccountSaveFailState(this.accountModel);
+  final AccountModel account;
+  AccountSaveFailState(this.account);
 }
 
 class AccountDeleteSuccessState extends AccountState {}

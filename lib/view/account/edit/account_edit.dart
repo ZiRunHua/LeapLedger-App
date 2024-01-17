@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keepaccount_app/common/global.dart';
 import 'package:keepaccount_app/model/account/model.dart';
+import 'package:keepaccount_app/routes/routes.dart';
 import 'package:keepaccount_app/view/account/bloc/account_bloc.dart';
 import 'package:keepaccount_app/widget/form/form.dart';
 
@@ -52,9 +53,10 @@ class _AccountEditState extends State<_AccountEdit> {
         listener: (context, state) {
           if (state is AccountSaveSuccessState) {
             if (mode == AccountEditMode.add) {
-              //Navigator.pushReplacementNamed(context, routeName)
+              Navigator.pushReplacement(
+                  context, TransactionCategoryRoutes.getTemplateRoute(context, account: state.account));
             } else {
-              Navigator.pop(context, state.accountModel);
+              Navigator.pop(context, state.account);
             }
           }
         },

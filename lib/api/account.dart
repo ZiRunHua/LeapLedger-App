@@ -58,6 +58,21 @@ class AccountApi {
     }
     return result;
   }
+
+  static Future<AccountModel> initTransCategoryByTempalte({
+    required AccountModel account,
+    required AccountTemplateModel template,
+  }) async {
+    ResponseBody response = await ApiServer.request(Method.post, '$baseUrl/${account.id}/Transaction/category/init',
+        data: {'TemplateId': template.id});
+    AccountModel result;
+    if (response.isSuccess) {
+      result = AccountModel.fromJson(response.data);
+    } else {
+      result = AccountModel.fromJson({});
+    }
+    return result;
+  }
 }
 
 
