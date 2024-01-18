@@ -20,6 +20,8 @@ class ConstantFontSize {
   const ConstantFontSize();
   static const double largeHeadline = 18;
   static const double headline = 16;
+
+  static const double bodyLarge = 16;
   static const double body = 14;
   static const double bodySmall = 12;
 }

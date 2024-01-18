@@ -87,8 +87,7 @@ class _TransactionEditState extends State<TransactionEdit> {
               tabs: <Widget>[Tab(text: '支 出'), Tab(text: '收 入')],
             ),
           ),
-          body: Expanded(
-              child: TabBarView(
+          body: TabBarView(
             children: <Widget>[
               CategoryPicker(
                 initialVlaue: model.incomeExpense == IncomeExpense.expense ? model.categoryId : null,
@@ -109,7 +108,7 @@ class _TransactionEditState extends State<TransactionEdit> {
                 },
               ),
             ],
-          )),
+          ),
           bottomNavigationBar: Bottom(
             model: model,
             account: account,

@@ -15,41 +15,53 @@ class AccountOperationBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: ConstantDecoration.bottomSheet,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          TextButton(
-            onPressed: () => _onUpdateCurrentAccount(context),
-            child: const Text(
-              '设为当前账本',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: ConstantFontSize.body),
+      child: DefaultTextStyle.merge(
+        style: const TextStyle(fontSize: ConstantFontSize.bodyLarge),
+        textAlign: TextAlign.center,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildButton(
+              context,
+              onTap: () => _onUpdateCurrentAccount(context),
+              child: const Text(
+                '设为当前账本',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          ConstantWidget.divider.list,
-          TextButton(
-            onPressed: () => _onDetail(context),
-            child: const Text(
-              '打开',
-              style: TextStyle(fontSize: ConstantFontSize.body),
+            ConstantWidget.divider.list,
+            _buildButton(
+              context,
+              onTap: () => _onDetail(context),
+              child: const Text('打开'),
             ),
-          ),
-          ConstantWidget.divider.list,
-          TextButton(
-            onPressed: () => _onEdit(context),
-            child: const Text(
-              '编辑',
-              style: TextStyle(fontSize: ConstantFontSize.body),
+            ConstantWidget.divider.list,
+            _buildButton(
+              context,
+              onTap: () => _onEdit(context),
+              child: const Text('编辑'),
             ),
-          ),
-          ConstantWidget.divider.list,
-          TextButton(
-            onPressed: () => _onDelete(context),
-            child: const Text('删除', style: TextStyle(color: Colors.red, fontSize: ConstantFontSize.body)),
-          ),
-        ],
+            ConstantWidget.divider.list,
+            _buildButton(
+              context,
+              onTap: () => _onDelete(context),
+              child: const Text('删除', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  Widget _buildButton(BuildContext context, {required void Function() onTap, required Widget child}) {
+    return Padding(
+        padding: const EdgeInsets.all(Constant.padding),
+        child: GestureDetector(
+          onTap: () => onTap(),
+          child: child,
+        ));
   }
 
   void _onUpdateCurrentAccount(BuildContext context) {

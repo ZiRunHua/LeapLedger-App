@@ -6,6 +6,7 @@ import 'package:keepaccount_app/common/global.dart';
 import 'package:keepaccount_app/routes/routes.dart';
 import 'package:keepaccount_app/util/enter.dart';
 import 'package:keepaccount_app/view/home/home.dart';
+import 'package:keepaccount_app/view/share/home/share_home.dart';
 import 'package:keepaccount_app/widget/dialog/enter.dart';
 
 import 'bloc/navigation_bloc.dart';
@@ -90,7 +91,7 @@ class _NavigationState extends State<Navigation> {
         return const Home();
       case TabPage.share:
         return const Center(
-          child: Text("group"),
+          child: ShareHome(),
         );
       default:
         return Container();
