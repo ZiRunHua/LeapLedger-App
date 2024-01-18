@@ -40,7 +40,7 @@ class _TransactionCategoryTemplateState extends State<TransactionCategoryTemplat
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("ok"),
+          title: const Text("选择交易类型"),
         ),
         body: child,
       ),
@@ -68,13 +68,13 @@ class _TransactionCategoryTemplateState extends State<TransactionCategoryTemplat
     return Expanded(
         child: Padding(
       padding: const EdgeInsets.all(Constant.padding),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: ConstantDecoration.borderRadius,
-          border: Border.all(color: ConstantColor.borderColor),
-        ),
-        child: GestureDetector(
-          onTap: () => onSelect(account),
+      child: GestureDetector(
+        onTap: () => onSelect(account),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: ConstantDecoration.borderRadius,
+            border: Border.all(color: ConstantColor.borderColor),
+          ),
           child: AspectRatio(
             aspectRatio: 1.61,
             child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [

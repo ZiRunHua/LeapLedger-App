@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:keepaccount_app/bloc/account/account_bloc.dart';
 import 'package:keepaccount_app/common/global.dart';
 import 'package:keepaccount_app/model/account/model.dart';
 import 'package:keepaccount_app/routes/routes.dart';
-import 'package:keepaccount_app/view/account/bloc/account_bloc.dart';
+import 'package:keepaccount_app/widget/common/common.dart';
 import 'package:keepaccount_app/widget/form/form.dart';
 
 enum AccountEditMode {
@@ -11,27 +12,14 @@ enum AccountEditMode {
   update,
 }
 
-class AccountEdit extends StatelessWidget {
+class AccountEdit extends StatefulWidget {
   const AccountEdit({super.key, this.account});
   final AccountModel? account;
-
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider<AccountBloc>(
-      create: (context) => AccountBloc(),
-      child: _AccountEdit(account: account),
-    );
-  }
+  AccountEditState createState() => AccountEditState();
 }
 
-class _AccountEdit extends StatefulWidget {
-  const _AccountEdit({this.account});
-  final AccountModel? account;
-  @override
-  _AccountEditState createState() => _AccountEditState();
-}
-
-class _AccountEditState extends State<_AccountEdit> {
+class AccountEditState extends State<AccountEdit> {
   final _formKey = GlobalKey<FormState>();
   late AccountModel account;
   late final AccountEditMode mode;
@@ -50,13 +38,13 @@ class _AccountEditState extends State<_AccountEdit> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AccountBloc, AccountState>(
-        listener: (context, state) {
-          if (state is AccountSaveSuccessState) {
+        listener: (context, state) async {
+          if (state is AccountSaveSuccess) {
             if (mode == AccountEditMode.add) {
-              Navigator.pushReplacement(
-                  context, TransactionCategoryRoutes.getTemplateRoute(context, account: state.account));
+              await Navigator.push(context, TransactionCategoryRoutes.getTemplateRoute(context, account: state.account))
+                  .then((value) => Navigator.pop<AccountModel>(context, state.account));
             } else {
-              Navigator.pop(context, state.account);
+              Navigator.pop<AccountModel>(context, state.account);
             }
           }
         },
@@ -163,6 +151,10 @@ class _AccountEditState extends State<_AccountEdit> {
   }
 
   void _onSave() {
+    if (account.name.isEmpty) {
+      CommonToast.tipToast("请填写账本名称");
+      return;
+    }
     BlocProvider.of<AccountBloc>(context).add(AccountSaveEvent(account));
   }
 }
@@ -172,6 +164,6 @@ class TestAccountEdit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _AccountEdit();
+    return const AccountEdit();
   }
 }

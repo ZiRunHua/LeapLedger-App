@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:keepaccount_app/bloc/account/account_bloc.dart';
 import 'package:keepaccount_app/common/global.dart';
 import 'package:keepaccount_app/model/account/model.dart';
-import 'package:keepaccount_app/view/account/list/bloc/account_list_bloc.dart';
 
 import 'widget/enter.dart';
 
@@ -19,7 +19,7 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
   List<AccountModel> list = [];
   @override
   void initState() {
-    BlocProvider.of<AccountListBloc>(context).add(GetListEvent());
+    BlocProvider.of<AccountBloc>(context).add(AccountListFetchEvent());
     currentAccount = widget.currentAccount;
     super.initState();
   }
@@ -31,7 +31,7 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AccountListBloc, AccountListState>(
+    return BlocListener<AccountBloc, AccountState>(
       listener: (context, state) {
         if (state is AccountListLoaded) {
           setState(() {

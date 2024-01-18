@@ -17,7 +17,9 @@ class AccountRoutes {
 
   static Future<AccountModel?> pushEdit(BuildContext context, {AccountModel? account}) async {
     AccountModel? result;
-    await Navigator.of(context).pushNamed(AccountRoutes.edit).then((value) {
+    await Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => AccountEdit(account: account)))
+        .then((value) {
       if (value is AccountModel) {
         result = value;
       }
@@ -34,11 +36,8 @@ class AccountRoutes {
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       context: context,
-      builder: (_) => BlocProvider(
-        create: (context) => AccountListBloc(),
-        child: AccountListBottomSheet(
-          currentAccount: currentAccount,
-        ),
+      builder: (_) => AccountListBottomSheet(
+        currentAccount: currentAccount,
       ),
     ).then((value) {
       if (value is AccountModel) {
@@ -46,5 +45,19 @@ class AccountRoutes {
       }
     });
     return result;
+  }
+
+  static void showOperationBottomSheet(
+    BuildContext context, {
+    required AccountModel account,
+  }) {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      context: context,
+      builder: (_) => AccountOperationBottomSheet(
+        account: account,
+      ),
+    );
   }
 }

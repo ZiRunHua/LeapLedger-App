@@ -18,12 +18,12 @@ class AccountApi {
     return AccountModel.fromJson(response.data);
   }
 
-  static Future<ResponseBody> add(AccountModel accountModel) async {
-    ResponseBody response = await ApiServer.request(Method.post, baseUrl, data: accountModel.toJson());
-    accountModel.id = response.data['Id'];
-    accountModel.createdAt = Json.dateTimeFromJson(response.data['CreatedAt']);
-    accountModel.updatedAt = Json.dateTimeFromJson(response.data['UpdatedAt']);
-    return response;
+  static Future<AccountModel?> add(AccountModel accountModel) async {
+    ResponseBody responseBody = await ApiServer.request(Method.post, baseUrl, data: accountModel.toJson());
+    if (false == responseBody.isSuccess) {
+      return null;
+    }
+    return AccountModel.fromJson(responseBody.data);
   }
 
   static Future<ResponseBody> delete(int id) async {
@@ -59,17 +59,15 @@ class AccountApi {
     return result;
   }
 
-  static Future<AccountModel> initTransCategoryByTempalte({
+  static Future<AccountModel?> initTransCategoryByTempalte({
     required AccountModel account,
     required AccountTemplateModel template,
   }) async {
-    ResponseBody response = await ApiServer.request(Method.post, '$baseUrl/${account.id}/Transaction/category/init',
+    ResponseBody response = await ApiServer.request(Method.post, '$baseUrl/${account.id}/transaction/category/init',
         data: {'TemplateId': template.id});
-    AccountModel result;
+    AccountModel? result;
     if (response.isSuccess) {
       result = AccountModel.fromJson(response.data);
-    } else {
-      result = AccountModel.fromJson({});
     }
     return result;
   }
