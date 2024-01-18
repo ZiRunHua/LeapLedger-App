@@ -21,7 +21,9 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
   List<AccountModel> _list = [];
   _getList(AccountListFetchEvent event, emit) async {
-    _list = await AccountApi.getList();
+    if (_list.isEmpty) {
+      _list = await AccountApi.getList();
+    }
     emit(AccountListLoaded(list: _list));
   }
 
