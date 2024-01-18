@@ -15,8 +15,9 @@ class _ShareHomeState extends State<ShareHome> {
       appBar: AppBar(
         title: DropdownButton(
           value: "ok",
-          underline: null,
+          underline: const SizedBox(),
           dropdownColor: Colors.white,
+          alignment: Alignment.center,
           items: [
             DropdownMenuItem<String>(
               value: "ok",
@@ -32,7 +33,7 @@ class _ShareHomeState extends State<ShareHome> {
               ),
             ),
             DropdownMenuItem<String>(
-              value: "ok1",
+              value: "ok123232",
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -40,7 +41,7 @@ class _ShareHomeState extends State<ShareHome> {
                   const SizedBox(
                     width: Constant.margin,
                   ),
-                  Text("ok")
+                  Text("ok2323232")
                 ],
               ),
             )
