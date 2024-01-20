@@ -70,10 +70,12 @@ class AccountOperationBottomSheet extends StatelessWidget {
   }
 
   void _onDetail(BuildContext context) {
+    Navigator.pop(context);
     AccountRoutes.pushEdit(context, account: account);
   }
 
   void _onEdit(BuildContext context) {
+    Navigator.pop(context);
     AccountRoutes.pushEdit(context, account: account);
   }
 

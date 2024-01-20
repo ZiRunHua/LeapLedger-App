@@ -6,6 +6,8 @@ sealed class AccountEvent {}
 // 列表
 class AccountListFetchEvent extends AccountEvent {}
 
+class ShareAccountListFetchEvent extends AccountEvent {}
+
 // 账本
 class AccountSaveEvent extends AccountEvent {
   final AccountModel account;

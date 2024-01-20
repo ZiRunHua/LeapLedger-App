@@ -10,6 +10,7 @@ part 'account_state.dart';
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
   AccountBloc() : super(AccountInitial()) {
     on<AccountListFetchEvent>(_getList);
+    on<ShareAccountListFetchEvent>(_getShareAccountList);
     on<AccountSaveEvent>(_handleAccountSave);
     on<AccountDeleteEvent>(_deleteAccount);
     on<AccountTemplateListFetch>(_getTemplateList);
@@ -19,6 +20,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     return BlocProvider.of<AccountBloc>(context);
   }
 
+//列表
   List<AccountModel> _list = [];
   _getList(AccountListFetchEvent event, emit) async {
     if (_list.isEmpty) {
@@ -27,22 +29,20 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     emit(AccountListLoaded(list: _list));
   }
 
-  List<AccountTemplateModel> _templateList = [];
-  _getTemplateList(AccountTemplateListFetch evnet, emit) async {
-    if (_templateList.isEmpty) {
-      _templateList = await AccountApi.getTemplateList();
+  _getShareAccountList(ShareAccountListFetchEvent event, emit) async {
+    if (_list.isEmpty) {
+      _list = await AccountApi.getList();
     }
-    emit(AccountTemplateListLoaded(_templateList));
+    List<AccountModel> result = [];
+    for (var element in _list) {
+      if (element.type == AccountType.share) {
+        result.add(element);
+      }
+    }
+    emit(ShareAccountListLoaded(list: result));
   }
 
-  _useTemplateTransCategory(AccountTransCategoryInit event, emit) async {
-    var responseData = await AccountApi.initTransCategoryByTempalte(account: event.account, template: event.template);
-    if (responseData == null) {
-      return;
-    }
-    emit(AccountTransCategoryInitSuccess());
-  }
-
+// 账本
   _deleteAccount(AccountDeleteEvent event, Emitter<AccountState> emit) async {
     if (event.account.id == UserBloc.currentAccount.id) {
       emit(AccountDeleteFail(msg: "当前账本正在使用"));
@@ -79,5 +79,22 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       emit(AccountListLoaded(list: _list));
       emit(AccountSaveSuccess(event.account));
     }
+  }
+
+  // 模板账本
+  List<AccountTemplateModel> _templateList = [];
+  _getTemplateList(AccountTemplateListFetch evnet, emit) async {
+    if (_templateList.isEmpty) {
+      _templateList = await AccountApi.getTemplateList();
+    }
+    emit(AccountTemplateListLoaded(_templateList));
+  }
+
+  _useTemplateTransCategory(AccountTransCategoryInit event, emit) async {
+    var responseData = await AccountApi.initTransCategoryByTempalte(account: event.account, template: event.template);
+    if (responseData == null) {
+      return;
+    }
+    emit(AccountTransCategoryInitSuccess());
   }
 }

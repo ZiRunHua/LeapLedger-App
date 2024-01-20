@@ -43,18 +43,9 @@ class _CommonIconSelecterState extends State<CommonIconSelecter> {
           widget.onChanged!(iconData);
         }
       },
-      child: Container(
-        decoration: BoxDecoration(
-          color: iconData == value ? Colors.blue : Colors.grey.shade200,
-          borderRadius: BorderRadius.circular(90),
-        ),
-        width: 64,
-        height: 64,
-        child: Icon(
-          iconData,
-          size: 32,
-          color: Colors.black87,
-        ),
+      child: CircularIcon(
+        icon: iconData,
+        backgroundColor: iconData == value ? Colors.blue : Colors.grey.shade200,
       ),
     );
   }

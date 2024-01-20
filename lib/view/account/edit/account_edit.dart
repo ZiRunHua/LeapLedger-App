@@ -6,6 +6,7 @@ import 'package:keepaccount_app/model/account/model.dart';
 import 'package:keepaccount_app/routes/routes.dart';
 import 'package:keepaccount_app/widget/common/common.dart';
 import 'package:keepaccount_app/widget/form/form.dart';
+import 'package:keepaccount_app/widget/icon/enter.dart';
 
 enum AccountEditMode {
   add,
@@ -74,19 +75,9 @@ class AccountEditState extends State<AccountEdit> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           _buildRadio(),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.circular(90),
-            ),
-            margin: const EdgeInsets.only(bottom: 16),
-            width: 64,
-            height: 64,
-            child: Icon(
-              account.icon,
-              size: 32,
-              color: Colors.black87,
-            ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: Constant.padding),
+            child: CircularIcon(icon: account.icon),
           ),
           FormInputField.string('名称', account.name, (text) => account.name = text),
           const SizedBox(

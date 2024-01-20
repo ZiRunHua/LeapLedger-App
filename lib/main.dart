@@ -9,6 +9,7 @@ import 'package:keepaccount_app/routes/routes.dart';
 import 'package:keepaccount_app/util/enter.dart';
 import 'package:keepaccount_app/view/navigation/navigation.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:keepaccount_app/view/share/home/share_home.dart';
 
 import 'common/global.dart';
 import 'package:keepaccount_app/common/current.dart';
@@ -71,7 +72,7 @@ class MyApp extends StatelessWidget {
             ),
             useMaterial3: true,
           ),
-          home: const Navigation(),
+          home: const ShareHome(),
           builder: EasyLoading.init(),
           routes: Routes.routes,
           onGenerateRoute: Routes.generateRoute,

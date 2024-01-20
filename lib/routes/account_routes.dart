@@ -17,9 +17,7 @@ class AccountRoutes {
 
   static Future<AccountModel?> pushEdit(BuildContext context, {AccountModel? account}) async {
     AccountModel? result;
-    await Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => AccountEdit(account: account)))
-        .then((value) {
+    await Navigator.of(context).push(RightSlideRoute(page: AccountEdit(account: account))).then((value) {
       if (value is AccountModel) {
         result = value;
       }

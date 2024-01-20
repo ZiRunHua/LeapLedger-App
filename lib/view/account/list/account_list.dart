@@ -87,10 +87,11 @@ class AccountListState extends State<AccountList> {
           ),
           subtitle: Text('建立时间：${DateFormat('yyyy-MM-dd HH:mm:ss').format(account.createdAt)}'),
           trailing: IconButton(
-              onPressed: () async {
-                _onClickAccount(list[index]);
-              },
-              icon: const Icon(Icons.more_vert, size: 32)),
+            onPressed: () async {
+              _onClickAccount(list[index]);
+            },
+            icon: const Icon(Icons.more_vert, size: 32),
+          ),
         );
       },
       separatorBuilder: (BuildContext context, int index) {

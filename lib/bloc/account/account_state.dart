@@ -5,15 +5,21 @@ sealed class AccountState {}
 
 final class AccountInitial extends AccountState {}
 
-final class AccountTemplateListLoaded extends AccountState {
-  final List<AccountTemplateModel> list;
-  AccountTemplateListLoaded(this.list);
+//列表
+
+class AccountListLoaded extends AccountState {
+  final List<AccountModel> list;
+
+  AccountListLoaded({required this.list});
 }
 
-final class AccountTransCategoryInitSuccess extends AccountState {
-  AccountTransCategoryInitSuccess();
+class ShareAccountListLoaded extends AccountState {
+  final List<AccountModel> list;
+
+  ShareAccountListLoaded({required this.list});
 }
 
+// 账本
 class AccountSaveSuccess extends AccountState {
   final AccountModel account;
   AccountSaveSuccess(this.account);
@@ -31,10 +37,12 @@ class AccountDeleteFail extends AccountState {
   AccountDeleteFail({this.msg});
 }
 
-class AccountListLoading extends AccountState {}
+// 模板账本
+final class AccountTemplateListLoaded extends AccountState {
+  final List<AccountTemplateModel> list;
+  AccountTemplateListLoaded(this.list);
+}
 
-class AccountListLoaded extends AccountState {
-  final List<AccountModel> list;
-
-  AccountListLoaded({required this.list});
+final class AccountTransCategoryInitSuccess extends AccountState {
+  AccountTransCategoryInitSuccess();
 }
