@@ -28,3 +28,7 @@ class SetCurrentAccount extends UserEvent {
   final AccountModel account;
   SetCurrentAccount(this.account);
 }
+
+class UserFriendListFetch extends UserEvent {
+  UserFriendListFetch();
+}

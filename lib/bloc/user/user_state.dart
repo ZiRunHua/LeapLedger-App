@@ -33,3 +33,9 @@ class UserUpdatePasswordFail extends UserState {}
 class UserUpdateInfoSuccess extends UserState {}
 
 class UserUpdateInfoFail extends UserState {}
+
+/*好友*/
+class UserFriendLoaded extends UserState {
+  List<UserModel> list;
+  UserFriendLoaded(this.list);
+}

@@ -83,4 +83,32 @@ class FormInputField {
       },
     );
   }
+
+  static Widget searchInput({
+    void Function(String?)? onChanged,
+    void Function(String?)? onSave,
+  }) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        const Text("搜索："),
+        Expanded(
+            child: TextFormField(
+          decoration: const InputDecoration(
+            border: UnderlineInputBorder(), // 添加边框
+          ),
+          onChanged: (String? value) {
+            if (onChanged != null) {
+              onChanged(value);
+            }
+          },
+          onSaved: (String? value) {
+            if (onSave != null) {
+              onSave(value);
+            }
+          },
+        ))
+      ],
+    );
+  }
 }

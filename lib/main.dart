@@ -10,6 +10,7 @@ import 'package:keepaccount_app/util/enter.dart';
 import 'package:keepaccount_app/view/navigation/navigation.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:keepaccount_app/view/share/home/share_home.dart';
+import 'package:keepaccount_app/view/user/search/user_search.dart';
 
 import 'common/global.dart';
 import 'package:keepaccount_app/common/current.dart';
@@ -72,7 +73,7 @@ class MyApp extends StatelessWidget {
             ),
             useMaterial3: true,
           ),
-          home: const ShareHome(),
+          home: const UserSearch(),
           builder: EasyLoading.init(),
           routes: Routes.routes,
           onGenerateRoute: Routes.generateRoute,

@@ -30,6 +30,12 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<UserRegisterEvent>(_register);
     on<UserPasswordUpdateEvent>(_updatePassword);
     on<UserInfoUpdateEvent>(_updateInfo);
+
+    on<UserFriendListFetch>(_fetchFriendList);
+  }
+
+  static UserBloc of(BuildContext context) {
+    return BlocProvider.of<UserBloc>(context);
   }
 
   void _login(UserLoginEvent event, Emitter<UserState> emit) async {
@@ -111,6 +117,17 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     emit(UpdateCurrentAccount());
     UserBloc.saveToCache();
     await UserApi.setCurrentAccount(event.account.id);
+  }
+
+  void _fetchFriendList(UserFriendListFetch event, emit) {
+    List<UserModel> result = [
+      UserModel.fromJson({"UserName": "ok", "Email": "oko"}),
+      UserModel.fromJson({"UserName": "ok1", "Email": "oko1"})
+    ];
+    for (var i = 1; i < 20; i++) {
+      result.add(UserModel.fromJson({"UserName": "ok", "Email": "$i$i test"}));
+    }
+    emit(UserFriendLoaded(result));
   }
 
   // Remaining methods unchanged
