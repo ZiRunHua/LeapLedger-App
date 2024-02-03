@@ -38,3 +38,17 @@ Map<String, dynamic> _$UserTransactionShareConfigModelToJson(
       'UpdateTime': instance.updateTime,
       'Remark': instance.remark,
     };
+
+UserInfoModel _$UserInfoModelFromJson(Map<String, dynamic> json) =>
+    UserInfoModel(
+      email: json['Email'] as String,
+      id: json['Id'] as int,
+      username: json['Username'] as String,
+    );
+
+Map<String, dynamic> _$UserInfoModelToJson(UserInfoModel instance) =>
+    <String, dynamic>{
+      'Email': instance.email,
+      'Id': instance.id,
+      'Username': instance.username,
+    };

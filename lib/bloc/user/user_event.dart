@@ -32,3 +32,8 @@ class SetCurrentAccount extends UserEvent {
 class UserFriendListFetch extends UserEvent {
   UserFriendListFetch();
 }
+
+class UserSearchEvent extends UserEvent {
+  final String searchStr;
+  UserSearchEvent(this.searchStr);
+}

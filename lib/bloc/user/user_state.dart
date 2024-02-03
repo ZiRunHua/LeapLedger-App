@@ -36,6 +36,11 @@ class UserUpdateInfoFail extends UserState {}
 
 /*好友*/
 class UserFriendLoaded extends UserState {
-  List<UserModel> list;
+  List<UserInfoModel> list;
   UserFriendLoaded(this.list);
+}
+
+class UserSearchFinish extends UserState {
+  List<UserInfoModel> list;
+  UserSearchFinish(this.list);
 }

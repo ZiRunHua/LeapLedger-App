@@ -32,6 +32,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<UserInfoUpdateEvent>(_updateInfo);
 
     on<UserFriendListFetch>(_fetchFriendList);
+    on<UserSearchEvent>(_searchUser);
   }
 
   static UserBloc of(BuildContext context) {
@@ -119,18 +120,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     await UserApi.setCurrentAccount(event.account.id);
   }
 
-  void _fetchFriendList(UserFriendListFetch event, emit) {
-    List<UserModel> result = [
-      UserModel.fromJson({"UserName": "ok", "Email": "oko"}),
-      UserModel.fromJson({"UserName": "ok1", "Email": "oko1"})
-    ];
-    for (var i = 1; i < 20; i++) {
-      result.add(UserModel.fromJson({"UserName": "ok", "Email": "$i$i test"}));
-    }
-    emit(UserFriendLoaded(result));
+  /// 用户搜索
+  _searchUser(UserSearchEvent event, emit) async {
+    _friendList = await UserApi.getFriendList();
+    emit(UserSearchFinish(_friendList));
   }
 
-  // Remaining methods unchanged
+  /* 好友 */
+  List<UserInfoModel> _friendList = [];
+  Future<void> _fetchFriendList(UserFriendListFetch event, emit) async {
+    _friendList = await UserApi.getFriendList();
+
+    emit(UserFriendLoaded(_friendList));
+  }
 
   static saveToCache() => Global.cache.save('User', {
         'Username': username,

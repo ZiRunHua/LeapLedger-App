@@ -50,3 +50,21 @@ class UserTransactionShareConfigModel {
         remark: remark ?? this.remark,
       );
 }
+
+///用户信息
+@JsonSerializable(fieldRename: FieldRename.pascal)
+class UserInfoModel {
+  String email;
+  int id;
+  String username;
+
+  UserInfoModel({
+    required this.email,
+    required this.id,
+    required this.username,
+  });
+
+  factory UserInfoModel.fromJson(Map<String, dynamic> json) => _$UserInfoModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserInfoModelToJson(this);
+}

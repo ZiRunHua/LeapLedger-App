@@ -70,6 +70,18 @@ class UserApi {
     }
     return UserTransactionShareConfigModel.fromJson(response.data);
   }
+
+  static Future<List<UserInfoModel>> getFriendList() async {
+    ResponseBody response = await ApiServer.request(Method.get, '$baseUrl/friend/list');
+    List<UserInfoModel> list = [];
+    if (response.isSuccess == false || response.data['List'].runtimeType != List) {
+      return [];
+    }
+    for (Map<String, dynamic> data in response.data['List']) {
+      list.add(UserInfoModel.fromJson(data));
+    }
+    return list;
+  }
 }
 
 enum UserTransactionShareConfigFlag {

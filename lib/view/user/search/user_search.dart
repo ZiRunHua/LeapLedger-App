@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keepaccount_app/bloc/user/user_bloc.dart';
 import 'package:keepaccount_app/common/global.dart';
 import 'package:keepaccount_app/model/user/model.dart';
+import 'package:keepaccount_app/widget/common/common.dart';
 import 'package:keepaccount_app/widget/form/form.dart';
 
 class UserSearch extends StatefulWidget {
@@ -40,16 +41,14 @@ class _UserSearchState extends State<UserSearch> {
     return Scaffold(
         appBar: AppBar(
           title: _buildInput(),
-          actions: [TextButton(onPressed: () {}, child: const Text("查找"))],
+          actions: [TextButton(onPressed: _onSubmitSearch, child: const Text("查找"))],
         ),
         body: BlocListener<UserBloc, UserState>(
             listener: (context, state) {
               if (state is UserFriendLoaded) {
-                setState(() {
-                  displayContent = state.list;
-                  searchResult = state.list;
-                  currentState = PageStatus.loaded;
-                });
+                _initData(state.list);
+              } else if (state is UserSearchFinish) {
+                _initData(state.list);
               }
             },
             child: RefreshIndicator(
@@ -64,7 +63,7 @@ class _UserSearchState extends State<UserSearch> {
                   child: CustomScrollView(controller: _scrollController, slivers: [_buildList()]),
                 ))),
 
-        /// 获取更多 加载中
+        /// 获取更多中
         bottomNavigationBar: Visibility(
           visible: currentState == PageStatus.moreDataFetching,
           child: Container(
@@ -75,8 +74,16 @@ class _UserSearchState extends State<UserSearch> {
         ));
   }
 
-  List<UserModel> searchResult = [];
-  List<UserModel> displayContent = [];
+  void _initData(List<UserInfoModel> data) {
+    setState(() {
+      displayContent = data;
+      searchResult = data;
+      currentState = PageStatus.loaded;
+    });
+  }
+
+  List<UserInfoModel> searchResult = [];
+  List<UserInfoModel> displayContent = [];
   Widget _buildList() {
     if (currentState == PageStatus.loading) {
       return const SliverToBoxAdapter(
@@ -96,10 +103,11 @@ class _UserSearchState extends State<UserSearch> {
     );
   }
 
-  Widget _buildListTile(UserModel user) {
+  Widget _buildListTile(UserInfoModel user) {
     return ListTile(
       title: Text(user.username),
       subtitle: Text(user.email),
+      onTap: () => _onSelectUser(user),
     );
   }
 
@@ -109,26 +117,35 @@ class _UserSearchState extends State<UserSearch> {
       height: 100,
       child: Padding(
         padding: const EdgeInsets.all(Constant.padding),
-        child: FormInputField.searchInput(onChanged: _onChaneg),
+        child: FormInputField.searchInput(onChanged: _onChange),
       ),
     );
   }
 
-  String? input;
-  void _onChaneg(String? value) {
-    print(value);
-    input = value;
-
+  String? inputStr;
+  void _onChange(String? value) {
+    inputStr = value;
     displayContent = [];
     if (value == null) {
       return;
     }
     setState(() {
-      searchResult.forEach((element) {
+      for (var element in searchResult) {
         if (element.username.startsWith(value) || element.email.startsWith(value)) {
           displayContent.add(element);
         }
-      });
+      }
     });
+  }
+
+  void _onSelectUser(UserInfoModel user) {
+    Navigator.pop<UserInfoModel>(context, user);
+  }
+
+  void _onSubmitSearch() {
+    if (inputStr == null) {
+      CommonToast.tipToast("请输入搜索内容");
+    }
+    UserBloc.of(context).add(UserSearchEvent(inputStr!));
   }
 }
