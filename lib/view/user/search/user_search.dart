@@ -78,8 +78,9 @@ class _UserSearchState extends State<UserSearch> {
                 }
                 if (offset != 0) {
                   setState(() {
-                    displayContent.addAll(state.list);
                     searchResult.addAll(state.list);
+                    displayContent.addAll(state.list);
+
                     currentState = PageStatus.loaded;
                   });
                   return;
@@ -115,8 +116,11 @@ class _UserSearchState extends State<UserSearch> {
   List<UserInfoModel> displayContent = [];
   void _initData(List<UserInfoModel> data) {
     setState(() {
-      displayContent = data;
       searchResult = data;
+      displayContent = [];
+      for (var element in data) {
+        displayContent.add(element);
+      }
       currentState = PageStatus.loaded;
     });
   }
@@ -166,7 +170,7 @@ class _UserSearchState extends State<UserSearch> {
   }
 
   void _onSelectUser(UserInfoModel user) {
-    Navigator.pop<UserInfoModel>(context, user);
+    print(user.id);
   }
 
   int offset = 0;
@@ -182,11 +186,11 @@ class _UserSearchState extends State<UserSearch> {
   }
 
   void _onFetchMoreData() {
-    if (currentState == PageStatus.noMoreData) {
+    if (currentState == PageStatus.noMoreData || currentState == PageStatus.refreshing) {
       return;
     }
 
-    offset += 10;
+    offset += limit;
     UserBloc.of(context).add(UserSearchEvent.formInputUsername(offset: offset, limit: limit, inputStr: inputStr!));
     setState(() {
       currentState = PageStatus.moreDataFetching;
@@ -194,6 +198,11 @@ class _UserSearchState extends State<UserSearch> {
   }
 
   Future<void> _onRefresh() async {
+    if (inputStr == null) {
+      return;
+    }
+    offset = 0;
+    limit = 20;
     UserBloc.of(context).add(UserSearchEvent.formInputUsername(offset: offset, limit: limit, inputStr: inputStr!));
     setState(() {
       currentState = PageStatus.refreshing;
