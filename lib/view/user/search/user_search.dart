@@ -30,24 +30,61 @@ class _UserSearchState extends State<UserSearch> {
     });
   }
 
-  void _onFetchMoreData() {}
-  Future<void> _onRefresh() async {
-    currentState = PageStatus.moreDataFetching;
+  late final ScrollController _scrollController;
+  Widget _buildInputWidget() {
+    return SizedBox(
+      width: double.infinity,
+      height: 100,
+      child: Padding(
+        padding: const EdgeInsets.only(left: Constant.padding, top: Constant.padding, bottom: Constant.padding),
+        child: FormInputField.searchInput(onChanged: _onChange),
+      ),
+    );
   }
 
-  late final ScrollController _scrollController;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: _buildInput(),
-          actions: [TextButton(onPressed: _onSubmitSearch, child: const Text("查找"))],
+          title: DefaultTextStyle.merge(
+            style: const TextStyle(fontSize: ConstantFontSize.largeHeadline),
+            child: _buildInputWidget(),
+          ),
+          automaticallyImplyLeading: false,
+          actions: [
+            GestureDetector(
+              onTap: _onSubmitSearch,
+              child: const Center(
+                  child: Padding(
+                padding: EdgeInsets.only(right: Constant.padding),
+                child: Text(
+                  "查找",
+                  style: TextStyle(fontSize: ConstantFontSize.largeHeadline),
+                ),
+              )),
+            )
+          ],
         ),
         body: BlocListener<UserBloc, UserState>(
             listener: (context, state) {
               if (state is UserFriendLoaded) {
                 _initData(state.list);
               } else if (state is UserSearchFinish) {
+                if (state.list.isEmpty) {
+                  setState(() {
+                    currentState = PageStatus.noMoreData;
+                  });
+                  return;
+                }
+                if (offset != 0) {
+                  setState(() {
+                    displayContent.addAll(state.list);
+                    searchResult.addAll(state.list);
+                    currentState = PageStatus.loaded;
+                  });
+                  return;
+                }
+
                 _initData(state.list);
               }
             },
@@ -74,6 +111,8 @@ class _UserSearchState extends State<UserSearch> {
         ));
   }
 
+  List<UserInfoModel> searchResult = [];
+  List<UserInfoModel> displayContent = [];
   void _initData(List<UserInfoModel> data) {
     setState(() {
       displayContent = data;
@@ -82,8 +121,6 @@ class _UserSearchState extends State<UserSearch> {
     });
   }
 
-  List<UserInfoModel> searchResult = [];
-  List<UserInfoModel> displayContent = [];
   Widget _buildList() {
     if (currentState == PageStatus.loading) {
       return const SliverToBoxAdapter(
@@ -92,33 +129,23 @@ class _UserSearchState extends State<UserSearch> {
         ),
       );
     }
-    return SliverList(
+    return SliverPrototypeExtentList(
+      prototypeItem: _buildListTile(UserInfoModel(email: "testtesttest@qq.com", username: "test", id: 1)),
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          // 构建子集
           return _buildListTile(displayContent[index]);
         },
-        childCount: displayContent.length, // 子集的数量
+        childCount: displayContent.length,
       ),
     );
   }
 
   Widget _buildListTile(UserInfoModel user) {
     return ListTile(
+      leading: user.avatarPainterWidget,
       title: Text(user.username),
       subtitle: Text(user.email),
       onTap: () => _onSelectUser(user),
-    );
-  }
-
-  Widget _buildInput() {
-    return SizedBox(
-      width: double.infinity,
-      height: 100,
-      child: Padding(
-        padding: const EdgeInsets.all(Constant.padding),
-        child: FormInputField.searchInput(onChanged: _onChange),
-      ),
     );
   }
 
@@ -142,10 +169,34 @@ class _UserSearchState extends State<UserSearch> {
     Navigator.pop<UserInfoModel>(context, user);
   }
 
+  int offset = 0;
+  int limit = 20;
   void _onSubmitSearch() {
     if (inputStr == null) {
-      CommonToast.tipToast("请输入搜索内容");
+      CommonToast.tipToast("请输入搜索用户名");
+      return;
     }
-    UserBloc.of(context).add(UserSearchEvent(inputStr!));
+    offset = 0;
+    limit = 20;
+    UserBloc.of(context).add(UserSearchEvent.formInputUsername(offset: offset, limit: limit, inputStr: inputStr!));
+  }
+
+  void _onFetchMoreData() {
+    if (currentState == PageStatus.noMoreData) {
+      return;
+    }
+
+    offset += 10;
+    UserBloc.of(context).add(UserSearchEvent.formInputUsername(offset: offset, limit: limit, inputStr: inputStr!));
+    setState(() {
+      currentState = PageStatus.moreDataFetching;
+    });
+  }
+
+  Future<void> _onRefresh() async {
+    UserBloc.of(context).add(UserSearchEvent.formInputUsername(offset: offset, limit: limit, inputStr: inputStr!));
+    setState(() {
+      currentState = PageStatus.refreshing;
+    });
   }
 }

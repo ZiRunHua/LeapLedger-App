@@ -34,6 +34,22 @@ class UserFriendListFetch extends UserEvent {
 }
 
 class UserSearchEvent extends UserEvent {
-  final String searchStr;
-  UserSearchEvent(this.searchStr);
+  final int offset, limit;
+  late final int? id;
+  late final String username;
+  UserSearchEvent({required this.offset, required this.limit, this.id, required this.username});
+  UserSearchEvent.formInputUsername({required this.offset, required this.limit, required String inputStr}) {
+    List<String> parts = inputStr.split("#");
+    if (parts.length == 2) {
+      id = int.tryParse(parts[1]);
+      if (id != null) {
+        username = parts[0];
+      } else {
+        username = inputStr;
+      }
+    } else {
+      username = inputStr;
+      id = null;
+    }
+  }
 }

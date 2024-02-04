@@ -67,4 +67,10 @@ class UserInfoModel {
   factory UserInfoModel.fromJson(Map<String, dynamic> json) => _$UserInfoModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserInfoModelToJson(this);
+
+  Widget get avatarPainterWidget => SizedBox(
+        width: 50,
+        height: 50,
+        child: CustomPaint(painter: CommonAvatarPainter(username: username)),
+      );
 }

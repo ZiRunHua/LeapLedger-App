@@ -122,7 +122,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   /// 用户搜索
   _searchUser(UserSearchEvent event, emit) async {
-    _friendList = await UserApi.getFriendList();
+    _friendList =
+        await UserApi.search(offset: event.offset, limit: event.limit, id: event.id, username: event.username);
     emit(UserSearchFinish(_friendList));
   }
 
