@@ -272,8 +272,11 @@ class _NewUserSearchState extends State<NewUserSearch> {
           listener: (context, state) {
             if (state is UserSearchFinish) {
               listBloc.add(PageDataFetchFinish(state.list));
+
+              list = state.list;
             }
             if (state is UserFriendLoaded) {
+              list = state.list;
               listBloc.add(PageDataFetchFinish(state.list));
             }
           },
