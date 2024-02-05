@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keepaccount_app/bloc/user/user_bloc.dart';
 import 'package:keepaccount_app/common/global.dart';
 import 'package:keepaccount_app/model/user/model.dart';
+import 'package:keepaccount_app/widget/common/bloc/refresh_and_load_more_bloc.dart';
 import 'package:keepaccount_app/widget/common/common.dart';
 import 'package:keepaccount_app/widget/form/form.dart';
 
@@ -107,7 +107,7 @@ class _UserSearchState extends State<UserSearch> {
           child: Container(
             height: 64,
             alignment: Alignment.center,
-            child: const CupertinoActivityIndicator(),
+            child: const CircularProgressIndicator(),
           ),
         ));
   }
@@ -207,5 +207,125 @@ class _UserSearchState extends State<UserSearch> {
     setState(() {
       currentState = PageStatus.refreshing;
     });
+  }
+}
+
+class NewUserSearch extends StatefulWidget {
+  const NewUserSearch({super.key});
+
+  @override
+  State<NewUserSearch> createState() => _NewUserSearchState();
+}
+
+class _NewUserSearchState extends State<NewUserSearch> {
+  late final RefreshAndLoadMoreBloc<UserInfoModel> listBloc;
+  @override
+  void initState() {
+    listBloc = RefreshAndLoadMoreBloc<UserInfoModel>(callbackFetchData: _onFetchData);
+    BlocProvider.of<UserBloc>(context).add(UserFriendListFetch());
+    super.initState();
+  }
+
+  void _onFetchData(int offset, int limit) {
+    if (inputStr == null) {
+      UserBloc.of(context).add(UserFriendListFetch());
+      return;
+    }
+    UserBloc.of(context).add(UserSearchEvent.formInputUsername(offset: offset, limit: limit, inputStr: inputStr!));
+  }
+
+  String? inputStr;
+  List<UserInfoModel> list = [];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: DefaultTextStyle.merge(
+          style: const TextStyle(fontSize: ConstantFontSize.largeHeadline),
+          child: _buildInputWidget(),
+        ),
+        automaticallyImplyLeading: false,
+        actions: [
+          GestureDetector(
+            onTap: _onSubmitSearch,
+            child: const Center(
+                child: Padding(
+              padding: EdgeInsets.only(right: Constant.padding),
+              child: Text(
+                "查找",
+                style: TextStyle(fontSize: ConstantFontSize.largeHeadline),
+              ),
+            )),
+          )
+        ],
+      ),
+      body: BlocProvider.value(
+        value: listBloc,
+        child: BlocListener<UserBloc, UserState>(
+          listenWhen: (_, state) {
+            if (state is UserSearchFinish || state is UserFriendLoaded) {
+              return true;
+            }
+            return false;
+          },
+          listener: (context, state) {
+            if (state is UserSearchFinish) {
+              listBloc.add(PageDataFetchFinish(state.list));
+            }
+            if (state is UserFriendLoaded) {
+              listBloc.add(PageDataFetchFinish(state.list));
+            }
+          },
+          child: CommonRefreshAndLoadMoreWidget<UserInfoModel>(
+            buildListOne: _buildListTile,
+            prototypeData: UserInfoModel(email: "testtesttest@qq.com", username: "test", id: 1),
+            initRefresh: true,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _onSubmitSearch() {
+    listBloc.add(PageRefresh());
+  }
+
+  Widget _buildListTile(UserInfoModel user) {
+    return ListTile(
+      leading: user.avatarPainterWidget,
+      title: Text(user.username),
+      subtitle: Text(user.email),
+      onTap: () => _onSelectUser(user),
+    );
+  }
+
+  void _onSelectUser(UserInfoModel user) {
+    print(user.id);
+  }
+
+  Widget _buildInputWidget() {
+    return SizedBox(
+      width: double.infinity,
+      height: 100,
+      child: Padding(
+        padding: const EdgeInsets.only(left: Constant.padding, top: Constant.padding, bottom: Constant.padding),
+        child: FormInputField.searchInput(onChanged: _onInputChange),
+      ),
+    );
+  }
+
+  void _onInputChange(String? value) {
+    inputStr = value;
+    List<UserInfoModel> displayList = [];
+    if (value == null) {
+      return;
+    }
+    for (var element in list) {
+      if (element.username.startsWith(value) || element.email.startsWith(value)) {
+        displayList.add(element);
+      }
+    }
+    listBloc.add(PageDataUpdate(displayList));
   }
 }

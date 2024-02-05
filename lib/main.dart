@@ -73,7 +73,7 @@ class MyApp extends StatelessWidget {
             ),
             useMaterial3: true,
           ),
-          home: const UserSearch(),
+          home: const NewUserSearch(),
           builder: EasyLoading.init(),
           routes: Routes.routes,
           onGenerateRoute: Routes.generateRoute,
