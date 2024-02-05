@@ -44,9 +44,9 @@ class RefreshAndLoadMoreBloc<T> extends Bloc<RefreshAndLoadMoreEvent, RefreshAnd
     if (event.data.isEmpty) {
       list = [];
       if (currentStatus == PageStatus.moreDataFetching) {
-        //currentStatus = PageStatus.noMoreData;
+        currentStatus = PageStatus.noMoreData;
       } else {
-        //currentStatus = PageStatus.noData;
+        currentStatus = PageStatus.noData;
       }
       return;
     }
@@ -55,7 +55,7 @@ class RefreshAndLoadMoreBloc<T> extends Bloc<RefreshAndLoadMoreEvent, RefreshAnd
     }
     list.addAll(event.data);
     currentStatus = PageStatus.loaded;
-    emit(PageLoaded<T>(event.data));
+    emit(PageLoaded<T>(list));
   }
 
   _updateData(PageDataUpdate<T> event, emit) {

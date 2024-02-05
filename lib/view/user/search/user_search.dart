@@ -235,7 +235,6 @@ class _NewUserSearchState extends State<NewUserSearch> {
   }
 
   String? inputStr;
-  List<UserInfoModel> list = [];
 
   @override
   Widget build(BuildContext context) {
@@ -272,11 +271,8 @@ class _NewUserSearchState extends State<NewUserSearch> {
           listener: (context, state) {
             if (state is UserSearchFinish) {
               listBloc.add(PageDataFetchFinish(state.list));
-
-              list = state.list;
             }
             if (state is UserFriendLoaded) {
-              list = state.list;
               listBloc.add(PageDataFetchFinish(state.list));
             }
           },
@@ -324,7 +320,7 @@ class _NewUserSearchState extends State<NewUserSearch> {
     if (value == null) {
       return;
     }
-    for (var element in list) {
+    for (var element in listBloc.list) {
       if (element.username.startsWith(value) || element.email.startsWith(value)) {
         displayList.add(element);
       }

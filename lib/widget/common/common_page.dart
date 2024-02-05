@@ -14,20 +14,30 @@ class CommonRefreshAndLoadMoreWidget<T> extends StatefulWidget {
   State<CommonRefreshAndLoadMoreWidget<T>> createState() => _CommonRefreshAndLoadMoreWidgetState<T>();
 }
 
-class _CommonRefreshAndLoadMoreWidgetState<T> extends State<CommonRefreshAndLoadMoreWidget<T>> {
+class _CommonRefreshAndLoadMoreWidgetState<T> extends State<CommonRefreshAndLoadMoreWidget<T>>
+    with SingleTickerProviderStateMixin {
   late final ScrollController _scrollController;
+  late final AnimationController _loadingController;
+  late final Animation<double> _loadingAnimation;
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        print("object");
         BlocProvider.of<RefreshAndLoadMoreBloc<T>>(context).add(PageMoreDataFetch());
       }
     });
     if (mounted && widget.initRefresh) {
       BlocProvider.of<RefreshAndLoadMoreBloc<T>>(context).add(PageRefresh());
     }
+    _loadingController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2000), // 调整动画时长
+    );
+
+    _loadingAnimation = Tween<double>(begin: 0, end: 1).animate(_loadingController);
   }
 
   var indicator = GlobalKey<RefreshIndicatorState>();
@@ -35,19 +45,26 @@ class _CommonRefreshAndLoadMoreWidgetState<T> extends State<CommonRefreshAndLoad
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<RefreshAndLoadMoreBloc<T>, RefreshAndLoadMoreState>(buildWhen: (_, state) {
-      if (state is PageLoaded || state is PageLoading || state is PageNoData) {
+      if (state is PageLoaded<T> || state is PageLoading || state is PageNoData || state is PageLoadingMore) {
         return true;
       }
       return false;
     }, builder: (context, state) {
+      // 无数据
       if (state is PageNoData) {
         return _buildNoData();
       }
       List<Widget> slivers = [];
+      // 加载或刷新中
       if (state is PageLoading || state is PageRefreshing) {
         slivers.add(_buildLoading());
       }
+      // 加载完成
+      if (state is PageLoaded<T>) {
+        list = state.data;
+      }
       slivers.add(_buildSliverList());
+      // 加载更多中
       if (state is PageLoadingMore) {
         slivers.add(_buildLoading());
       }
@@ -61,8 +78,6 @@ class _CommonRefreshAndLoadMoreWidgetState<T> extends State<CommonRefreshAndLoad
         if (indicator.currentState != null) {
           indicator.currentState!.show();
         }
-      } else if (state is PageLoaded<T>) {
-        list = state.data;
       }
     });
   }
@@ -96,8 +111,28 @@ class _CommonRefreshAndLoadMoreWidgetState<T> extends State<CommonRefreshAndLoad
   }
 
   Widget _buildLoading() {
-    return const SliverToBoxAdapter(
-      child: SizedBox(height: 64, child: Center(child: CircularProgressIndicator())),
-    );
+    return SliverToBoxAdapter(
+        child: AnimatedBuilder(
+      animation: _loadingAnimation,
+      builder: (context, child) {
+        return Transform.translate(
+            offset: Offset(0, _loadingAnimation.value * 50),
+            child: SizedBox(height: 64, child: const Center(child: CircularProgressIndicator())));
+      },
+    ));
+  }
+}
+
+class RefreshAnimation extends RenderSliverToBoxAdapter {
+  const RefreshAnimation({super.key});
+
+  @override
+  State<RefreshAnimation> createState() => _RefreshAnimationState();
+}
+
+class _RefreshAnimationState extends State<RefreshAnimation> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }
