@@ -24,13 +24,10 @@ class _CommonRefreshAndLoadMoreWidgetState<T> extends State<CommonRefreshAndLoad
     super.initState();
     _scrollController = ScrollController();
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
-        print("object");
-        BlocProvider.of<RefreshAndLoadMoreBloc<T>>(context).add(PageMoreDataFetch());
-      }
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {}
     });
     if (mounted && widget.initRefresh) {
-      BlocProvider.of<RefreshAndLoadMoreBloc<T>>(context).add(PageRefresh());
+      context.read<RefreshAndLoadMoreCubit<T>>().fetchMoreData();
     }
     _loadingController = AnimationController(
       vsync: this,
@@ -42,9 +39,10 @@ class _CommonRefreshAndLoadMoreWidgetState<T> extends State<CommonRefreshAndLoad
 
   var indicator = GlobalKey<RefreshIndicatorState>();
   List<T> list = [];
+  bool inRefresh = false;
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<RefreshAndLoadMoreBloc<T>, RefreshAndLoadMoreState>(buildWhen: (_, state) {
+    return BlocConsumer<RefreshAndLoadMoreCubit<T>, RefreshAndLoadMoreState>(buildWhen: (_, state) {
       if (state is PageLoaded<T> || state is PageLoading || state is PageNoData || state is PageLoadingMore) {
         return true;
       }
@@ -69,11 +67,20 @@ class _CommonRefreshAndLoadMoreWidgetState<T> extends State<CommonRefreshAndLoad
         slivers.add(_buildLoading());
       }
 
-      return CustomScrollView(controller: _scrollController, slivers: slivers);
+      return RefreshIndicator(
+          child: CustomScrollView(controller: _scrollController, slivers: slivers),
+          onRefresh: () async {
+            context.read<RefreshAndLoadMoreCubit<T>>().refresh();
+          });
     }, listenWhen: (_, state) {
       print(state);
       return true;
     }, listener: (context, state) {
+      if (state is PageLoading) {
+        inRefresh = true;
+      } else {
+        inRefresh = false;
+      }
       if (state is PageLoading || state is PageRefreshing) {
         if (indicator.currentState != null) {
           indicator.currentState!.show();
@@ -111,28 +118,88 @@ class _CommonRefreshAndLoadMoreWidgetState<T> extends State<CommonRefreshAndLoad
   }
 
   Widget _buildLoading() {
+    _loadingController.forward();
     return SliverToBoxAdapter(
         child: AnimatedBuilder(
-      animation: _loadingAnimation,
-      builder: (context, child) {
-        return Transform.translate(
-            offset: Offset(0, _loadingAnimation.value * 50),
-            child: SizedBox(height: 64, child: const Center(child: CircularProgressIndicator())));
+      animation: _loadingController,
+      builder: (BuildContext context, Widget? child) {
+        return SlideTransition(
+            position: Tween(begin: Offset(0, -1), end: Offset(0, 0)).animate(_loadingController),
+            child: Container(
+                color: ConstantColor.secondaryColor,
+                height: 64,
+                child: const Center(child: CircularProgressIndicator())));
       },
     ));
   }
 }
 
-class RefreshAnimation extends RenderSliverToBoxAdapter {
-  const RefreshAnimation({super.key});
-
-  @override
-  State<RefreshAnimation> createState() => _RefreshAnimationState();
-}
-
-class _RefreshAnimationState extends State<RefreshAnimation> {
+class RefreshAnimation extends AnimatedWidget {
+  const RefreshAnimation({Key? key, required this.progress}) : super(key: key, listenable: progress);
+  final Animation<double> progress;
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return TweenAnimationBuilder(
+      duration: Duration(seconds: 1),
+      tween: Tween(begin: 0, end: 50),
+      builder: (BuildContext context, int value, Widget? child) {
+        return Container(
+            color: ConstantColor.secondaryColor, height: 64, child: const Center(child: CircularProgressIndicator()));
+      },
+    );
+  }
+}
+
+class TestRefreshAnimation extends StatefulWidget {
+  const TestRefreshAnimation({super.key});
+
+  @override
+  State<TestRefreshAnimation> createState() => _TestRefreshAnimationState();
+}
+
+class _TestRefreshAnimationState extends State<TestRefreshAnimation> with SingleTickerProviderStateMixin {
+  late final AnimationController _loadingController;
+  void initState() {
+    super.initState();
+
+    _loadingController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000), // 调整动画时长
+    );
+    _loadingController.forward();
+  }
+
+  bool display = false;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          AnimatedBuilder(
+            animation: _loadingController,
+            builder: (BuildContext context, Widget? child) {
+              return SlideTransition(
+                  position: Tween(begin: Offset(0, -1), end: Offset(0, 0)).animate(_loadingController),
+                  child: Container(
+                      color: ConstantColor.secondaryColor,
+                      height: 64,
+                      child: const Center(child: CircularProgressIndicator())));
+            },
+          ),
+          const SizedBox(
+            height: 100,
+          ),
+          TextButton(
+              onPressed: () {
+                setState(() {
+                  display = !display;
+                  _loadingController.forward();
+                });
+              },
+              child: const Text("test")),
+        ],
+      ),
+    );
   }
 }

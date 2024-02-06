@@ -8,10 +8,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:keepaccount_app/bloc/captcha/captcha_bloc.dart';
 import 'package:keepaccount_app/bloc/email/captcha/email_captcha_bloc.dart';
 import 'package:keepaccount_app/common/global.dart';
+import 'package:keepaccount_app/widget/common/cubit/refresh_and_load_more_cubit.dart';
 import 'package:keepaccount_app/widget/icon/enter.dart';
 import 'package:shimmer/shimmer.dart';
 
-import 'bloc/refresh_and_load_more_bloc.dart';
 part 'common_expansion_tile.dart';
 part 'common_card.dart';
 part 'common_captcha.dart';
