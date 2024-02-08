@@ -69,6 +69,21 @@ class FlowListBloc extends Bloc<FlowListEvent, FlowListState> {
     var key = list.keys.firstWhere((element) {
       bool notInThisMonth = data.tradeTime.isBefore(element.startTime) || element.endTime.isBefore(data.tradeTime);
       return false == notInThisMonth;
+    }, orElse: () {
+      list.keys.forEach(
+        (element) {
+          print(element.startTime);
+          print(element.endTime);
+        },
+      );
+
+      print(data.tradeTime);
+      print(data.id);
+      return IncomeExpenseStatisticWithTimeApiModel(
+          expense: AmountCountApiModel(0, 0),
+          income: AmountCountApiModel(0, 0),
+          startTime: DateTime.now(),
+          endTime: DateTime.now());
     });
 
     list[key]!.add(data);

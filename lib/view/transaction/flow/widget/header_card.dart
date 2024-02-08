@@ -110,11 +110,11 @@ class _HeaderCardState extends State<HeaderCard> {
     return Column(children: [
       Text(
         title,
-        style: const TextStyle(color: Colors.black54, fontSize: 14),
+        style: const TextStyle(color: Colors.black54, fontSize: ConstantFontSize.body),
       ),
       SameHightAmount(
         amount: amount,
-        textStyle: const TextStyle(color: Colors.black87, fontSize: 20),
+        textStyle: const TextStyle(color: Colors.black87, fontSize: ConstantFontSize.bodyLarge),
         dollarSign: true,
       )
     ]);

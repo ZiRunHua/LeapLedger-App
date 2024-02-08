@@ -124,7 +124,6 @@ class _TransactionFlowState extends State<_TransactionFlow> {
       },
       child: child,
     );
-    print("state");
     // 交易bloc
     child = BlocListener<TransactionBloc, TransactionState>(
       listener: (context, state) {
@@ -218,12 +217,13 @@ class _TransactionFlowState extends State<_TransactionFlow> {
 
   List<Widget> buildMonthStatisticGroupList() {
     List<SliverMainAxisGroup> result = [];
+    print(data);
     data.forEach((key, value) {
       if (value.isNotEmpty) {
         result.add(buildMonthStatisticGroup(key, value));
       }
     });
-
+    print(result);
     if (result.isEmpty) {
       return [
         SliverToBoxAdapter(

@@ -19,6 +19,7 @@ class FlowConditionBloc extends Bloc<FlowConditionEvent, FlowConditionState> {
         assert(condition?.accountId == currentAccount?.id),
         super(FlowConditionInitial()) {
     this.condition = condition ?? _defaultCondition;
+    print(this.condition.startTime);
     this.currentAccount = currentAccount ?? UserBloc.currentAccount;
     on<FlowConditionAccountDataFetchEvent>(_fetchAccountList);
     on<FlowConditionCategoryDataFetchEvent>(_fetchCategoryData);

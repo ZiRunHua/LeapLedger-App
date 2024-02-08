@@ -132,7 +132,7 @@ class _TimePeriodStatisticsState extends State<TimePeriodStatistics> {
         const SizedBox(width: Constant.margin / 2),
         SameHightAmountTextSpan(
           amount: amount,
-          textStyle: TextStyle(fontSize: ConstantFontSize.headline, fontWeight: FontWeight.normal, color: color),
+          textStyle: TextStyle(fontSize: ConstantFontSize.body, fontWeight: FontWeight.normal, color: color),
         ),
       ],
     );

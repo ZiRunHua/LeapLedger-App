@@ -44,7 +44,7 @@ class MonthStatisticHeaderDelegate extends SliverPersistentHeaderDelegate {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              flex: 4,
+              flex: 2,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -59,7 +59,7 @@ class MonthStatisticHeaderDelegate extends SliverPersistentHeaderDelegate {
               ),
             ),
             Expanded(
-              flex: 8,
+              flex: 10,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.end,

@@ -75,9 +75,9 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
         emit(AccountSaveFail(event.account));
         return;
       }
-      _list.add(event.account);
+      _list.add(newAccount);
       emit(AccountListLoaded(list: _list));
-      emit(AccountSaveSuccess(event.account));
+      emit(AccountSaveSuccess(newAccount));
     }
   }
 
