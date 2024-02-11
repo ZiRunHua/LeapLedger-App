@@ -76,7 +76,7 @@ class _TransactionFlowState extends State<_TransactionFlow> {
   }
 
   void _onFetchMoreData() {
-    if (currentState != PageStatus.noMoreData) {
+    if (currentState != PageStatus.noMoreData && currentState != PageStatus.moreDataFetching) {
       flowListBloc.add(FlowListMoreDataFetchEvent());
       _changeState(PageStatus.moreDataFetching);
     }

@@ -136,11 +136,29 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
 
   Widget _buildListTile({required String leading, String? trailing, Widget? trailingWidget}) {
     assert(trailing != null || trailingWidget != null);
-    trailingWidget ??= Text(trailing!, style: const TextStyle(fontSize: ConstantFontSize.body));
+    trailingWidget ??= Text(
+      trailing!,
+      style: const TextStyle(fontSize: ConstantFontSize.body),
+      softWrap: true,
+    );
 
-    return ListTile(
-      leading: Text(leading, style: const TextStyle(fontSize: ConstantFontSize.body)),
-      trailing: trailingWidget,
+    return Padding(
+      padding: const EdgeInsets.all(Constant.padding),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(leading, style: const TextStyle(fontSize: ConstantFontSize.body)),
+          ),
+          Expanded(
+              flex: 10,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: trailingWidget,
+              ))
+        ],
+      ),
     );
   }
 
