@@ -13,43 +13,43 @@ class AccountOperationBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: ConstantDecoration.bottomSheet,
-      child: DefaultTextStyle.merge(
-        style: const TextStyle(fontSize: ConstantFontSize.bodyLarge),
-        textAlign: TextAlign.center,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildButton(
-              context,
-              onTap: () => _onUpdateCurrentAccount(context),
-              child: const Text(
-                '设为当前账本',
-                style: TextStyle(fontWeight: FontWeight.bold),
+    return BlocListener<AccountBloc, AccountState>(
+      listener: (context, state) {},
+      child: DecoratedBox(
+        decoration: ConstantDecoration.bottomSheet,
+        child: DefaultTextStyle.merge(
+          style: const TextStyle(fontSize: ConstantFontSize.bodyLarge),
+          textAlign: TextAlign.center,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildButton(
+                context,
+                onTap: () => _onUpdateCurrentAccount(context),
+                child: const Text('设为当前账本', style: TextStyle(fontWeight: FontWeight.bold)),
               ),
-            ),
-            ConstantWidget.divider.list,
-            _buildButton(
-              context,
-              onTap: () => _onDetail(context),
-              child: const Text('打开'),
-            ),
-            ConstantWidget.divider.list,
-            _buildButton(
-              context,
-              onTap: () => _onEdit(context),
-              child: const Text('编辑'),
-            ),
-            ConstantWidget.divider.list,
-            _buildButton(
-              context,
-              onTap: () => _onDelete(context),
-              child: const Text('删除', style: TextStyle(color: Colors.red)),
-            ),
-          ],
+              ConstantWidget.divider.list,
+              _buildButton(
+                context,
+                onTap: () => _onDetail(context),
+                child: const Text('打开'),
+              ),
+              ConstantWidget.divider.list,
+              _buildButton(
+                context,
+                onTap: () => _onEdit(context),
+                child: const Text('编辑'),
+              ),
+              ConstantWidget.divider.list,
+              _buildButton(
+                context,
+                onTap: () => _onDelete(context),
+                child: const Text('删除', style: TextStyle(color: Colors.red)),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -66,17 +66,14 @@ class AccountOperationBottomSheet extends StatelessWidget {
 
   void _onUpdateCurrentAccount(BuildContext context) {
     BlocProvider.of<UserBloc>(context).add(SetCurrentAccount(account));
-    Navigator.pop(context);
   }
 
   void _onDetail(BuildContext context) {
-    Navigator.pop(context);
     AccountRoutes.pushEdit(context, account: account);
   }
 
   void _onEdit(BuildContext context) {
-    Navigator.pop(context);
-    AccountRoutes.pushEdit(context, account: account);
+    AccountRoutes.pushEdit(context, account: account).then((value) => null);
   }
 
   void _onDelete(BuildContext context) {

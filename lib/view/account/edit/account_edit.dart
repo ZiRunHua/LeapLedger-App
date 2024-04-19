@@ -15,19 +15,19 @@ enum AccountEditMode {
 
 class AccountEdit extends StatefulWidget {
   const AccountEdit({super.key, this.account});
-  final AccountModel? account;
+  final AccountDetailModel? account;
   @override
   AccountEditState createState() => AccountEditState();
 }
 
 class AccountEditState extends State<AccountEdit> {
   final _formKey = GlobalKey<FormState>();
-  late AccountModel account;
+  late AccountDetailModel account;
   late final AccountEditMode mode;
   @override
   void initState() {
     if (widget.account == null) {
-      account = AccountModel.fromJson({});
+      account = AccountDetailModel.fromJson({});
       mode = AccountEditMode.add;
     } else {
       account = widget.account!;
@@ -53,12 +53,7 @@ class AccountEditState extends State<AccountEdit> {
             appBar: AppBar(
               title: Text(mode == AccountEditMode.add ? "添加账本" : "编辑账本"),
               actions: <Widget>[
-                IconButton(
-                    icon: const Icon(
-                      Icons.save,
-                      size: 24,
-                    ),
-                    onPressed: _onSave),
+                IconButton(icon: const Icon(Icons.save, size: 24), onPressed: _onSave),
               ],
             ),
             body: Padding(

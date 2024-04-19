@@ -133,10 +133,30 @@ class AccountRouterGuard {
   }
 }
 
+class AccountEditNavigator extends RouterNavigator {
+  final AccountDetailModel account;
+  AccountEditNavigator(BuildContext context, {required this.account}) : super(context: context);
+
+  Future<bool> push() async {
+    return await _push(context, AccountEdit(account: account));
+  }
+
+  @override
+  _then(value) {
+    if (value is AccountDetailModel) {
+      result = value;
+    }
+  }
+
+  AccountDetailModel? result;
+  AccountDetailModel? getReturn() {
+    return result;
+  }
+}
+
 class AccountListNavigator extends RouterNavigator {
   final AccountDetailModel account;
-  final void Function(AccountUserModel)? onEdit;
-  AccountListNavigator(BuildContext context, {required this.account, this.onEdit}) : super(context: context);
+  AccountListNavigator(BuildContext context, {required this.account}) : super(context: context);
 
   Future<bool> showModalBottomSheet() async {
     return await _modalBottomSheetShow(context, AccountListBottomSheet(currentAccount: account));
