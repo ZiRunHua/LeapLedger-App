@@ -46,21 +46,6 @@ class TransactionRoutes {
     );
   }
 
-  /// 已弃用 新方法[TransactionRoutes.editNavigator]
-  @Deprecated('Use [TransactionRoutes.editNavigator] instead')
-  static Future<bool> pushEdit(BuildContext context,
-      {required TransactionEditMode mode, TransactionModel? transaction, AccountModel? account}) async {
-    bool isFinish = false;
-    await Navigator.push(
-      context,
-      LeftSlideRoute(
-        page: TransactionEdit(mode: mode, model: transaction, account: account),
-        transitionDuration: const Duration(milliseconds: 500),
-      ),
-    ).then((value) => value is bool ? isFinish = value : isFinish = false);
-    return isFinish;
-  }
-
   static TransactionImportNavigator import(BuildContext context, {required AccountDetailModel account}) {
     return TransactionImportNavigator(context, account: account);
   }

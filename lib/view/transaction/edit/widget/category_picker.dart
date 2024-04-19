@@ -33,7 +33,7 @@ class _CategoryPickerState extends State<CategoryPicker> with AutomaticKeepAlive
     super.build(context);
     Widget child;
     if (isNoData) {
-      child = Center(child: TransactionCategoryRoutes.getNoDataRichText(context));
+      child = Center(child: NoData.categoryText(context, account: BlocProvider.of<EditBloc>(context).account));
     } else if (categoryList.isEmpty) {
       child = const Center(child: CircularProgressIndicator());
     } else {

@@ -1,37 +1,19 @@
 part of '../transaction_edit.dart';
 
 class Bottom extends StatefulWidget {
-  const Bottom({
-    required this.model,
-    super.key,
-    required this.account,
-    required this.onComplete,
-    required this.mode,
-    required this.isAgain,
-  });
+  const Bottom({super.key});
 
-  final TransactionEditModel model;
-
-  final AccountModel account;
-
-  final Function({required int amount, required DateTime tradeTime, required String remark, required bool isAgain})
-      onComplete;
-
-  final TransactionEditMode mode;
-
-  final bool isAgain;
   @override
   State<Bottom> createState() => _BottomState();
 }
 
 class _BottomState extends State<Bottom> {
   late TransactionEditModel model;
-  late AccountModel account;
+  late AccountDetailModel account;
+  late EditBloc _bloc;
   @override
   void initState() {
-    model = widget.model;
-    account = widget.account;
-    model.accountId = account.id;
+    _bloc = BlocProvider.of<EditBloc>(context);
     super.initState();
   }
 
@@ -52,7 +34,7 @@ class _BottomState extends State<Bottom> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           _buildCard(),
-          AmountKeyboard(onRefresh: onRefreshKeyborad, onComplete: onComplete, openAgain: widget.isAgain),
+          AmountKeyboard(onRefresh: onRefreshKeyborad, onComplete: onComplete, openAgain: _bloc.canAgain),
         ],
       ),
     );
@@ -69,10 +51,12 @@ class _BottomState extends State<Bottom> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             _buildButtonGroup(),
-            SameHightAmountTextSpan(
-              amount: model.amount,
-              textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
-              dollarSign: true,
+            Text.rich(
+              AmountTextSpan.sameHeight(
+                _bloc.trans.amount,
+                textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
+                dollarSign: true,
+              ),
             ),
             const Divider(),
             SingleChildScrollView(
@@ -110,12 +94,12 @@ class _BottomState extends State<Bottom> {
         // 账本
         _buildButton(
             onPressed: () async {
-              AccountModel? resule = await AccountRoutes.showAccountListButtomSheet(context, currentAccount: account);
+              AccountDetailModel? resule =
+                  await AccountRoutes.showAccountListButtomSheet(context, currentAccount: account);
               if (resule == null) {
                 return;
               }
-              print(resule.hashCode);
-              BlocProvider.of<EditBloc>(context).add(AccountChange(resule));
+              _bloc.add(AccountChange(resule));
             },
             name: account.name),
         _buildButton(
@@ -123,7 +107,12 @@ class _BottomState extends State<Bottom> {
               await showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return EditDialog("备注", null, model.remark, onChanegRemark);
+                    return CommonDialog.editOne<String>(
+                      context,
+                      fieldName: "备注",
+                      onSave: (String? value) => _bloc.trans.remark = value ?? "",
+                      initValue: _bloc.trans.remark,
+                    );
                   });
             },
             name: "备注"),
@@ -132,15 +121,15 @@ class _BottomState extends State<Bottom> {
   }
 
   Widget _buildDateButton() {
-    String buttonName = DateFormat('yyyy-MM-dd').format(model.tradeTime);
-    if (Time.isSameDayComparison(model.tradeTime, DateTime.now())) {
+    String buttonName = DateFormat('yyyy-MM-dd').format(_bloc.trans.tradeTime);
+    if (Time.isSameDayComparison(_bloc.trans.tradeTime, DateTime.now())) {
       buttonName += " 今天";
     }
     return _buildButton(
         onPressed: () async {
           final DateTime? picked = await showDatePicker(
             context: context,
-            initialDate: model.tradeTime,
+            initialDate: _bloc.trans.tradeTime,
             firstDate: Constant.minDateTime,
             lastDate: Constant.maxDateTime,
           );
@@ -192,30 +181,23 @@ class _BottomState extends State<Bottom> {
 
 // 事件
   void onComplete(int amount, bool isAgain) {
-    widget.onComplete(amount: amount, tradeTime: model.tradeTime, remark: model.remark, isAgain: isAgain);
+    _bloc.trans.amount = amount;
+    _bloc.add(TransactionSave(isAgain));
   }
 
   void onRefreshKeyborad(int amount, String input, String history) {
     setState(() {
-      model.amount = amount;
+      _bloc.trans.amount = amount;
       keyboradInput = input;
       keyboradHistory = history;
     });
   }
 
   void onChangeTradeTime(DateTime time) {
-    if (false == Time.isSameDayComparison(model.tradeTime, time)) {
+    if (false == Time.isSameDayComparison(_bloc.trans.tradeTime, time)) {
       setState(() {
-        model.tradeTime = time;
+        _bloc.trans.tradeTime = time;
       });
     }
-  }
-
-  void onChangeAccount(AccountModel result) {
-    BlocProvider.of<EditBloc>(context).add(AccountChange(result));
-  }
-
-  void onChanegRemark(String remark) {
-    model.remark = remark;
   }
 }

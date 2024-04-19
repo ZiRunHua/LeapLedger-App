@@ -29,7 +29,6 @@ class FormInputField {
     InputDecoration? decoration,
     bool enabled = true,
   }) {
-    assert(decoration == null || fieldName == null);
     late final T? Function(String? value) handleValue;
     late final String? initialValueString;
     late final TextInputType type;
@@ -61,10 +60,12 @@ class FormInputField {
       initialValue: initialValueString,
       keyboardType: type,
       decoration: decoration ??
-          InputDecoration(
-            labelText: fieldName,
-            border: const OutlineInputBorder(),
-          ),
+          (fieldName == null
+              ? InputDecoration(
+                  labelText: fieldName,
+                  border: const OutlineInputBorder(),
+                )
+              : null),
       onChanged: (String? value) {
         if (onChanged != null) {
           onChanged(handleValue(value));

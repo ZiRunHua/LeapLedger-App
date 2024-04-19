@@ -16,6 +16,17 @@ final class IncomeCategoryPickLoaded extends EditState {
 }
 
 final class AccountChanged extends EditState {
-  final AccountModel account;
+  final AccountDetailModel account;
   AccountChanged(this.account);
+}
+
+final class AddNewTransaction extends EditState {
+  final TransactionEditModel trans;
+  AddNewTransaction(this.trans);
+}
+
+final class UpdateTransaction extends EditState {
+  final TransactionModel oldTrans;
+  final TransactionEditModel editModel;
+  UpdateTransaction(this.oldTrans, this.editModel);
 }

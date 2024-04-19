@@ -4,7 +4,7 @@ part of 'edit_bloc.dart';
 sealed class EditEvent {}
 
 class EditDataFetch extends EditEvent {
-  final AccountModel account;
+  final AccountDetailModel account;
   EditDataFetch(this.account);
 }
 
@@ -14,6 +14,11 @@ class TransactionCategoryFetch extends EditEvent {
 }
 
 class AccountChange extends EditEvent {
-  final AccountModel account;
+  final AccountDetailModel account;
   AccountChange(this.account);
+}
+
+class TransactionSave extends EditEvent {
+  final bool isAgain;
+  TransactionSave(this.isAgain);
 }
