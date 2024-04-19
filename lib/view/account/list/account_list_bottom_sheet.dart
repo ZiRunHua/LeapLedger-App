@@ -8,15 +8,15 @@ import 'widget/enter.dart';
 
 class AccountListBottomSheet extends StatefulWidget {
   const AccountListBottomSheet({required this.currentAccount, super.key});
-  final AccountModel currentAccount;
+  final AccountDetailModel currentAccount;
   @override
   State<AccountListBottomSheet> createState() => _AccountListBottomSheetState();
 }
 
 class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
-  late AccountModel currentAccount;
+  late AccountDetailModel currentAccount;
 
-  List<AccountModel> list = [];
+  List<AccountDetailModel> list = [];
   @override
   void initState() {
     BlocProvider.of<AccountBloc>(context).add(AccountListFetchEvent());
@@ -52,7 +52,7 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
                   '选择账本',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 18,
+                    fontSize: ConstantFontSize.largeHeadline,
                   ),
                 ),
               ),
@@ -78,7 +78,7 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
                       Text(account.name),
                       Visibility(visible: account.type == AccountType.share, child: const ShareLabel()),
                     ]),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
+                    contentPadding: const EdgeInsets.symmetric(vertical: Constant.margin),
                     onTap: () {
                       onUpdateAccount(account);
                     },
@@ -96,7 +96,7 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
     );
   }
 
-  void onUpdateAccount(AccountModel account) {
-    Navigator.pop<AccountModel>(context, account);
+  void onUpdateAccount(AccountDetailModel account) {
+    Navigator.pop<AccountDetailModel>(context, account);
   }
 }

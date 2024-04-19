@@ -38,9 +38,7 @@ class AccountRoutes {
     await showModalBottomSheet(
       isScrollControlled: true,
       context: context,
-      builder: (_) => AccountListBottomSheet(
-        currentAccount: currentAccount,
-      ),
+      builder: (_) => AccountListBottomSheet(currentAccount: currentAccount),
     ).then((value) {
       if (value is AccountModel) {
         result = value;
@@ -90,6 +88,14 @@ class AccountRoutes {
     );
   }
 
+  static AccountListNavigator list(BuildContext context, {required AccountDetailModel account}) {
+    return AccountListNavigator(context, account: account);
+  }
+
+  static AccountListNavigator operationList(BuildContext context, {required AccountDetailModel account}) {
+    return AccountListNavigator(context, account: account);
+  }
+
   static AccountUserEditNavigator userEdit(BuildContext context,
       {required AccountUserModel accountUser, required AccountDetailModel accoount}) {
     return AccountUserEditNavigator(context, account: accoount, accountUser: accountUser);
@@ -124,6 +130,53 @@ class AccountRouterGuard {
 
   static bool mapping({required AccountDetailModel mainAccount, AccountMappingModel? mapping}) {
     return !mainAccount.isReader;
+  }
+}
+
+class AccountListNavigator extends RouterNavigator {
+  final AccountDetailModel account;
+  final void Function(AccountUserModel)? onEdit;
+  AccountListNavigator(BuildContext context, {required this.account, this.onEdit}) : super(context: context);
+
+  Future<bool> showModalBottomSheet() async {
+    return await _modalBottomSheetShow(context, AccountListBottomSheet(currentAccount: account));
+  }
+
+  Future<bool> push() async {
+    return await _push(context, AccountList(account: account));
+  }
+
+  @override
+  _then(value) {
+    if (value is AccountDetailModel) {
+      result = value;
+    }
+  }
+
+  AccountDetailModel? result;
+  AccountDetailModel? getReturn() {
+    return result;
+  }
+}
+
+class AccountOperationListNavigator extends RouterNavigator {
+  final AccountDetailModel account;
+  AccountOperationListNavigator(BuildContext context, {required this.account}) : super(context: context);
+
+  Future<bool> showModalBottomSheet() async {
+    return await _modalBottomSheetShow(context, AccountOperationBottomSheet(account: account));
+  }
+
+  @override
+  _then(value) {
+    if (value is AccountDetailModel) {
+      result = value;
+    }
+  }
+
+  AccountDetailModel? result;
+  AccountDetailModel? getReturn() {
+    return result;
   }
 }
 
