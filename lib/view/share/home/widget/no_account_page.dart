@@ -15,8 +15,12 @@ class NoAccountPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildButton(Icons.add_outlined, "新建共享账本",
-                () => AccountRoutes.pushEdit(context, account: AccountModel.fromJson({})..type = AccountType.share)),
+            _buildButton(
+              Icons.add_outlined,
+              "新建共享账本",
+              () => AccountRoutes.edit(context, account: AccountDetailModel.fromJson({})..type = AccountType.share)
+                  .push(),
+            ),
             _buildButton(Icons.send_outlined, "查看邀请", () => UserRoutes.pushNamed(context, UserRoutes.accountInvitation))
           ],
         ),

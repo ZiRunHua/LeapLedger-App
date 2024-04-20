@@ -34,7 +34,7 @@ class NoData {
                 style: const TextStyle(color: Colors.blue),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
-                    AccountRoutes.pushEdit(context);
+                    AccountRoutes.edit(context);
                   }),
           ],
         ));

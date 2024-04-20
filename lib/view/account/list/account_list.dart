@@ -55,11 +55,7 @@ class AccountListState extends State<AccountList> {
     return listener(
       Scaffold(
         appBar: AppBar(title: const Text('我的账本'), actions: [
-          IconButton(
-              icon: const Icon(Icons.add_circle_outline),
-              onPressed: () {
-                AccountRoutes.pushEdit(context);
-              })
+          IconButton(icon: const Icon(Icons.add_circle_outline), onPressed: () => AccountRoutes.edit(context).push())
         ]),
         body: child,
       ),
@@ -92,10 +88,9 @@ class AccountListState extends State<AccountList> {
               child: CommonLabel(text: account.role.name),
             ),
             IconButton(
-                onPressed: () async {
-                  _onClickAccount(list[index]);
-                },
-                icon: const Icon(Icons.more_vert, size: 32))
+              onPressed: () async => _onClickAccount(list[index]),
+              icon: const Icon(Icons.more_vert, size: 32),
+            )
           ]),
         );
       },
@@ -119,9 +114,8 @@ class AccountListState extends State<AccountList> {
     ]);
   }
 
-  void _onClickAccount(AccountDetailModel account) async {
-    AccountRoutes.showOperationBottomSheet(context, account: account);
-  }
+  void _onClickAccount(AccountDetailModel account) async =>
+      await AccountRoutes.operationList(context, account: account).showModalBottomSheet();
 
   void _onUpdateCurrentAccount() {
     if (currentAccount != UserBloc.currentAccount.id) {

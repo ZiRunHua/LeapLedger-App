@@ -22,16 +22,19 @@ class AccountEdit extends StatefulWidget {
 
 class AccountEditState extends State<AccountEdit> {
   final _formKey = GlobalKey<FormState>();
-  late AccountDetailModel account;
+  late AccountModel account;
   late final AccountEditMode mode;
   @override
   void initState() {
+    if (widget.account != null && widget.account!.isValid) {
+      mode = AccountEditMode.update;
+    } else {
+      mode = AccountEditMode.add;
+    }
     if (widget.account == null) {
       account = AccountDetailModel.fromJson({});
-      mode = AccountEditMode.add;
     } else {
       account = widget.account!;
-      mode = AccountEditMode.update;
     }
     super.initState();
   }
