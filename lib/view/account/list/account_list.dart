@@ -11,8 +11,8 @@ import 'package:keepaccount_app/view/account/list/widget/enter.dart';
 import 'package:keepaccount_app/widget/common/common.dart';
 
 class AccountList extends StatefulWidget {
-  const AccountList({Key? key}) : super(key: key);
-
+  const AccountList({Key? key, required this.account}) : super(key: key);
+  final AccountDetailModel account;
   @override
   AccountListState createState() => AccountListState();
 }
@@ -22,7 +22,7 @@ class AccountListState extends State<AccountList> {
   late List<AccountDetailModel> list;
   @override
   void initState() {
-    currentAccount = UserBloc.currentAccount.id;
+    currentAccount = widget.account.id;
     list = [];
     BlocProvider.of<AccountBloc>(context).add(AccountListFetchEvent());
     super.initState();
@@ -55,11 +55,7 @@ class AccountListState extends State<AccountList> {
     return listener(
       Scaffold(
         appBar: AppBar(title: const Text('我的账本'), actions: [
-          IconButton(
-              icon: const Icon(Icons.add_circle_outline),
-              onPressed: () {
-                AccountRoutes.pushEdit(context);
-              })
+          IconButton(icon: const Icon(Icons.add_circle_outline), onPressed: () => AccountRoutes.edit(context).push())
         ]),
         body: child,
       ),
@@ -92,10 +88,9 @@ class AccountListState extends State<AccountList> {
               child: CommonLabel(text: account.role.name),
             ),
             IconButton(
-                onPressed: () async {
-                  _onClickAccount(list[index]);
-                },
-                icon: const Icon(Icons.more_vert, size: 32))
+              onPressed: () async => _onClickAccount(list[index]),
+              icon: const Icon(Icons.more_vert, size: 32),
+            )
           ]),
         );
       },
@@ -110,7 +105,7 @@ class AccountListState extends State<AccountList> {
       SizedBox(
         width: 4,
         child: Container(
-          color: account.id == currentAccount ? Colors.blue : Colors.white,
+          color: account.id == widget.account.id ? Colors.blue : Colors.white,
         ),
       ),
       const SizedBox(width: Constant.margin),
@@ -119,9 +114,8 @@ class AccountListState extends State<AccountList> {
     ]);
   }
 
-  void _onClickAccount(AccountDetailModel account) async {
-    AccountRoutes.showOperationBottomSheet(context, account: account);
-  }
+  void _onClickAccount(AccountDetailModel account) async =>
+      await AccountRoutes.operationList(context, account: account).showModalBottomSheet();
 
   void _onUpdateCurrentAccount() {
     if (currentAccount != UserBloc.currentAccount.id) {
