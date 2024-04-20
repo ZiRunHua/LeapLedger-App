@@ -22,9 +22,7 @@ class UserDrawer extends StatelessWidget {
             leading: const Icon(Icons.library_books),
             title: const Text('账本管理'),
             contentPadding: const EdgeInsets.only(left: 48),
-            onTap: () {
-              Navigator.pushNamed(context, AccountRoutes.list);
-            },
+            onTap: () => AccountRoutes.list(context, selectedAccount: UserBloc.currentAccount).push(),
           ),
           ListTile(
             leading: const Icon(Icons.toggle_on_outlined),

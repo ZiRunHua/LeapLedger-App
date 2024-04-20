@@ -34,7 +34,7 @@ class HomeNavigationState extends State<HomeNavigation> {
         navigatorButton(
           account.name,
           icon: Icons.sync_outlined,
-          onTap: () => Navigator.pushNamed(context, AccountRoutes.list),
+          onTap: () => AccountRoutes.list(context, selectedAccount: account).push(),
         ),
         navigatorButton(
           "交易类型",
@@ -52,7 +52,7 @@ class HomeNavigationState extends State<HomeNavigation> {
         navigatorButton(
           "导出账单",
           icon: Icons.download_outlined,
-          onTap: () => Navigator.pushNamed(context, AccountRoutes.list),
+          onTap: () => AccountRoutes.list(context, selectedAccount: account).push(),
         )
       ],
     );

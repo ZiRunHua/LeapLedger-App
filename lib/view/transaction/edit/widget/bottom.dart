@@ -94,8 +94,9 @@ class _BottomState extends State<Bottom> {
         // 账本
         _buildButton(
             onPressed: () async {
-              AccountDetailModel? resule =
-                  await AccountRoutes.showAccountListButtomSheet(context, currentAccount: account);
+              var page = AccountRoutes.list(context, selectedAccount: account);
+              await page.showModalBottomSheet();
+              AccountDetailModel? resule = page.retrunAccount;
               if (resule == null) {
                 return;
               }

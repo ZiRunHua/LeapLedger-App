@@ -2,7 +2,6 @@ part of 'routes.dart';
 
 class AccountRoutes {
   static String baseUrl = 'account';
-  static String list = '$baseUrl/list';
   static String detail = '$baseUrl/detail';
   static String templateList = '$baseUrl/template/list';
   static String userInvitation = '$baseUrl/user/invitation';
@@ -10,7 +9,6 @@ class AccountRoutes {
   static get accountUser => null;
   static void init() {
     Routes.routes.addAll({
-      list: (context) => Routes.buildloginPermissionRoute(context, const AccountList()),
       detail: (context) => const AccountDetail(),
       templateList: (context) => const AccountTemplateList(),
     });
@@ -18,23 +16,6 @@ class AccountRoutes {
 
   static Future<T?> pushNamed<T extends Object?>(BuildContext context, String routeName, {Object? arguments}) {
     return Navigator.of(context).pushNamed<T>(routeName, arguments: arguments);
-  }
-
-  static Future<AccountModel?> showAccountListButtomSheet(
-    BuildContext context, {
-    required AccountModel currentAccount,
-  }) async {
-    AccountModel? result;
-    await showModalBottomSheet(
-      isScrollControlled: true,
-      context: context,
-      builder: (_) => AccountListBottomSheet(currentAccount: currentAccount),
-    ).then((value) {
-      if (value is AccountModel) {
-        result = value;
-      }
-    });
-    return result;
   }
 
   static Future<AccountUserInvitationModle?> pushAccountUserInvitation(
@@ -68,8 +49,10 @@ class AccountRoutes {
   static AccountEditNavigator edit(BuildContext context, {AccountDetailModel? account}) =>
       AccountEditNavigator(context, account: account);
 
-  static AccountListNavigator list(BuildContext context, {required AccountDetailModel account}) =>
-      AccountListNavigator(context, account: account);
+  static AccountListNavigator list(BuildContext context, {AccountDetailModel? selectedAccount}) {
+    selectedAccount ??= UserBloc.currentAccount;
+    return AccountListNavigator(context, selectedAccount: selectedAccount);
+  }
 
   static AccountOperationListNavigator operationList(BuildContext context, {required AccountDetailModel account}) =>
       AccountOperationListNavigator(context, account: account);
@@ -145,14 +128,14 @@ class AccountEditNavigator extends RouterNavigator {
 }
 
 class AccountListNavigator extends RouterNavigator {
-  final AccountDetailModel account;
-  AccountListNavigator(BuildContext context, {required this.account}) : super(context: context);
+  final AccountDetailModel selectedAccount;
+  AccountListNavigator(BuildContext context, {required this.selectedAccount}) : super(context: context);
 
   Future<bool> showModalBottomSheet() async =>
-      await _modalBottomSheetShow(context, AccountListBottomSheet(currentAccount: account));
+      await _modalBottomSheetShow(context, AccountListBottomSheet(currentAccount: selectedAccount));
 
   Future<bool> push() async {
-    return await _push(context, AccountList(account: account));
+    return await _push(context, AccountList(account: selectedAccount));
   }
 
   AccountDetailModel? retrunAccount;
