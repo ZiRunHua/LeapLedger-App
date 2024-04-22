@@ -25,7 +25,7 @@ class AccountMappingCubit extends Cubit<AccountMappingState> {
       if (false == isSuccess) {
         return;
       }
-      mapping == null;
+      mapping = null;
     } else if (mapping == null) {
       var mapping = await AccountApi.createMapping(mainAccountId: mainAccount.id, relatedAccountId: account.id);
       if (mapping == null) {

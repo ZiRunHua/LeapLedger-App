@@ -131,7 +131,7 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
         trailing: data.remark.isEmpty ? "无" : data.remark,
       ),
       Offstage(
-        offstage: TransactionRouterGuard.edit(mode: TransactionEditMode.update, account: widget.account),
+        offstage: false == TransactionRouterGuard.edit(mode: TransactionEditMode.update, account: widget.account),
         child: _buildButtomButtonGroup(),
       )
     ]);

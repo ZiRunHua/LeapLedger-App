@@ -6,7 +6,7 @@ class AmountKeyboard extends StatefulWidget {
   const AmountKeyboard({super.key, required this.onRefresh, required this.onComplete, this.openAgain = true});
 
   final Function(int amount, String input, String history) onRefresh;
-  final Function(int amount, bool isAgain) onComplete;
+  final Function(bool isAgain) onComplete;
   final bool openAgain;
   @override
   State<AmountKeyboard> createState() => _AmountKeyboardState();
@@ -26,6 +26,12 @@ class _AmountKeyboardState extends State<AmountKeyboard> {
   }
 
   initValue() {
+    // amount = widget.initAmount;
+    // input = amount;
+    // inputString = (amount / 100).toString();
+    // history = "";
+    // baseNumber = 100;
+    // operator = "";
     history = "";
     amount = 0;
     input = 0;
@@ -50,7 +56,7 @@ class _AmountKeyboardState extends State<AmountKeyboard> {
             children: [
               _buildButton(const Text("1"), () => onClickNumber(1)),
               _buildButton(const Text("4"), () => onClickNumber(4)),
-              _buildButton(const Text("6"), () => onClickNumber(6)),
+              _buildButton(const Text("7"), () => onClickNumber(7)),
               _buildButton(const Text("."), () => onClickDot())
             ],
           )),
@@ -60,7 +66,7 @@ class _AmountKeyboardState extends State<AmountKeyboard> {
             children: [
               _buildButton(const Text("2"), () => onClickNumber(2)),
               _buildButton(const Text("5"), () => onClickNumber(5)),
-              _buildButton(const Text("7"), () => onClickNumber(7)),
+              _buildButton(const Text("8"), () => onClickNumber(8)),
               _buildButton(const Text("0"), () => onClickNumber(0))
             ],
           )),
@@ -213,9 +219,9 @@ class _AmountKeyboardState extends State<AmountKeyboard> {
         amount += input;
         _transmitRefresh();
       case AmountKeyboardAction.complete:
-        widget.onComplete(amount, false);
+        widget.onComplete(false);
       case AmountKeyboardAction.again:
-        widget.onComplete(amount, true);
+        widget.onComplete(true);
         initValue();
         _transmitRefresh();
 
@@ -256,11 +262,11 @@ class _TextAmountKeyboardState extends State<TextAmountKeyboard> {
           margin: const EdgeInsets.all(Constant.margin),
           alignment: Alignment.centerRight,
           child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-            SameHightAmountTextSpan(
-              amount: amount,
+            Text.rich(AmountTextSpan.sameHeight(
+              amount,
               textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
               dollarSign: true,
-            ),
+            )),
             SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 reverse: true,
@@ -300,5 +306,5 @@ class _TextAmountKeyboardState extends State<TextAmountKeyboard> {
     });
   }
 
-  onComplete(int amount, bool isAgain) {}
+  onComplete(bool isAgain) {}
 }

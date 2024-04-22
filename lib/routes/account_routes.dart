@@ -6,7 +6,6 @@ class AccountRoutes {
   static String templateList = '$baseUrl/template/list';
   static String userInvitation = '$baseUrl/user/invitation';
 
-  static get accountUser => null;
   static void init() {
     Routes.routes.addAll({
       detail: (context) => const AccountDetail(),
@@ -49,9 +48,17 @@ class AccountRoutes {
   static AccountEditNavigator edit(BuildContext context, {AccountDetailModel? account}) =>
       AccountEditNavigator(context, account: account);
 
-  static AccountListNavigator list(BuildContext context, {AccountDetailModel? selectedAccount}) {
-    selectedAccount ??= UserBloc.currentAccount;
+  static AccountListNavigator list(BuildContext context, {required AccountDetailModel selectedAccount}) {
     return AccountListNavigator(context, selectedAccount: selectedAccount);
+  }
+
+  static AccountListNavigator listByCurrentAccount(BuildContext context) {
+    return AccountListNavigator(context, selectedAccount: UserBloc.currentAccount,
+        onSelectedAccount: (AccountDetailModel account) async {
+      var page = AccountRoutes.operationList(context, account: account);
+      await page.showModalBottomSheet();
+      return UserBloc.currentAccount;
+    });
   }
 
   static AccountOperationListNavigator operationList(BuildContext context, {required AccountDetailModel account}) =>
@@ -129,14 +136,30 @@ class AccountEditNavigator extends RouterNavigator {
 
 class AccountListNavigator extends RouterNavigator {
   final AccountDetailModel selectedAccount;
-  AccountListNavigator(BuildContext context, {required this.selectedAccount}) : super(context: context);
+  final SelectAccountCallback? onSelectedAccount;
+  AccountListNavigator(BuildContext context, {required this.selectedAccount, this.onSelectedAccount})
+      : super(context: context);
 
-  Future<bool> showModalBottomSheet() async =>
-      await _modalBottomSheetShow(context, AccountListBottomSheet(currentAccount: selectedAccount));
+  Future<bool> showModalBottomSheet() async => await _modalBottomSheetShow(
+      context,
+      AccountListBottomSheet(
+          selectedAccount: selectedAccount,
+          onSelectedAccount: onSelectedAccount ??
+              (AccountDetailModel account) async {
+                Navigator.pop<AccountDetailModel>(context, account);
+                return account;
+              }));
 
-  Future<bool> push() async {
-    return await _push(context, AccountList(account: selectedAccount));
-  }
+  Future<bool> push() async => await _push(
+        context,
+        AccountList(
+            selectedAccount: selectedAccount,
+            onSelectedAccount: onSelectedAccount ??
+                (AccountDetailModel account) async {
+                  Navigator.pop<AccountDetailModel>(context, account);
+                  return account;
+                }),
+      );
 
   AccountDetailModel? retrunAccount;
   @override

@@ -34,7 +34,11 @@ class _BottomState extends State<Bottom> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           _buildCard(),
-          AmountKeyboard(onRefresh: onRefreshKeyborad, onComplete: onComplete, openAgain: _bloc.canAgain),
+          AmountKeyboard(
+            onRefresh: onRefreshKeyborad,
+            onComplete: onComplete,
+            openAgain: _bloc.canAgain,
+          ),
         ],
       ),
     );
@@ -181,8 +185,7 @@ class _BottomState extends State<Bottom> {
   String keyboradInput = "", keyboradHistory = "";
 
 // 事件
-  void onComplete(int amount, bool isAgain) {
-    _bloc.trans.amount = amount;
+  void onComplete(bool isAgain) {
     _bloc.add(TransactionSave(isAgain));
   }
 

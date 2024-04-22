@@ -17,7 +17,7 @@ class EditBloc extends Bloc<EditEvent, EditState> {
       this.trans = _trans!.editModel;
     } else {
       canAgain = true;
-      this.trans = TransactionEditModel.init();
+      this.trans = TransactionEditModel.init()..accountId = account.id;
     }
     on<EditDataFetch>(_fetchData);
     on<TransactionCategoryFetch>(_fetchTransactionCategory);
@@ -37,6 +37,9 @@ class EditBloc extends Bloc<EditEvent, EditState> {
       () => TransactionCategoryApi.getTree(type: event.type),
       TransactionCategoryApi.dataFormatFunc.getCategoryListByTree,
     );
+    if (trans.categoryId == 0 && list.isNotEmpty) {
+      trans.categoryId = list.first.id;
+    }
     if (event.type == IncomeExpense.expense) {
       emit(ExpenseCategoryPickLoaded(list));
     } else {

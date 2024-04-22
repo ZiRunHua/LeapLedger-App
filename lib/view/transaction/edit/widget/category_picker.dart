@@ -1,10 +1,9 @@
 part of '../transaction_edit.dart';
 
 class CategoryPicker extends StatefulWidget {
-  const CategoryPicker({this.initialVlaue, required this.type, required this.onSave, super.key});
-  final int? initialVlaue;
+  const CategoryPicker({required this.type, super.key});
+
   final IncomeExpense type;
-  final Function(TransactionCategoryModel category) onSave;
   @override
   State<CategoryPicker> createState() => _CategoryPickerState();
 }
@@ -14,18 +13,18 @@ class _CategoryPickerState extends State<CategoryPicker> with AutomaticKeepAlive
   bool get wantKeepAlive => true;
   List<TransactionCategoryModel> categoryList = [];
   bool isNoData = false;
-  int? selected;
+  int? get selected => _bloc.trans.categoryId;
+  late final EditBloc _bloc;
   @override
   void initState() {
+    _bloc = BlocProvider.of<EditBloc>(context);
     fetchData();
-    selected = widget.initialVlaue;
     super.initState();
   }
 
   void fetchData() {
     categoryList = [];
-    selected = null;
-    BlocProvider.of<EditBloc>(context).add(TransactionCategoryFetch(widget.type));
+    _bloc.add(TransactionCategoryFetch(widget.type));
   }
 
   @override
@@ -65,7 +64,7 @@ class _CategoryPickerState extends State<CategoryPicker> with AutomaticKeepAlive
 
   Widget _buildCategoryGridView() {
     return GridView.builder(
-        shrinkWrap: true, // 让网格视图适应内容大小
+        shrinkWrap: true,
         padding: EdgeInsets.zero,
         itemCount: categoryList.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -84,9 +83,7 @@ class _CategoryPickerState extends State<CategoryPicker> with AutomaticKeepAlive
   }
 
   void _onTap(TransactionCategoryModel category) {
-    widget.onSave(category);
-    setState(() {
-      selected = category.id;
-    });
+    _bloc.trans.categoryId = category.id;
+    setState(() {});
   }
 }

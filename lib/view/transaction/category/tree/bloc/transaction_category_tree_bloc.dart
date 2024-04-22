@@ -28,7 +28,7 @@ class TransactionCategoryTreeBloc extends Bloc<TransactionCategoryTreeEvent, Tra
     on<UpdateChildEvent>(_updateChild);
     on<UpdateFatherEvent>(_updateFather);
   }
-  bool get canEdit => false;
+  bool get canEdit => account.isCreator;
 
   _getTree(LoadEvent event, Emitter<TransactionCategoryTreeState> emit) async {
     emit(LoadingState());

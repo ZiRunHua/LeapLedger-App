@@ -127,12 +127,15 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   _updateCurrentInfo(UserCurrentModel data, Emitter<UserState> emit) async {
     var needSaveCache = false;
-    if (false == data.currentAccount.isSame(currentAccount)) {
+    var isUpdateCurrent = data.currentAccount.isValid && data.currentAccount.id == currentAccount.id;
+    if (isUpdateCurrent && false == data.currentAccount.isSame(currentAccount)) {
       UserBloc.currentAccount = data.currentAccount.copy();
       emit(CurrentAccountChanged());
       needSaveCache = true;
     }
-    if (false == data.currentShareAccount.isSame(currentShareAccount)) {
+
+    isUpdateCurrent = data.currentShareAccount.isValid && data.currentShareAccount.id == currentShareAccount.id;
+    if (isUpdateCurrent && false == data.currentShareAccount.isSame(currentShareAccount)) {
       UserBloc.currentShareAccount = data.currentShareAccount.copy();
       emit(CurrentShareAccountChanged());
       needSaveCache = true;

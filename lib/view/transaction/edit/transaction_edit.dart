@@ -77,21 +77,9 @@ class _TransactionEditState extends State<TransactionEdit> {
               tabs: <Widget>[Tab(text: '支 出'), Tab(text: '收 入')],
             ),
           ),
-          body: Expanded(
-              child: TabBarView(
-            children: <Widget>[
-              CategoryPicker(
-                initialVlaue: _bloc.trans.incomeExpense == IncomeExpense.expense ? _bloc.trans.categoryId : null,
-                type: IncomeExpense.expense,
-                onSave: (TransactionCategoryModel category) => selectedCategory = category,
-              ),
-              CategoryPicker(
-                initialVlaue: _bloc.trans.incomeExpense == IncomeExpense.income ? _bloc.trans.categoryId : null,
-                type: IncomeExpense.income,
-                onSave: (TransactionCategoryModel category) => selectedCategory = category,
-              ),
-            ],
-          )),
+          body: const TabBarView(
+            children: <Widget>[CategoryPicker(type: IncomeExpense.expense), CategoryPicker(type: IncomeExpense.income)],
+          ),
           bottomNavigationBar: const Bottom(),
         ));
   }

@@ -1,14 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keepaccount_app/bloc/account/account_bloc.dart';
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/account/model.dart';
-
-import 'widget/enter.dart';
+part of "enter.dart";
 
 class AccountListBottomSheet extends StatefulWidget {
-  const AccountListBottomSheet({required this.currentAccount, super.key});
-  final AccountDetailModel currentAccount;
+  const AccountListBottomSheet({required this.selectedAccount, this.onSelectedAccount, super.key});
+  final AccountDetailModel selectedAccount;
+  final SelectAccountCallback? onSelectedAccount;
   @override
   State<AccountListBottomSheet> createState() => _AccountListBottomSheetState();
 }
@@ -20,7 +15,7 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
   @override
   void initState() {
     BlocProvider.of<AccountBloc>(context).add(AccountListFetchEvent());
-    currentAccount = widget.currentAccount;
+    currentAccount = widget.selectedAccount;
     super.initState();
   }
 
@@ -79,9 +74,7 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
                       Visibility(visible: account.type == AccountType.share, child: const ShareLabel()),
                     ]),
                     contentPadding: const EdgeInsets.symmetric(vertical: Constant.margin),
-                    onTap: () {
-                      onUpdateAccount(account);
-                    },
+                    onTap: () => onSelectedAccount(account),
                   );
                 },
                 separatorBuilder: (BuildContext context, int index) {
@@ -96,7 +89,8 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
     );
   }
 
-  void onUpdateAccount(AccountDetailModel account) {
-    Navigator.pop<AccountDetailModel>(context, account);
+  void onSelectedAccount(AccountDetailModel account) {
+    if (widget.onSelectedAccount == null) return;
+    widget.onSelectedAccount!(account);
   }
 }

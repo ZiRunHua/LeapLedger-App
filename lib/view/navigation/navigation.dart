@@ -55,7 +55,7 @@ class _NavigationState extends State<Navigation> {
                 } else if (state is InFlowPage) {
                   var condition = TransactionQueryConditionApiModel(
                       accountId: _bloc.account.id, startTime: Time.getFirstSecondOfMonth(), endTime: DateTime.now());
-                  TransactionRoutes.pushFlow(context, condition: condition, account: UserBloc.currentAccount);
+                  TransactionRoutes.pushFlow(context, condition: condition, account: _bloc.account);
                 }
               },
             )
