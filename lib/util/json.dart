@@ -2,19 +2,19 @@ part of 'enter.dart';
 
 class Json {
   static DateTime dateTimeFromJson(dynamic timestamp) {
-    return DateTime.fromMillisecondsSinceEpoch(timestamp != null ? timestamp * 1000 + 28800000 : 0);
+    return DateTime.fromMillisecondsSinceEpoch(timestamp != null ? timestamp * 1000 : 0);
   }
 
   static int dateTimeToJson(DateTime? dateTime) {
-    return dateTime != null ? dateTime.millisecondsSinceEpoch ~/ 1000 - 28800 : 0;
+    return dateTime != null ? dateTime.millisecondsSinceEpoch ~/ 1000 : 0;
   }
 
   static DateTime? optionDateTimeFromJson(dynamic timestamp) {
-    return timestamp != null ? DateTime.fromMillisecondsSinceEpoch(timestamp * 1000 + 28800000) : null;
+    return timestamp != null ? DateTime.fromMillisecondsSinceEpoch(timestamp * 1000) : null;
   }
 
   static int? optionDateTimeToJson(DateTime? dateTime) {
-    return dateTime != null ? dateTime.millisecondsSinceEpoch ~/ 1000 - 28800 : null;
+    return dateTime != null ? dateTime.millisecondsSinceEpoch ~/ 1000 : null;
   }
 
   static const _defaultIconData = Icons.payment_outlined;
