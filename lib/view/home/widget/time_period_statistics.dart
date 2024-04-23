@@ -90,27 +90,23 @@ class _TimePeriodStatisticsState extends State<TimePeriodStatistics> {
             leading: Icon(
               icon,
               size: 30,
-              color: Colors.blueAccent,
+              color: ConstantColor.primaryColor,
             ),
             title: Text(
               title,
-              style: const TextStyle(
-                fontSize: ConstantFontSize.headline,
-              ),
+              style: const TextStyle(fontSize: ConstantFontSize.headline),
             ),
             subtitle: Text(
               date,
-              style: TextStyle(
-                fontSize: ConstantFontSize.bodySmall,
-                color: Colors.grey.shade600,
-              ),
+              style: const TextStyle(fontSize: ConstantFontSize.bodySmall, color: ConstantColor.greyText),
             ),
             trailing: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildEndAmount(name: "总支出", color: ConstantColor.expenseAmount, amount: data.expense.amount),
-                _buildEndAmount(name: "总收入", color: ConstantColor.incomeAmount, amount: data.income.amount),
+                _buildEndAmount(name: "支", color: ConstantColor.expenseAmount, amount: data.expense.amount),
+                _buildEndAmount(name: "收", color: ConstantColor.incomeAmount, amount: data.income.amount),
               ],
             ),
           ),
@@ -122,18 +118,16 @@ class _TimePeriodStatisticsState extends State<TimePeriodStatistics> {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Text(
-          name,
-          style: TextStyle(
-            fontSize: ConstantFontSize.bodySmall,
-            color: Colors.grey.shade500,
-          ),
+        Text.rich(
+          AmountTextSpan.sameHeight(amount,
+              textStyle: TextStyle(
+                fontSize: ConstantFontSize.bodySmall,
+                fontWeight: FontWeight.normal,
+                color: color,
+              )),
         ),
         const SizedBox(width: Constant.margin / 2),
-        UnequalHeightAmountTextSpan(
-          amount: amount,
-          textStyle: TextStyle(fontSize: ConstantFontSize.headline, fontWeight: FontWeight.normal, color: color),
-        ),
+        Text(name, style: const TextStyle(color: ConstantColor.greyText)),
       ],
     );
   }

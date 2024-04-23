@@ -98,7 +98,14 @@ class _ShareHomeState extends State<ShareHome> {
                     monthTransTotal: IncomeExpenseStatisticApiModel());
               }
             })),
-        _buildOperationalNavigation(),
+        Padding(
+          padding: const EdgeInsets.all(Constant.margin),
+          child: SizedBox(
+            height: 48,
+            width: MediaQuery.of(context).size.width,
+            child: _buildOperationalNavigation(),
+          ),
+        ),
         const AccountUserCard(),
         const AccountTransList()
       ],
@@ -106,31 +113,29 @@ class _ShareHomeState extends State<ShareHome> {
   }
 
   _buildOperationalNavigation() {
-    return Row(
+    return ListView(
+      scrollDirection: Axis.horizontal,
       children: [
-        Expanded(
-          child: BlocBuilder<ShareHomeBloc, ShareHomeState>(
-            buildWhen: (_, state) => state is AccountMappingLoad,
-            builder: (context, state) {
-              if (state is AccountMappingLoad && state.mapping != null) {
-                // 存在关联账本
-                return _buildNavigationCard(
-                    text: state.mapping!.relatedAccount.name,
-                    icon: state.mapping!.relatedAccount.icon,
-                    onTap: _clickMapping);
-              }
-              if (ShareHomeBloc.account != null && ShareHomeBloc.account!.isReader) {
-                // 只读权限
-                return _buildNavigationCard(
-                    text: ShareHomeBloc.account!.name, icon: Icons.receipt_long_outlined, onTap: _clickMapping);
-              }
-              // 未设置关联账本或正在加载中
-              return _buildNavigationCard(text: "关联账本", icon: Icons.receipt_long_outlined, onTap: _clickMapping);
-            },
-          ),
+        BlocBuilder<ShareHomeBloc, ShareHomeState>(
+          buildWhen: (_, state) => state is AccountMappingLoad,
+          builder: (context, state) {
+            if (state is AccountMappingLoad && state.mapping != null) {
+              // 存在关联账本
+              return _buildNavigationCard(
+                  text: state.mapping!.relatedAccount.name,
+                  icon: state.mapping!.relatedAccount.icon,
+                  onTap: _clickMapping);
+            }
+            if (ShareHomeBloc.account != null && ShareHomeBloc.account!.isReader) {
+              // 只读权限
+              return _buildNavigationCard(
+                  text: ShareHomeBloc.account!.name, icon: Icons.receipt_long_outlined, onTap: _clickMapping);
+            }
+            // 未设置关联账本或正在加载中
+            return _buildNavigationCard(text: "关联账本", icon: Icons.receipt_long_outlined, onTap: _clickMapping);
+          },
         ),
-        Expanded(
-            child: _buildNavigationCard(
+        _buildNavigationCard(
           text: "交易类型",
           icon: Icons.settings_outlined,
           onTap: () {
@@ -140,15 +145,13 @@ class _ShareHomeState extends State<ShareHome> {
                   .pushTree();
             }
           },
-        )),
-        Expanded(
-          child: _buildNavigationCard(
-              text: "邀请",
-              icon: Icons.send_outlined,
-              onTap: () async {
-                await AccountRoutes.pushAccountUserInvitation(context, account: ShareHomeBloc.account!);
-              }),
-        )
+        ),
+        _buildNavigationCard(
+            text: "邀请",
+            icon: Icons.send_outlined,
+            onTap: () async {
+              await AccountRoutes.pushAccountUserInvitation(context, account: ShareHomeBloc.account!);
+            })
       ],
     );
   }
@@ -167,35 +170,63 @@ class _ShareHomeState extends State<ShareHome> {
     }
   }
 
-  _buildNavigationCard({required String text, required IconData icon, VoidCallback? onTap}) {
-    return Padding(
-      padding: const EdgeInsets.all(Constant.margin),
-      child: GestureDetector(
-        onTap: onTap,
-        child: AspectRatio(
-          aspectRatio: 2,
-          child: DecoratedBox(
-            decoration: const BoxDecoration(color: Colors.white, borderRadius: ConstantDecoration.borderRadius),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  icon,
-                  color: ConstantColor.primaryColor,
-                ),
-                const SizedBox(
-                  width: Constant.margin,
-                ),
-                Text(
-                  text,
-                  style: const TextStyle(fontSize: ConstantFontSize.bodyLarge),
-                )
-              ],
-            ),
+  Widget navigatorButton(String text, {String? subTitle, IconData? icon, VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+          margin: const EdgeInsets.only(left: Constant.margin / 2, right: Constant.margin / 2),
+          padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(90)),
           ),
-        ),
-      ),
+          alignment: Alignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                color: ConstantColor.primaryColor,
+                size: 24,
+              ),
+              const SizedBox(
+                width: Constant.margin / 2,
+              ),
+              Text(text),
+            ],
+          )),
+    );
+  }
+
+  _buildNavigationCard({required String text, required IconData icon, VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+          margin: const EdgeInsets.only(left: Constant.margin / 2, right: Constant.margin / 2),
+          padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(90)),
+          ),
+          alignment: Alignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                color: ConstantColor.primaryColor,
+                size: 24,
+              ),
+              const SizedBox(
+                width: Constant.margin / 2,
+              ),
+              Text(text),
+            ],
+          )),
     );
   }
 }

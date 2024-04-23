@@ -35,7 +35,7 @@ class TransactionCategoryTreeBloc extends Bloc<TransactionCategoryTreeEvent, Tra
 
     List<MapEntry<TransactionCategoryFatherModel, List<TransactionCategoryModel>>> list;
     list = await ApiServer.getData(
-      () => TransactionCategoryApi.getTree(type: event.incomeExpense),
+      () => TransactionCategoryApi.getTree(accountId: account.id, type: event.incomeExpense),
       TransactionCategoryApi.dataFormatFunc.getTreeDataToList,
     );
 

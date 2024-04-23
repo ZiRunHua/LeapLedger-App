@@ -31,7 +31,7 @@ class FlowConditionBloc extends Bloc<FlowConditionEvent, FlowConditionState> {
     var accountId = event.accountId ?? condition.accountId;
     if (_categoryCache[accountId] == null) {
       _categoryCache[accountId] = await ApiServer.getData(
-        () => TransactionCategoryApi.getTree(),
+        () => TransactionCategoryApi.getTree(accountId: accountId),
         TransactionCategoryApi.dataFormatFunc.getTreeDataToList,
       );
     }

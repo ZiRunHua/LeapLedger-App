@@ -34,7 +34,7 @@ class EditBloc extends Bloc<EditEvent, EditState> {
   _fetchTransactionCategory(TransactionCategoryFetch event, emit) async {
     List<TransactionCategoryModel> list;
     list = await ApiServer.getData(
-      () => TransactionCategoryApi.getTree(type: event.type),
+      () => TransactionCategoryApi.getTree(accountId: account.id, type: event.type),
       TransactionCategoryApi.dataFormatFunc.getCategoryListByTree,
     );
     if (trans.categoryId == 0 && list.isNotEmpty) {

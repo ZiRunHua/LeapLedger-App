@@ -58,41 +58,36 @@ class _UserDrawerHeaderState extends State<UserDrawerHeader> {
   }
 
   Widget buildUsername(BuildContext context) {
-    return GestureDetector(
-        onTap: () {
-          onSubmit(String value) {
-            UserInfoUpdateModel model = UserInfoUpdateModel();
-            model.username = value;
-            BlocProvider.of<UserBloc>(context).add(UserInfoUpdateEvent(model));
-          }
+    return FittedBox(
+        fit: BoxFit.scaleDown,
+        child: GestureDetector(
+            onTap: () {
+              onSubmit(String? value) {
+                UserInfoUpdateModel model = UserInfoUpdateModel();
+                model.username = value;
+                BlocProvider.of<UserBloc>(context).add(UserInfoUpdateEvent(model));
+              }
 
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return EditDialog("编辑昵称", null, UserBloc.user.username, onSubmit);
-              });
-        },
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              UserBloc.user.username,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(
-              width: 5,
-            ),
-            const Icon(
-              Icons.edit_calendar,
-              color: Colors.white,
-              size: 18,
-            ),
-          ],
-        ));
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return CommonDialog.editOne<String>(context,
+                        fieldName: "编辑昵称", initValue: UserBloc.user.username, onSave: onSubmit);
+                  });
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  UserBloc.user.username,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              ],
+            )));
   }
 }

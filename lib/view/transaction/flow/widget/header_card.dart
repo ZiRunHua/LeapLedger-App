@@ -112,11 +112,11 @@ class _HeaderCardState extends State<HeaderCard> {
         title,
         style: const TextStyle(color: Colors.black54, fontSize: 14),
       ),
-      SameHightAmount(
-        amount: amount,
-        textStyle: const TextStyle(color: Colors.black87, fontSize: 20),
+      Text.rich(AmountTextSpan.sameHeight(
+        amount,
+        textStyle: const TextStyle(color: Colors.black87, fontSize: ConstantFontSize.bodyLarge),
         dollarSign: true,
-      )
+      ))
     ]);
   }
 

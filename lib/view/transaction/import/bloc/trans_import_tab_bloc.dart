@@ -11,14 +11,14 @@ class TransImportTabBloc extends Bloc<TransImportTabEvent, TransImportTabState> 
   loadTab(TransImportTabLoadedEvent event, Emitter<TransImportTabState> emit) async {
     List<MapEntry<TransactionCategoryFatherModel, List<TransactionCategoryModel>>> expenseTree =
         await ApiServer.getData(
-      () => TransactionCategoryApi.getTree(type: IncomeExpense.expense),
+      () => TransactionCategoryApi.getTree(accountId: account.id, type: IncomeExpense.expense),
       TransactionCategoryApi.dataFormatFunc.getTreeDataToList,
     );
     for (var element in expenseTree) {
       _tree.add(element);
     }
     List<MapEntry<TransactionCategoryFatherModel, List<TransactionCategoryModel>>> incomeTree = await ApiServer.getData(
-      () => TransactionCategoryApi.getTree(type: IncomeExpense.income),
+      () => TransactionCategoryApi.getTree(accountId: account.id, type: IncomeExpense.income),
       TransactionCategoryApi.dataFormatFunc.getTreeDataToList,
     );
     for (var element in incomeTree) {
