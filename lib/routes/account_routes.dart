@@ -64,6 +64,9 @@ class AccountRoutes {
   static AccountOperationListNavigator operationList(BuildContext context, {required AccountDetailModel account}) =>
       AccountOperationListNavigator(context, account: account);
 
+  static AccountUserConfigNavigator userConfig(BuildContext context, {required AccountDetailModel accoount}) =>
+      AccountUserConfigNavigator(context, account: accoount);
+
   static AccountUserEditNavigator userEdit(
     BuildContext context, {
     required AccountUserModel accountUser,
@@ -259,4 +262,11 @@ class AccountMappingNavigator extends RouterNavigator {
           onMappingChange: onMappingChange,
         ));
   }
+}
+
+class AccountUserConfigNavigator extends RouterNavigator {
+  final AccountDetailModel account;
+  AccountUserConfigNavigator(BuildContext context, {required this.account}) : super(context: context);
+
+  Future<bool> showDialog() async => await _showDialog(context, AccountUserConfigDialog(account: account));
 }

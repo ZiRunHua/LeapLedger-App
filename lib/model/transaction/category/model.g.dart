@@ -15,11 +15,11 @@ TransactionCategoryModel _$TransactionCategoryModelFromJson(
       incomeExpense:
           $enumDecodeNullable(_$IncomeExpenseEnumMap, json['IncomeExpense']) ??
               IncomeExpense.income,
+      createdAt: Json.dateTimeFromJson(json['CreatedAt']),
+      updatedAt: Json.dateTimeFromJson(json['UpdatedAt']),
     )
       ..fatherId = json['FatherId'] as int? ?? 0
-      ..accountId = json['AccountId'] as int? ?? 0
-      ..createdAt = Json.dateTimeFromJson(json['CreatedAt'])
-      ..updatedAt = Json.dateTimeFromJson(json['UpdatedAt']);
+      ..accountId = json['AccountId'] as int? ?? 0;
 
 Map<String, dynamic> _$TransactionCategoryModelToJson(
         TransactionCategoryModel instance) =>

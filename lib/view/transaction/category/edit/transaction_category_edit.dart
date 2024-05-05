@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keepaccount_app/bloc/transaction/category/transaction_category_bloc.dart';
+import 'package:keepaccount_app/model/account/model.dart';
 import 'package:keepaccount_app/model/transaction/category/model.dart';
 import 'package:keepaccount_app/widget/form/form.dart';
 
 class TransactionCategoryEdit extends StatelessWidget {
+  final AccountDetailModel account;
   final TransactionCategoryModel? transactionCategory;
 
-  const TransactionCategoryEdit({super.key, this.transactionCategory});
+  const TransactionCategoryEdit({super.key, this.transactionCategory, required this.account});
 
   @override
   Widget build(BuildContext context) {
@@ -93,14 +95,5 @@ class _EditFormState extends State<_EditForm> {
     setState(() {
       widget.transactionCategory.icon = selectValue;
     });
-  }
-}
-
-class TestTransactionCategoryEdit extends StatelessWidget {
-  const TestTransactionCategoryEdit({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return TransactionCategoryEdit(transactionCategory: TransactionCategoryModel.fromJson({}));
   }
 }

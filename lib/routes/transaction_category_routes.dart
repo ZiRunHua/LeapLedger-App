@@ -4,26 +4,10 @@ class TransactionCategoryRoutes {
   static const String _base = 'transactionCategory';
   static String edit = '$_base/edit';
   static String mapping = '$_base/mapping';
-  static void init() {
-    Routes.routes[edit] = (context) => TransactionCategoryEdit(
-        transactionCategory: Routes.argument<TransactionCategoryModel>(context, 'transactionCategory'));
-  }
-
-  @Deprecated("改用global下的NoData.categoryText")
-  static RichText getNoDataRichText(BuildContext context) {
-    return RichText(
-      textScaler: MediaQuery.of(context).textScaler,
-      textAlign: TextAlign.center,
-      text: const TextSpan(
-        children: [
-          TextSpan(
-              text: '交易类型未设置!\n\n',
-              style: TextStyle(
-                color: Colors.black,
-              )),
-        ],
-      ),
-    );
+  static void init() {}
+  static TransactionCategoryEditNavigator editNavigator(BuildContext context,
+      {required AccountDetailModel account, required TransactionCategoryModel transactionCategory}) {
+    return TransactionCategoryEditNavigator(context, transactionCategory: transactionCategory, account: account);
   }
 
   static TransactionCategoryFatherEditNavigator fatherEditNavigator(BuildContext context,
@@ -69,7 +53,6 @@ class TransactionCategoryRoutes {
 }
 
 class TransactionCategoryRouterGuard {
-  /// [TransactionCategoryFatherEditNavigator]的鉴权方法
   static bool edit({required AccountDetailModel account}) {
     return account.isCreator;
   }
@@ -90,6 +73,26 @@ class TransactionCategoryRouterGuard {
   }) {
     return !account.isReader;
   }
+}
+
+class TransactionCategoryEditNavigator extends RouterNavigator {
+  final AccountDetailModel account;
+  final TransactionCategoryModel transactionCategory;
+  TransactionCategoryEditNavigator(BuildContext context, {required this.account, required this.transactionCategory})
+      : super(context: context);
+
+  @override
+  bool get guard => TransactionCategoryRouterGuard.edit(account: account);
+  Future<bool> push() async {
+    return await _push(context, TransactionCategoryEdit(account: account, transactionCategory: transactionCategory));
+  }
+
+  @override
+  _then(value) {
+    result = value is TransactionCategoryModel && value.isValid ? value : null;
+  }
+
+  TransactionCategoryModel? result;
 }
 
 class TransactionCategoryFatherEditNavigator extends RouterNavigator {

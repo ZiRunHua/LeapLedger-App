@@ -284,3 +284,76 @@ class AccountMappingModel {
 
   Map<String, dynamic> toJson() => _$AccountMappingModelToJson(this);
 }
+
+@JsonSerializable(fieldRename: FieldRename.pascal)
+class AccountUserConfigModel {
+  int id;
+  int userId;
+  int accountId;
+  AccountUserTransConfigModel trans;
+  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  DateTime updateTime;
+  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  DateTime createTime;
+
+  AccountUserConfigModel({
+    required this.id,
+    required this.userId,
+    required this.accountId,
+    required this.trans,
+    required this.updateTime,
+    required this.createTime,
+  });
+
+  AccountUserConfigModel copyWith({
+    int? id,
+    int? userId,
+    int? accountId,
+    AccountUserTransConfigModel? trans,
+    DateTime? updateTime,
+    DateTime? createTime,
+  }) =>
+      AccountUserConfigModel(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        accountId: accountId ?? this.accountId,
+        trans: trans ?? this.trans,
+        updateTime: updateTime ?? this.updateTime,
+        createTime: createTime ?? this.createTime,
+      );
+
+  factory AccountUserConfigModel.fromJson(Map<String, dynamic> json) => _$AccountUserConfigModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AccountUserConfigModelToJson(this);
+
+  List<StatusFlagModel> getFlagList() {
+    return trans.getFlagList();
+  }
+}
+
+@JsonSerializable(fieldRename: FieldRename.pascal)
+class AccountUserTransConfigModel {
+  bool syncMappingAccount;
+
+  AccountUserTransConfigModel({
+    required this.syncMappingAccount,
+  });
+
+  AccountUserTransConfigModel copyWith({
+    bool? syncMappingAccount,
+  }) =>
+      AccountUserTransConfigModel(
+        syncMappingAccount: syncMappingAccount ?? this.syncMappingAccount,
+      );
+
+  factory AccountUserTransConfigModel.fromJson(Map<String, dynamic> json) =>
+      _$AccountUserTransConfigModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AccountUserTransConfigModelToJson(this);
+
+  List<StatusFlagModel> getFlagList() {
+    return [
+      StatusFlagModel(name: "同步至关联账本", flagName: "SyncMappingAccount", status: syncMappingAccount),
+    ];
+  }
+}

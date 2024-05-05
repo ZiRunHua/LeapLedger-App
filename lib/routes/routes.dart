@@ -18,6 +18,7 @@ import 'package:keepaccount_app/view/account/list/enter.dart';
 import 'package:keepaccount_app/view/account/mapping/account_mapping_bottom_sheet.dart';
 import 'package:keepaccount_app/view/account/operation/account_operation_bottom_sheet.dart';
 import 'package:keepaccount_app/view/account/template/list/account_template_list.dart';
+import 'package:keepaccount_app/view/account/user/config/account_user_config_dialog.dart';
 import 'package:keepaccount_app/view/account/user/detail/account_user_detail_buttom_sheet.dart';
 import 'package:keepaccount_app/view/account/user/edit/user_detail_edit.dart';
 import 'package:keepaccount_app/view/account/user/invitation/account_user_invitation.dart';
@@ -40,6 +41,7 @@ import 'package:keepaccount_app/view/user/password/update/user_password_update.d
 import 'package:keepaccount_app/view/user/register/user_register.dart';
 import 'package:keepaccount_app/view/user/forgetPassword/user_forgetPassword.dart';
 import 'package:keepaccount_app/view/user/search/user_search.dart';
+import 'package:keepaccount_app/widget/common/common.dart';
 
 part "animation.dart";
 part 'account_routes.dart';
@@ -119,6 +121,7 @@ class RouterNavigator {
   bool get guard => true;
   Future<bool> _push(BuildContext context, Widget page) async {
     if (false == guard) {
+      CommonToast.tipToast("无权访问");
       return false;
     }
     await Navigator.push(

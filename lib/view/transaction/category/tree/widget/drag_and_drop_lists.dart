@@ -92,17 +92,16 @@ class _DragAndDropListsState extends State<_DragAndDropLists> with AutomaticKeep
           Text("新建子类型", style: TextStyle(fontSize: ConstantFontSize.body, color: ConstantColor.greyText))
         ],
       ),
-      onPressed: () {
-        //添加子类型
-        Navigator.of(context).pushNamed(TransactionCategoryRoutes.edit, arguments: {
-          'transactionCategory': TransactionCategoryModel.fromJson({})
-            ..fatherId = father.id
-            ..incomeExpense = father.incomeExpense
-        }).then((value) {
-          if (value is TransactionCategoryModel && value.id > 0) {
-            _bloc.add(AddChildEvent(value));
-          }
-        });
+      onPressed: () async {
+        var page = TransactionCategoryRoutes.editNavigator(
+          context,
+          account: _bloc.account,
+          transactionCategory: TransactionCategoryModel.toAdd(father),
+        );
+        await page.push();
+        if (page.result != null) {
+          _bloc.add(AddChildEvent(page.result!));
+        }
       },
     ));
   }
@@ -147,14 +146,12 @@ class _DragAndDropListsState extends State<_DragAndDropLists> with AutomaticKeep
     }
   }
 
-  _updateChild(TransactionCategoryModel child) {
-    //编辑
-    Navigator.pushNamed(context, TransactionCategoryRoutes.edit, arguments: {'transactionCategory': child})
-        .then((value) {
-      if (value is TransactionCategoryModel) {
-        _bloc.add(UpdateChildEvent(value));
-      }
-    });
+  _updateChild(TransactionCategoryModel child) async {
+    var page = TransactionCategoryRoutes.editNavigator(context, account: _bloc.account, transactionCategory: child);
+    await page.push();
+    if (page.result != null) {
+      _bloc.add(UpdateChildEvent(page.result!));
+    }
   }
 
   _deleteFather(TransactionCategoryFatherModel fahter) {

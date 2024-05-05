@@ -142,6 +142,41 @@ Map<String, dynamic> _$AccountMappingModelToJson(
       'CreateTime': Json.dateTimeToJson(instance.createTime),
     };
 
+AccountUserConfigModel _$AccountUserConfigModelFromJson(
+        Map<String, dynamic> json) =>
+    AccountUserConfigModel(
+      id: json['Id'] as int,
+      userId: json['UserId'] as int,
+      accountId: json['AccountId'] as int,
+      trans: AccountUserTransConfigModel.fromJson(
+          json['Trans'] as Map<String, dynamic>),
+      updateTime: Json.dateTimeFromJson(json['UpdateTime']),
+      createTime: Json.dateTimeFromJson(json['CreateTime']),
+    );
+
+Map<String, dynamic> _$AccountUserConfigModelToJson(
+        AccountUserConfigModel instance) =>
+    <String, dynamic>{
+      'Id': instance.id,
+      'UserId': instance.userId,
+      'AccountId': instance.accountId,
+      'Trans': instance.trans,
+      'UpdateTime': Json.dateTimeToJson(instance.updateTime),
+      'CreateTime': Json.dateTimeToJson(instance.createTime),
+    };
+
+AccountUserTransConfigModel _$AccountUserTransConfigModelFromJson(
+        Map<String, dynamic> json) =>
+    AccountUserTransConfigModel(
+      syncMappingAccount: json['SyncMappingAccount'] as bool,
+    );
+
+Map<String, dynamic> _$AccountUserTransConfigModelToJson(
+        AccountUserTransConfigModel instance) =>
+    <String, dynamic>{
+      'SyncMappingAccount': instance.syncMappingAccount,
+    };
+
 AccountTemplateModel _$AccountTemplateModelFromJson(
         Map<String, dynamic> json) =>
     AccountTemplateModel()

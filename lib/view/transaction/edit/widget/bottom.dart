@@ -90,37 +90,49 @@ class _BottomState extends State<Bottom> {
 
   Widget _buildButtonGroup() {
     return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // 日期
-        _buildDateButton(),
-        // 账本
-        _buildButton(
-            onPressed: () async {
-              var page = AccountRoutes.list(context, selectedAccount: account);
-              await page.showModalBottomSheet();
-              AccountDetailModel? resule = page.retrunAccount;
-              if (resule == null) {
-                return;
-              }
-              _bloc.add(AccountChange(resule));
-            },
-            name: account.name),
-        _buildButton(
-            onPressed: () async {
-              await showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return CommonDialog.editOne<String>(
-                      context,
-                      fieldName: "备注",
-                      onSave: (String? value) => _bloc.trans.remark = value ?? "",
-                      initValue: _bloc.trans.remark,
-                    );
-                  });
-            },
-            name: "备注"),
+        GestureDetector(
+          onTap: () async {
+            var page = AccountRoutes.userConfig(context, accoount: account);
+            await page.showDialog();
+          },
+          child: const Icon(Icons.more_vert_outlined),
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            // 日期
+            _buildDateButton(),
+            // 账本
+            _buildButton(
+                onPressed: () async {
+                  var page = AccountRoutes.list(context, selectedAccount: account);
+                  await page.showModalBottomSheet();
+                  AccountDetailModel? resule = page.retrunAccount;
+                  if (resule == null) {
+                    return;
+                  }
+                  _bloc.add(AccountChange(resule));
+                },
+                name: account.name),
+            _buildButton(
+                onPressed: () async {
+                  await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return CommonDialog.editOne<String>(
+                          context,
+                          fieldName: "备注",
+                          onSave: (String? value) => _bloc.trans.remark = value ?? "",
+                          initValue: _bloc.trans.remark,
+                        );
+                      });
+                },
+                name: "备注"),
+          ],
+        )
       ],
     );
   }

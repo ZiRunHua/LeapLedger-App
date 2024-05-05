@@ -17,15 +17,15 @@ class Json {
     return dateTime != null ? dateTime.millisecondsSinceEpoch ~/ 1000 : null;
   }
 
-  static const _defaultIconData = Icons.payment_outlined;
+  static const defaultIconData = Icons.payment_outlined;
 
   static final Map<IconData, String> _reverseIconMap =
       Map.fromEntries(_iconMap.entries.map((entry) => MapEntry(entry.value, entry.key)));
   static IconData iconDataFormJson(dynamic iconString) {
     if (iconString == null) {
-      return _defaultIconData;
+      return defaultIconData;
     }
-    return _iconMap[iconString] ?? _defaultIconData;
+    return _iconMap[iconString] ?? defaultIconData;
   }
 
   static String iconDataToJson(IconData icon) {
