@@ -48,7 +48,7 @@ class _EditFormState extends State<_EditForm> {
               actions: <Widget>[
                 IconButton(
                   icon: const Icon(
-                    Icons.save,
+                    Icons.save_outlined,
                     size: 24,
                   ),
                   onPressed: () => BlocProvider.of<TransactionCategoryBloc>(context)

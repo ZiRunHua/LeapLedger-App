@@ -14,9 +14,10 @@ class TransactionCategoryModel extends BaseTransactionCategoryModel {
     required super.id,
     required super.name,
     required super.icon,
+    required this.fatherId,
+    required this.accountId,
     required super.incomeExpense,
     required this.createdAt,
-    required,
     required this.updatedAt,
   });
   factory TransactionCategoryModel.fromJson(Map<String, dynamic> json) => _$TransactionCategoryModelFromJson(json);
@@ -27,6 +28,8 @@ class TransactionCategoryModel extends BaseTransactionCategoryModel {
           id: 0,
           name: "",
           icon: Json.defaultIconData,
+          accountId: father.accountId,
+          fatherId: father.id,
           incomeExpense: father.incomeExpense,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
