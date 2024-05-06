@@ -1,8 +1,23 @@
 import 'dart:collection';
 import 'dart:core';
 import 'dart:io';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:uuid/uuid.dart';
+
 import 'package:dio/dio.dart'
-    show Dio, BaseOptions, Options, Response, InterceptorsWrapper, DioException, FormData, MultipartFile;
+    show
+        Dio,
+        BaseOptions,
+        Options,
+        Response,
+        InterceptorsWrapper,
+        DioException,
+        FormData,
+        MultipartFile,
+        RequestOptions;
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
+
 import 'package:keepaccount_app/api/model/model.dart';
 import 'package:keepaccount_app/bloc/user/user_bloc.dart';
 import 'package:keepaccount_app/common/current.dart';
@@ -33,6 +48,7 @@ enum Method {
 const String pubilcBaseUrl = '/public';
 
 class ApiServer {
+  static const _uuid = Uuid();
   static Dio dio = Dio(BaseOptions(
     baseUrl: Global.config.server.network.address,
     headers: {'Content-Type': 'application/json', 'User-Agent': Current.peratingSystem},
@@ -42,7 +58,19 @@ class ApiServer {
         options.headers[HttpHeaders.authorizationHeader] = UserBloc.token;
         return handler.next(options); // 必须调用 next 方法，否则请求不会继续
       },
-    ));
+    ))
+    ..interceptors.add(
+      DioCacheInterceptor(
+        options: CacheOptions(
+          keyBuilder: (RequestOptions request) {
+            return _uuid.v5(Uuid.NAMESPACE_URL, request.uri.toString() + request.queryParameters.toString());
+          },
+          store: HiveCacheStore(Global.tempDirectory.path),
+          policy: CachePolicy.forceCache,
+        ),
+      ),
+    )
+    ..interceptors.add(PrettyDioLogger());
   static Future<Response?> _issueRequest(Method method, String path, Object? data, Options options) async {
     Response response;
     try {
@@ -74,7 +102,6 @@ class ApiServer {
 
   static Future<ResponseBody> request(Method method, String path, {Object? data, Map<String, dynamic>? header}) async {
     Options options = Options(headers: header ?? {});
-    print({method, path, data});
     Response? response = await _issueRequest(method, path, data, options);
     //处理响应
     if (response == null || response.statusCode == null) {
@@ -114,7 +141,6 @@ class ApiServer {
       responseBody = ResponseBody(response.data, isSuccess: false);
     }
     Toast.error(message: errorMsg ?? responseBody.msg);
-    print({"error", response});
     return responseBody;
   }
 }
@@ -124,7 +150,6 @@ class ResponseBody {
   late Map<String, dynamic> data;
   late bool isSuccess;
   ResponseBody(dynamic body, {this.isSuccess = true}) {
-    print(body);
     if (body != null) {
       if (body is Map<String, dynamic>) {
         msg = body['Msg'] ?? '';

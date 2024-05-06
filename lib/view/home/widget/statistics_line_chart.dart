@@ -35,6 +35,9 @@ class _StatisticsLineChartState extends State<StatisticsLineChart> {
   }
 
   Widget _buildLineChart(List<DayAmountStatisticApiModel> data) {
+    if (data.isEmpty) {
+      return const SizedBox();
+    }
     return LineChart(
       LineChartData(
         lineTouchData: LineTouchData(

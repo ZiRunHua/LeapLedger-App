@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:keepaccount_app/config/config.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:keepaccount_app/model/account/model.dart';
 import 'package:keepaccount_app/routes/routes.dart';
 import 'package:keepaccount_app/util/enter.dart';
+import 'package:path_provider/path_provider.dart';
 
 part 'constant.dart';
 part 'no_data.dart';
@@ -18,9 +21,14 @@ class Global {
   static OverlayEntry? overlayEntry;
   // 是否为release版
   static bool get isRelease => const bool.fromEnvironment("dart.vm.product");
+  static late final Directory tempDirectory;
+
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
     config.init();
+    getTemporaryDirectory().then((dir) {
+      tempDirectory = dir;
+    });
   }
 
   static void showOverlayLoader() {
