@@ -40,7 +40,7 @@ class ShareHomeBloc extends Bloc<ShareHomeEvent, ShareHomeState> {
       account = null;
       emit(NoShareAccount());
       return;
-    } else if (account == null && accountList.lastIndexWhere((element) => element.id == account!.id) > 0) {
+    } else if (account == null || accountList.lastIndexWhere((element) => element.id == account!.id) == -1) {
       //当前账本发生变化
       await _changeAccount(accountList.first, emit);
     }
