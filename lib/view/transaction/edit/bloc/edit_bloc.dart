@@ -20,7 +20,9 @@ class EditBloc extends Bloc<EditEvent, EditState> {
       this.trans = TransactionEditModel.init()..accountId = account.id;
     }
     on<EditDataFetch>(_fetchData);
-    on<TransactionCategoryFetch>(_fetchTransactionCategory);
+    on<TransactionCategoryFetch>((TransactionCategoryFetch event, emit) async {
+      await _fetchTransactionCategory(event.type, emit);
+    });
     on<AccountChange>(_changeAccount);
     on<TransactionSave>(_save);
   }
@@ -31,28 +33,32 @@ class EditBloc extends Bloc<EditEvent, EditState> {
   bool canAgain = false;
   _fetchData(EditDataFetch event, emit) async {}
 
-  _fetchTransactionCategory(TransactionCategoryFetch event, emit) async {
+  Future<void> _fetchTransactionCategory(IncomeExpense ie, emit) async {
     List<TransactionCategoryModel> list;
     list = await ApiServer.getData(
-      () => TransactionCategoryApi.getTree(accountId: account.id, type: event.type),
+      () => TransactionCategoryApi.getTree(accountId: account.id, type: ie),
       TransactionCategoryApi.dataFormatFunc.getCategoryListByTree,
     );
     if (trans.categoryId == 0 && list.isNotEmpty) {
       trans.categoryId = list.first.id;
     }
-    if (event.type == IncomeExpense.expense) {
+    if (ie == IncomeExpense.expense) {
       emit(ExpenseCategoryPickLoaded(list));
     } else {
       emit(IncomeCategoryPickLoaded(list));
     }
   }
 
-  _changeAccount(AccountChange event, emit) {
+  _changeAccount(AccountChange event, emit) async {
     if (account.id == event.account.id) {
       return;
     }
     trans.accountId = account.id;
     account = event.account;
+    await Future.wait([
+      _fetchTransactionCategory(IncomeExpense.expense, emit),
+      _fetchTransactionCategory(IncomeExpense.income, emit),
+    ]);
     emit(AccountChanged());
   }
 

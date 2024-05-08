@@ -27,8 +27,8 @@ class _TransactionCategoryFatherEditDialogState extends State<TransactionCategor
       Navigator.pop(context, transactionCategory);
     }
 
-    return BlocProvider<TransCatFatherBloc>(
-        create: (context) => TransCatFatherBloc(),
+    return BlocProvider<TransCatFatherBloc>.value(
+        value: _bloc,
         child: BlocListener<TransCatFatherBloc, TransCatFatherState>(
             listener: (context, state) {
               if (state is SaveSuccessState) {
