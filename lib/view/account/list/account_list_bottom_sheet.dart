@@ -1,9 +1,11 @@
 part of "enter.dart";
 
 class AccountListBottomSheet extends StatefulWidget {
-  const AccountListBottomSheet({required this.selectedAccount, this.onSelectedAccount, super.key});
+  const AccountListBottomSheet(
+      {required this.selectedAccount, this.onSelectedAccount, this.type = ViewAccountListType.all, super.key});
   final AccountDetailModel selectedAccount;
   final SelectAccountCallback? onSelectedAccount;
+  final ViewAccountListType type;
   @override
   State<AccountListBottomSheet> createState() => _AccountListBottomSheetState();
 }
@@ -14,27 +16,45 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
   List<AccountDetailModel> list = [];
   @override
   void initState() {
-    BlocProvider.of<AccountBloc>(context).add(AccountListFetchEvent());
+    _fetchData();
     currentAccount = widget.selectedAccount;
     super.initState();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  void _fetchData() {
+    switch (widget.type) {
+      case ViewAccountListType.onlyCanEdit:
+        BlocProvider.of<AccountBloc>(context).add(CanEditAccountListFetchEvent());
+      default:
+        BlocProvider.of<AccountBloc>(context).add(AccountListFetchEvent());
+    }
+  }
+
+  Widget _bloclistener(Widget child) {
+    switch (widget.type) {
+      case ViewAccountListType.onlyCanEdit:
+        return BlocListener<AccountBloc, AccountState>(
+            listener: (context, state) {
+              if (state is CanEditAccountListLoaded) {
+                setState(() => list = state.list);
+              }
+            },
+            child: child);
+      default:
+        return BlocListener<AccountBloc, AccountState>(
+            listener: (context, state) {
+              if (state is AccountListLoaded) {
+                setState(() => list = state.list);
+              }
+            },
+            child: child);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AccountBloc, AccountState>(
-      listener: (context, state) {
-        if (state is AccountListLoaded) {
-          setState(() {
-            list = state.list;
-          });
-        }
-      },
-      child: Container(
+    return _bloclistener(
+      Container(
         decoration: ConstantDecoration.bottomSheet,
         child: Column(
           mainAxisSize: MainAxisSize.min,

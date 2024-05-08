@@ -146,12 +146,14 @@ class AccountListNavigator extends RouterNavigator {
   Future<bool> showModalBottomSheet({bool onlyCanEdit = false}) async => await _modalBottomSheetShow(
       context,
       AccountListBottomSheet(
-          selectedAccount: selectedAccount,
-          onSelectedAccount: onSelectedAccount ??
-              (AccountDetailModel account) async {
-                Navigator.pop<AccountDetailModel>(context, account);
-                return account;
-              }));
+        selectedAccount: selectedAccount,
+        onSelectedAccount: onSelectedAccount ??
+            (AccountDetailModel account) async {
+              Navigator.pop<AccountDetailModel>(context, account);
+              return account;
+            },
+        type: onlyCanEdit ? ViewAccountListType.onlyCanEdit : ViewAccountListType.onlyCanEdit,
+      ));
 
   Future<bool> push() async => await _push(
         context,

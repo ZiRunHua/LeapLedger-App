@@ -30,11 +30,7 @@ class _BottomState extends State<Bottom> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           _buildCard(),
-          AmountKeyboard(
-            onRefresh: onRefreshKeyborad,
-            onComplete: onComplete,
-            openAgain: _bloc.canAgain,
-          ),
+          AmountKeyboard(onRefresh: onRefreshKeyborad, onComplete: onComplete, openAgain: _bloc.canAgain),
         ],
       ),
     );
@@ -105,7 +101,7 @@ class _BottomState extends State<Bottom> {
             _buildButton(
                 onPressed: () async {
                   var page = AccountRoutes.list(context, selectedAccount: _bloc.account);
-                  await page.showModalBottomSheet();
+                  await page.showModalBottomSheet(onlyCanEdit: true);
                   AccountDetailModel? resule = page.retrunAccount;
                   if (resule == null) {
                     return;

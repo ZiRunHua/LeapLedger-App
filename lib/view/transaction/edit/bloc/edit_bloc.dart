@@ -51,19 +51,24 @@ class EditBloc extends Bloc<EditEvent, EditState> {
     if (account.id == event.account.id) {
       return;
     }
-    account.copyWith(event.account);
-    emit(AccountChanged(account));
+    trans.accountId = account.id;
+    account = event.account;
+    emit(AccountChanged());
   }
 
   _save(TransactionSave event, emit) {
     if (event.amount != null) {
       trans.amount = event.amount!;
     }
+    var newTrans = trans.copy();
     if (mode == TransactionEditMode.add) {
       canAgain = event.isAgain;
-      emit(AddNewTransaction(trans));
+      if (canAgain) {
+        trans.amount = 0;
+      }
+      emit(AddNewTransaction(newTrans));
     } else {
-      emit(UpdateTransaction(_trans!, trans));
+      emit(UpdateTransaction(_trans!, newTrans));
     }
   }
 }
