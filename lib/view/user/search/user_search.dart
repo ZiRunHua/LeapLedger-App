@@ -23,7 +23,7 @@ class _UserSearchState extends State<UserSearch> {
         refreshListener: _onFetchData,
         loadMoreListener: _onFetchData,
         filter: (UserInfoModel data) {
-          return inputStr == null || data.username.startsWith(inputStr!) || data.email.startsWith(inputStr!);
+          return inputStr == null || data.username.startsWith(inputStr!);
         });
     _onFetchData(offset: 0, limit: _pageController.limit);
     super.initState();
