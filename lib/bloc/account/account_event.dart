@@ -4,7 +4,13 @@ part of 'account_bloc.dart';
 sealed class AccountEvent {}
 
 // 列表
-class AccountListFetchEvent extends AccountEvent {}
+class AccountListFetchEvent extends AccountEvent {
+  AccountListFetchEvent();
+}
+
+class CanEditAccountListFetchEvent extends AccountEvent {
+  CanEditAccountListFetchEvent();
+}
 
 class ShareAccountListFetchEvent extends AccountEvent {}
 

@@ -12,3 +12,5 @@ part "account_list.dart";
 part "account_list_bottom_sheet.dart";
 
 typedef SelectAccountCallback = Future<AccountDetailModel?> Function(AccountDetailModel account);
+
+enum ViewAccountListType { canEdit, all }

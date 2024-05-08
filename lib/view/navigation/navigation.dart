@@ -8,7 +8,6 @@ import 'package:keepaccount_app/util/enter.dart';
 import 'package:keepaccount_app/view/home/home.dart';
 import 'package:keepaccount_app/view/share/home/share_home.dart';
 import 'package:keepaccount_app/widget/common/common.dart';
-import 'package:keepaccount_app/widget/dialog/enter.dart';
 
 import 'bloc/navigation_bloc.dart';
 

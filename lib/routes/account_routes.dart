@@ -143,7 +143,7 @@ class AccountListNavigator extends RouterNavigator {
   AccountListNavigator(BuildContext context, {required this.selectedAccount, this.onSelectedAccount})
       : super(context: context);
 
-  Future<bool> showModalBottomSheet() async => await _modalBottomSheetShow(
+  Future<bool> showModalBottomSheet({bool onlyCanEdit = false}) async => await _modalBottomSheetShow(
       context,
       AccountListBottomSheet(
           selectedAccount: selectedAccount,

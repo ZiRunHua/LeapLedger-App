@@ -6,7 +6,7 @@ class AmountKeyboard extends StatefulWidget {
   const AmountKeyboard({super.key, required this.onRefresh, required this.onComplete, this.openAgain = true});
 
   final Function(int amount, String input, String history) onRefresh;
-  final Function(bool isAgain) onComplete;
+  final Function(bool isAgain, int? amount) onComplete;
   final bool openAgain;
   @override
   State<AmountKeyboard> createState() => _AmountKeyboardState();
@@ -26,12 +26,6 @@ class _AmountKeyboardState extends State<AmountKeyboard> {
   }
 
   initValue() {
-    // amount = widget.initAmount;
-    // input = amount;
-    // inputString = (amount / 100).toString();
-    // history = "";
-    // baseNumber = 100;
-    // operator = "";
     history = "";
     amount = 0;
     input = 0;
@@ -219,9 +213,17 @@ class _AmountKeyboardState extends State<AmountKeyboard> {
         amount += input;
         _transmitRefresh();
       case AmountKeyboardAction.complete:
-        widget.onComplete(false);
+        if (inputString == "") {
+          widget.onComplete(false, null);
+        } else {
+          widget.onComplete(false, amount);
+        }
       case AmountKeyboardAction.again:
-        widget.onComplete(true);
+        if (inputString == "") {
+          widget.onComplete(true, null);
+        } else {
+          widget.onComplete(true, amount);
+        }
         initValue();
         _transmitRefresh();
 
@@ -306,5 +308,5 @@ class _TextAmountKeyboardState extends State<TextAmountKeyboard> {
     });
   }
 
-  onComplete(bool isAgain) {}
+  onComplete(bool isAgain, int? amount) {}
 }

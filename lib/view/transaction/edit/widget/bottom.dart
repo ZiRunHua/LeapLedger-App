@@ -9,7 +9,6 @@ class Bottom extends StatefulWidget {
 
 class _BottomState extends State<Bottom> {
   late TransactionEditModel model;
-  late AccountDetailModel account;
   late EditBloc _bloc;
   @override
   void initState() {
@@ -19,13 +18,10 @@ class _BottomState extends State<Bottom> {
 
   @override
   Widget build(BuildContext context) {
-    account = BlocProvider.of<EditBloc>(context).account;
     return BlocListener<EditBloc, EditState>(
       listener: (context, state) {
         if (state is AccountChanged) {
-          setState(() {
-            account = state.account;
-          });
+          setState(() {});
         }
       },
       child: Column(
@@ -94,7 +90,7 @@ class _BottomState extends State<Bottom> {
       children: [
         GestureDetector(
           onTap: () async {
-            var page = AccountRoutes.userConfig(context, accoount: account);
+            var page = AccountRoutes.userConfig(context, accoount: _bloc.account);
             await page.showDialog();
           },
           child: const Icon(Icons.more_vert_outlined),
@@ -108,7 +104,7 @@ class _BottomState extends State<Bottom> {
             // 账本
             _buildButton(
                 onPressed: () async {
-                  var page = AccountRoutes.list(context, selectedAccount: account);
+                  var page = AccountRoutes.list(context, selectedAccount: _bloc.account);
                   await page.showModalBottomSheet();
                   AccountDetailModel? resule = page.retrunAccount;
                   if (resule == null) {
@@ -116,7 +112,7 @@ class _BottomState extends State<Bottom> {
                   }
                   _bloc.add(AccountChange(resule));
                 },
-                name: account.name),
+                name: _bloc.account.name),
             _buildButton(
                 onPressed: () async {
                   await showDialog(
@@ -197,8 +193,8 @@ class _BottomState extends State<Bottom> {
   String keyboradInput = "", keyboradHistory = "";
 
 // 事件
-  void onComplete(bool isAgain) {
-    _bloc.add(TransactionSave(isAgain));
+  void onComplete(bool isAgain, int? amount) {
+    _bloc.add(TransactionSave(isAgain, amount: amount));
   }
 
   void onRefreshKeyborad(int amount, String input, String history) {

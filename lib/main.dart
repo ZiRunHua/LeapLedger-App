@@ -88,7 +88,12 @@ class MyApp extends StatelessWidget {
               },
             )
           ], child: const Navigation()),
-          builder: EasyLoading.init(),
+          builder: EasyLoading.init(builder: (context, child) {
+            return MediaQuery(
+              data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),
+              child: child!,
+            );
+          }),
           routes: Routes.routes,
           onGenerateRoute: Routes.generateRoute,
         ));

@@ -56,6 +56,9 @@ class EditBloc extends Bloc<EditEvent, EditState> {
   }
 
   _save(TransactionSave event, emit) {
+    if (event.amount != null) {
+      trans.amount = event.amount!;
+    }
     if (mode == TransactionEditMode.add) {
       canAgain = event.isAgain;
       emit(AddNewTransaction(trans));

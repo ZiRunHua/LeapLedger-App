@@ -10,6 +10,7 @@ part 'account_state.dart';
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
   AccountBloc() : super(AccountInitial()) {
     on<AccountListFetchEvent>(_getList);
+    on<CanEditAccountListFetchEvent>(_getCanEditList);
     on<AccountSaveEvent>(_handleAccountSave);
     on<AccountDeleteEvent>(_deleteAccount);
     on<AccountTemplateListFetch>(_getTemplateList);
@@ -25,6 +26,11 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   _getList(AccountListFetchEvent event, emit) async {
     _list = await AccountApi.getList();
     emit(AccountListLoaded(list: _list));
+  }
+
+  _getCanEditList(CanEditAccountListFetchEvent event, emit) async {
+    _list = await AccountApi.getList();
+    emit(CanEditAccountListLoaded(list: _list.where((element) => element.role != AccountRole.reader).toList()));
   }
 
   // 账本
