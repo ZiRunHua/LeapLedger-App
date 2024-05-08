@@ -62,11 +62,12 @@ class ApiServer {
     ..interceptors.add(
       DioCacheInterceptor(
         options: CacheOptions(
+          maxStale: const Duration(days: 7),
           keyBuilder: (RequestOptions request) {
-            return _uuid.v5(Uuid.NAMESPACE_URL, request.uri.toString() + request.queryParameters.toString());
+            return _uuid.v5(Uuid.NAMESPACE_URL, request.uri.toString() + request.data.toString());
           },
           store: HiveCacheStore(Global.tempDirectory.path),
-          policy: CachePolicy.forceCache,
+          policy: CachePolicy.request,
         ),
       ),
     )
