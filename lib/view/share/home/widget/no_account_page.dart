@@ -23,7 +23,8 @@ class NoAccountPage extends StatelessWidget {
                     .push(),
               ),
               _buildButton(Icons.send_outlined, "查看邀请", () {
-                UserRoutes.pushNamed(context, UserRoutes.accountInvitation).then((value) {});
+                UserRoutes.pushNamed(context, UserRoutes.accountInvitation)
+                    .then((value) => BlocProvider.of<ShareHomeBloc>(context).add(LoadAccountListEvent()));
               })
             ],
           ),

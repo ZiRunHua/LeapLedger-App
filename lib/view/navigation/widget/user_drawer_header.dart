@@ -37,7 +37,7 @@ class _UserDrawerHeaderState extends State<UserDrawerHeader> {
                           }
                         },
                         child: buildUsername(context)),
-                    _buildEmail(context, UserBloc.user.email)
+                    _buildEmail(context, "share_account_c@gamil.com")
                   ],
                 ),
               ),
@@ -80,7 +80,7 @@ class _UserDrawerHeaderState extends State<UserDrawerHeader> {
 
   Widget _buildEmail(BuildContext context, String email) {
     List<String> splitStrings = email.split("@");
-    if (splitStrings.length == 2) {
+    if (splitStrings.length == 2 && email.length >= 25) {
       return Column(
         children: [
           Align(
