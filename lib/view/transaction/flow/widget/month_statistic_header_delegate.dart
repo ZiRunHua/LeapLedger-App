@@ -2,7 +2,7 @@ part of 'enter.dart';
 
 class MonthStatisticHeaderDelegate extends SliverPersistentHeaderDelegate {
   MonthStatisticHeaderDelegate(this.data, this.fontHeight) {
-    height = fontHeight + 4.5 + Constant.padding * 2 + Constant.margin;
+    height = fontHeight + 3.5 + Constant.padding * 2 + Constant.margin;
   }
   static const double baseFontHeight = ConstantFontSize.headline * 2 + 8;
   static TextStyle amountStyle =

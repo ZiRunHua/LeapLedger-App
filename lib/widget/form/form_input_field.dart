@@ -87,29 +87,36 @@ class FormInputField {
 
   static Widget searchInput({
     void Function(String?)? onChanged,
+    void Function(String?)? onSubmitted,
     void Function(String?)? onSave,
   }) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        const Text("搜索："),
-        Expanded(
-            child: TextFormField(
-          decoration: const InputDecoration(
-            border: UnderlineInputBorder(), // 添加边框
-          ),
-          onChanged: (String? value) {
-            if (onChanged != null) {
-              onChanged(value);
-            }
-          },
-          onSaved: (String? value) {
-            if (onSave != null) {
-              onSave(value);
-            }
-          },
-        ))
-      ],
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: Constant.margin),
+      margin: const EdgeInsets.only(right: Constant.margin),
+      decoration:
+          const BoxDecoration(color: ConstantColor.greyBackground, borderRadius: ConstantDecoration.borderRadius),
+      child: TextFormField(
+        decoration: const InputDecoration(
+          icon: Icon(Icons.search_rounded),
+          border: InputBorder.none,
+        ),
+        textInputAction: TextInputAction.search,
+        onChanged: (String? value) {
+          if (onChanged != null) {
+            onChanged(value);
+          }
+        },
+        onFieldSubmitted: (String? value) {
+          if (onSubmitted != null) {
+            onSubmitted(value);
+          }
+        },
+        onSaved: (String? value) {
+          if (onSave != null) {
+            onSave(value);
+          }
+        },
+      ),
     );
   }
 }

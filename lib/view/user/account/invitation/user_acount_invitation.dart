@@ -65,7 +65,7 @@ class _UserAccountInvitationState extends State<UserAccountInvitation> {
   Widget _buildListTile(AccountUserInvitationModle invitation) {
     return ListTile(
       leading: Icon(invitation.account.icon, size: 32, color: ConstantColor.primaryColor),
-      title: Text("账本名称：${invitation.account.name}"),
+      title: Text(invitation.account.name),
       subtitle: Text(
         "来自${invitation.inviter.username}的邀请",
         style: const TextStyle(color: ConstantColor.greyText),

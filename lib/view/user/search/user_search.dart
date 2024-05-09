@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keepaccount_app/bloc/user/user_bloc.dart';
 import 'package:keepaccount_app/common/global.dart';
@@ -51,28 +52,17 @@ class _UserSearchState extends State<UserSearch> {
       appBar: AppBar(
         title: DefaultTextStyle.merge(
           style: const TextStyle(fontSize: ConstantFontSize.largeHeadline),
-          child: SizedBox(
-            width: double.infinity,
-            height: 100,
-            child: Padding(
-              padding: const EdgeInsets.only(left: Constant.padding, top: Constant.padding, bottom: Constant.padding),
-              child: FormInputField.searchInput(onChanged: (String? value) {
-                inputStr = value;
-                _pageController.notifyListeners();
-              }),
-            ),
+          child: FormInputField.searchInput(
+            onChanged: (String? value) {
+              inputStr = value;
+              _pageController.notifyListeners();
+            },
+            onSubmitted: (String? value) {
+              inputStr = value;
+              _pageController.refresh();
+            },
           ),
         ),
-        actions: [
-          GestureDetector(
-            onTap: () => _pageController.refresh(),
-            child: const Center(
-                child: Padding(
-              padding: EdgeInsets.only(right: Constant.padding),
-              child: Icon(Icons.search_outlined),
-            )),
-          )
-        ],
       ),
       body: BlocListener<UserBloc, UserState>(
         listenWhen: (_, state) {

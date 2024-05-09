@@ -5,27 +5,31 @@ class NoAccountPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, BoxConstraints constraints) {
-      var padding = constraints.maxWidth * 0.1;
-      if (constraints.minWidth > padding * 2) {
-        padding = 0;
-      }
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: padding),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildButton(
-              Icons.add_outlined,
-              "新建共享账本",
-              () => AccountRoutes.edit(context, account: AccountDetailModel.fromJson({})..type = AccountType.share)
-                  .push(),
-            ),
-            _buildButton(Icons.send_outlined, "查看邀请", () => UserRoutes.pushNamed(context, UserRoutes.accountInvitation))
-          ],
-        ),
-      );
-    });
+    return LayoutBuilder(
+      builder: (context, BoxConstraints constraints) {
+        var padding = constraints.maxWidth * 0.1;
+        if (constraints.minWidth > padding * 2) {
+          padding = 0;
+        }
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: padding),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildButton(
+                Icons.add_outlined,
+                "新建共享账本",
+                () => AccountRoutes.edit(context, account: AccountDetailModel.fromJson({})..type = AccountType.share)
+                    .push(),
+              ),
+              _buildButton(Icons.send_outlined, "查看邀请", () {
+                UserRoutes.pushNamed(context, UserRoutes.accountInvitation).then((value) {});
+              })
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Widget _buildButton(IconData icons, String text, VoidCallback onTap) {

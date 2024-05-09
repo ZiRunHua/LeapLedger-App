@@ -18,40 +18,31 @@ class _UserDrawerHeaderState extends State<UserDrawerHeader> {
         decoration: const BoxDecoration(
           color: Colors.blue,
         ),
-        child: Row(
-          children: <Widget>[
-            const CircleAvatar(
-                backgroundImage: null,
-                radius: 32.0,
-                child: Icon(
-                  Icons.person,
-                  size: 32.0,
-                )),
-            const SizedBox(width: 16.0),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  BlocListener<UserBloc, UserState>(
-                      listener: (_, state) {
-                        if (state is UserUpdateInfoSuccess) {
-                          setState(() {});
-                        }
-                      },
-                      child: buildUsername(context)),
-                  const SizedBox(height: 8.0),
-                  Text(
-                    UserBloc.user.email,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14.0,
-                    ),
-                  ),
-                ],
+        child: DefaultTextStyle.merge(
+          style: const TextStyle(color: Colors.white),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              const CircleAvatar(backgroundImage: null, radius: 32.0, child: Icon(Icons.person, size: 32.0)),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    BlocListener<UserBloc, UserState>(
+                        listener: (_, state) {
+                          if (state is UserUpdateInfoSuccess) {
+                            setState(() {});
+                          }
+                        },
+                        child: buildUsername(context)),
+                    _buildEmail(context, UserBloc.user.email)
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -81,13 +72,41 @@ class _UserDrawerHeaderState extends State<UserDrawerHeader> {
               children: [
                 Text(
                   UserBloc.user.username,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
                 )
               ],
             )));
+  }
+
+  Widget _buildEmail(BuildContext context, String email) {
+    List<String> splitStrings = email.split("@");
+    if (splitStrings.length == 2) {
+      return Column(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              splitStrings[0],
+              style: const TextStyle(fontSize: ConstantFontSize.body),
+            ),
+          ),
+          Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                "@${splitStrings[1]}",
+                style: const TextStyle(fontSize: ConstantFontSize.bodySmall),
+              ))
+        ],
+      );
+    } else {
+      return Column(
+        children: [
+          Text(
+            email,
+            style: const TextStyle(fontSize: ConstantFontSize.body),
+          )
+        ],
+      );
+    }
   }
 }
