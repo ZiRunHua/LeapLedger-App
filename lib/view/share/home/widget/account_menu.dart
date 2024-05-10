@@ -93,8 +93,8 @@ class _AccountMenuState extends State<AccountMenu> {
           border: Border.all(color: Colors.grey.shade400),
           borderRadius: ConstantDecoration.borderRadius,
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(Constant.padding),
+        child: const Padding(
+          padding: EdgeInsets.all(Constant.padding),
           child: Column(
             children: [Text("新建共享账本"), Icon(Icons.add_outlined)],
           ),
