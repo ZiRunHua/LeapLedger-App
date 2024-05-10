@@ -44,27 +44,29 @@ class _AccountMenuState extends State<AccountMenu> {
           if (state is AccountListLoaded && state.list.isEmpty || state is NoShareAccount) {
             return _buildCreateBox();
           } else if (state is AccountListLoaded) {
-            return PopupMenuButton<AccountDetailModel>(
-              itemBuilder: (context) {
-                return List.generate(
-                  state.list.length,
-                  (index) => PopupMenuItem(
-                    value: state.list[index],
-                    child: _buildAccount(state.list[index]),
+            return DefaultTextStyle.merge(
+                style: const TextStyle(fontSize: ConstantFontSize.largeHeadline),
+                child: PopupMenuButton<AccountDetailModel>(
+                  itemBuilder: (context) {
+                    return List.generate(
+                      state.list.length,
+                      (index) => PopupMenuItem(
+                        value: state.list[index],
+                        child: _buildAccount(state.list[index]),
+                      ),
+                    );
+                  },
+                  initialValue: ShareHomeBloc.account,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [_buildAccount(ShareHomeBloc.account!), const Icon(Icons.arrow_drop_down_rounded)],
                   ),
-                );
-              },
-              initialValue: ShareHomeBloc.account,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [_buildAccount(ShareHomeBloc.account!), const Icon(Icons.arrow_drop_down_rounded)],
-              ),
-              onSelected: (AccountDetailModel account) {
-                _bloc.add(ChangeAccountEvent(account));
-                UserBloc.of(context).add(SetCurrentShareAccount(account));
-              },
-            );
+                  onSelected: (AccountDetailModel account) {
+                    _bloc.add(ChangeAccountEvent(account));
+                    UserBloc.of(context).add(SetCurrentShareAccount(account));
+                  },
+                ));
           }
           return const SizedBox();
         },
@@ -75,15 +77,11 @@ class _AccountMenuState extends State<AccountMenu> {
   Widget _buildAccount(AccountModel account) {
     return Row(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(
-          account.icon,
-        ),
-        Text(
-          account.name,
-          textAlign: TextAlign.center,
-        )
+        Icon(account.icon, size: ConstantFontSize.largeHeadline),
+        const SizedBox(width: Constant.margin / 2),
+        Text(account.name, textAlign: TextAlign.center)
       ],
     );
   }

@@ -69,7 +69,7 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
             Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [_buildHeader(), detailWidget],
+              children: [_buildHeader(), detailWidget, const SizedBox(height: Constant.padding)],
             ),
           ])),
     );
@@ -130,10 +130,7 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
         leading: "备注",
         trailing: data.remark.isEmpty ? "无" : data.remark,
       ),
-      Offstage(
-        offstage: false == TransactionRouterGuard.edit(mode: TransactionEditMode.update, account: widget.account),
-        child: _buildButtomButtonGroup(),
-      )
+      _buildButtomButtonGroup(TransactionRouterGuard.edit(mode: TransactionEditMode.update, account: widget.account)),
     ]);
   }
 
@@ -147,25 +144,29 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
     );
   }
 
-  Widget _buildButtomButtonGroup() {
+  Widget _buildButtomButtonGroup(bool canEdit) {
     return Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-      OutlinedButton(
-        onPressed: _onDelete,
-        style: const ButtonStyle(
-          side: MaterialStatePropertyAll<BorderSide>(BorderSide(color: ConstantColor.primaryColor)),
-        ),
-        child: const Text(
-          "删除",
-          style: TextStyle(letterSpacing: Constant.buttomLetterSpacing),
-        ),
-      ),
-      FilledButton(
-        onPressed: _onUpdate,
-        child: const Text(
-          "编辑",
-          style: TextStyle(letterSpacing: Constant.buttomLetterSpacing),
-        ),
-      )
+      Offstage(
+          offstage: false == canEdit,
+          child: OutlinedButton(
+            onPressed: _onDelete,
+            style: const ButtonStyle(
+              side: MaterialStatePropertyAll<BorderSide>(BorderSide(color: ConstantColor.primaryColor)),
+            ),
+            child: const Text(
+              "删除",
+              style: TextStyle(letterSpacing: Constant.buttomLetterSpacing),
+            ),
+          )),
+      Offstage(
+          offstage: false == canEdit,
+          child: FilledButton(
+            onPressed: _onUpdate,
+            child: const Text(
+              "编辑",
+              style: TextStyle(letterSpacing: Constant.buttomLetterSpacing),
+            ),
+          ))
     ]);
   }
 

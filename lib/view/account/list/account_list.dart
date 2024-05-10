@@ -70,7 +70,7 @@ class AccountListState extends State<AccountList> {
               Visibility(visible: account.type == AccountType.share, child: const ShareLabel()),
             ],
           ),
-          subtitle: Text('建立时间：${DateFormat('yyyy-MM-dd HH:mm:ss').format(account.createTime)}'),
+          subtitle: Text(DateFormat('yyyy-MM-dd HH:mm:ss').format(account.createTime)),
           trailing: Row(mainAxisSize: MainAxisSize.min, children: [
             Offstage(
               offstage: account.type != AccountType.share,
