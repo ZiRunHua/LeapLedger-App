@@ -13,7 +13,6 @@ class AccountListBottomSheet extends StatefulWidget {
 class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
   late AccountDetailModel currentAccount;
 
-  List<AccountDetailModel> list = [];
   @override
   void initState() {
     _fetchData();
@@ -30,6 +29,7 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
     }
   }
 
+  List<AccountDetailModel> list = [];
   Widget _bloclistener(Widget child) {
     switch (widget.type) {
       case ViewAccountListType.onlyCanEdit:
@@ -51,8 +51,27 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
     }
   }
 
+  double elementHight = 72;
   @override
   Widget build(BuildContext context) {
+    var maxHight = MediaQuery.of(context).size.height / 2;
+    Widget listWidget;
+    if (maxHight > elementHight * list.length + Constant.margin * (list.length - 1)) {
+      listWidget = Column(
+        children: List.generate(list.length, (index) => _buildAccount(list[index])),
+      );
+    } else {
+      listWidget = SizedBox(
+          height: maxHight,
+          child: ListView.separated(
+            itemBuilder: (_, int index) => _buildAccount(list[index]),
+            separatorBuilder: (BuildContext context, int index) {
+              return ConstantWidget.divider.list;
+            },
+            itemCount: list.length,
+          ));
+    }
+
     return _bloclistener(
       Container(
         decoration: ConstantDecoration.bottomSheet,
@@ -72,17 +91,7 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
                 ),
               ),
             ),
-            FractionallySizedBox(
-              heightFactor: 0.5,
-              alignment: FractionalOffset.center,
-              child: ListView.separated(
-                itemBuilder: (_, int index) => _buildAccount(list[index]),
-                separatorBuilder: (BuildContext context, int index) {
-                  return ConstantWidget.divider.list;
-                },
-                itemCount: list.length,
-              ),
-            ),
+            listWidget
           ],
         ),
       ),
@@ -114,5 +123,47 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
   void onSelectedAccount(AccountDetailModel account) {
     if (widget.onSelectedAccount == null) return;
     widget.onSelectedAccount!(account);
+  }
+}
+
+typedef void OnWidgetSizeChange(Size size);
+
+class MeasureSizeRenderObject extends RenderProxyBox {
+  Size? oldSize;
+  OnWidgetSizeChange onChange;
+
+  MeasureSizeRenderObject(this.onChange);
+
+  @override
+  void performLayout() {
+    super.performLayout();
+
+    Size newSize = child!.size;
+    if (oldSize == newSize) return;
+
+    oldSize = newSize;
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      onChange(newSize);
+    });
+  }
+}
+
+class MeasureSize extends SingleChildRenderObjectWidget {
+  final OnWidgetSizeChange onChange;
+
+  const MeasureSize({
+    Key? key,
+    required this.onChange,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return MeasureSizeRenderObject(onChange);
+  }
+
+  @override
+  void updateRenderObject(BuildContext context, covariant MeasureSizeRenderObject renderObject) {
+    renderObject.onChange = onChange;
   }
 }
