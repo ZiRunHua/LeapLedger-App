@@ -132,6 +132,21 @@ class AccountDetailModel extends AccountModel {
       joinTime: joinTime,
     );
   }
+
+  factory AccountDetailModel.prototypeData() {
+    return AccountDetailModel(
+      id: 0,
+      name: 'prototypeData',
+      icon: Icons.account_circle,
+      type: AccountType.share,
+      createTime: DateTime.now(),
+      updateTime: DateTime.now(),
+      creatorId: 0,
+      creatorName: 'prototypeData',
+      role: AccountRole.reader,
+      joinTime: DateTime.now(),
+    );
+  }
 }
 
 ///账本用户角色
