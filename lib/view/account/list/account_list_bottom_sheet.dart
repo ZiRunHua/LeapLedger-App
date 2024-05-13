@@ -29,7 +29,7 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
     }
   }
 
-  List<AccountDetailModel> list = [];
+  List<AccountDetailModel>? list;
   Widget _bloclistener(Widget child) {
     switch (widget.type) {
       case ViewAccountListType.onlyCanEdit:
@@ -51,24 +51,31 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
     }
   }
 
-  double elementHight = 72;
+  static const double elementHight = 72;
   @override
   Widget build(BuildContext context) {
     var maxHight = MediaQuery.of(context).size.height / 2;
     Widget listWidget;
-    if (maxHight > elementHight * list.length + Constant.margin * (list.length - 1)) {
+    if (list == null) {
+      listWidget = const SizedBox(
+        height: elementHight,
+        child: Center(
+          child: ConstantWidget.activityIndicator,
+        ),
+      );
+    } else if (maxHight > elementHight * list!.length + Constant.margin * (list!.length - 1)) {
       listWidget = Column(
-        children: List.generate(list.length, (index) => _buildAccount(list[index])),
+        children: List.generate(list!.length, (index) => _buildAccount(list![index])),
       );
     } else {
       listWidget = SizedBox(
           height: maxHight,
           child: ListView.separated(
-            itemBuilder: (_, int index) => _buildAccount(list[index]),
+            itemBuilder: (_, int index) => _buildAccount(list![index]),
             separatorBuilder: (BuildContext context, int index) {
               return ConstantWidget.divider.list;
             },
-            itemCount: list.length,
+            itemCount: list!.length,
           ));
     }
 
