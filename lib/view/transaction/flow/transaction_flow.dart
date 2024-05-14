@@ -17,15 +17,15 @@ import 'package:shimmer/shimmer.dart';
 
 class TransactionFlow extends StatelessWidget {
   final TransactionQueryConditionApiModel? condition;
-  final AccountDetailModel? account;
-  const TransactionFlow({this.condition, this.account, super.key});
+  final AccountDetailModel account;
+  const TransactionFlow({this.condition, required this.account, super.key});
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
       BlocProvider<FlowListBloc>(create: (context) => FlowListBloc()),
-      BlocProvider<FlowConditionBloc>(
-          create: (context) => FlowConditionBloc(condition: condition, currentAccount: account)),
+      BlocProvider<FlowConditionCubit>(
+          create: (context) => FlowConditionCubit(condition: condition, currentAccount: account)),
     ], child: _TransactionFlow(condition: condition, account: account));
   }
 }
@@ -42,7 +42,7 @@ class _TransactionFlow extends StatefulWidget {
 enum PageStatus { loading, loaded, refreshing, moreDataFetching, noMoreData }
 
 class _TransactionFlowState extends State<_TransactionFlow> {
-  late final FlowConditionBloc conditionBloc;
+  late final FlowConditionCubit conditionCubit;
   late final FlowListBloc flowListBloc;
   PageStatus currentState = PageStatus.loading;
   late final ScrollController _scrollController;
@@ -50,8 +50,8 @@ class _TransactionFlowState extends State<_TransactionFlow> {
   @override
   void initState() {
     flowListBloc = BlocProvider.of<FlowListBloc>(context);
-    conditionBloc = BlocProvider.of<FlowConditionBloc>(context);
-    flowListBloc.add(FlowListDataFetchEvent(conditionBloc.condition));
+    conditionCubit = BlocProvider.of<FlowConditionCubit>(context);
+    flowListBloc.add(FlowListDataFetchEvent(conditionCubit.condition));
     super.initState();
     _scrollController = ScrollController();
     _scrollController.addListener(() {
@@ -65,13 +65,13 @@ class _TransactionFlowState extends State<_TransactionFlow> {
   @override
   void dispose() {
     flowListBloc.close();
-    conditionBloc.close();
+    conditionCubit.close();
     _scrollController.dispose();
     super.dispose();
   }
 
   Future<void> _onRefresh() async {
-    flowListBloc.add(FlowListDataFetchEvent(conditionBloc.condition));
+    flowListBloc.add(FlowListDataFetchEvent(conditionCubit.condition));
     _changeState(PageStatus.refreshing);
   }
 
@@ -116,7 +116,7 @@ class _TransactionFlowState extends State<_TransactionFlow> {
       child: child,
     );
     // 条件bloc
-    child = BlocListener<FlowConditionBloc, FlowConditionState>(
+    child = BlocListener<FlowConditionCubit, FlowConditionState>(
       listener: (context, state) {
         if (state is FlowConditionUpdate) {
           flowListBloc.add(FlowListDataFetchEvent(state.condition));
@@ -184,9 +184,16 @@ class _TransactionFlowState extends State<_TransactionFlow> {
 
   List<Widget> _buildActions() {
     return [
-      BlocProvider.value(
-        value: conditionBloc,
-        child: const AccountListBottomSheet(),
+      TextButton(
+        style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Colors.white)),
+        onPressed: () {
+          var page = AccountRoutes.list(context, selectedAccount: conditionCubit.currentAccount);
+          page.showModalBottomSheet();
+          conditionCubit.updateAccount(page.selectedAccount);
+        },
+        child: Row(
+          children: [Icon(conditionCubit.currentAccount.icon, size: 18), Text(conditionCubit.currentAccount.name)],
+        ),
       ),
       const SizedBox(
         width: Constant.margin,
@@ -200,7 +207,7 @@ class _TransactionFlowState extends State<_TransactionFlow> {
                 context: context,
                 builder: (BuildContext context) {
                   return BlocProvider.value(
-                    value: conditionBloc,
+                    value: conditionCubit,
                     child: const ConditionBottomSheet(),
                   );
                 });
@@ -225,8 +232,8 @@ class _TransactionFlowState extends State<_TransactionFlow> {
       return [
         SliverToBoxAdapter(
           child: Center(
-              child:
-                  NoData.transactionText(context, account: BlocProvider.of<FlowConditionBloc>(context).currentAccount)),
+              child: NoData.transactionText(context,
+                  account: BlocProvider.of<FlowConditionCubit>(context).currentAccount)),
         ),
       ];
     }
@@ -278,7 +285,7 @@ class _TransactionFlowState extends State<_TransactionFlow> {
   Widget _buildListTile(TransactionModel model) {
     return ListTile(
       onTap: () =>
-          TransactionRoutes.pushDetailBottomSheet(context, account: conditionBloc.currentAccount, transaction: model),
+          TransactionRoutes.pushDetailBottomSheet(context, account: conditionCubit.currentAccount, transaction: model),
       dense: true,
       titleAlignment: ListTileTitleAlignment.center,
       leading: Icon(model.categoryIcon),

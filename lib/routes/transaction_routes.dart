@@ -10,15 +10,12 @@ class TransactionRoutes {
   static pushFlow(
     BuildContext context, {
     TransactionQueryConditionApiModel? condition,
-    AccountDetailModel? account,
+    required AccountDetailModel account,
   }) {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => TransactionFlow(
-            condition: condition,
-            account: account,
-          ),
+          builder: (context) => TransactionFlow(condition: condition, account: account),
         ));
   }
 

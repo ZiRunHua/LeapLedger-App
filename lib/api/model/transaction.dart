@@ -3,8 +3,8 @@ part of 'model.dart';
 @JsonSerializable(fieldRename: FieldRename.pascal)
 class TransactionQueryConditionApiModel {
   int accountId;
-  Set<int>? userIds;
-  Set<int>? categoryIds;
+  late Set<int> userIds;
+  late Set<int> categoryIds;
   IncomeExpense? incomeExpense;
   int? minimumAmount;
   int? maximumAmount;
@@ -14,6 +14,42 @@ class TransactionQueryConditionApiModel {
   // 结束时间（时间戳）
   @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
   DateTime endTime;
+
+  TransactionQueryConditionApiModel({
+    required this.accountId,
+    required this.startTime,
+    required this.endTime,
+    Set<int>? userIds,
+    Set<int>? categoryIds,
+    this.incomeExpense,
+    this.minimumAmount,
+    this.maximumAmount,
+  }) {
+    this.userIds = userIds ?? {};
+    this.categoryIds = categoryIds ?? {};
+  }
+
+  TransactionQueryConditionApiModel copyWith({
+    int? accountId,
+    Set<int>? userIds,
+    Set<int>? categoryIds,
+    IncomeExpense? incomeExpense,
+    int? minimumAmount,
+    int? maximumAmount,
+    DateTime? startTime,
+    DateTime? endTime,
+  }) {
+    return TransactionQueryConditionApiModel(
+      accountId: accountId ?? this.accountId,
+      userIds: userIds ?? this.userIds.toSet(),
+      categoryIds: categoryIds ?? this.categoryIds.toSet(),
+      incomeExpense: incomeExpense ?? this.incomeExpense,
+      minimumAmount: minimumAmount ?? this.minimumAmount,
+      maximumAmount: maximumAmount ?? this.maximumAmount,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+    );
+  }
 
   @override
   bool operator ==(Object other) {
@@ -48,17 +84,6 @@ class TransactionQueryConditionApiModel {
     return true;
   }
 
-  TransactionQueryConditionApiModel({
-    required this.accountId,
-    required this.startTime,
-    required this.endTime,
-    this.userIds,
-    this.categoryIds,
-    this.incomeExpense,
-    this.minimumAmount,
-    this.maximumAmount,
-  });
-
   factory TransactionQueryConditionApiModel.fromJson(Map<String, dynamic> json) =>
       _$TransactionQueryConditionApiModelFromJson(json);
 
@@ -74,10 +99,10 @@ class TransactionQueryConditionApiModel {
     if (startTime.isAfter(trans.tradeTime) || endTime.isBefore(trans.tradeTime)) {
       return false;
     }
-    if (userIds != null && false == userIds!.contains(trans.userId)) {
+    if (false == userIds.contains(trans.userId)) {
       return false;
     }
-    if (categoryIds != null && false == categoryIds!.contains(trans.categoryId)) {
+    if (false == categoryIds.contains(trans.categoryId)) {
       return false;
     }
     if (incomeExpense != null && incomeExpense != trans.incomeExpense) {

@@ -8,11 +8,13 @@ class AmountInput extends StatelessWidget {
     border: OutlineInputBorder(),
     // You can further style the input here
   );
-  final Function(int?) onSave;
+  final Function(int?)? onSave;
+  final Function(int?)? onChanged;
   final InputDecoration decoration;
   final int? initialValue;
   const AmountInput({
-    required this.onSave,
+    this.onSave,
+    this.onChanged,
     this.initialValue,
     this.decoration = defaultDecoration,
     super.key,
@@ -35,12 +37,14 @@ class AmountInput extends StatelessWidget {
         inputFormatters: [
           FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
         ],
-        onSaved: (String? value) {
-          double? doubleResult = Data.stringToDouble(value);
-          int? intResult = doubleResult != null ? (doubleResult * 100).toInt() : null;
-          onSave(intResult);
-        },
+        onSaved: (String? value) => onSave != null ? onSave!(stringToAmount(value)) : null,
+        onChanged: (String? value) => onChanged != null ? onChanged!(stringToAmount(value)) : null,
       ),
     );
+  }
+
+  int? stringToAmount(String? value) {
+    double? doubleResult = Data.stringToDouble(value);
+    return doubleResult != null ? (doubleResult * 100).toInt() : null;
   }
 }

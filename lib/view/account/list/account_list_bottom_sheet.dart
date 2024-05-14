@@ -1,8 +1,12 @@
 part of "enter.dart";
 
 class AccountListBottomSheet extends StatefulWidget {
-  const AccountListBottomSheet(
-      {required this.selectedAccount, this.onSelectedAccount, this.type = ViewAccountListType.all, super.key});
+  const AccountListBottomSheet({
+    required this.selectedAccount,
+    this.onSelectedAccount,
+    this.type = ViewAccountListType.all,
+    super.key,
+  });
   final AccountDetailModel selectedAccount;
   final SelectAccountCallback? onSelectedAccount;
   final ViewAccountListType type;
@@ -11,12 +15,12 @@ class AccountListBottomSheet extends StatefulWidget {
 }
 
 class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
-  late AccountDetailModel currentAccount;
+  late AccountDetailModel selectedAccount;
 
   @override
   void initState() {
     _fetchData();
-    currentAccount = widget.selectedAccount;
+    selectedAccount = widget.selectedAccount;
     super.initState();
   }
 
@@ -29,79 +33,67 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
     }
   }
 
-  List<AccountDetailModel>? list;
-  Widget _bloclistener(Widget child) {
-    switch (widget.type) {
-      case ViewAccountListType.onlyCanEdit:
-        return BlocListener<AccountBloc, AccountState>(
-            listener: (context, state) {
-              if (state is CanEditAccountListLoaded) {
-                setState(() => list = state.list);
-              }
-            },
-            child: child);
-      default:
-        return BlocListener<AccountBloc, AccountState>(
-            listener: (context, state) {
-              if (state is AccountListLoaded) {
-                setState(() => list = state.list);
-              }
-            },
-            child: child);
-    }
-  }
-
   static const double elementHight = 72;
   @override
   Widget build(BuildContext context) {
-    var maxHight = MediaQuery.of(context).size.height / 2;
-    Widget listWidget;
-    if (list == null) {
-      listWidget = const SizedBox(
-        height: elementHight,
-        child: Center(
-          child: ConstantWidget.activityIndicator,
-        ),
-      );
-    } else if (maxHight > elementHight * list!.length + Constant.margin * (list!.length - 1)) {
-      listWidget = Column(
-        children: List.generate(list!.length, (index) => _buildAccount(list![index])),
-      );
-    } else {
-      listWidget = SizedBox(
-          height: maxHight,
-          child: ListView.separated(
-            itemBuilder: (_, int index) => _buildAccount(list![index]),
-            separatorBuilder: (BuildContext context, int index) {
-              return ConstantWidget.divider.list;
-            },
-            itemCount: list!.length,
-          ));
-    }
+    return BlocBuilder<AccountBloc, AccountState>(
+      buildWhen: (_, state) => state is CanEditAccountListLoaded || state is AccountListLoaded,
+      builder: (context, state) {
+        List<AccountDetailModel> list = [];
+        if (state is CanEditAccountListLoaded) {
+          list = state.list;
+        } else if (state is AccountListLoaded) {
+          list = state.list;
+        }
 
-    return _bloclistener(
-      Container(
-        decoration: ConstantDecoration.bottomSheet,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Center(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(Constant.margin, Constant.margin, Constant.margin, 0),
-                child: Text(
-                  '选择账本',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: ConstantFontSize.largeHeadline,
+        var maxHight = MediaQuery.of(context).size.height / 2;
+        Widget listWidget;
+        if (list.isEmpty) {
+          listWidget = const SizedBox(
+            height: elementHight,
+            child: Center(
+              child: ConstantWidget.activityIndicator,
+            ),
+          );
+        } else if (maxHight > elementHight * list.length + Constant.margin * (list.length - 1)) {
+          listWidget = Column(
+            children: List.generate(list.length, (index) => _buildAccount(list[index])),
+          );
+        } else {
+          listWidget = SizedBox(
+              height: maxHight,
+              child: ListView.separated(
+                itemBuilder: (_, int index) => _buildAccount(list![index]),
+                separatorBuilder: (BuildContext context, int index) {
+                  return ConstantWidget.divider.list;
+                },
+                itemCount: list!.length,
+              ));
+        }
+
+        return Container(
+          decoration: ConstantDecoration.bottomSheet,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(Constant.margin, Constant.margin, Constant.margin, 0),
+                  child: Text(
+                    '选择账本',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: ConstantFontSize.largeHeadline,
+                    ),
                   ),
                 ),
               ),
-            ),
-            listWidget
-          ],
-        ),
-      ),
+              listWidget
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -113,7 +105,7 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
           Container(
             width: 4,
             height: double.infinity,
-            color: account.id == currentAccount.id ? Colors.blue : Colors.white,
+            color: account.id == selectedAccount.id ? Colors.blue : Colors.white,
           ),
           Icon(account.icon),
         ],
@@ -130,47 +122,5 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
   void onSelectedAccount(AccountDetailModel account) {
     if (widget.onSelectedAccount == null) return;
     widget.onSelectedAccount!(account);
-  }
-}
-
-typedef void OnWidgetSizeChange(Size size);
-
-class MeasureSizeRenderObject extends RenderProxyBox {
-  Size? oldSize;
-  OnWidgetSizeChange onChange;
-
-  MeasureSizeRenderObject(this.onChange);
-
-  @override
-  void performLayout() {
-    super.performLayout();
-
-    Size newSize = child!.size;
-    if (oldSize == newSize) return;
-
-    oldSize = newSize;
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      onChange(newSize);
-    });
-  }
-}
-
-class MeasureSize extends SingleChildRenderObjectWidget {
-  final OnWidgetSizeChange onChange;
-
-  const MeasureSize({
-    Key? key,
-    required this.onChange,
-    required Widget child,
-  }) : super(key: key, child: child);
-
-  @override
-  RenderObject createRenderObject(BuildContext context) {
-    return MeasureSizeRenderObject(onChange);
-  }
-
-  @override
-  void updateRenderObject(BuildContext context, covariant MeasureSizeRenderObject renderObject) {
-    renderObject.onChange = onChange;
   }
 }

@@ -10,6 +10,9 @@ class TransactionCategoryModel extends BaseTransactionCategoryModel {
   late DateTime createdAt;
   @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
   late DateTime updatedAt;
+
+  bool get isValid => id > 0;
+
   TransactionCategoryModel({
     required super.id,
     required super.name,
@@ -34,5 +37,4 @@ class TransactionCategoryModel extends BaseTransactionCategoryModel {
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         );
-  bool get isValid => id > 0;
 }

@@ -13,8 +13,7 @@ final class FlowConditionLoaded extends FlowConditionState {
 }
 
 final class FlowConditionCategoryLoaded extends FlowConditionState {
-  final List<MapEntry<TransactionCategoryFatherModel, List<TransactionCategoryModel>>> tree;
-  FlowConditionCategoryLoaded(this.tree);
+  FlowConditionCategoryLoaded();
 }
 
 final class FlowConditionAccountLoaded extends FlowConditionState {
