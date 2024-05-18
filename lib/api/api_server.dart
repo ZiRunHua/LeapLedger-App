@@ -6,15 +6,16 @@ import 'package:uuid/uuid.dart';
 
 import 'package:dio/dio.dart'
     show
-        Dio,
         BaseOptions,
-        Options,
-        Response,
-        InterceptorsWrapper,
+        Dio,
         DioException,
         FormData,
+        InterceptorsWrapper,
         MultipartFile,
-        RequestOptions;
+        Options,
+        QueuedInterceptor,
+        RequestOptions,
+        Response;
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 
@@ -59,6 +60,7 @@ class ApiServer {
         return handler.next(options); // 必须调用 next 方法，否则请求不会继续
       },
     ))
+    ..interceptors.add(QueuedInterceptor())
     ..interceptors.add(
       DioCacheInterceptor(
         options: CacheOptions(
