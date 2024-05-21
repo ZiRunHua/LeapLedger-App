@@ -11,20 +11,18 @@ class HomeNavigationState extends State<HomeNavigation> {
   AccountDetailModel account = UserBloc.currentAccount;
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.symmetric(vertical: Constant.smallPadding / 2),
-        child: UserBloc.listenerCurrentAccountIdUpdate(
-          () {
-            setState(() {
-              account = UserBloc.currentAccount;
-            });
-          },
-          SizedBox(
-            height: 48,
-            width: MediaQuery.of(context).size.width,
-            child: _buidlButtonGroup(),
-          ),
-        ));
+    return UserBloc.listenerCurrentAccountIdUpdate(
+      () {
+        setState(() {
+          account = UserBloc.currentAccount;
+        });
+      },
+      SizedBox(
+        height: 48,
+        width: MediaQuery.of(context).size.width,
+        child: _buidlButtonGroup(),
+      ),
+    );
   }
 
   Widget _buidlButtonGroup() {

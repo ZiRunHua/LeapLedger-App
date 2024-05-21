@@ -84,9 +84,12 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(right: Constant.padding),
-                child: Text(
-                  "$number",
-                  style: const TextStyle(color: Colors.grey, fontSize: ConstantFontSize.headline),
+                child: SizedBox(
+                  width: 10,
+                  child: Text(
+                    "$number",
+                    style: const TextStyle(color: Colors.grey, fontSize: ConstantFontSize.headline),
+                  ),
                 ),
               ),
               Icon(data.category.icon, color: ConstantColor.primaryColor)

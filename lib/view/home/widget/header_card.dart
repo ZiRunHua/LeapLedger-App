@@ -8,7 +8,6 @@ class HeaderCard extends StatefulWidget {
 }
 
 class _HeaderCardState extends State<HeaderCard> {
-  UserHomeHeaderCardApiModel? _data;
   final UserHomeHeaderCardApiModel _shimmeData = UserHomeHeaderCardApiModel(
     income: AmountCountApiModel(0, 0),
     expense: AmountCountApiModel(0, 0),
@@ -24,15 +23,14 @@ class _HeaderCardState extends State<HeaderCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => _Func._pushTransactionFlow(context, _condition),
-      child: BlocListener<HomeBloc, HomeState>(
-        listener: (context, state) {
+      child: BlocBuilder<HomeBloc, HomeState>(
+        buildWhen: (_, state) => state is HomeHeaderLoaded,
+        builder: (context, state) {
           if (state is HomeHeaderLoaded) {
-            setState(() {
-              _data = state.data;
-            });
+            return _buildCard(state.data);
           }
+          return _buildCard(_shimmeData);
         },
-        child: _data != null ? _buildCard(_data!) : _buildCard(_shimmeData),
       ),
     );
   }
@@ -88,14 +86,12 @@ class _HeaderCardState extends State<HeaderCard> {
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(Constant.smallPadding * 2),
-        color: Colors.white,
+        color: ConstantColor.secondaryColor,
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Constant.smallPadding),
-        child: Text(
-          "${DateFormat('MM月dd日').format(start)}-${DateFormat('MM月dd日').format(end)}",
-          style: const TextStyle(fontSize: ConstantFontSize.body),
-        ),
+      padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
+      child: Text(
+        "${DateFormat('MM月dd日').format(start)}-${DateFormat('MM月dd日').format(end)}",
+        style: const TextStyle(fontSize: ConstantFontSize.body),
       ),
     );
   }

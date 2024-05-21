@@ -8,7 +8,6 @@ class TimePeriodStatistics extends StatefulWidget {
 }
 
 class _TimePeriodStatisticsState extends State<TimePeriodStatistics> {
-  UserHomeTimePeriodStatisticsApiModel? _data;
   final today = DateTime.now();
   late final UserHomeTimePeriodStatisticsApiModel _shimmeData;
   @override
@@ -33,35 +32,36 @@ class _TimePeriodStatisticsState extends State<TimePeriodStatistics> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<HomeBloc, HomeState>(
-      listener: (context, state) {
-        if (state is HomeTimePeriodStatisticsLoaded) {
-          setState(() {
-            _data = state.data;
-          });
-        }
-      },
-      child: _data != null ? _buildCard(_data!) : _buildCard(_shimmeData),
+    return _Func._buildCard(
+      title: "收支报告",
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
+        child: BlocBuilder<HomeBloc, HomeState>(
+          buildWhen: (_, state) => state is HomeTimePeriodStatisticsLoaded,
+          builder: (context, state) {
+            if (state is HomeTimePeriodStatisticsLoaded) {
+              return _buildContent(state.data);
+            }
+            return _buildContent(_shimmeData);
+          },
+        ),
+      ),
     );
   }
 
-  Widget _buildCard(UserHomeTimePeriodStatisticsApiModel data) {
-    return _Func._buildCard(
-        title: "收支报告",
-        child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildListTile(icon: Icons.calendar_today_outlined, title: "今日", data: data.todayData),
-                ConstantWidget.divider.list,
-                _buildListTile(icon: Icons.event_outlined, title: "昨日", data: data.yesterdayData),
-                ConstantWidget.divider.list,
-                _buildListTile(icon: Icons.date_range_outlined, title: "本周", data: data.weekData),
-                ConstantWidget.divider.list,
-                _buildListTile(icon: Icons.public_outlined, title: "今年", data: data.yearData),
-              ],
-            )));
+  Widget _buildContent(UserHomeTimePeriodStatisticsApiModel data) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildListTile(icon: Icons.calendar_today_outlined, title: "今日", data: data.todayData),
+        ConstantWidget.divider.list,
+        _buildListTile(icon: Icons.event_outlined, title: "昨日", data: data.yesterdayData),
+        ConstantWidget.divider.list,
+        _buildListTile(icon: Icons.date_range_outlined, title: "本周", data: data.weekData),
+        ConstantWidget.divider.list,
+        _buildListTile(icon: Icons.public_outlined, title: "今年", data: data.yearData),
+      ],
+    );
   }
 
   Widget _buildListTile(

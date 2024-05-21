@@ -26,6 +26,7 @@ class _Func {
       shape: const RoundedRectangleBorder(
         borderRadius: ConstantDecoration.borderRadius,
       ),
+      margin: const EdgeInsets.symmetric(vertical: Constant.margin),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,

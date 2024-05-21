@@ -8,28 +8,24 @@ class StatisticsLineChart extends StatefulWidget {
 }
 
 class _StatisticsLineChartState extends State<StatisticsLineChart> {
-  List<DayAmountStatisticApiModel>? _expenseList;
-
   @override
   Widget build(BuildContext context) {
-    return BlocListener<HomeBloc, HomeState>(
-      listener: (context, state) {
-        if (state is HomeStatisticsLineChart) {
-          setState(() {
-            _expenseList = state.expenseList;
-          });
-        }
-      },
-      child: _Func._buildCard(
-        title: "本月支出情况",
-        child: AspectRatio(
-            aspectRatio: 1.6,
-            child: Padding(
-              padding: const EdgeInsets.all(Constant.padding),
-              child: _expenseList != null
-                  ? _buildLineChart(_expenseList!)
-                  : const Center(child: CircularProgressIndicator()),
-            )),
+    return _Func._buildCard(
+      title: "本月支出情况",
+      child: AspectRatio(
+        aspectRatio: 1.6,
+        child: Padding(
+          padding: const EdgeInsets.all(Constant.padding),
+          child: BlocBuilder<HomeBloc, HomeState>(
+            buildWhen: (_, state) => state is HomeStatisticsLineChart,
+            builder: (context, state) {
+              if (state is HomeStatisticsLineChart) {
+                return _buildLineChart(state.expenseList);
+              }
+              return const Center(child: CircularProgressIndicator());
+            },
+          ),
+        ),
       ),
     );
   }
@@ -94,7 +90,7 @@ class _StatisticsLineChartState extends State<StatisticsLineChart> {
                 return Text(DateFormat('d日').format(data[value.toInt()].date),
                     style: const TextStyle(
                       color: Colors.grey,
-                      fontSize: 14,
+                      fontSize: ConstantFontSize.bodySmall,
                     ));
               },
               interval: data.length / 6 > 0 ? data.length / 6 : 1,

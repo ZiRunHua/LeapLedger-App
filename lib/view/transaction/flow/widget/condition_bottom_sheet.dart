@@ -10,13 +10,27 @@ class ConditionBottomSheet extends StatefulWidget {
 class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
   late final GlobalKey<FormState> _formKey;
   late final FlowConditionCubit _conditionCubit;
+
+  TransactionQueryConditionApiModel get _condition => _conditionCubit.condition;
   @override
   void initState() {
     _conditionCubit = BlocProvider.of<FlowConditionCubit>(context);
     _conditionCubit.fetchCategoryData();
-
     _formKey = GlobalKey<FormState>();
+    if (_condition.minimumAmount != null) {
+      _minAmountController.text = _condition.minimumAmount.toString();
+    }
+    if (_condition.maximumAmount != null) {
+      _maxAmountController.text = _condition.maximumAmount.toString();
+    }
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _minAmountController.dispose();
+    _maxAmountController.dispose();
+    super.dispose();
   }
 
   @override
@@ -96,6 +110,8 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
   }
 
   /// 金额
+  final TextEditingController _minAmountController = TextEditingController();
+  final TextEditingController _maxAmountController = TextEditingController();
   List<Widget> _buildAmountInput() {
     return [
       Row(
@@ -103,18 +119,15 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
         children: [
           Flexible(
             child: AmountInput(
-              initialValue: _conditionCubit.condition.minimumAmount,
+              controller: _minAmountController,
               onChanged: (amount) => _conditionCubit.updateMinimumAmount(amount: amount),
               decoration: AmountInput.defaultDecoration.copyWith(labelText: "最低金额"),
             ),
           ),
-          SizedBox(
-            width: 32,
-            child: ConstantWidget.divider.indented,
-          ), // Add some space between the text fields
+          SizedBox(width: 32, child: ConstantWidget.divider.indented),
           Flexible(
             child: AmountInput(
-              initialValue: _conditionCubit.condition.maximumAmount,
+              controller: _maxAmountController,
               onChanged: (amount) => _conditionCubit.updateMaximumAmount(amount: amount),
               decoration: AmountInput.defaultDecoration.copyWith(labelText: "最高金额"),
             ),
@@ -125,7 +138,7 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
   }
 
   /// 收支
-  get selectedIncomeExpense => _conditionCubit.condition.incomeExpense;
+  get selectedIncomeExpense => _condition.incomeExpense;
   List<Widget> _buildIncomeExpense() {
     return [
       SegmentedButton<IncomeExpense?>(
@@ -200,7 +213,7 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
     );
   }
 
-  Set<int> get selectCategory => _conditionCubit.condition.categoryIds;
+  Set<int> get selectCategory => _condition.categoryIds;
   Widget _buildCategoryIcon(TransactionCategoryModel category) {
     return CategoryIconAndName(
       category: category,
@@ -221,8 +234,9 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
               style: ButtonStyle(
                   shape: MaterialStateProperty.all(const StadiumBorder(side: BorderSide(style: BorderStyle.none)))),
               onPressed: () {
+                _minAmountController.clear();
+                _maxAmountController.clear();
                 _conditionCubit.setOptionalFieldsToEmpty();
-                _formKey.currentState?.reset();
               },
               child: const Text("重 置"),
             )),

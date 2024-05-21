@@ -12,12 +12,14 @@ class AmountInput extends StatelessWidget {
   final Function(int?)? onChanged;
   final InputDecoration decoration;
   final int? initialValue;
+  final TextEditingController? controller;
   const AmountInput({
+    super.key,
     this.onSave,
     this.onChanged,
     this.initialValue,
     this.decoration = defaultDecoration,
-    super.key,
+    this.controller,
   });
 
   @override
@@ -26,6 +28,7 @@ class AmountInput extends StatelessWidget {
       height: 48,
       width: 150,
       child: TextFormField(
+        controller: controller,
         style: const TextStyle(fontSize: 14),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: initialValue != null ? (initialValue! / 100).toStringAsFixed(2) : null,

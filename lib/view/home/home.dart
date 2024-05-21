@@ -32,13 +32,14 @@ class Home extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            SafeArea(
-                              child: HeaderCard(),
-                            ),
+                            SafeArea(child: HeaderCard()),
+                            SizedBox(height: Constant.margin),
                             HomeNavigation(),
+                            SizedBox(height: Constant.margin),
                             TimePeriodStatistics(),
                             StatisticsLineChart(),
                             CategoryAmountRank(),
+                            SizedBox(height: Constant.margin),
                           ],
                         ),
                       ),
