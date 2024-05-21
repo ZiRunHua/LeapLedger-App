@@ -19,7 +19,7 @@ Map<String, dynamic> _$ProductModelToJson(ProductModel instance) =>
 ProductTransactionCategoryModel _$ProductTransactionCategoryModelFromJson(
         Map<String, dynamic> json) =>
     ProductTransactionCategoryModel(
-      id: json['Id'] as int,
+      id: (json['Id'] as num).toInt(),
       name: json['Name'] as String? ?? '',
       icon: Json.iconDataFormJson(json['Icon']),
       incomeExpense:
@@ -46,10 +46,10 @@ ProductTransactionCategoryMappingModel
     _$ProductTransactionCategoryMappingModelFromJson(
             Map<String, dynamic> json) =>
         ProductTransactionCategoryMappingModel()
-          ..accountId = json['AccountId'] as int? ?? 0
-          ..ptcId = json['PtcId'] as int? ?? 0
-          ..categoryId = json['CategoryId'] as int? ?? 0
-          ..productKey = json['ProductKey'] as int? ?? 0
+          ..accountId = (json['AccountId'] as num?)?.toInt() ?? 0
+          ..ptcId = (json['PtcId'] as num?)?.toInt() ?? 0
+          ..categoryId = (json['CategoryId'] as num?)?.toInt() ?? 0
+          ..productKey = (json['ProductKey'] as num?)?.toInt() ?? 0
           ..createdAt = Json.dateTimeFromJson(json['CreatedAt'])
           ..updatedAt = Json.dateTimeFromJson(json['UpdatedAt']);
 

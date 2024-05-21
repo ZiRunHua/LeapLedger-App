@@ -57,7 +57,7 @@ class AccountListState extends State<AccountList> {
       itemBuilder: (_, index) {
         final account = list[index];
         return ListTile(
-          leading: _buildLeading(account),
+          leading: _buildLeading(account, selectedAccount.id),
           contentPadding: const EdgeInsets.only(left: Constant.padding, right: Constant.smallPadding),
           horizontalTitleGap: 0,
           title: Row(
@@ -87,20 +87,6 @@ class AccountListState extends State<AccountList> {
         return ConstantWidget.divider.indented;
       },
     );
-  }
-
-  Widget _buildLeading(AccountModel account) {
-    return Row(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
-      SizedBox(
-        width: 4,
-        child: Container(
-          color: account.id == selectedAccount.id ? Colors.blue : Colors.white,
-        ),
-      ),
-      const SizedBox(width: Constant.margin),
-      Icon(account.icon, size: 32),
-      const SizedBox(width: Constant.margin),
-    ]);
   }
 
   _onClickAccount(AccountDetailModel account) async {

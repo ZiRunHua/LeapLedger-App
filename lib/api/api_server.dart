@@ -1,7 +1,6 @@
 import 'dart:collection';
 import 'dart:core';
 import 'dart:io';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:dio/dio.dart'
@@ -11,6 +10,7 @@ import 'package:dio/dio.dart'
         DioException,
         FormData,
         InterceptorsWrapper,
+        LogInterceptor,
         MultipartFile,
         Options,
         QueuedInterceptor,
@@ -57,10 +57,9 @@ class ApiServer {
     ..interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) {
         options.headers[HttpHeaders.authorizationHeader] = UserBloc.token;
-        return handler.next(options); // 必须调用 next 方法，否则请求不会继续
+        return handler.next(options);
       },
     ))
-    ..interceptors.add(QueuedInterceptor())
     ..interceptors.add(
       DioCacheInterceptor(
         options: CacheOptions(
@@ -73,7 +72,15 @@ class ApiServer {
         ),
       ),
     )
-    ..interceptors.add(PrettyDioLogger());
+    ..interceptors.add(QueuedInterceptor())
+    ..interceptors.add(LogInterceptor(
+      request: true,
+      requestHeader: false,
+      requestBody: true,
+      responseHeader: true,
+      responseBody: true,
+      error: true,
+    ));
   static Future<Response?> _issueRequest(Method method, String path, Object? data, Options options) async {
     Response response;
     try {
@@ -111,7 +118,7 @@ class ApiServer {
       return getResponseBodyAndShowError(null, errorMsg: "服务器错误");
     }
     int code = response.statusCode!;
-    if (code >= 200 && code < 300) {
+    if (code >= 200 && (code < 300 || code == 304)) {
       return ResponseBody(response.data);
     } else if (code == 401) {
       if (Global.navigatorKey.currentState != null) {

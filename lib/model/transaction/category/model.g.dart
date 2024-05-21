@@ -9,11 +9,11 @@ part of 'model.dart';
 TransactionCategoryModel _$TransactionCategoryModelFromJson(
         Map<String, dynamic> json) =>
     TransactionCategoryModel(
-      id: json['Id'] as int,
+      id: (json['Id'] as num).toInt(),
       name: json['Name'] as String? ?? '',
       icon: Json.iconDataFormJson(json['Icon']),
-      fatherId: json['FatherId'] as int? ?? 0,
-      accountId: json['AccountId'] as int? ?? 0,
+      fatherId: (json['FatherId'] as num?)?.toInt() ?? 0,
+      accountId: (json['AccountId'] as num?)?.toInt() ?? 0,
       incomeExpense:
           $enumDecodeNullable(_$IncomeExpenseEnumMap, json['IncomeExpense']) ??
               IncomeExpense.income,
@@ -42,8 +42,8 @@ const _$IncomeExpenseEnumMap = {
 TransactionCategoryFatherModel _$TransactionCategoryFatherModelFromJson(
         Map<String, dynamic> json) =>
     TransactionCategoryFatherModel()
-      ..id = json['Id'] as int? ?? 0
-      ..accountId = json['AccountId'] as int? ?? 0
+      ..id = (json['Id'] as num?)?.toInt() ?? 0
+      ..accountId = (json['AccountId'] as num?)?.toInt() ?? 0
       ..name = json['Name'] as String? ?? ''
       ..incomeExpense =
           $enumDecodeNullable(_$IncomeExpenseEnumMap, json['IncomeExpense']) ??

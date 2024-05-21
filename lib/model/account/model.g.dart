@@ -7,7 +7,7 @@ part of 'model.dart';
 // **************************************************************************
 
 AccountModel _$AccountModelFromJson(Map<String, dynamic> json) => AccountModel(
-      id: json['Id'] as int? ?? 0,
+      id: (json['Id'] as num?)?.toInt() ?? 0,
       name: json['Name'] as String? ?? '',
       icon: Json.iconDataFormJson(json['Icon']),
       type: $enumDecodeNullable(_$AccountTypeEnumMap, json['Type'],
@@ -34,7 +34,7 @@ const _$AccountTypeEnumMap = {
 
 AccountDetailModel _$AccountDetailModelFromJson(Map<String, dynamic> json) =>
     AccountDetailModel(
-      id: json['Id'] as int? ?? 0,
+      id: (json['Id'] as num?)?.toInt() ?? 0,
       name: json['Name'] as String? ?? '',
       icon: Json.iconDataFormJson(json['Icon']),
       type: $enumDecodeNullable(_$AccountTypeEnumMap, json['Type'],
@@ -42,7 +42,7 @@ AccountDetailModel _$AccountDetailModelFromJson(Map<String, dynamic> json) =>
           AccountType.independent,
       createTime: Json.dateTimeFromJson(json['CreateTime']),
       updateTime: Json.dateTimeFromJson(json['UpdateTime']),
-      creatorId: json['CreatorId'] as int? ?? 0,
+      creatorId: (json['CreatorId'] as num?)?.toInt() ?? 0,
       creatorName: json['CreatorName'] as String? ?? '',
       role: $enumDecodeNullable(_$AccountRoleEnumMap, json['Role'],
               unknownValue: AccountRole.reader) ??
@@ -73,9 +73,9 @@ const _$AccountRoleEnumMap = {
 
 AccountUserModel _$AccountUserModelFromJson(Map<String, dynamic> json) =>
     AccountUserModel(
-      id: json['Id'] as int?,
-      accountId: json['AccountId'] as int,
-      userId: json['UserId'] as int,
+      id: (json['Id'] as num?)?.toInt(),
+      accountId: (json['AccountId'] as num).toInt(),
+      userId: (json['UserId'] as num).toInt(),
       info: UserInfoModel.fromJson(json['Info'] as Map<String, dynamic>),
       role: $enumDecode(_$AccountRoleEnumMap, json['Role']),
       createTime: Json.dateTimeFromJson(json['CreateTime']),
@@ -95,7 +95,7 @@ AccountUserInvitationModle _$AccountUserInvitationModleFromJson(
         Map<String, dynamic> json) =>
     AccountUserInvitationModle(
       account: AccountModel.fromJson(json['Account'] as Map<String, dynamic>),
-      id: json['Id'] as int,
+      id: (json['Id'] as num).toInt(),
       invitee: UserInfoModel.fromJson(json['Invitee'] as Map<String, dynamic>),
       inviter: UserInfoModel.fromJson(json['Inviter'] as Map<String, dynamic>),
       role: $enumDecode(_$AccountRoleEnumMap, json['Role']),
@@ -123,7 +123,7 @@ const _$AccountUserInvitationStatusEnumMap = {
 
 AccountMappingModel _$AccountMappingModelFromJson(Map<String, dynamic> json) =>
     AccountMappingModel(
-      id: json['Id'] as int,
+      id: (json['Id'] as num).toInt(),
       mainAccount:
           AccountModel.fromJson(json['MainAccount'] as Map<String, dynamic>),
       relatedAccount: AccountDetailModel.fromJson(
@@ -145,9 +145,9 @@ Map<String, dynamic> _$AccountMappingModelToJson(
 AccountUserConfigModel _$AccountUserConfigModelFromJson(
         Map<String, dynamic> json) =>
     AccountUserConfigModel(
-      id: json['Id'] as int,
-      userId: json['UserId'] as int,
-      accountId: json['AccountId'] as int,
+      id: (json['Id'] as num).toInt(),
+      userId: (json['UserId'] as num).toInt(),
+      accountId: (json['AccountId'] as num).toInt(),
       trans: AccountUserTransConfigModel.fromJson(
           json['Trans'] as Map<String, dynamic>),
       updateTime: Json.dateTimeFromJson(json['UpdateTime']),
@@ -180,7 +180,7 @@ Map<String, dynamic> _$AccountUserTransConfigModelToJson(
 AccountTemplateModel _$AccountTemplateModelFromJson(
         Map<String, dynamic> json) =>
     AccountTemplateModel()
-      ..id = json['Id'] as int? ?? 0
+      ..id = (json['Id'] as num?)?.toInt() ?? 0
       ..name = json['Name'] as String? ?? ''
       ..icon = Json.iconDataFormJson(json['Icon']);
 

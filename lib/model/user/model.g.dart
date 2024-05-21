@@ -7,7 +7,7 @@ part of 'model.dart';
 // **************************************************************************
 
 UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel()
-  ..id = json['Id'] as int? ?? 0
+  ..id = (json['Id'] as num?)?.toInt() ?? 0
   ..username = json['Username'] as String? ?? ''
   ..email = json['Email'] as String? ?? ''
   ..createTime = Json.dateTimeFromJson(json['CreateTime'])
@@ -42,7 +42,7 @@ Map<String, dynamic> _$UserTransactionShareConfigModelToJson(
 UserInfoModel _$UserInfoModelFromJson(Map<String, dynamic> json) =>
     UserInfoModel(
       email: json['Email'] as String,
-      id: json['Id'] as int,
+      id: (json['Id'] as num).toInt(),
       username: json['Username'] as String,
     );
 

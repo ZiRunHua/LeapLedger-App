@@ -43,6 +43,7 @@ class CommonListTile extends ListTile {
     TransactionModel model, {
     Key? key,
     bool displayUser = false,
+    bool displayTime = true,
     VoidCallback? onTap,
   }) : this(
             key: key,
@@ -51,23 +52,32 @@ class CommonListTile extends ListTile {
               color: ConstantColor.primaryColor,
             ),
             title: Text(model.categoryName),
-            subtitle: Text("${model.categoryFatherName}  ${DateFormat('yyyy-MM-dd').format(model.tradeTime)}"),
+            subtitle: displayTime
+                ? Text("${model.categoryFatherName}  ${DateFormat('yyyy-MM-dd').format(model.tradeTime)}")
+                : Text(model.categoryFatherName),
             trailing: Text.rich(
               style: const TextStyle(fontSize: ConstantFontSize.headline, fontWeight: FontWeight.normal),
               TextSpan(
                 children: displayUser
                     ? [
-                        AmountTextSpan.sameHeight(model.amount,
-                            textStyle:
-                                const TextStyle(fontSize: ConstantFontSize.headline, fontWeight: FontWeight.w500)),
+                        AmountTextSpan.sameHeight(
+                          model.amount,
+                          textStyle: const TextStyle(fontSize: ConstantFontSize.headline, fontWeight: FontWeight.w500),
+                          incomeExpense: model.incomeExpense,
+                          displayModel: IncomeExpenseDisplayModel.symbols,
+                        ),
                         TextSpan(
-                            text: "\n${model.userName}",
-                            style: const TextStyle(fontSize: ConstantFontSize.body, fontWeight: FontWeight.normal))
+                          text: "\n${model.userName}",
+                          style: const TextStyle(fontSize: ConstantFontSize.body, fontWeight: FontWeight.normal),
+                        )
                       ]
                     : [
-                        AmountTextSpan.sameHeight(model.amount,
-                            textStyle:
-                                const TextStyle(fontSize: ConstantFontSize.headline, fontWeight: FontWeight.w500))
+                        AmountTextSpan.sameHeight(
+                          model.amount,
+                          textStyle: const TextStyle(fontSize: ConstantFontSize.headline, fontWeight: FontWeight.w500),
+                          incomeExpense: model.incomeExpense,
+                          displayModel: IncomeExpenseDisplayModel.symbols,
+                        )
                       ],
               ),
               textAlign: TextAlign.right,

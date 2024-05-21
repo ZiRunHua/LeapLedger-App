@@ -22,24 +22,27 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return BlocBuilder<FlowConditionCubit, FlowConditionState>(
-      buildWhen: (_, state) => state is FlowConditionUpdate,
-      builder: (context, state) {
-        return Stack(children: [
-          Container(
-              padding: const EdgeInsets.only(top: Constant.padding),
-              decoration: ConstantDecoration.bottomSheet,
-              height: size.height * 0.8,
-              width: size.width,
-              child: _buildForm()),
-          Positioned(
-            top: Constant.margin / 2,
-            right: Constant.margin / 2,
-            child: IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.of(context).pop()),
-          ),
-        ]);
-      },
-    );
+    return PopScope(
+        onPopInvoked: (_) => _conditionCubit.sync(),
+        child: BlocBuilder<FlowConditionCubit, FlowConditionState>(
+          buildWhen: (_, state) => state is FlowEditingConditionUpdate,
+          builder: (context, state) {
+            return Stack(children: [
+              Container(
+                padding: const EdgeInsets.only(top: Constant.padding),
+                decoration: ConstantDecoration.bottomSheet,
+                height: size.height * 0.8,
+                width: size.width,
+                child: _buildForm(),
+              ),
+              Positioned(
+                top: Constant.margin / 2,
+                right: Constant.margin / 2,
+                child: IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.of(context).pop()),
+              ),
+            ]);
+          },
+        ));
   }
 
   Widget _buildForm() {
@@ -50,20 +53,20 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            flex: 12,
+            flex: 11,
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildOneConditon(name: "金额", _buildAmountInput()),
-                  _buildOneConditon(name: "分类", _buildIncomeExpense()),
+                  _buildOneConditon(name: "收支", _buildIncomeExpense()),
                   _buildCategory()
                 ],
               ),
             ),
           ),
-          Expanded(child: _buildButtonGroup()),
+          Expanded(flex: 1, child: _buildButtonGroup()),
         ],
       ),
     );
@@ -71,7 +74,7 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
 
   Widget _buildOneConditon(List<Widget> widgetList, {String? name}) {
     return Padding(
-      padding: const EdgeInsets.all(Constant.padding),
+      padding: const EdgeInsets.fromLTRB(Constant.padding, Constant.padding, Constant.padding, 0),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,6 +103,7 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
         children: [
           Flexible(
             child: AmountInput(
+              initialValue: _conditionCubit.condition.minimumAmount,
               onChanged: (amount) => _conditionCubit.updateMinimumAmount(amount: amount),
               decoration: AmountInput.defaultDecoration.copyWith(labelText: "最低金额"),
             ),
@@ -110,6 +114,7 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
           ), // Add some space between the text fields
           Flexible(
             child: AmountInput(
+              initialValue: _conditionCubit.condition.maximumAmount,
               onChanged: (amount) => _conditionCubit.updateMaximumAmount(amount: amount),
               decoration: AmountInput.defaultDecoration.copyWith(labelText: "最高金额"),
             ),
@@ -123,41 +128,38 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
   get selectedIncomeExpense => _conditionCubit.condition.incomeExpense;
   List<Widget> _buildIncomeExpense() {
     return [
-      Padding(
-        padding: const EdgeInsets.only(bottom: Constant.padding),
-        child: SegmentedButton<IncomeExpense?>(
-          selected: {selectedIncomeExpense},
-          emptySelectionAllowed: true,
-          showSelectedIcon: false,
-          style: ButtonStyle(
-            visualDensity: VisualDensity.compact,
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            ),
-            textStyle: MaterialStateProperty.all<TextStyle>(const TextStyle(color: Colors.white)),
-            backgroundColor: MaterialStateProperty.resolveWith<Color>(
-              (Set<MaterialState> states) {
-                if (states.contains(MaterialState.selected)) {
-                  return selectedIncomeExpense == IncomeExpense.income
-                      ? ConstantColor.incomeAmount
-                      : ConstantColor.expenseAmount;
-                }
-                return Colors.white;
-              },
-            ),
+      SegmentedButton<IncomeExpense?>(
+        selected: {selectedIncomeExpense},
+        emptySelectionAllowed: true,
+        showSelectedIcon: false,
+        style: ButtonStyle(
+          visualDensity: VisualDensity.compact,
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
-          onSelectionChanged: (value) => _conditionCubit.changeIncomeExpense(ie: value.first),
-          segments: const [
-            ButtonSegment(
-              value: IncomeExpense.income,
-              label: Text("收入", style: TextStyle(fontSize: ConstantFontSize.body)),
-            ),
-            ButtonSegment(
-              value: IncomeExpense.expense,
-              label: Text("支出", style: TextStyle(fontSize: ConstantFontSize.body)),
-            )
-          ],
+          textStyle: MaterialStateProperty.all<TextStyle>(const TextStyle(color: Colors.white)),
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              if (states.contains(MaterialState.selected)) {
+                return selectedIncomeExpense == IncomeExpense.income
+                    ? ConstantColor.incomeAmount
+                    : ConstantColor.expenseAmount;
+              }
+              return Colors.white;
+            },
+          ),
         ),
+        onSelectionChanged: (value) => _conditionCubit.changeIncomeExpense(ie: value.first),
+        segments: const [
+          ButtonSegment(
+            value: IncomeExpense.income,
+            label: Text("收入", style: TextStyle(fontSize: ConstantFontSize.body)),
+          ),
+          ButtonSegment(
+            value: IncomeExpense.expense,
+            label: Text("支出", style: TextStyle(fontSize: ConstantFontSize.body)),
+          )
+        ],
       ),
     ];
   }
@@ -211,13 +213,17 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
   Widget _buildButtonGroup() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(
             width: 100,
             child: OutlinedButton(
               style: ButtonStyle(
                   shape: MaterialStateProperty.all(const StadiumBorder(side: BorderSide(style: BorderStyle.none)))),
-              onPressed: () => _conditionCubit.reset(),
+              onPressed: () {
+                _conditionCubit.setOptionalFieldsToEmpty();
+                _formKey.currentState?.reset();
+              },
               child: const Text("重 置"),
             )),
         SizedBox(

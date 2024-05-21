@@ -82,7 +82,9 @@ class IncomeExpenseStatisticWithTimeApiModel {
   late AmountCountApiModel income;
   late AmountCountApiModel expense;
   Duration? get timeDuration => endTime.difference(startTime);
+  // 日均收入
   int get dayAverageIncome => timeDuration != null && income.amount != 0 ? income.amount ~/ timeDuration!.inDays : 0;
+  // 日均支出
   int get dayAverageExpense => timeDuration != null && expense.amount != 0 ? expense.amount ~/ timeDuration!.inDays : 0;
 
   @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)

@@ -15,3 +15,15 @@ part "account_list_bottom_sheet.dart";
 typedef SelectAccountCallback = Future<AccountDetailModel?> Function(AccountDetailModel account);
 
 enum ViewAccountListType { onlyCanEdit, all }
+
+Widget _buildLeading(AccountModel account, int selectAccountId) {
+  return Row(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
+    SizedBox(
+      width: 4,
+      child: Container(color: account.id == selectAccountId ? ConstantColor.primaryColor : Colors.white),
+    ),
+    const SizedBox(width: Constant.margin),
+    Icon(account.icon, size: 32),
+    const SizedBox(width: Constant.margin),
+  ]);
+}

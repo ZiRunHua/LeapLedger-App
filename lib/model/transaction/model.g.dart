@@ -8,19 +8,19 @@ part of 'model.dart';
 
 TransactionModel _$TransactionModelFromJson(Map<String, dynamic> json) =>
     TransactionModel()
-      ..id = json['Id'] as int? ?? 0
-      ..userId = json['UserId'] as int? ?? 0
+      ..id = (json['Id'] as num?)?.toInt() ?? 0
+      ..userId = (json['UserId'] as num?)?.toInt() ?? 0
       ..userName = json['UserName'] as String? ?? ''
-      ..accountId = json['AccountId'] as int? ?? 0
+      ..accountId = (json['AccountId'] as num?)?.toInt() ?? 0
       ..accountName = json['AccountName'] as String? ?? ''
       ..incomeExpense =
           $enumDecodeNullable(_$IncomeExpenseEnumMap, json['IncomeExpense']) ??
               IncomeExpense.income
-      ..categoryId = json['CategoryId'] as int? ?? 0
+      ..categoryId = (json['CategoryId'] as num?)?.toInt() ?? 0
       ..categoryIcon = Json.iconDataFormJson(json['CategoryIcon'])
       ..categoryName = json['CategoryName'] as String? ?? ''
       ..categoryFatherName = json['CategoryFatherName'] as String? ?? ''
-      ..amount = json['Amount'] as int? ?? 0
+      ..amount = (json['Amount'] as num?)?.toInt() ?? 0
       ..remark = json['Remark'] as String? ?? ''
       ..tradeTime = Json.dateTimeFromJson(json['TradeTime'])
       ..createTime = Json.dateTimeFromJson(json['CreateTime'])
@@ -53,12 +53,12 @@ const _$IncomeExpenseEnumMap = {
 TransactionEditModel _$TransactionEditModelFromJson(
         Map<String, dynamic> json) =>
     TransactionEditModel(
-      id: json['Id'] as int?,
-      userId: json['UserId'] as int,
-      accountId: json['AccountId'] as int,
-      categoryId: json['CategoryId'] as int,
+      id: (json['Id'] as num?)?.toInt(),
+      userId: (json['UserId'] as num).toInt(),
+      accountId: (json['AccountId'] as num).toInt(),
+      categoryId: (json['CategoryId'] as num).toInt(),
       incomeExpense: $enumDecode(_$IncomeExpenseEnumMap, json['IncomeExpense']),
-      amount: json['Amount'] as int,
+      amount: (json['Amount'] as num).toInt(),
       remark: json['Remark'] as String,
       tradeTime: Json.dateTimeFromJson(json['TradeTime']),
     );
@@ -79,8 +79,8 @@ Map<String, dynamic> _$TransactionEditModelToJson(
 TransactionShareModel _$TransactionShareModelFromJson(
         Map<String, dynamic> json) =>
     TransactionShareModel(
-      id: json['Id'] as int? ?? 0,
-      amount: json['Amount'] as int? ?? 0,
+      id: (json['Id'] as num?)?.toInt() ?? 0,
+      amount: (json['Amount'] as num?)?.toInt() ?? 0,
       incomeExpense:
           $enumDecodeNullable(_$IncomeExpenseEnumMap, json['IncomeExpense']) ??
               IncomeExpense.income,

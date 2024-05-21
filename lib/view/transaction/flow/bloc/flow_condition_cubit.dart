@@ -52,16 +52,30 @@ class FlowConditionCubit extends Cubit<FlowConditionState> {
     _condition.maximumAmount = condition.maximumAmount;
     _condition.startTime = condition.startTime;
     _condition.endTime = condition.endTime;
-    emit(FlowConditionUpdate(_condition));
+    emit(FlowConditionChanged(_condition));
   }
 
-  reset() {
+  setOptionalFieldsToEmpty() {
     condition.userIds = {};
     condition.categoryIds = {};
     condition.incomeExpense = null;
     condition.minimumAmount = null;
     condition.maximumAmount = null;
-    save();
+    emit(FlowEditingConditionUpdate());
+  }
+
+  sync() {
+    if (_condition == condition) {
+      return;
+    }
+    condition.accountId = _condition.accountId;
+    condition.userIds = _condition.userIds.toSet();
+    condition.categoryIds = _condition.categoryIds.toSet();
+    condition.incomeExpense = _condition.incomeExpense;
+    condition.minimumAmount = _condition.minimumAmount;
+    condition.maximumAmount = _condition.maximumAmount;
+    condition.startTime = _condition.startTime.copyWith();
+    condition.endTime = _condition.endTime.copyWith();
   }
 
   updateAccount(AccountDetailModel account) async {
@@ -69,8 +83,17 @@ class FlowConditionCubit extends Cubit<FlowConditionState> {
       return;
     }
     condition.accountId = account.id;
-    save();
+    _condition.accountId = account.id;
+    currentAccount = account;
+    emit(FlowConditionChanged(condition));
+    emit(FlowCurrentAccountChanged());
     await fetchCategoryData(accountId: account.id);
+  }
+
+  resetTime() {
+    condition.startTime = _condition.startTime;
+    condition.endTime = _condition.endTime;
+    emit(FlowEditingConditionUpdate());
   }
 
   updateTime({required DateTime startTime, required DateTime endTime}) {
@@ -79,7 +102,9 @@ class FlowConditionCubit extends Cubit<FlowConditionState> {
     }
     condition.startTime = startTime;
     condition.endTime = endTime;
-    save();
+    _condition.startTime = startTime.copyWith();
+    _condition.endTime = endTime.copyWith();
+    emit(FlowConditionChanged(condition));
   }
 
   selectCategory({required TransactionCategoryModel category}) {
@@ -88,12 +113,12 @@ class FlowConditionCubit extends Cubit<FlowConditionState> {
     } else {
       condition.categoryIds.add(category.id);
     }
-    save();
+    emit(FlowEditingConditionUpdate());
   }
 
   changeIncomeExpense({IncomeExpense? ie}) {
     condition.incomeExpense = ie;
-    save();
+    emit(FlowEditingConditionUpdate());
   }
 
   updateMinimumAmount({int? amount}) {

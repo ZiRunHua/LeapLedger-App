@@ -21,7 +21,15 @@ final class FlowConditionAccountLoaded extends FlowConditionState {
   FlowConditionAccountLoaded(this.data);
 }
 
-final class FlowConditionUpdate extends FlowConditionState {
+final class FlowEditingConditionUpdate extends FlowConditionState {
+  FlowEditingConditionUpdate();
+}
+
+final class FlowConditionChanged extends FlowConditionState {
   final TransactionQueryConditionApiModel condition;
-  FlowConditionUpdate(this.condition);
+  FlowConditionChanged(this.condition);
+}
+
+final class FlowCurrentAccountChanged extends FlowConditionState {
+  FlowCurrentAccountChanged();
 }

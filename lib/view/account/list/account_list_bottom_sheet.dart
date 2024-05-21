@@ -57,17 +57,26 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
           );
         } else if (maxHight > elementHight * list.length + Constant.margin * (list.length - 1)) {
           listWidget = Column(
-            children: List.generate(list.length, (index) => _buildAccount(list[index])),
+            children: List.generate(list.length * 2 - 1, (index) {
+              if (index % 2 == 0) {
+                return _buildAccount(list[index ~/ 2]);
+              } else {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: Constant.margin),
+                  child: ConstantWidget.divider.indented,
+                );
+              }
+            }),
           );
         } else {
           listWidget = SizedBox(
               height: maxHight,
               child: ListView.separated(
-                itemBuilder: (_, int index) => _buildAccount(list![index]),
+                itemBuilder: (_, int index) => _buildAccount(list[index]),
                 separatorBuilder: (BuildContext context, int index) {
                   return ConstantWidget.divider.list;
                 },
-                itemCount: list!.length,
+                itemCount: list.length,
               ));
         }
 
@@ -79,13 +88,10 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
             children: [
               const Center(
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(Constant.margin, Constant.margin, Constant.margin, 0),
+                  padding: EdgeInsets.all(Constant.margin),
                   child: Text(
                     '选择账本',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: ConstantFontSize.largeHeadline,
-                    ),
+                    style: TextStyle(fontSize: ConstantFontSize.largeHeadline, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -99,22 +105,15 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
 
   Widget _buildAccount(AccountDetailModel account) {
     return ListTile(
-      leading: Row(
-        mainAxisSize: MainAxisSize.min,
+      horizontalTitleGap: 0,
+      contentPadding: const EdgeInsets.only(left: Constant.padding, right: Constant.smallPadding),
+      leading: _buildLeading(account, selectedAccount.id),
+      title: Row(
         children: [
-          Container(
-            width: 4,
-            height: double.infinity,
-            color: account.id == selectedAccount.id ? Colors.blue : Colors.white,
-          ),
-          Icon(account.icon),
+          Text(account.name),
+          Visibility(visible: account.type == AccountType.share, child: const ShareLabel()),
         ],
       ),
-      title: Row(children: [
-        Text(account.name),
-        Visibility(visible: account.type == AccountType.share, child: const ShareLabel()),
-      ]),
-      contentPadding: const EdgeInsets.symmetric(vertical: Constant.margin),
       onTap: () => onSelectedAccount(account),
     );
   }

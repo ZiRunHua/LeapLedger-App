@@ -6,18 +6,17 @@ sealed class FlowListState {}
 final class FlowListLoading extends FlowListState {}
 
 final class FlowListLoaded extends FlowListState {
-  final Map<IncomeExpenseStatisticWithTimeApiModel, List<TransactionModel>> data;
-  final bool hasMore;
-  FlowListLoaded(this.data, this.hasMore);
+  FlowListLoaded();
 }
 
 final class FlowListMoreDataFetched extends FlowListState {
-  final Map<IncomeExpenseStatisticWithTimeApiModel, List<TransactionModel>> data;
-  final bool hasMore;
-  FlowListMoreDataFetched(this.data, this.hasMore);
+  FlowListMoreDataFetched();
 }
 
 final class FlowListTotalDataFetched extends FlowListState {
-  final IncomeExpenseStatisticApiModel data;
-  FlowListTotalDataFetched(this.data);
+  FlowListTotalDataFetched();
+}
+
+final class FlowLisMoreDataFetchingEvent extends FlowListState {
+  FlowLisMoreDataFetchingEvent();
 }

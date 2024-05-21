@@ -17,36 +17,58 @@ class _HeaderCardState extends State<HeaderCard> {
     super.initState();
   }
 
-  IncomeExpenseStatisticApiModel get totalData => _bloc.total;
+  IncomeExpenseStatisticWithTimeApiModel get totalData => _bloc.total;
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<FlowListBloc, FlowListState>(
-      buildWhen: (_, state) => state is FlowListTotalDataFetched || state is FlowListLoading,
-      builder: (context, state) {
-        return Container(
-          margin: const EdgeInsets.only(top: Constant.margin, bottom: Constant.margin),
-          padding: const EdgeInsets.all(Constant.padding),
-          decoration: ConstantDecoration.cardDecoration,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: Constant.margin),
-                child: _buildDateRange(),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildTotalData("支出", totalData.expense.amount),
-                  _buildTotalData("收入", totalData.income.amount),
-                  _buildTotalData("结余", totalData.income.amount - totalData.expense.amount),
-                  _buildTotalData("日均支出", totalData.expense.average),
-                ],
-              )
-            ],
-          ),
-        );
-      },
-    );
+    return Container(
+        padding: const EdgeInsets.all(Constant.padding),
+        decoration: const BoxDecoration(
+          color: ConstantColor.primaryColor,
+          borderRadius: ConstantDecoration.borderRadius,
+        ),
+        child: PopScope(
+            onPopInvoked: (_) => _conditionCubit.sync(),
+            child: BlocBuilder<FlowListBloc, FlowListState>(
+              buildWhen: (_, state) => state is FlowListTotalDataFetched || state is FlowListLoading,
+              builder: (context, state) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildDateRange(),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(Constant.margin),
+                          child: Text.rich(
+                            TextSpan(children: [
+                              AmountTextSpan.sameHeight(
+                                totalData.income.amount - totalData.expense.amount,
+                                dollarSign: true,
+                                textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                              ),
+                              const WidgetSpan(child: SizedBox(width: Constant.margin)),
+                              const TextSpan(text: "结余", style: TextStyle(fontSize: ConstantFontSize.bodySmall))
+                            ]),
+                          ),
+                        )
+                      ],
+                    ),
+                    IntrinsicHeight(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          _buildTotalData("支出", totalData.expense.amount),
+                          _buildVerticalDivider(),
+                          _buildTotalData("收入", totalData.income.amount),
+                          _buildVerticalDivider(),
+                          _buildTotalData("日均支出", totalData.dayAverageExpense),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              },
+            )));
   }
 
   DateTime get startDate => _conditionCubit.condition.startTime;
@@ -65,37 +87,52 @@ class _HeaderCardState extends State<HeaderCard> {
       dateText = '${DateFormat('yyyy-MM-dd').format(startDate)} 至 ${DateFormat('yyyy-MM-dd').format(endDate)}';
     }
     return GestureDetector(
-      onTap: () async {
-        var result = (await showMonthOrDateRangePickerModalBottomSheet(
-          initialValue: DateTimeRange(start: startDate, end: endDate),
-          context: context,
+        onTap: () async {
+          var result = (await showMonthOrDateRangePickerModalBottomSheet(
+            initialValue: DateTimeRange(start: startDate, end: endDate),
+            context: context,
+          ));
+          if (result != null) {
+            _conditionCubit.updateTime(startTime: result.start, endTime: result.end);
+          }
+        },
+        child: Container(
+          width: 256,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(32),
+            color: ConstantColor.secondaryColor,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(dateText, style: const TextStyle(fontSize: ConstantFontSize.bodyLarge)),
+              const Icon(Icons.arrow_drop_down_outlined),
+            ],
+          ),
         ));
-        if (result != null) {
-          _conditionCubit.updateTime(startTime: result.start, endTime: result.end);
-        }
-      },
-      child: Row(
+  }
+
+  Widget _buildTotalData(String title, int amount) {
+    return Text.rich(
+      TextSpan(
+        style: const TextStyle(fontSize: ConstantFontSize.body),
         children: [
-          Text(dateText, style: const TextStyle(fontSize: ConstantFontSize.largeHeadline)),
-          const Icon(Icons.arrow_drop_down_outlined),
+          TextSpan(text: title),
+          const WidgetSpan(child: SizedBox(width: Constant.margin)),
+          AmountTextSpan.sameHeight(amount)
         ],
       ),
     );
   }
 
-  Widget _buildTotalData(String title, int amount) {
-    return Column(
-      children: [
-        Text(
-          title,
-          style: const TextStyle(color: Colors.black54, fontSize: ConstantFontSize.body),
-        ),
-        Text.rich(AmountTextSpan.sameHeight(
-          amount,
-          textStyle: const TextStyle(color: Colors.black87, fontSize: ConstantFontSize.bodyLarge),
-          dollarSign: true,
-        ))
-      ],
+  Widget _buildVerticalDivider() {
+    return const VerticalDivider(
+      color: Colors.black,
+      width: Constant.padding,
+      thickness: 1,
+      indent: Constant.margin / 2,
+      endIndent: Constant.margin / 2,
     );
   }
 }

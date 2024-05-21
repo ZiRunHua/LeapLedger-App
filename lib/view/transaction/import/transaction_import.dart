@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keepaccount_app/bloc/user/user_bloc.dart';
 import 'package:keepaccount_app/common/global.dart';
 import 'package:keepaccount_app/model/account/model.dart';
 import 'package:keepaccount_app/model/product/model.dart';
@@ -14,46 +13,59 @@ import 'bloc/enter.dart';
 
 part 'widget/ptc_card.dart';
 
-class TransactionImport extends StatelessWidget {
+class TransactionImport extends StatefulWidget {
   const TransactionImport({super.key, required this.account});
   final AccountDetailModel account;
+
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider<TransImportTabBloc>(
-      create: (context) => TransImportTabBloc(account: account)..add(TransImportTabLoadedEvent()),
-      child: const _TransactionImport(),
-    );
-  }
+  State<TransactionImport> createState() => _TransactionImportState();
 }
 
-class _TransactionImport extends StatelessWidget {
-  const _TransactionImport();
+class _TransactionImportState extends State<TransactionImport> {
+  late final TransImportTabBloc _tabBloc;
+  @override
+  void initState() {
+    _tabBloc = TransImportTabBloc(account: widget.account)..add(TransImportTabLoadedEvent());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TransImportTabBloc, TransImportTabState>(builder: (context, state) {
-      if (state is TransImportTabLoaded) {
-        return buildPage(context, state);
-      }
-      return Scaffold(appBar: AppBar(title: const Text('导入账单')), body: buildShimmer());
-    });
+    return BlocProvider<TransImportTabBloc>.value(
+      value: _tabBloc,
+      child: BlocBuilder<TransImportTabBloc, TransImportTabState>(
+        builder: (context, state) {
+          if (state is TransImportTabLoaded) {
+            return DefaultTabController(
+              length: state.list.length,
+              child: Scaffold(
+                appBar: AppBar(
+                    title: const Text('导入账单'),
+                    bottom: TabBar(
+                      tabs: state.list.map((product) => Tab(text: product.name)).toList(),
+                    )),
+                body: buildPage(context, state),
+              ),
+            );
+          }
+          return Scaffold(
+            appBar: AppBar(title: const Text('导入账单')),
+            body: const Center(child: ConstantWidget.activityIndicator),
+          );
+        },
+      ),
+    );
   }
 
   Widget buildPage(BuildContext context, TransImportTabLoaded state) {
-    return DefaultTabController(
-        length: state.list.length,
-        child: Scaffold(
-            appBar: AppBar(
-                title: const Text('导入账单'),
-                bottom: TabBar(
-                  tabs: state.list.map((product) => Tab(text: product.name)).toList(),
-                )),
-            body: PageStorage(
-                bucket: PageStorageBucket(),
-                child: TabBarView(
-                    children: List.generate(state.list.length, (index) {
-                  return _buidlButtonGroup(context, state.list[index], state.tree);
-                })))));
+    return PageStorage(
+      bucket: PageStorageBucket(),
+      child: TabBarView(
+        children: List.generate(state.list.length, (index) {
+          return _buidlButtonGroup(context, state.list[index], state.tree);
+        }),
+      ),
+    );
   }
 
   Widget _buidlButtonGroup(BuildContext context, ProductModel product,

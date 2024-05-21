@@ -3,6 +3,7 @@ part of 'model.dart';
 @JsonSerializable(fieldRename: FieldRename.pascal)
 class TransactionQueryConditionApiModel {
   int accountId;
+  @JsonKey(toJson: toSet)
   late Set<int> userIds;
   late Set<int> categoryIds;
   IncomeExpense? incomeExpense;
@@ -133,3 +134,5 @@ class TransactionCategoryAmountRankApiModel extends AmountCountApiModel {
   @override
   Map<String, dynamic> toJson() => _$TransactionCategoryAmountRankApiModelToJson(this);
 }
+
+toSet(Set<int> value) => value.isEmpty ? null : value.toList();

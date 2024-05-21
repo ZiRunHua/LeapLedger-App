@@ -1,7 +1,12 @@
 part of 'enter.dart';
 
 class FlowListBloc extends Bloc<FlowListEvent, FlowListState> {
-  FlowListBloc() : super(FlowListLoading()) {
+  FlowListBloc({required TransactionQueryConditionApiModel initCondition}) : super(FlowListLoading()) {
+    condition = initCondition;
+    total = IncomeExpenseStatisticWithTimeApiModel(
+      startTime: condition.startTime,
+      endTime: condition.endTime,
+    );
     on<FlowListDataFetchEvent>(_fetchData);
     on<FlowListMoreDataFetchEvent>(_fetchMoreData);
 
@@ -17,13 +22,11 @@ class FlowListBloc extends Bloc<FlowListEvent, FlowListState> {
   Map<IncomeExpenseStatisticWithTimeApiModel, List<TransactionModel>> list = {};
 
   /// 合计数据
-  IncomeExpenseStatisticApiModel total = IncomeExpenseStatisticApiModel();
+  late IncomeExpenseStatisticWithTimeApiModel total;
 
   /// 条件
-  TransactionQueryConditionApiModel condition = TransactionQueryConditionApiModel(
-      accountId: UserBloc.currentAccount.id,
-      startTime: DateTime(DateTime.now().year, DateTime.now().month - 6),
-      endTime: DateTime.now());
+  late TransactionQueryConditionApiModel condition;
+
   bool hasMore = true;
   int offset = 0, limit = 10;
   _initList() {
@@ -35,34 +38,35 @@ class FlowListBloc extends Bloc<FlowListEvent, FlowListState> {
 
   _fetchData(FlowListDataFetchEvent event, emit) async {
     emit(FlowListLoading());
-    condition = event.condition;
+    if (event.condition != null) condition = event.condition!;
+
     offset = 0;
-    List<TransactionModel> result = [];
+    List<TransactionModel> newList = [];
     await Future.wait([
       Future(() async {
         monthStatistic = await TransactionApi.getMonthStatistic(condition);
       }),
       Future(() async {
-        result = await TransactionApi.getList(condition, limit, offset);
+        newList = await TransactionApi.getList(condition, limit, offset);
       })
     ]);
     // 处理列表数据
-    offset = result.length;
+    offset = newList.length;
     _initList();
-    for (var element in result) {
+    for (var element in newList) {
       _setListData(element);
     }
-    bool hasMore = list.isNotEmpty;
-    emit(FlowListLoaded(list, hasMore));
+    hasMore = list.isNotEmpty;
+    emit(FlowListLoaded());
     // 处理合计数据
-    total = IncomeExpenseStatisticApiModel();
+    total = IncomeExpenseStatisticWithTimeApiModel(startTime: condition.startTime, endTime: condition.endTime);
     if (monthStatistic.isNotEmpty) {
       for (var element in monthStatistic) {
         total.income.add(element.income);
         total.expense.add(element.expense);
       }
     }
-    emit(FlowListTotalDataFetched(total));
+    emit(FlowListTotalDataFetched());
   }
 
   _setListData(TransactionModel data) {
@@ -75,13 +79,14 @@ class FlowListBloc extends Bloc<FlowListEvent, FlowListState> {
   }
 
   _fetchMoreData(FlowListMoreDataFetchEvent event, emit) async {
+    emit(FlowLisMoreDataFetchingEvent());
     var result = await TransactionApi.getList(condition, limit, offset);
     offset += result.length;
     hasMore = result.isNotEmpty;
     for (var element in result) {
       _setListData(element);
     }
-    emit(FlowListMoreDataFetched(list, hasMore));
+    emit(FlowListMoreDataFetched());
   }
 
   /* 单笔交易处理 */
@@ -131,7 +136,7 @@ class FlowListBloc extends Bloc<FlowListEvent, FlowListState> {
       }
     }
     needToUpdate = true;
-    emit(FlowListLoaded(list, hasMore));
+    emit(FlowListLoaded());
     return needToUpdate;
   }
 
@@ -150,14 +155,14 @@ class FlowListBloc extends Bloc<FlowListEvent, FlowListState> {
       if (list[statistic] != null) {
         list[statistic]!.removeWhere((element) => element.id == trans.id);
       }
-      emit(FlowListLoaded(list, hasMore));
+      emit(FlowListLoaded());
     }
     return needToUpdate;
   }
 
   _handleTransInTotal(TransactionModel trans, emit, {bool isAdd = true}) {
-    if (total.handleTransEditModel(trans: trans.editModel, isAdd: isAdd)) {
-      emit(FlowListTotalDataFetched(total));
+    if (total.handleTransEditModel(editModel: trans.editModel, isAdd: isAdd)) {
+      emit(FlowListTotalDataFetched());
     }
   }
 }

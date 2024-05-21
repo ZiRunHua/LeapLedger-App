@@ -69,9 +69,12 @@ class _ConstantWidgetDivider {
 
 class ConstantColor {
   static const Color primaryColor = Colors.blue;
+  static const Color primary80AlphaColor = Color.fromRGBO(33, 150, 243, 0.8);
   static const Color secondaryColor = Color.fromRGBO(187, 222, 251, 1);
   static const Color incomeAmount = Colors.green;
   static const Color expenseAmount = Colors.red;
+  static const Color incomeAmount80Alpha = Color.fromRGBO(76, 175, 80, 0.8);
+  static const Color expenseAmount80Alpha = Color.fromRGBO(244, 67, 54, 0.8);
   static const Color shimmerBaseColor = Color.fromRGBO(224, 224, 224, 1);
   static const Color shimmerHighlightColor = Color.fromRGBO(245, 245, 245, 1);
   static const Color greyBackground = Color.fromRGBO(245, 245, 245, 1);
