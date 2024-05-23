@@ -16,7 +16,7 @@ import 'package:keepaccount_app/widget/amount/enter.dart';
 import 'package:shimmer/shimmer.dart';
 
 class TransactionFlow extends StatefulWidget {
-  final TransactionQueryConditionApiModel? condition;
+  final TransactionQueryCondModel? condition;
   final AccountDetailModel account;
   const TransactionFlow({this.condition, required this.account, super.key});
 
@@ -35,7 +35,8 @@ class _TransactionFlowState extends State<TransactionFlow> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
-    _conditionCubit = FlowConditionCubit(condition: widget.condition, currentAccount: widget.account);
+    _conditionCubit = FlowConditionCubit(condition: widget.condition, currentAccount: widget.account)
+      ..fetchCategoryData();
     _flowListBloc = FlowListBloc(initCondition: _conditionCubit.condition);
 
     _flowListBloc.add(FlowListDataFetchEvent());

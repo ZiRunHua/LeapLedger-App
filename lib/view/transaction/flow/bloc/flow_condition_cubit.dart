@@ -1,20 +1,20 @@
 part of 'enter.dart';
 
 class FlowConditionCubit extends Cubit<FlowConditionState> {
-  final TransactionQueryConditionApiModel _defaultCondition = TransactionQueryConditionApiModel(
+  final TransactionQueryCondModel _defaultCondition = TransactionQueryCondModel(
     accountId: UserBloc.currentAccount.id,
     startTime: DateTime(DateTime.now().year, DateTime.now().month - 6),
     endTime: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 23, 59, 59),
   );
 
-  late TransactionQueryConditionApiModel condition, _condition;
+  late TransactionQueryCondModel condition, _condition;
   late AccountDetailModel currentAccount;
   Map<int, List<MapEntry<TransactionCategoryFatherModel, List<TransactionCategoryModel>>>> _categoryCache = {};
   List<AccountDetailModel> accountList = [];
 
   ///condition和currentAccount要么都传 要么都不传
   ///不传时会取默认值
-  FlowConditionCubit({TransactionQueryConditionApiModel? condition, required this.currentAccount})
+  FlowConditionCubit({TransactionQueryCondModel? condition, required this.currentAccount})
       : assert(condition?.accountId == currentAccount.id),
         super(FlowConditionInitial()) {
     _condition = condition ?? _defaultCondition;
@@ -97,7 +97,7 @@ class FlowConditionCubit extends Cubit<FlowConditionState> {
   }
 
   updateTime({required DateTime startTime, required DateTime endTime}) {
-    if (startTime == condition.startTime && endTime == endTime) {
+    if (endTime.isAtSameMomentAs(condition.startTime) && endTime.isAtSameMomentAs(endTime)) {
       return;
     }
     condition.startTime = startTime;

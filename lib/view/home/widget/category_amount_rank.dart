@@ -73,7 +73,7 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> {
     return GestureDetector(
         onTap: () => _Func._pushTransactionFlow(
             context,
-            TransactionQueryConditionApiModel(
+            TransactionQueryCondModel(
                 accountId: UserBloc.currentAccount.id,
                 categoryIds: {data.category.id},
                 startTime: HomeBloc.startTime,

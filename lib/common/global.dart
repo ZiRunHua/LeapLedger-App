@@ -54,9 +54,6 @@ enum IncomeExpense {
   });
 }
 
-// ignore: constant_identifier_names
-const INCOME = "income", EXPENSE = "expense";
-
 enum UserAction { register, updatePassword, forgetPassword }
 
 enum TransactionEditMode { add, update }

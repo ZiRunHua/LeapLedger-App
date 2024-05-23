@@ -60,6 +60,6 @@ class _AccountTransListState extends State<AccountTransList> {
     }
     TransactionRoutes.pushFlow(context,
         account: account,
-        condition: TransactionQueryConditionApiModel(accountId: account.id, startTime: startTime, endTime: endTime));
+        condition: TransactionQueryCondModel(accountId: account.id, startTime: startTime, endTime: endTime));
   }
 }

@@ -30,21 +30,18 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
 
     startDate = widget.initialValue.start;
     endDate = widget.initialValue.end;
-    //判断是否是处在同一个月 并且起始和结束时间分别是月第一秒和最后一秒
-    bool isFirstSecondOfMonth = startDate == DateTime(startDate.year, startDate.month, startDate.day, 0, 0, 0);
-    bool isLastSecondOfMonth = endDate == DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59);
-    if (isFirstSecondOfMonth &&
-        isLastSecondOfMonth &&
-        startDate.year == endDate.year &&
-        startDate.month == endDate.month) {
+    //判断是否是使用月份选择 依据起始和结束时间是否是第一秒和最后一秒
+    bool isFirstSecondOfMonth = startDate.isAtSameMomentAs(Time.getFirstSecondOfMonth(date: startDate));
+    bool isLastSecondOfMonth = endDate.isAtSameMomentAs(Time.getLastSecondOfMonth(date: startDate));
+    if (isFirstSecondOfMonth && isLastSecondOfMonth) {
       _tabController.index = _monthTabIndex;
     } else {
       _tabController.index = _dateRangeTabIndex;
     }
 
-    endDate = DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59);
     startDate = DateTime(startDate.year, startDate.month, startDate.day, 0, 0, 0);
-    month = DateTime(startDate.year, startDate.month, 1, 0, 0, 0);
+    endDate = DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59);
+    selectedMonth = DateTime(startDate.year, startDate.month, 1, 0, 0, 0);
   }
 
   late TabController _tabController;
@@ -55,7 +52,7 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
   }
 
   final int _monthTabIndex = 0, _dateRangeTabIndex = 1;
-  DateTime startDate = DateTime.now(), endDate = DateTime.now(), month = DateTime.now();
+  late DateTime startDate, endDate, selectedMonth;
   _handleTabSelection() {
     if (_tabController.indexIsChanging) {
       setState(() {});
@@ -91,11 +88,9 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
             height: 300,
             child: CupertinoDatePicker(
               mode: CupertinoDatePickerMode.monthYear,
-              initialDateTime: month,
+              initialDateTime: selectedMonth,
               onDateTimeChanged: (DateTime newDate) {
-                setState(() {
-                  month = newDate;
-                });
+                selectedMonth = newDate;
               },
             )),
         _buildSumbitButton(),
@@ -103,13 +98,8 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
     );
   }
 
-  void _initDateRangeButtonState() {
-    datePickerKey = UniqueKey();
-    selectedStartInputButton = true;
-    selectedNumberOfMonths = null;
-  }
-
-  UniqueKey datePickerKey = UniqueKey();
+  final UniqueKey startDatePickerKey = UniqueKey();
+  final UniqueKey endDatePickerKey = UniqueKey();
 
   /// 自定义时间（日期范围选择）
   Widget _buildDateRangePicker() {
@@ -159,21 +149,20 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
         SizedBox(
           height: 300,
           child: CupertinoDatePicker(
-            key: datePickerKey,
+            key: selectedStartInputButton ? startDatePickerKey : endDatePickerKey,
             mode: CupertinoDatePickerMode.date,
             initialDateTime: selectedStartInputButton ? startDate : endDate,
-            minimumDate: selectedStartInputButton ? null : startDate,
-            maximumDate: selectedStartInputButton ? endDate : null,
             minimumYear: 2000,
             maximumYear: 2050,
             onDateTimeChanged: (DateTime newDate) {
-              setState(() {
-                if (selectedStartInputButton) {
-                  startDate = newDate;
-                } else {
-                  endDate = newDate;
-                }
-              });
+              if (selectedStartInputButton) {
+                startDate = newDate;
+                if (minStartDate.isAfter(startDate) || startDate.isAfter(endDate)) endDate = maxEndDate;
+              } else {
+                endDate = newDate;
+                if (endDate.isAfter(maxEndDate) || startDate.isAfter(endDate)) startDate = minStartDate;
+              }
+              setState(() {});
             },
           ),
         ),
@@ -182,7 +171,16 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
     );
   }
 
+  DateTime get minStartDate =>
+      DateTime(endDate.year - Constantlimit.maxTimeRangeForYear, endDate.month, endDate.day, 0, 0, 0);
+  DateTime get maxEndDate =>
+      DateTime(startDate.year + Constantlimit.maxTimeRangeForYear, startDate.month, startDate.day, 23, 59, 59);
+
   int? selectedNumberOfMonths = 0;
+  void _initDateRangeButtonState() {
+    selectedStartInputButton = true;
+    selectedNumberOfMonths = null;
+  }
 
   /// 月份快捷按钮
   Widget _buildMonthButton({required int numberOfMonths, required String name}) {
@@ -204,8 +202,8 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
         padding: EdgeInsets.zero,
         decoration: BoxDecoration(
           border: Border.all(
-            color: isSelected ? ConstantColor.primaryColor : Colors.grey, // 设置边框颜色
-            width: 1.0, // 设置边框宽度
+            color: isSelected ? ConstantColor.primaryColor : Colors.grey,
+            width: 1.0,
           ),
           borderRadius: BorderRadius.circular(4.0),
         ),
@@ -262,7 +260,7 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
           onPressed: () {
             DateTime start, end;
             if (_tabController.index == _monthTabIndex) {
-              start = DateTime(month.year, month.month, 1, 0, 0, 0);
+              start = DateTime(selectedMonth.year, selectedMonth.month, 1, 0, 0, 0);
               end = Time.getLastSecondOfMonth(date: start);
             } else {
               start = DateTime(startDate.year, startDate.month, startDate.day, 0, 0, 0);

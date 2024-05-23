@@ -4,7 +4,7 @@ part of 'enter.dart';
 sealed class FlowListEvent {}
 
 class FlowListDataFetchEvent extends FlowListEvent {
-  final TransactionQueryConditionApiModel? condition;
+  final TransactionQueryCondModel? condition;
   FlowListDataFetchEvent({this.condition});
 }
 

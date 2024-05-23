@@ -126,7 +126,7 @@ class _AccountUserDetailButtomSheetState extends State<AccountUserDetailButtomSh
 
     TransactionRoutes.pushFlow(context,
         account: _cubit.account,
-        condition: TransactionQueryConditionApiModel(
+        condition: TransactionQueryCondModel(
             accountId: _cubit.account.id,
             userIds: {_cubit.accountUser.info.id},
             startTime: startTime,

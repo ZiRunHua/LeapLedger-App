@@ -1,7 +1,7 @@
 part of 'enter.dart';
 
 class FlowListBloc extends Bloc<FlowListEvent, FlowListState> {
-  FlowListBloc({required TransactionQueryConditionApiModel initCondition}) : super(FlowListLoading()) {
+  FlowListBloc({required TransactionQueryCondModel initCondition}) : super(FlowListLoading()) {
     condition = initCondition;
     total = IncomeExpenseStatisticWithTimeApiModel(
       startTime: condition.startTime,
@@ -25,7 +25,7 @@ class FlowListBloc extends Bloc<FlowListEvent, FlowListState> {
   late IncomeExpenseStatisticWithTimeApiModel total;
 
   /// 条件
-  late TransactionQueryConditionApiModel condition;
+  late TransactionQueryCondModel condition;
 
   bool hasMore = true;
   int offset = 0, limit = 10;

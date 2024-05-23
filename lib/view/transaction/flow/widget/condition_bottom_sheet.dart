@@ -11,7 +11,7 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
   late final GlobalKey<FormState> _formKey;
   late final FlowConditionCubit _conditionCubit;
 
-  TransactionQueryConditionApiModel get _condition => _conditionCubit.condition;
+  TransactionQueryCondModel get _condition => _conditionCubit.condition;
   @override
   void initState() {
     _conditionCubit = BlocProvider.of<FlowConditionCubit>(context);
@@ -205,8 +205,8 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
       shrinkWrap: true,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 5,
-        crossAxisSpacing: 12.0,
-        mainAxisSpacing: 0.0,
+        crossAxisSpacing: Constant.margin,
+        mainAxisSpacing: Constant.margin,
       ),
       itemCount: list.length,
       itemBuilder: (context, index) => _buildCategoryIcon(list[index]),

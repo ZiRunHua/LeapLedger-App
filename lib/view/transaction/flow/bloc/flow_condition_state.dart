@@ -8,7 +8,7 @@ final class FlowConditionInitial extends FlowConditionState {}
 final class FlowConditionLoading extends FlowConditionState {}
 
 final class FlowConditionLoaded extends FlowConditionState {
-  final TransactionQueryConditionApiModel data;
+  final TransactionQueryCondModel data;
   FlowConditionLoaded(this.data);
 }
 
@@ -26,7 +26,7 @@ final class FlowEditingConditionUpdate extends FlowConditionState {
 }
 
 final class FlowConditionChanged extends FlowConditionState {
-  final TransactionQueryConditionApiModel condition;
+  final TransactionQueryCondModel condition;
   FlowConditionChanged(this.condition);
 }
 

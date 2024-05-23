@@ -86,3 +86,7 @@ class ConstantColor {
   static const Color secondaryTextColor = Color.fromRGBO(117, 117, 117, 1); //Colors.grey.shade800
   static const Color borderColor = Color.fromRGBO(189, 189, 189, 1); //Colors.grey.shade400
 }
+
+class Constantlimit {
+  static const int maxTimeRangeForYear = 2;
+}

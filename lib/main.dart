@@ -10,6 +10,7 @@ import 'package:keepaccount_app/routes/routes.dart';
 import 'package:keepaccount_app/util/enter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:keepaccount_app/view/navigation/navigation.dart';
+import 'package:keepaccount_app/view/transaction/chart/transaction_chart.dart';
 
 import 'common/global.dart';
 import 'package:keepaccount_app/common/current.dart';
@@ -87,7 +88,7 @@ class MyApp extends StatelessWidget {
                 }
               },
             )
-          ], child: const Navigation()),
+          ], child: const TextWidget()),
           builder: EasyLoading.init(builder: (context, child) {
             return MediaQuery(
               data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),

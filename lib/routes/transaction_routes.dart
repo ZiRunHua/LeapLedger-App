@@ -9,7 +9,7 @@ class TransactionRoutes {
 
   static pushFlow(
     BuildContext context, {
-    TransactionQueryConditionApiModel? condition,
+    TransactionQueryCondModel? condition,
     required AccountDetailModel account,
   }) {
     Navigator.push(

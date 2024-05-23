@@ -76,10 +76,8 @@ class _TimePeriodStatisticsState extends State<TimePeriodStatistics> {
       date = "${DateFormat("MM月dd日").format(startTime)}-${DateFormat("MM月dd日").format(endTime)}";
     }
     onTap = () {
-      _Func._pushTransactionFlow(
-          context,
-          TransactionQueryConditionApiModel(
-              accountId: UserBloc.currentAccount.id, startTime: startTime, endTime: endTime));
+      _Func._pushTransactionFlow(context,
+          TransactionQueryCondModel(accountId: UserBloc.currentAccount.id, startTime: startTime, endTime: endTime));
     };
     return GestureDetector(
         onTap: () => onTap(),

@@ -111,3 +111,34 @@ Map<String, dynamic> _$TransactionShareModelToJson(
       'CreateTime': Json.dateTimeToJson(instance.createTime),
       'UpdateTime': Json.dateTimeToJson(instance.updateTime),
     };
+
+TransactionQueryCondModel _$TransactionQueryCondModelFromJson(
+        Map<String, dynamic> json) =>
+    TransactionQueryCondModel(
+      accountId: (json['AccountId'] as num).toInt(),
+      startTime: Json.dateTimeFromJson(json['StartTime']),
+      endTime: Json.dateTimeFromJson(json['EndTime']),
+      userIds: (json['UserIds'] as List<dynamic>?)
+          ?.map((e) => (e as num).toInt())
+          .toSet(),
+      categoryIds: (json['CategoryIds'] as List<dynamic>?)
+          ?.map((e) => (e as num).toInt())
+          .toSet(),
+      incomeExpense:
+          $enumDecodeNullable(_$IncomeExpenseEnumMap, json['IncomeExpense']),
+      minimumAmount: (json['MinimumAmount'] as num?)?.toInt(),
+      maximumAmount: (json['MaximumAmount'] as num?)?.toInt(),
+    );
+
+Map<String, dynamic> _$TransactionQueryCondModelToJson(
+        TransactionQueryCondModel instance) =>
+    <String, dynamic>{
+      'AccountId': instance.accountId,
+      'UserIds': toSet(instance.userIds),
+      'CategoryIds': instance.categoryIds.toList(),
+      'IncomeExpense': _$IncomeExpenseEnumMap[instance.incomeExpense],
+      'MinimumAmount': instance.minimumAmount,
+      'MaximumAmount': instance.maximumAmount,
+      'StartTime': Json.dateTimeToJson(instance.startTime),
+      'EndTime': Json.dateTimeToJson(instance.endTime),
+    };

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keepaccount_app/api/model/model.dart';
 import 'package:keepaccount_app/bloc/user/user_bloc.dart';
 import 'package:keepaccount_app/common/global.dart';
+import 'package:keepaccount_app/model/transaction/model.dart';
 import 'package:keepaccount_app/routes/routes.dart';
 import 'package:keepaccount_app/util/enter.dart';
 import 'package:keepaccount_app/view/home/home.dart';
@@ -52,7 +53,7 @@ class _NavigationState extends State<Navigation> {
                 } else if (state is InUserHomePage) {
                   _scaffoldKey.currentState!.openEndDrawer();
                 } else if (state is InFlowPage) {
-                  var condition = TransactionQueryConditionApiModel(
+                  var condition = TransactionQueryCondModel(
                       accountId: _bloc.account.id, startTime: Time.getFirstSecondOfMonth(), endTime: DateTime.now());
                   TransactionRoutes.pushFlow(context, condition: condition, account: _bloc.account);
                 }

@@ -14,7 +14,7 @@ class _HeaderCardState extends State<HeaderCard> {
     startTime: HomeBloc.startTime,
     endTime: HomeBloc.endTime,
   );
-  final TransactionQueryConditionApiModel _condition = TransactionQueryConditionApiModel(
+  final TransactionQueryCondModel _condition = TransactionQueryCondModel(
     accountId: UserBloc.currentAccount.id,
     startTime: HomeBloc.startTime,
     endTime: HomeBloc.endTime,

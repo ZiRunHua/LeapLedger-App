@@ -26,8 +26,7 @@ class TransactionApi {
     return response;
   }
 
-  static Future<List<TransactionModel>> getList(
-      TransactionQueryConditionApiModel condition, int limit, int offset) async {
+  static Future<List<TransactionModel>> getList(TransactionQueryCondModel condition, int limit, int offset) async {
     var data = condition.toJson();
     data['Limit'] = limit;
     data['Offset'] = offset;
@@ -39,6 +38,15 @@ class TransactionApi {
       }
     }
     return result;
+  }
+
+  static Future<InExStatisticModel?> getTotal(TransactionQueryCondModel condition) async {
+    var data = condition.toJson();
+    var responseBody = await ApiServer.request(Method.get, '$baseUrl/total', data: data);
+    if (responseBody.isSuccess) {
+      return InExStatisticModel.fromJson(responseBody.data);
+    }
+    return null;
   }
 
   static Future<List<DayAmountStatisticApiModel>> getDayStatistic({
@@ -65,7 +73,7 @@ class TransactionApi {
   }
 
   static Future<List<IncomeExpenseStatisticWithTimeApiModel>> getMonthStatistic(
-      TransactionQueryConditionApiModel condition) async {
+      TransactionQueryCondModel condition) async {
     var responseBody = await ApiServer.request(Method.get, '$baseUrl/month/statistic', data: condition.toJson());
     List<IncomeExpenseStatisticWithTimeApiModel> result = [];
     if (responseBody.isSuccess) {
@@ -80,7 +88,7 @@ class TransactionApi {
     required int accountId,
     Set<int>? categoryIds,
     required IncomeExpense ie,
-    required int limit,
+    int? limit,
     required DateTime startTime,
     required DateTime endTime,
   }) async {
@@ -96,6 +104,27 @@ class TransactionApi {
     if (responseBody.isSuccess && responseBody.data['List'] is List) {
       for (Map<String, dynamic> data in responseBody.data['List'] as List) {
         result.add(TransactionCategoryAmountRankApiModel.fromJson(data));
+      }
+    }
+    return result;
+  }
+
+  static Future<List<TransactionModel>> getAmountRank({
+    required int accountId,
+    required IncomeExpense ie,
+    required DateTime startTime,
+    required DateTime endTime,
+  }) async {
+    var responseBody = await ApiServer.request(Method.get, '$baseUrl/amount/rank', data: {
+      "AccountId": accountId,
+      "IncomeExpense": ie.name,
+      "StartTime": Json.dateTimeToJson(startTime),
+      "EndTime": Json.dateTimeToJson(endTime),
+    });
+    List<TransactionModel> result = [];
+    if (responseBody.isSuccess && responseBody.data['List'] is List) {
+      for (Map<String, dynamic> data in responseBody.data['List'] as List) {
+        result.add(TransactionModel.fromJson(data));
       }
     }
     return result;

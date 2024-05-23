@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:keepaccount_app/api/model/model.dart';
 import 'package:keepaccount_app/common/global.dart';
 import 'package:keepaccount_app/model/transaction/category/model.dart';
+import 'package:keepaccount_app/model/transaction/model.dart';
 import 'package:keepaccount_app/util/enter.dart';
 
 import 'package:keepaccount_app/view/transaction/flow/bloc/enter.dart';
