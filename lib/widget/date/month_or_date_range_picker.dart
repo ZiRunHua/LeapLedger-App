@@ -1,20 +1,31 @@
 part of 'enter.dart';
 
-/// return中start会是日期那天的第一秒 end会是日期那天的最后一秒
+enum Mode {
+  normal,
+  month,
+  dateRange,
+}
+
+/// return中start是选中日期的第一秒 end是选中日期的最后一秒
 Future<DateTimeRange?> showMonthOrDateRangePickerModalBottomSheet({
   required BuildContext context,
   required DateTimeRange initialValue,
+  Mode mode = Mode.normal,
 }) async {
   return await showModalBottomSheet<DateTimeRange>(
     isScrollControlled: true,
     context: context,
-    builder: (BuildContext context) => MonthOrDateRangePicker(initialValue: initialValue),
+    builder: (BuildContext context) => MonthOrDateRangePicker(
+      initialValue: initialValue,
+      mode: mode,
+    ),
   );
 }
 
 class MonthOrDateRangePicker extends StatefulWidget {
-  const MonthOrDateRangePicker({required this.initialValue, super.key});
+  const MonthOrDateRangePicker({required this.initialValue, super.key, required this.mode});
   final DateTimeRange initialValue;
+  final Mode mode;
   @override
   // ignore: library_private_types_in_public_api
   _MonthOrDateRangePickerState createState() => _MonthOrDateRangePickerState();
@@ -61,17 +72,51 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
 
   @override
   Widget build(BuildContext context) {
+    late Widget child, title;
+    switch (widget.mode) {
+      case Mode.month:
+        child = _buildMonthPicker();
+        title = const Padding(
+          padding: EdgeInsets.all(Constant.padding),
+          child: Text(
+            '月份选择',
+            style: TextStyle(
+              fontSize: ConstantFontSize.headline,
+              fontWeight: FontWeight.bold,
+              letterSpacing: Constant.margin / 2,
+            ),
+          ),
+        );
+        break;
+      case Mode.dateRange:
+        child = _buildDateRangePicker();
+        title = const Padding(
+          padding: EdgeInsets.all(Constant.padding),
+          child: Text(
+            '日期选择',
+            style: TextStyle(
+              fontSize: ConstantFontSize.headline,
+              fontWeight: FontWeight.bold,
+              letterSpacing: Constant.margin / 2,
+            ),
+          ),
+        );
+      default:
+        child = [_buildMonthPicker(), _buildDateRangePicker()][_tabController.index];
+        title = TabBar(
+          controller: _tabController,
+          tabs: const [Tab(text: '月份选择'), Tab(text: '自定义时间')],
+        );
+        break;
+    }
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        TabBar(
-          controller: _tabController,
-          tabs: const [Tab(text: '月份选择'), Tab(text: '自定义时间')],
-        ),
+        title,
         Container(
           padding: const EdgeInsets.all(Constant.padding),
-          child: [_buildMonthPicker(), _buildDateRangePicker()][_tabController.index],
+          child: child,
         )
       ],
     );
@@ -137,18 +182,10 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
             onDateTimeChanged: (DateTime newDate) {
               if (selectedStartInputButton) {
                 startDate = newDate;
-                if (minStartDate.isAfter(startDate)) {
-                  endDate = maxEndDate;
-                } else if (startDate.isAfter(endDate)) {
-                  endDate = startDate.add(const Duration(days: 1));
-                }
+                if (minStartDate.isAfter(startDate) || startDate.isAfter(endDate)) endDate = maxEndDate;
               } else {
                 endDate = newDate;
-                if (endDate.isAfter(maxEndDate)) {
-                  startDate = minStartDate;
-                } else if (startDate.isAfter(endDate)) {
-                  startDate = endDate.add(const Duration(days: -1));
-                }
+                if (endDate.isAfter(maxEndDate) || startDate.isAfter(endDate)) startDate = minStartDate;
               }
               setState(() {});
             },
