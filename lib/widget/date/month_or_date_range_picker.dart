@@ -98,8 +98,9 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
     );
   }
 
-  final UniqueKey startDatePickerKey = UniqueKey();
-  final UniqueKey endDatePickerKey = UniqueKey();
+  bool selectedStartInputButton = true;
+  UniqueKey startDatePickerKey = UniqueKey();
+  UniqueKey endDatePickerKey = UniqueKey();
 
   /// 自定义时间（日期范围选择）
   Widget _buildDateRangePicker() {
@@ -109,40 +110,19 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: SizedBox(
-            height: 28,
-            child: Wrap(
-              spacing: Constant.margin,
-              children: [
-                _buildMonthButton(numberOfMonths: 3, name: '近三月'),
-                _buildMonthButton(numberOfMonths: 6, name: '近六月'),
-                _buildMonthButton(numberOfMonths: 12, name: '近一年'),
-              ],
-            ),
-          ),
+          padding: const EdgeInsets.only(top: Constant.margin),
+          child: _buildButtonGroup(),
         ),
-        const SizedBox(
-          height: 20,
-        ),
+        const SizedBox(height: 20),
         // 时间输入框
         Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(
-              flex: 5,
-              child: _buildInputButton(isStartInputButton: true),
-            ),
+            Expanded(flex: 5, child: _buildInputButton(isStartInputButton: true)),
             const Expanded(
-                child: Padding(
-              padding: EdgeInsets.all(Constant.margin),
-              child: Divider(color: Colors.black87),
-            )),
-            Expanded(
-              flex: 5,
-              child: _buildInputButton(isStartInputButton: false),
-            ),
+                child: Padding(padding: EdgeInsets.all(Constant.margin), child: Divider(color: Colors.black87))),
+            Expanded(flex: 5, child: _buildInputButton(isStartInputButton: false)),
           ],
         ),
         // 日期滚轮
@@ -157,10 +137,18 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
             onDateTimeChanged: (DateTime newDate) {
               if (selectedStartInputButton) {
                 startDate = newDate;
-                if (minStartDate.isAfter(startDate) || startDate.isAfter(endDate)) endDate = maxEndDate;
+                if (minStartDate.isAfter(startDate)) {
+                  endDate = maxEndDate;
+                } else if (startDate.isAfter(endDate)) {
+                  endDate = startDate.add(const Duration(days: 1));
+                }
               } else {
                 endDate = newDate;
-                if (endDate.isAfter(maxEndDate) || startDate.isAfter(endDate)) startDate = minStartDate;
+                if (endDate.isAfter(maxEndDate)) {
+                  startDate = minStartDate;
+                } else if (startDate.isAfter(endDate)) {
+                  startDate = endDate.add(const Duration(days: -1));
+                }
               }
               setState(() {});
             },
@@ -176,30 +164,74 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
   DateTime get maxEndDate =>
       DateTime(startDate.year + Constantlimit.maxTimeRangeForYear, startDate.month, startDate.day, 23, 59, 59);
 
-  int? selectedNumberOfMonths = 0;
-  void _initDateRangeButtonState() {
+  /// 按钮组
+  Widget _buildButtonGroup() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            _buildMonthShortcutButton(numberOfMonths: 3, name: '近三月'),
+            _buildMonthShortcutButton(numberOfMonths: 6, name: '近六月'),
+            _buildMonthShortcutButton(numberOfMonths: 12, name: '近一年'),
+          ],
+        ),
+        Row(
+          children: [
+            _buildShortcutButton(
+              startDate: Time.getFirstSecondOfYear(numberOfYears: -1),
+              endDate: Time.getLastSecondOfYear(numberOfYears: -1),
+              name: '去年',
+            ),
+            _buildShortcutButton(
+              startDate: Time.getFirstSecondOfYear(),
+              endDate: Time.getLastSecondOfYear(),
+              name: '今年',
+            ),
+          ],
+        )
+      ],
+    );
+  }
+
+  void _initDateRangeButtonState({required DateTime startDate, required DateTime endDate}) {
     selectedStartInputButton = true;
-    selectedNumberOfMonths = null;
+    if (false == this.startDate.isAtSameMomentAs(startDate)) {
+      startDatePickerKey = UniqueKey();
+    }
+    if (false == this.endDate.isAtSameMomentAs(endDate)) {
+      endDatePickerKey = UniqueKey();
+    }
+    this.startDate = startDate;
+    this.endDate = endDate;
   }
 
   /// 月份快捷按钮
-  Widget _buildMonthButton({required int numberOfMonths, required String name}) {
+  Widget _buildMonthShortcutButton({required int numberOfMonths, required String name}) {
     assert(numberOfMonths >= 1);
-    var isSelected = selectedNumberOfMonths == numberOfMonths;
+    return _buildShortcutButton(
+      name: name,
+      startDate: Time.getFirstSecondOfPreviousMonths(date: DateTime.now(), numberOfMonths: numberOfMonths - 1),
+      endDate: Time.getLastSecondOfMonth(),
+    );
+  }
+
+  /// 快捷按钮
+  Widget _buildShortcutButton({
+    required String name,
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    var isSelected = this.startDate.isAtSameMomentAs(startDate) && this.endDate.isAtSameMomentAs(endDate);
     return GestureDetector(
       onTap: () {
-        setState(() {
-          _initDateRangeButtonState();
-          startDate = Time.getFirstSecondOfPreviousMonths(date: DateTime.now(), numberOfMonths: numberOfMonths - 1);
-          endDate = Time.getLastSecondOfMonth();
-          selectedNumberOfMonths = numberOfMonths;
-        });
+        _initDateRangeButtonState(startDate: startDate, endDate: endDate);
+        setState(() {});
       },
       child: Container(
-        width: 64,
         height: 28,
-        margin: EdgeInsets.zero,
-        padding: EdgeInsets.zero,
+        margin: const EdgeInsets.all(Constant.margin / 2),
+        padding: const EdgeInsets.symmetric(horizontal: Constant.margin),
         decoration: BoxDecoration(
           border: Border.all(
             color: isSelected ? ConstantColor.primaryColor : Colors.grey,
@@ -220,13 +252,10 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
     );
   }
 
-  bool selectedStartInputButton = true;
-
   /// 输入框按钮
   Widget _buildInputButton({bool isStartInputButton = false}) {
     return GestureDetector(
       onTap: () => setState(() {
-        _initDateRangeButtonState();
         selectedStartInputButton = isStartInputButton;
       }),
       child: Container(

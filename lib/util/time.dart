@@ -5,6 +5,16 @@ class Time {
     return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
   }
 
+  static DateTime getFirstSecondOfYear({int numberOfYears = 0, DateTime? date}) {
+    date ??= DateTime.now();
+    return DateTime(date.year + numberOfYears);
+  }
+
+  static DateTime getLastSecondOfYear({int numberOfYears = 0, DateTime? date}) {
+    date ??= DateTime.now();
+    return DateTime(date.year + numberOfYears + 1).add(const Duration(seconds: -1));
+  }
+
   static DateTime getLastMonth({DateTime? date}) {
     date ??= DateTime.now();
     return DateTime(date.year, date.month - 1, date.day);
