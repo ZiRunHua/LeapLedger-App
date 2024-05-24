@@ -172,6 +172,7 @@ class TransactionQueryCondModel {
   int accountId;
   @JsonKey(toJson: toSet)
   late Set<int> userIds;
+  @JsonKey(toJson: toSet)
   late Set<int> categoryIds;
   IncomeExpense? incomeExpense;
   int? minimumAmount;

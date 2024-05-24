@@ -135,7 +135,7 @@ Map<String, dynamic> _$TransactionQueryCondModelToJson(
     <String, dynamic>{
       'AccountId': instance.accountId,
       'UserIds': toSet(instance.userIds),
-      'CategoryIds': instance.categoryIds.toList(),
+      'CategoryIds': toSet(instance.categoryIds),
       'IncomeExpense': _$IncomeExpenseEnumMap[instance.incomeExpense],
       'MinimumAmount': instance.minimumAmount,
       'MaximumAmount': instance.maximumAmount,
