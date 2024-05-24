@@ -77,7 +77,7 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
       case Mode.month:
         child = _buildMonthPicker();
         title = const Padding(
-          padding: EdgeInsets.all(Constant.padding),
+          padding: EdgeInsets.fromLTRB(Constant.padding, Constant.padding, Constant.padding, 0),
           child: Text(
             '月份选择',
             style: TextStyle(
@@ -91,7 +91,7 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
       case Mode.dateRange:
         child = _buildDateRangePicker();
         title = const Padding(
-          padding: EdgeInsets.all(Constant.padding),
+          padding: EdgeInsets.fromLTRB(Constant.padding, Constant.padding, Constant.padding, 0),
           child: Text(
             '日期选择',
             style: TextStyle(
