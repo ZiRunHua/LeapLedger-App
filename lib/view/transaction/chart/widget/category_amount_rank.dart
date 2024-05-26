@@ -2,7 +2,7 @@ part of 'enter.dart';
 
 class CategoryAmountRank extends StatefulWidget {
   const CategoryAmountRank(this.ranks, {super.key});
-  final CategoryRanks ranks;
+  final CategoryRankingList ranks;
   @override
   State<CategoryAmountRank> createState() => _CategoryAmountRankState();
 }

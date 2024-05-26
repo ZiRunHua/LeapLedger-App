@@ -3,7 +3,7 @@ part of 'enter.dart';
 class CategoryPieChart extends StatefulWidget {
   const CategoryPieChart(this.categoryRanks, {super.key});
 
-  final CategoryRanks categoryRanks;
+  final CategoryRankingList categoryRanks;
 
   @override
   State<CategoryPieChart> createState() => _CategoryPieChartState();

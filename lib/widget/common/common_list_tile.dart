@@ -47,6 +47,7 @@ class CommonListTile extends ListTile {
     VoidCallback? onTap,
   }) : this(
             key: key,
+            dense: true,
             leading: Icon(
               model.categoryIcon,
               color: ConstantColor.primaryColor,

@@ -1,7 +1,7 @@
 part of 'enter.dart';
 
-class CategoryRanks {
-  CategoryRanks({required List<TransactionCategoryAmountRankApiModel> data}) {
+class CategoryRankingList {
+  CategoryRankingList({required List<TransactionCategoryAmountRankApiModel> data}) {
     int totalAmount = 0;
     for (var element in data) {
       totalAmount += element.amount;

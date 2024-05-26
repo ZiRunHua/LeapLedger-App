@@ -14,9 +14,9 @@ class ExpenseChartCubit extends Cubit<ExpenseChartState> {
     await Future.wait<void>([loadTotal(), loadDayStatistic(), loadCategoryRank()]);
   }
 
-  InExStatisticModel? total;
+  AmountCountModel? total;
   Future<void> loadTotal() async {
-    total = await TransactionApi.getTotal(TransactionQueryCondModel(
+    var data = await TransactionApi.getTotal(TransactionQueryCondModel(
       accountId: account.id,
       startTime: startTime,
       endTime: endTime,
@@ -24,20 +24,8 @@ class ExpenseChartCubit extends Cubit<ExpenseChartState> {
     if (total == null) {
       return;
     }
+    total = data!.expense;
     emit(ExpenseTotalLoaded());
-  }
-
-  CategoryRanks? categoryRanks;
-  Future<void> loadCategoryRank() async {
-    categoryRanks = CategoryRanks(
-      data: await TransactionApi.getCategoryAmountRank(
-        accountId: account.id,
-        ie: ie,
-        startTime: startTime,
-        endTime: endTime,
-      ),
-    );
-    emit(ExpenseCategoryRankLoaded());
   }
 
   List<DayAmountStatisticApiModel> dayStatistics = [];
@@ -49,5 +37,29 @@ class ExpenseChartCubit extends Cubit<ExpenseChartState> {
       endTime: endTime,
     );
     emit(ExpenseDayStatisticsLoaded());
+  }
+
+  CategoryRankingList? categoryRankingList;
+  Future<void> loadCategoryRank() async {
+    categoryRankingList = CategoryRankingList(
+      data: await TransactionApi.getCategoryAmountRank(
+        accountId: account.id,
+        ie: ie,
+        startTime: startTime,
+        endTime: endTime,
+      ),
+    );
+    emit(ExpenseCategoryRankLoaded());
+  }
+
+  List<TransactionModel> amountRankinglist = [];
+  Future<void> loadAmountRankgin() async {
+    amountRankinglist = await TransactionApi.getAmountRank(
+      accountId: account.id,
+      ie: ie,
+      startTime: startTime,
+      endTime: endTime,
+    );
+    emit(ExpenseTransRankLoaded());
   }
 }

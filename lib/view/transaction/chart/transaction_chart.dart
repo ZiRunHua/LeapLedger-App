@@ -68,44 +68,51 @@ class _TransactionChartState extends State<TransactionChart> {
     return Column(
       children: [
         BlocBuilder<ExpenseChartCubit, ExpenseChartState>(
-          buildWhen: (_, current) => current is ExpenseDayStatisticsLoaded,
+          buildWhen: (_, current) => current is ExpenseTotalLoaded,
           builder: (context, state) {
-            if (_cubit.dayStatistics.isNotEmpty) {
-              return CommonCard.withTitle(
-                title: "支出趋势",
-                child: AspectRatio(
-                  aspectRatio: 1.61,
-                  child: StatisticsLineChart(list: _cubit.dayStatistics),
-                ),
-              );
+            if (_cubit.total == null) {
+              return const SizedBox();
             }
-            return const SizedBox();
+            return CommonCard.withTitle(
+              child: TotalHeader(data: _cubit.total!, type: IncomeExpense.expense),
+            );
           },
         ),
         BlocBuilder<ExpenseChartCubit, ExpenseChartState>(
           buildWhen: (_, current) => current is ExpenseDayStatisticsLoaded,
           builder: (context, state) {
-            if (_cubit.dayStatistics.isNotEmpty) {
-              return CommonCard.withTitle(
-                title: "支出趋势",
-                child: AspectRatio(
-                  aspectRatio: 1.61,
-                  child: StatisticsLineChart(list: _cubit.dayStatistics),
-                ),
-              );
+            if (_cubit.dayStatistics.isEmpty) {
+              return const SizedBox();
             }
-            return const SizedBox();
+            return CommonCard.withTitle(
+              title: "支出趋势",
+              child: AspectRatio(
+                aspectRatio: 1.61,
+                child: StatisticsLineChart(list: _cubit.dayStatistics),
+              ),
+            );
           },
         ),
         BlocBuilder<ExpenseChartCubit, ExpenseChartState>(
           buildWhen: (_, current) => current is ExpenseCategoryRankLoaded,
           builder: (context, state) {
-            if (_cubit.categoryRanks != null && _cubit.categoryRanks!.isNotEmpty) {
-              return CommonCard.withTitle(
-                title: "分类汇总",
-                child: Column(
-                    children: [CategoryPieChart(_cubit.categoryRanks!), CategoryAmountRank(_cubit.categoryRanks!)]),
-              );
+            if (_cubit.categoryRankingList == null || _cubit.categoryRankingList!.isNotEmpty) {
+              return const SizedBox();
+            }
+            return CommonCard.withTitle(
+              title: "分类汇总",
+              child: Column(children: [
+                CategoryPieChart(_cubit.categoryRankingList!),
+                CategoryAmountRank(_cubit.categoryRankingList!)
+              ]),
+            );
+          },
+        ),
+        BlocBuilder<ExpenseChartCubit, ExpenseChartState>(
+          buildWhen: (_, current) => current is ExpenseTransRankLoaded,
+          builder: (context, state) {
+            if (_cubit.categoryRankingList != null && _cubit.categoryRankingList!.isNotEmpty) {
+              return CommonCard.withTitle(title: "支出排行", child: TransactionRank(transLsit: _cubit.amountRankinglist));
             }
             return const SizedBox();
           },
