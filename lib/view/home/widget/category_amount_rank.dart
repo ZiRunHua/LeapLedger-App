@@ -79,22 +79,7 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> {
                 startTime: HomeBloc.startTime,
                 endTime: HomeBloc.endTime)),
         child: ListTile(
-          leading: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: Constant.padding),
-                child: SizedBox(
-                  width: 10,
-                  child: Text(
-                    "$number",
-                    style: const TextStyle(color: Colors.grey, fontSize: ConstantFontSize.headline),
-                  ),
-                ),
-              ),
-              Icon(data.category.icon, color: ConstantColor.primaryColor)
-            ],
-          ),
+          leading: Icon(data.category.icon, color: ConstantColor.primaryColor),
           title: Text(
             data.category.name,
             style: const TextStyle(fontSize: ConstantFontSize.body),

@@ -56,14 +56,8 @@ class _TransactionFlowState extends State<TransactionFlow> {
   void _onFetchMoreData() {
     if (currentState != PageStatus.noMoreData) {
       _flowListBloc.add(FlowListMoreDataFetchEvent());
-      _changeState(PageStatus.moreDataFetching);
+      currentState = PageStatus.moreDataFetching;
     }
-  }
-
-  void _changeState(PageStatus status) {
-    setState(() {
-      currentState = status;
-    });
   }
 
   Map<IncomeExpenseStatisticWithTimeApiModel, List<TransactionModel>> data = {};

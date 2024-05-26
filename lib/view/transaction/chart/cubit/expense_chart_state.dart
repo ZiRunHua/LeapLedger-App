@@ -10,3 +10,5 @@ final class ExpenseChartLoad extends ExpenseChartState {}
 final class ExpenseCategoryRankLoaded extends ExpenseChartState {}
 
 final class ExpenseDayStatisticsLoaded extends ExpenseChartState {}
+
+final class ExpenseTotalLoaded extends ExpenseChartState {}

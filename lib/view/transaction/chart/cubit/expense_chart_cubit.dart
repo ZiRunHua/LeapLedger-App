@@ -2,7 +2,7 @@ part of 'enter.dart';
 
 class ExpenseChartCubit extends Cubit<ExpenseChartState> {
   ExpenseChartCubit({required this.account, DateTime? startTime, DateTime? endTime}) : super(ExpenseChartInitial()) {
-    this.startTime = startTime ?? Time.getFirstSecondOfPreviousMonths(numberOfMonths: 12);
+    this.startTime = startTime ?? Time.getFirstSecondOfMonth();
     this.endTime = endTime ?? Time.getLastSecondOfMonth();
   }
 
@@ -11,16 +11,11 @@ class ExpenseChartCubit extends Cubit<ExpenseChartState> {
   late DateTime startTime, endTime;
 
   load() async {
-    categoryList = await TransactionApi.getCategoryAmountRank(
-      accountId: account.id,
-      ie: ie,
-      startTime: startTime,
-      endTime: endTime,
-    );
+    await Future.wait<void>([loadTotal(), loadDayStatistic(), loadCategoryRank()]);
   }
 
   InExStatisticModel? total;
-  loadTotal() async {
+  Future<void> loadTotal() async {
     total = await TransactionApi.getTotal(TransactionQueryCondModel(
       accountId: account.id,
       startTime: startTime,
@@ -29,22 +24,24 @@ class ExpenseChartCubit extends Cubit<ExpenseChartState> {
     if (total == null) {
       return;
     }
-    emit(ExpenseCategoryRankLoaded());
+    emit(ExpenseTotalLoaded());
   }
 
-  List<TransactionCategoryAmountRankApiModel> categoryList = [];
-  loadCategoryRank() async {
-    categoryList = await TransactionApi.getCategoryAmountRank(
-      accountId: account.id,
-      ie: ie,
-      startTime: startTime,
-      endTime: endTime,
+  CategoryRanks? categoryRanks;
+  Future<void> loadCategoryRank() async {
+    categoryRanks = CategoryRanks(
+      data: await TransactionApi.getCategoryAmountRank(
+        accountId: account.id,
+        ie: ie,
+        startTime: startTime,
+        endTime: endTime,
+      ),
     );
     emit(ExpenseCategoryRankLoaded());
   }
 
   List<DayAmountStatisticApiModel> dayStatistics = [];
-  loadDayStatistic() async {
+  Future<void> loadDayStatistic() async {
     dayStatistics = await TransactionApi.getDayStatistic(
       accountId: account.id,
       ie: ie,

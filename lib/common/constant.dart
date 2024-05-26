@@ -10,6 +10,8 @@ class Constant {
 
   static const double buttomLetterSpacing = 4.0;
 
+  static const double iconSize = 24;
+
   static const int maxAmount = 99999999; //最大金额为100万减一 存储单位为分
   static const int minYear = 2000;
   static const int maxYear = 2050;
@@ -70,7 +72,7 @@ class _ConstantWidgetDivider {
 class ConstantColor {
   static const Color primaryColor = Colors.blue;
   static const Color primary80AlphaColor = Color.fromRGBO(33, 150, 243, 0.8);
-  static const Color secondaryColor = Color.fromRGBO(187, 222, 251, 1);
+  static const Color secondaryColor = Color.fromRGBO(187, 222, 251, 1); // is Colors.blue.shade100
   static const Color incomeAmount = Colors.green;
   static const Color expenseAmount = Colors.red;
   static const Color incomeAmount80Alpha = Color.fromRGBO(76, 175, 80, 0.8);
@@ -83,8 +85,8 @@ class ConstantColor {
   static const Color greyButtonIcon = Colors.grey;
   static const Color listDividerColor = Color.fromRGBO(238, 238, 238, 1);
 
-  static const Color secondaryTextColor = Color.fromRGBO(117, 117, 117, 1); //Colors.grey.shade800
-  static const Color borderColor = Color.fromRGBO(189, 189, 189, 1); //Colors.grey.shade400
+  static const Color secondaryTextColor = Color.fromRGBO(117, 117, 117, 1); // is Colors.grey.shade800
+  static const Color borderColor = Color.fromRGBO(189, 189, 189, 1); // is Colors.grey.shade400
 }
 
 class Constantlimit {

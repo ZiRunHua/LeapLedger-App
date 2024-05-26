@@ -1,8 +1,9 @@
 part of 'enter.dart';
 
 class CategoryPieChart extends StatefulWidget {
-  const CategoryPieChart(this.list, {super.key});
-  final List<TransactionCategoryAmountRankApiModel> list;
+  const CategoryPieChart(this.categoryRanks, {super.key});
+
+  final CategoryRanks categoryRanks;
 
   @override
   State<CategoryPieChart> createState() => _CategoryPieChartState();
@@ -11,75 +12,105 @@ class CategoryPieChart extends StatefulWidget {
 class _CategoryPieChartState extends State<CategoryPieChart> {
   @override
   void initState() {
-    list = widget.list;
-    var total = 0;
-    for (var category in list) {
-      total += category.amount;
-    }
-    this.total = total;
+    assert(widget.categoryRanks.isNotEmpty);
+
     super.initState();
   }
 
-  late final List<TransactionCategoryAmountRankApiModel> list;
-  late final int total;
-  int touchedIndex = -1;
+  List<CategoryRank> get rankList => widget.categoryRanks.data;
+  int get totalAmount => widget.categoryRanks.totalAmount;
+
+  final double centerSpaceRadius = 56;
+
+  int touchedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1,
-      child: PieChart(
-        PieChartData(
-          pieTouchData: PieTouchData(
-            touchCallback: (FlTouchEvent event, pieTouchResponse) {
-              setState(() {
-                if (!event.isInterestedForInteractions ||
-                    pieTouchResponse == null ||
-                    pieTouchResponse.touchedSection == null) {
-                  touchedIndex = -1;
-                  return;
-                }
-                touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
-              });
-            },
+    return SizedBox(
+      height: centerSpaceRadius * (1.5 + 1.61 * 0.61) * 2,
+      child: Stack(
+        children: [
+          Positioned(child: Center(child: _buildSelected())),
+          PieChart(
+            PieChartData(
+              pieTouchData: PieTouchData(
+                touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                  if (pieTouchResponse == null || pieTouchResponse.touchedSection == null) {
+                  } else if (pieTouchResponse.touchedSection!.touchedSectionIndex >= 0) {
+                    touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
+                    setState(() {});
+                  }
+                },
+              ),
+              borderData: FlBorderData(show: false),
+              sectionsSpace: 1,
+              centerSpaceRadius: centerSpaceRadius,
+              sections: showingSections(),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  CategoryRank get selected => rankList[touchedIndex];
+  Widget _buildSelected() {
+    return DefaultTextStyle.merge(
+      style: const TextStyle(fontSize: ConstantFontSize.bodySmall),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(selected.icon, size: 28),
+          Text(
+            selected.name,
+            style: const TextStyle(letterSpacing: Constant.margin / 2),
           ),
-          borderData: FlBorderData(
-            show: false,
+          Text.rich(
+            AmountTextSpan.sameHeight(selected.amount),
+            style: const TextStyle(fontSize: ConstantFontSize.body, fontWeight: FontWeight.w500),
           ),
-          sectionsSpace: 0,
-          centerSpaceRadius: 40,
-          sections: showingSections(),
-        ),
+          Text(
+            "${selected.count}笔",
+            style: const TextStyle(fontSize: ConstantFontSize.body, fontWeight: FontWeight.w500),
+          ),
+        ],
       ),
     );
   }
 
   List<PieChartSectionData> showingSections() {
-    TransactionCategoryAmountRankApiModel category;
+    CategoryRank rank;
     int accumulate = 0;
-    return List.generate(list.length, (index) {
-      final isTouched = index == touchedIndex;
-      category = list[index];
-      accumulate += total - category.amount;
-      var value = category.amount * 100 / total;
-      print(accumulate / total / list.length);
-      return _buildSectionData(
-        value: value,
-        isTouched: isTouched,
-        color: Color.lerp(ConstantColor.primaryColor, Colors.white, accumulate / total / list.length),
-      );
-    });
+    return List.generate(
+      rankList.length,
+      (index) {
+        final isTouched = index == touchedIndex;
+        rank = rankList[index];
+        accumulate += totalAmount - rank.amount;
+        return _buildSectionData(
+          rank: rank,
+          isTouched: isTouched,
+          color: Color.lerp(
+            ConstantColor.primaryColor,
+            ConstantColor.secondaryColor,
+            accumulate / totalAmount / rankList.length,
+          ),
+        );
+      },
+    );
   }
 
-  _buildSectionData({required double value, required bool isTouched, Color? color}) {
+  _buildSectionData({required CategoryRank rank, required bool isTouched, Color? color}) {
     return PieChartSectionData(
       color: color,
-      value: value,
-      title: '${value.toStringAsFixed(2)}%',
-      showTitle: value > 30,
-      radius: isTouched ? 60 : 40,
+      value: rank.amountProportion / 100,
+      title: rank.amountProportiontoString(),
+      showTitle: isTouched,
+      titlePositionPercentageOffset: 1.61,
+      radius: isTouched ? centerSpaceRadius * 1.61 * 0.61 : centerSpaceRadius * 0.61,
       titleStyle: TextStyle(
-        fontSize: isTouched ? ConstantFontSize.largeHeadline : ConstantFontSize.body,
-        fontWeight: FontWeight.bold,
+        fontSize: isTouched ? ConstantFontSize.bodyLarge : ConstantFontSize.body,
         color: ConstantColor.greyText,
         shadows: const [Shadow(color: Colors.black, blurRadius: 2)],
       ),

@@ -1,17 +1,60 @@
 part of 'common.dart';
 
-class CommonCard extends StatelessWidget {
-  final Widget child;
-  const CommonCard(this.child, {super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-        margin: const EdgeInsets.all(5),
-        color: Colors.white,
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: child);
+class CommonCard extends Card {
+  const CommonCard({
+    super.key,
+    super.color,
+    super.shadowColor,
+    super.surfaceTintColor,
+    super.elevation,
+    super.shape,
+    super.borderOnForeground = true,
+    super.margin,
+    super.clipBehavior,
+    super.child,
+    super.semanticContainer = true,
+  }) : assert(elevation == null || elevation >= 0.0);
+
+  factory CommonCard.withTitle({
+    required Widget child,
+    String? title,
+    Color? background,
+    Widget? action,
+  }) {
+    child = Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: title == null
+          ? [child]
+          : [
+              Padding(
+                padding: const EdgeInsets.only(top: Constant.padding, left: Constant.padding),
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: ConstantFontSize.headline,
+                    letterSpacing: 2,
+                  ),
+                ),
+              ),
+              child
+            ],
+    );
+    if (action != null) {
+      child = Stack(children: [
+        Positioned(top: Constant.padding, right: Constant.padding, child: action),
+        child,
+      ]);
+    }
+    return CommonCard(
+      color: background ?? Colors.white,
+      margin: const EdgeInsets.all(Constant.margin),
+      elevation: 0,
+      shape: const RoundedRectangleBorder(
+        borderRadius: ConstantDecoration.borderRadius,
+      ),
+      child: child,
+    );
   }
 }
