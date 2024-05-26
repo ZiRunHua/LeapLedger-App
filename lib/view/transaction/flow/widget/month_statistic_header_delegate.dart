@@ -6,7 +6,7 @@ class MonthStatisticHeaderDelegate extends SliverPersistentHeaderDelegate {
   static TextStyle amountStyle = const TextStyle(color: Colors.black, fontSize: ConstantFontSize.headline);
   final double height = 56 + Constant.margin * 2;
 
-  final IncomeExpenseStatisticWithTimeApiModel data;
+  final InExStatisticWithTimeModel data;
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(

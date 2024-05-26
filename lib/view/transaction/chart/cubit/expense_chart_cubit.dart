@@ -1,25 +1,31 @@
 part of 'enter.dart';
 
 class ExpenseChartCubit extends Cubit<ExpenseChartState> {
-  ExpenseChartCubit({required this.account, DateTime? startTime, DateTime? endTime}) : super(ExpenseChartInitial()) {
-    this.startTime = startTime ?? Time.getFirstSecondOfMonth();
-    this.endTime = endTime ?? Time.getLastSecondOfMonth();
+  ExpenseChartCubit({required this.account, DateTime? startMonth, DateTime? endMonth}) : super(ExpenseChartInitial()) {
+    this.startMonth = startMonth ?? Time.getFirstSecondOfMonth();
+    this.endMonth = endMonth ?? Time.getLastSecondOfMonth();
   }
 
   final ie = IncomeExpense.expense;
   late AccountDetailModel account;
-  late DateTime startTime, endTime;
+  late DateTime startMonth, endMonth;
 
   load() async {
     await Future.wait<void>([loadTotal(), loadDayStatistic(), loadCategoryRank()]);
+    emit(ExpenseChartLoaded());
+  }
+
+  updateDate() async {
+    await Future.wait<void>([loadTotal(), loadDayStatistic(), loadCategoryRank()]);
+    emit(ExpenseChartLoaded());
   }
 
   AmountCountModel? total;
   Future<void> loadTotal() async {
     var data = await TransactionApi.getTotal(TransactionQueryCondModel(
       accountId: account.id,
-      startTime: startTime,
-      endTime: endTime,
+      startTime: startMonth,
+      endTime: endMonth,
     ));
     if (total == null) {
       return;
@@ -33,8 +39,8 @@ class ExpenseChartCubit extends Cubit<ExpenseChartState> {
     dayStatistics = await TransactionApi.getDayStatistic(
       accountId: account.id,
       ie: ie,
-      startTime: startTime,
-      endTime: endTime,
+      startTime: startMonth,
+      endTime: endMonth,
     );
     emit(ExpenseDayStatisticsLoaded());
   }
@@ -45,8 +51,8 @@ class ExpenseChartCubit extends Cubit<ExpenseChartState> {
       data: await TransactionApi.getCategoryAmountRank(
         accountId: account.id,
         ie: ie,
-        startTime: startTime,
-        endTime: endTime,
+        startTime: startMonth,
+        endTime: endMonth,
       ),
     );
     emit(ExpenseCategoryRankLoaded());
@@ -57,8 +63,8 @@ class ExpenseChartCubit extends Cubit<ExpenseChartState> {
     amountRankinglist = await TransactionApi.getAmountRank(
       accountId: account.id,
       ie: ie,
-      startTime: startTime,
-      endTime: endTime,
+      startTime: startMonth,
+      endTime: endMonth,
     );
     emit(ExpenseTransRankLoaded());
   }

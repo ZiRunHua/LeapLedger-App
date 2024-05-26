@@ -13,16 +13,16 @@ class _TimePeriodStatisticsState extends State<TimePeriodStatistics> {
   @override
   void initState() {
     _shimmeData = UserHomeTimePeriodStatisticsApiModel(
-      todayData: IncomeExpenseStatisticWithTimeApiModel(startTime: today, endTime: today),
-      yearData: IncomeExpenseStatisticWithTimeApiModel(
+      todayData: InExStatisticWithTimeModel(startTime: today, endTime: today),
+      yearData: InExStatisticWithTimeModel(
         startTime: today.subtract(const Duration(days: 1)),
         endTime: today.subtract(const Duration(days: 1)),
       ),
-      weekData: IncomeExpenseStatisticWithTimeApiModel(
+      weekData: InExStatisticWithTimeModel(
         startTime: today.subtract(Duration(days: today.weekday - 1)),
         endTime: today.subtract(Duration(days: 7 - today.weekday)),
       ),
-      yesterdayData: IncomeExpenseStatisticWithTimeApiModel(
+      yesterdayData: InExStatisticWithTimeModel(
         startTime: DateTime(today.year, 1, 1),
         endTime: DateTime(today.year + 1, 1, 1).subtract(const Duration(days: 1)),
       ),
@@ -64,8 +64,7 @@ class _TimePeriodStatisticsState extends State<TimePeriodStatistics> {
     );
   }
 
-  Widget _buildListTile(
-      {required IconData icon, required String title, required IncomeExpenseStatisticWithTimeApiModel data}) {
+  Widget _buildListTile({required IconData icon, required String title, required InExStatisticWithTimeModel data}) {
     String date;
     Function() onTap;
     DateTime startTime = data.startTime;

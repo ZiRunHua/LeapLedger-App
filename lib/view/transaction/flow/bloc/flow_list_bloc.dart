@@ -3,7 +3,7 @@ part of 'enter.dart';
 class FlowListBloc extends Bloc<FlowListEvent, FlowListState> {
   FlowListBloc({required TransactionQueryCondModel initCondition}) : super(FlowListLoading()) {
     condition = initCondition;
-    total = IncomeExpenseStatisticWithTimeApiModel(
+    total = InExStatisticWithTimeModel(
       startTime: condition.startTime,
       endTime: condition.endTime,
     );
@@ -16,13 +16,13 @@ class FlowListBloc extends Bloc<FlowListEvent, FlowListState> {
   }
 
   /// 月统计
-  List<IncomeExpenseStatisticWithTimeApiModel> monthStatistic = [];
+  List<InExStatisticWithTimeModel> monthStatistic = [];
 
   /// 列表
-  Map<IncomeExpenseStatisticWithTimeApiModel, List<TransactionModel>> list = {};
+  Map<InExStatisticWithTimeModel, List<TransactionModel>> list = {};
 
   /// 合计数据
-  late IncomeExpenseStatisticWithTimeApiModel total;
+  late InExStatisticWithTimeModel total;
 
   /// 条件
   late TransactionQueryCondModel condition;
@@ -59,7 +59,7 @@ class FlowListBloc extends Bloc<FlowListEvent, FlowListState> {
     hasMore = list.isNotEmpty;
     emit(FlowListLoaded());
     // 处理合计数据
-    total = IncomeExpenseStatisticWithTimeApiModel(startTime: condition.startTime, endTime: condition.endTime);
+    total = InExStatisticWithTimeModel(startTime: condition.startTime, endTime: condition.endTime);
     if (monthStatistic.isNotEmpty) {
       for (var element in monthStatistic) {
         total.income.add(element.income);
@@ -114,7 +114,7 @@ class FlowListBloc extends Bloc<FlowListEvent, FlowListState> {
     _handleTransInTotal(trans, emit, isAdd: true);
     var editModel = trans.editModel;
     bool needToUpdate = false;
-    IncomeExpenseStatisticWithTimeApiModel? statistic;
+    InExStatisticWithTimeModel? statistic;
     for (var element in monthStatistic) {
       if (true == element.handleTransEditModel(editModel: editModel, isAdd: true)) {
         statistic = element;
@@ -144,7 +144,7 @@ class FlowListBloc extends Bloc<FlowListEvent, FlowListState> {
     _handleTransInTotal(trans, emit, isAdd: false);
     var editModel = trans.editModel;
     bool needToUpdate = false;
-    IncomeExpenseStatisticWithTimeApiModel? statistic;
+    InExStatisticWithTimeModel? statistic;
     for (var element in monthStatistic) {
       if (true == element.handleTransEditModel(editModel: editModel, isAdd: false)) {
         statistic = element;

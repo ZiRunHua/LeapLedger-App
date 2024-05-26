@@ -21,9 +21,9 @@ class UserHomeApiModel {
 
 ///首页头部Card接口数据模型
 @JsonSerializable(fieldRename: FieldRename.pascal)
-class UserHomeHeaderCardApiModel extends IncomeExpenseStatisticWithTimeApiModel {
+class UserHomeHeaderCardApiModel extends InExStatisticWithTimeModel {
   UserHomeHeaderCardApiModel(
-      {AmountCountApiModel? income, AmountCountApiModel? expense, required super.startTime, required super.endTime})
+      {AmountCountModel? income, AmountCountModel? expense, required super.startTime, required super.endTime})
       : super(income: income, expense: expense);
   int? get days => endTime.difference(startTime).inDays;
   int get dayExpenseAmountaverage {
@@ -42,10 +42,10 @@ class UserHomeHeaderCardApiModel extends IncomeExpenseStatisticWithTimeApiModel 
 
 ///首页时间段统计接口数据模型
 class UserHomeTimePeriodStatisticsApiModel {
-  late IncomeExpenseStatisticWithTimeApiModel todayData;
-  late IncomeExpenseStatisticWithTimeApiModel yesterdayData;
-  late IncomeExpenseStatisticWithTimeApiModel weekData;
-  late IncomeExpenseStatisticWithTimeApiModel yearData;
+  late InExStatisticWithTimeModel todayData;
+  late InExStatisticWithTimeModel yesterdayData;
+  late InExStatisticWithTimeModel weekData;
+  late InExStatisticWithTimeModel yearData;
   UserHomeTimePeriodStatisticsApiModel({
     required this.todayData,
     required this.yesterdayData,

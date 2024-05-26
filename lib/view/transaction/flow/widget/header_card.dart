@@ -17,7 +17,7 @@ class _HeaderCardState extends State<HeaderCard> {
     super.initState();
   }
 
-  IncomeExpenseStatisticWithTimeApiModel get totalData => _bloc.total;
+  InExStatisticWithTimeModel get totalData => _bloc.total;
   @override
   Widget build(BuildContext context) {
     return Container(

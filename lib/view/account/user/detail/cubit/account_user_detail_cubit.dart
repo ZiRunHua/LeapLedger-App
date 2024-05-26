@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:keepaccount_app/api/api_server.dart';
-import 'package:keepaccount_app/api/model/model.dart';
 import 'package:keepaccount_app/model/account/model.dart';
+import 'package:keepaccount_app/model/common/model.dart';
 import 'package:keepaccount_app/model/transaction/model.dart';
 import 'package:meta/meta.dart';
 

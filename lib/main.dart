@@ -9,7 +9,6 @@ import 'package:keepaccount_app/model/user/model.dart';
 import 'package:keepaccount_app/routes/routes.dart';
 import 'package:keepaccount_app/util/enter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:keepaccount_app/view/navigation/navigation.dart';
 import 'package:keepaccount_app/view/transaction/chart/transaction_chart.dart';
 
 import 'common/global.dart';

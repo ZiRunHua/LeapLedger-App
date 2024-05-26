@@ -17,64 +17,6 @@ Map<String, dynamic> _$CommonCaptchaModelToJson(CommonCaptchaModel instance) =>
       'CaptchaId': instance.captchaId,
     };
 
-AmountCountApiModel _$AmountCountApiModelFromJson(Map<String, dynamic> json) =>
-    AmountCountApiModel(
-      (json['Amount'] as num?)?.toInt() ?? 0,
-      (json['Count'] as num?)?.toInt() ?? 0,
-    );
-
-Map<String, dynamic> _$AmountCountApiModelToJson(
-        AmountCountApiModel instance) =>
-    <String, dynamic>{
-      'Amount': instance.amount,
-      'Count': instance.count,
-    };
-
-IncomeExpenseStatisticApiModel _$IncomeExpenseStatisticApiModelFromJson(
-        Map<String, dynamic> json) =>
-    IncomeExpenseStatisticApiModel(
-      income: json['Income'] == null
-          ? null
-          : AmountCountApiModel.fromJson(
-              json['Income'] as Map<String, dynamic>),
-      expense: json['Expense'] == null
-          ? null
-          : AmountCountApiModel.fromJson(
-              json['Expense'] as Map<String, dynamic>),
-    );
-
-Map<String, dynamic> _$IncomeExpenseStatisticApiModelToJson(
-        IncomeExpenseStatisticApiModel instance) =>
-    <String, dynamic>{
-      'Income': instance.income,
-      'Expense': instance.expense,
-    };
-
-IncomeExpenseStatisticWithTimeApiModel
-    _$IncomeExpenseStatisticWithTimeApiModelFromJson(
-            Map<String, dynamic> json) =>
-        IncomeExpenseStatisticWithTimeApiModel(
-          income: json['Income'] == null
-              ? null
-              : AmountCountApiModel.fromJson(
-                  json['Income'] as Map<String, dynamic>),
-          expense: json['Expense'] == null
-              ? null
-              : AmountCountApiModel.fromJson(
-                  json['Expense'] as Map<String, dynamic>),
-          startTime: Json.dateTimeFromJson(json['StartTime']),
-          endTime: Json.dateTimeFromJson(json['EndTime']),
-        );
-
-Map<String, dynamic> _$IncomeExpenseStatisticWithTimeApiModelToJson(
-        IncomeExpenseStatisticWithTimeApiModel instance) =>
-    <String, dynamic>{
-      'Income': instance.income,
-      'Expense': instance.expense,
-      'StartTime': Json.dateTimeToJson(instance.startTime),
-      'EndTime': Json.dateTimeToJson(instance.endTime),
-    };
-
 DayAmountStatisticApiModel _$DayAmountStatisticApiModelFromJson(
         Map<String, dynamic> json) =>
     DayAmountStatisticApiModel(
@@ -120,12 +62,10 @@ UserHomeHeaderCardApiModel _$UserHomeHeaderCardApiModelFromJson(
     UserHomeHeaderCardApiModel(
       income: json['Income'] == null
           ? null
-          : AmountCountApiModel.fromJson(
-              json['Income'] as Map<String, dynamic>),
+          : AmountCountModel.fromJson(json['Income'] as Map<String, dynamic>),
       expense: json['Expense'] == null
           ? null
-          : AmountCountApiModel.fromJson(
-              json['Expense'] as Map<String, dynamic>),
+          : AmountCountModel.fromJson(json['Expense'] as Map<String, dynamic>),
       startTime: Json.dateTimeFromJson(json['StartTime']),
       endTime: Json.dateTimeFromJson(json['EndTime']),
     );
@@ -142,13 +82,13 @@ Map<String, dynamic> _$UserHomeHeaderCardApiModelToJson(
 UserHomeTimePeriodStatisticsApiModel
     _$UserHomeTimePeriodStatisticsApiModelFromJson(Map<String, dynamic> json) =>
         UserHomeTimePeriodStatisticsApiModel(
-          todayData: IncomeExpenseStatisticWithTimeApiModel.fromJson(
+          todayData: InExStatisticWithTimeModel.fromJson(
               json['TodayData'] as Map<String, dynamic>),
-          yesterdayData: IncomeExpenseStatisticWithTimeApiModel.fromJson(
+          yesterdayData: InExStatisticWithTimeModel.fromJson(
               json['YesterdayData'] as Map<String, dynamic>),
-          weekData: IncomeExpenseStatisticWithTimeApiModel.fromJson(
+          weekData: InExStatisticWithTimeModel.fromJson(
               json['WeekData'] as Map<String, dynamic>),
-          yearData: IncomeExpenseStatisticWithTimeApiModel.fromJson(
+          yearData: InExStatisticWithTimeModel.fromJson(
               json['YearData'] as Map<String, dynamic>),
         );
 

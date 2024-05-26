@@ -39,7 +39,7 @@ final class AccountUserLoaded extends ShareHomeState {
 
 /// 账本统计加载完成
 final class AccountTotalLoaded extends ShareHomeState {
-  final IncomeExpenseStatisticApiModel todayTransTotal, monthTransTotal;
+  final InExStatisticModel todayTransTotal, monthTransTotal;
   AccountTotalLoaded(this.todayTransTotal, this.monthTransTotal);
 }
 

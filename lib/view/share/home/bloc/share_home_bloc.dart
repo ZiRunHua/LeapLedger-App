@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keepaccount_app/api/api_server.dart';
-import 'package:keepaccount_app/api/model/model.dart';
 import 'package:keepaccount_app/common/global.dart';
 import 'package:keepaccount_app/model/account/model.dart';
+import 'package:keepaccount_app/model/common/model.dart';
 import 'package:keepaccount_app/model/transaction/model.dart';
 
 part 'share_home_event.dart';
@@ -117,7 +117,7 @@ class ShareHomeBloc extends Bloc<ShareHomeEvent, ShareHomeState> {
     emit(AccountUserLoaded(userList));
   }
 
-  IncomeExpenseStatisticApiModel? todayTransTotal, monthTransTotal;
+  InExStatisticModel? todayTransTotal, monthTransTotal;
   Future<void> _getTotal(emit) async {
     if (account == null) {
       return;

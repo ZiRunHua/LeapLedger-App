@@ -109,22 +109,22 @@ class AccountApi {
 
   static Future<
       ({
-        IncomeExpenseStatisticApiModel? todayTransTotal,
-        IncomeExpenseStatisticApiModel? currentMonthTransTotal,
+        InExStatisticModel? todayTransTotal,
+        InExStatisticModel? currentMonthTransTotal,
         List<TransactionModel>? recentTrans,
       })> getUserInfo({required int id}) async {
     ResponseBody response = await ApiServer.request(Method.get, '$baseUrl/user/$id/info', data: {
       "Types": ['todayTransTotal', 'currentMonthTransTotal', 'recentTrans']
     });
-    IncomeExpenseStatisticApiModel? todayTotal;
-    IncomeExpenseStatisticApiModel? monthTotal;
+    InExStatisticModel? todayTotal;
+    InExStatisticModel? monthTotal;
     List<TransactionModel>? recentTrans;
     if (response.isSuccess) {
       if (response.data['TodayTransTotal'] != null) {
-        todayTotal = IncomeExpenseStatisticApiModel.fromJson(response.data['TodayTransTotal']);
+        todayTotal = InExStatisticModel.fromJson(response.data['TodayTransTotal']);
       }
       if (response.data['CurrentMonthTransTotal'] != null) {
-        monthTotal = IncomeExpenseStatisticApiModel.fromJson(response.data['CurrentMonthTransTotal']);
+        monthTotal = InExStatisticModel.fromJson(response.data['CurrentMonthTransTotal']);
       }
       if (response.data['RecentTrans'] != null && response.data['RecentTrans'] is List) {
         recentTrans = [];
@@ -143,21 +143,21 @@ class AccountApi {
   // 获取信息
   static Future<
       ({
-        IncomeExpenseStatisticApiModel? todayTransTotal,
-        IncomeExpenseStatisticApiModel? currentMonthTransTotal,
+        InExStatisticModel? todayTransTotal,
+        InExStatisticModel? currentMonthTransTotal,
         List<TransactionModel>? recentTrans,
       })> getInfo({required int accountId, required List<InfoType> types}) async {
     ResponseBody response =
         await ApiServer.request(Method.get, '$baseUrl/$accountId/info', data: {"Types": types.toJson()});
-    IncomeExpenseStatisticApiModel? todayTotal;
-    IncomeExpenseStatisticApiModel? monthTotal;
+    InExStatisticModel? todayTotal;
+    InExStatisticModel? monthTotal;
     List<TransactionModel>? recentTrans;
     if (response.isSuccess) {
       if (response.data['TodayTransTotal'] != null) {
-        todayTotal = IncomeExpenseStatisticApiModel.fromJson(response.data['TodayTransTotal']);
+        todayTotal = InExStatisticModel.fromJson(response.data['TodayTransTotal']);
       }
       if (response.data['CurrentMonthTransTotal'] != null) {
-        monthTotal = IncomeExpenseStatisticApiModel.fromJson(response.data['CurrentMonthTransTotal']);
+        monthTotal = InExStatisticModel.fromJson(response.data['CurrentMonthTransTotal']);
       }
       if (response.data['RecentTrans'] != null && response.data['RecentTrans'] is List) {
         recentTrans = [];

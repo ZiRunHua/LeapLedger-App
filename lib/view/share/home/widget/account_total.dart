@@ -1,7 +1,7 @@
 part of 'enter.dart';
 
 class AccountTotal extends StatelessWidget {
-  final IncomeExpenseStatisticApiModel todayTransTotal, monthTransTotal;
+  final InExStatisticModel todayTransTotal, monthTransTotal;
   const AccountTotal({super.key, required this.todayTransTotal, required this.monthTransTotal});
 
   @override
@@ -15,7 +15,7 @@ class AccountTotal extends StatelessWidget {
     );
   }
 
-  Widget _buildTotal(IconData icon, String text, IncomeExpenseStatisticApiModel data) {
+  Widget _buildTotal(IconData icon, String text, InExStatisticModel data) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(Constant.padding),

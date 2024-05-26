@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:keepaccount_app/api/model/model.dart';
 import 'package:keepaccount_app/bloc/transaction/transaction_bloc.dart';
 import 'package:keepaccount_app/common/global.dart';
 import 'package:keepaccount_app/model/account/model.dart';
+import 'package:keepaccount_app/model/common/model.dart';
 import 'package:keepaccount_app/model/transaction/category/model.dart';
 import 'package:keepaccount_app/model/transaction/model.dart';
 import 'package:keepaccount_app/routes/routes.dart';
@@ -60,7 +60,7 @@ class _TransactionFlowState extends State<TransactionFlow> {
     }
   }
 
-  Map<IncomeExpenseStatisticWithTimeApiModel, List<TransactionModel>> data = {};
+  Map<InExStatisticWithTimeModel, List<TransactionModel>> data = {};
 
   Widget listener(Widget child) {
     // 条件bloc
@@ -239,8 +239,7 @@ class _TransactionFlowState extends State<TransactionFlow> {
   }
 
   /// 月统计和交易列表
-  SliverMainAxisGroup buildMonthStatisticGroup(
-      IncomeExpenseStatisticWithTimeApiModel apiModel, List<TransactionModel> list) {
+  SliverMainAxisGroup buildMonthStatisticGroup(InExStatisticWithTimeModel apiModel, List<TransactionModel> list) {
     return SliverMainAxisGroup(slivers: [
       SliverPersistentHeader(
         pinned: true,
@@ -318,15 +317,14 @@ class _TransactionFlowState extends State<TransactionFlow> {
 
   /// Shimmer
   final List<MapEntry<TransactionCategoryFatherModel, List<TransactionCategoryModel>>> categoryShimmerData = [];
-  final Map<IncomeExpenseStatisticWithTimeApiModel, List<TransactionModel>> shimmerData = {
-    IncomeExpenseStatisticWithTimeApiModel(
-        startTime: Time.getFirstSecondOfMonth(), endTime: Time.getLastSecondOfMonth()): [
+  final Map<InExStatisticWithTimeModel, List<TransactionModel>> shimmerData = {
+    InExStatisticWithTimeModel(startTime: Time.getFirstSecondOfMonth(), endTime: Time.getLastSecondOfMonth()): [
       TransactionModel.fromJson({}),
       TransactionModel.fromJson({}),
       TransactionModel.fromJson({}),
       TransactionModel.fromJson({})
     ],
-    IncomeExpenseStatisticWithTimeApiModel(
+    InExStatisticWithTimeModel(
       startTime: Time.getFirstSecondOfPreviousMonths(numberOfMonths: 1),
       endTime: Time.getFirstSecondOfPreviousMonths(numberOfMonths: 1),
     ): [

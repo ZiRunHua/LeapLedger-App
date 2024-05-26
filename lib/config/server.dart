@@ -13,7 +13,6 @@ class Network {
   Network() {
     host = const String.fromEnvironment("config.server.network.host");
     port = const String.fromEnvironment("config.server.network.port");
-    print(host);
     address = "$host:$port";
   }
   Network.fromJson(dynamic data) {

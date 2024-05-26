@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keepaccount_app/api/model/model.dart';
 import 'package:keepaccount_app/common/global.dart';
 import 'package:keepaccount_app/model/account/model.dart';
+import 'package:keepaccount_app/model/common/model.dart';
 import 'package:keepaccount_app/model/transaction/model.dart';
 import 'package:keepaccount_app/routes/routes.dart';
 import 'package:keepaccount_app/view/account/user/detail/cubit/account_user_detail_cubit.dart';
@@ -133,7 +133,7 @@ class _AccountUserDetailButtomSheetState extends State<AccountUserDetailButtomSh
             endTime: endTime));
   }
 
-  Widget _buildTotal(IconData icon, String text, IncomeExpenseStatisticApiModel? data) {
+  Widget _buildTotal(IconData icon, String text, InExStatisticModel? data) {
     if (data == null) {
       return const SizedBox();
     }

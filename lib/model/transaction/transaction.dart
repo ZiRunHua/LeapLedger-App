@@ -258,6 +258,7 @@ class TransactionQueryCondModel {
   Map<String, dynamic> toJson() => _$TransactionQueryCondModelToJson(this);
 
   @override
+  // ignore: unnecessary_overrides
   int get hashCode => super.hashCode;
 
   bool checkTrans(TransactionModel trans) {

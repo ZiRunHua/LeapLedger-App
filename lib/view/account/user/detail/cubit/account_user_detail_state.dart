@@ -6,8 +6,8 @@ sealed class AccountUserDetailState {}
 final class AccountUserDetailInitial extends AccountUserDetailState {}
 
 final class AccountUserDetailLoad extends AccountUserDetailState {
-  final IncomeExpenseStatisticApiModel? todayTotal;
-  final IncomeExpenseStatisticApiModel? monthTotal;
+  final InExStatisticModel? todayTotal;
+  final InExStatisticModel? monthTotal;
   final List<TransactionModel>? recentTrans;
   AccountUserDetailLoad({this.todayTotal, this.monthTotal, this.recentTrans});
 }

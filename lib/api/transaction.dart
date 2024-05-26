@@ -72,13 +72,12 @@ class TransactionApi {
     return result;
   }
 
-  static Future<List<IncomeExpenseStatisticWithTimeApiModel>> getMonthStatistic(
-      TransactionQueryCondModel condition) async {
+  static Future<List<InExStatisticWithTimeModel>> getMonthStatistic(TransactionQueryCondModel condition) async {
     var responseBody = await ApiServer.request(Method.get, '$baseUrl/month/statistic', data: condition.toJson());
-    List<IncomeExpenseStatisticWithTimeApiModel> result = [];
+    List<InExStatisticWithTimeModel> result = [];
     if (responseBody.isSuccess) {
       for (Map<String, dynamic> data in responseBody.data['List']) {
-        result.add(IncomeExpenseStatisticWithTimeApiModel.fromJson(data));
+        result.add(InExStatisticWithTimeModel.fromJson(data));
       }
     }
     return result;

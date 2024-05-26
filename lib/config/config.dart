@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:keepaccount_app/common/current.dart';
 import 'package:keepaccount_app/config/server.dart';
 
 class Config {
@@ -27,8 +24,8 @@ class Config {
   }
 
   readFromConfigYaml() {
-    if (Current.env == ENV.dev) {}
-    String currentPath = Directory.current.path;
-    print(currentPath);
+    // if (Current.env == ENV.dev) {}
+    // String currentPath = Directory.current.path;
+    // print(currentPath);
   }
 }

@@ -33,3 +33,25 @@ Map<String, dynamic> _$InExStatisticModelToJson(InExStatisticModel instance) =>
       'Income': instance.income,
       'Expense': instance.expense,
     };
+
+InExStatisticWithTimeModel _$InExStatisticWithTimeModelFromJson(
+        Map<String, dynamic> json) =>
+    InExStatisticWithTimeModel(
+      income: json['Income'] == null
+          ? null
+          : AmountCountModel.fromJson(json['Income'] as Map<String, dynamic>),
+      expense: json['Expense'] == null
+          ? null
+          : AmountCountModel.fromJson(json['Expense'] as Map<String, dynamic>),
+      startTime: Json.dateTimeFromJson(json['StartTime']),
+      endTime: Json.dateTimeFromJson(json['EndTime']),
+    );
+
+Map<String, dynamic> _$InExStatisticWithTimeModelToJson(
+        InExStatisticWithTimeModel instance) =>
+    <String, dynamic>{
+      'Income': instance.income,
+      'Expense': instance.expense,
+      'StartTime': Json.dateTimeToJson(instance.startTime),
+      'EndTime': Json.dateTimeToJson(instance.endTime),
+    };

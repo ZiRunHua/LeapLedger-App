@@ -74,18 +74,59 @@ class InExStatisticModel {
   factory InExStatisticModel.fromJson(Map<String, dynamic> json) => _$InExStatisticModelFromJson(json);
   Map<String, dynamic> toJson() => _$InExStatisticModelToJson(this);
 
-  bool handleTransEditModel({required TransactionEditModel trans, required bool isAdd}) {
+  bool handleTransEditModel({required TransactionEditModel editModel, required bool isAdd}) {
     if (isAdd) {
-      if (trans.incomeExpense == IncomeExpense.income) {
-        income.addTransEditModel(trans);
+      if (editModel.incomeExpense == IncomeExpense.income) {
+        income.addTransEditModel(editModel);
       } else {
-        expense.addTransEditModel(trans);
+        expense.addTransEditModel(editModel);
       }
     } else {
-      if (trans.incomeExpense == IncomeExpense.income) {
-        income.subTransEditModel(trans);
+      if (editModel.incomeExpense == IncomeExpense.income) {
+        income.subTransEditModel(editModel);
       } else {
-        expense.subTransEditModel(trans);
+        expense.subTransEditModel(editModel);
+      }
+    }
+    return true;
+  }
+}
+
+@JsonSerializable(fieldRename: FieldRename.pascal)
+class InExStatisticWithTimeModel extends InExStatisticModel {
+  Duration get timeDuration => endTime.difference(startTime);
+  // 日均收入
+  int get dayAverageIncome => income.amount != 0 ? income.amount ~/ timeDuration.inDays : 0;
+  // 日均支出
+  int get dayAverageExpense => expense.amount != 0 ? expense.amount ~/ timeDuration.inDays : 0;
+
+  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  late DateTime startTime;
+  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  late DateTime endTime;
+  InExStatisticWithTimeModel({super.income, super.expense, required this.startTime, required this.endTime});
+
+  factory InExStatisticWithTimeModel.fromJson(Map<String, dynamic> json) => _$InExStatisticWithTimeModelFromJson(json);
+  @override
+  Map<String, dynamic> toJson() => _$InExStatisticWithTimeModelToJson(this);
+
+  /// 处理交易 以更新统计数据
+  @override
+  bool handleTransEditModel({required TransactionEditModel editModel, required bool isAdd}) {
+    if (startTime.isAfter(editModel.tradeTime) || endTime.isBefore(editModel.tradeTime)) {
+      return false;
+    }
+    if (isAdd) {
+      if (editModel.incomeExpense == IncomeExpense.income) {
+        income.addTransEditModel(editModel);
+      } else {
+        expense.addTransEditModel(editModel);
+      }
+    } else {
+      if (editModel.incomeExpense == IncomeExpense.income) {
+        income.subTransEditModel(editModel);
+      } else {
+        expense.subTransEditModel(editModel);
       }
     }
     return true;

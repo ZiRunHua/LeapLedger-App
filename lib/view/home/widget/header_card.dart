@@ -9,8 +9,8 @@ class HeaderCard extends StatefulWidget {
 
 class _HeaderCardState extends State<HeaderCard> {
   final UserHomeHeaderCardApiModel _shimmeData = UserHomeHeaderCardApiModel(
-    income: AmountCountApiModel(0, 0),
-    expense: AmountCountApiModel(0, 0),
+    income: AmountCountModel(0, 0),
+    expense: AmountCountModel(0, 0),
     startTime: HomeBloc.startTime,
     endTime: HomeBloc.endTime,
   );

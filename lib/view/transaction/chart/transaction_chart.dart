@@ -122,10 +122,10 @@ class _TransactionChartState extends State<TransactionChart> {
   }
 
   List<Widget> _buildAction() {
-    String text = '${DateFormat('yyyy-MM').format(_cubit.startTime)}-${DateFormat('yyyy-MM').format(_cubit.endTime)}';
+    String text = '${DateFormat('yyyy-MM').format(_cubit.startMonth)}-${DateFormat('yyyy-MM').format(_cubit.endMonth)}';
     var dateButton = DateButton(
-      startDate: _cubit.startTime,
-      endDate: _cubit.endTime,
+      startDate: _cubit.startMonth,
+      endDate: _cubit.endMonth,
     );
     return [dateButton];
   }
