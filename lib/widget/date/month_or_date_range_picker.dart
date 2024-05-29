@@ -41,13 +41,15 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
 
     startDate = widget.initialValue.start;
     endDate = widget.initialValue.end;
-    //判断是否是使用月份选择 依据起始和结束时间是否是第一秒和最后一秒
-    bool isFirstSecondOfMonth = startDate.isAtSameMomentAs(Time.getFirstSecondOfMonth(date: startDate));
-    bool isLastSecondOfMonth = endDate.isAtSameMomentAs(Time.getLastSecondOfMonth(date: startDate));
-    if (isFirstSecondOfMonth && isLastSecondOfMonth) {
-      _tabController.index = _monthTabIndex;
-    } else {
-      _tabController.index = _dateRangeTabIndex;
+    if (widget.mode == Mode.normal) {
+      //判断是否是使用月份选择 依据起始和结束时间是否是第一秒和最后一秒
+      bool isFirstSecondOfMonth = startDate.isAtSameMomentAs(Time.getFirstSecondOfMonth(date: startDate));
+      bool isLastSecondOfMonth = endDate.isAtSameMomentAs(Time.getLastSecondOfMonth(date: startDate));
+      if (isFirstSecondOfMonth && isLastSecondOfMonth) {
+        _tabController.index = _monthTabIndex;
+      } else {
+        _tabController.index = _dateRangeTabIndex;
+      }
     }
 
     startDate = DateTime(startDate.year, startDate.month, startDate.day, 0, 0, 0);
@@ -263,7 +265,7 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
     return GestureDetector(
       onTap: () {
         _initDateRangeButtonState(startDate: startDate, endDate: endDate);
-        setState(() {});
+        onSubmit();
       },
       child: Container(
         height: 28,
@@ -280,7 +282,7 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
           child: Text(
             name,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: ConstantFontSize.bodySmall,
               color: isSelected ? ConstantColor.primaryColor : Colors.black54,
             ),
           ),
@@ -322,19 +324,19 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
   Widget _buildSumbitButton() {
     return SizedBox(
       width: double.infinity,
-      child: ElevatedButton(
-          onPressed: () {
-            DateTime start, end;
-            if (_tabController.index == _monthTabIndex) {
-              start = DateTime(selectedMonth.year, selectedMonth.month, 1, 0, 0, 0);
-              end = Time.getLastSecondOfMonth(date: start);
-            } else {
-              start = DateTime(startDate.year, startDate.month, startDate.day, 0, 0, 0);
-              end = DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59);
-            }
-            Navigator.of(context).pop(DateTimeRange(start: start, end: end));
-          },
-          child: const Text('确定')),
+      child: ElevatedButton(onPressed: onSubmit, child: const Text('确定')),
     );
+  }
+
+  onSubmit() {
+    DateTime start, end;
+    if (_tabController.index == _monthTabIndex) {
+      start = DateTime(selectedMonth.year, selectedMonth.month, 1, 0, 0, 0);
+      end = Time.getLastSecondOfMonth(date: start);
+    } else {
+      start = DateTime(startDate.year, startDate.month, startDate.day, 0, 0, 0);
+      end = DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59);
+    }
+    Navigator.of(context).pop(DateTimeRange(start: start, end: end));
   }
 }

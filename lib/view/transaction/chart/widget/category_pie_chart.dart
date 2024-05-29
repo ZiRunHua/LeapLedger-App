@@ -26,7 +26,7 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: centerSpaceRadius * (1.5 + 1.61 * 0.61) * 2,
+      height: centerSpaceRadius * (1.3 + 1.61 * 0.61) * 2,
       child: Stack(
         children: [
           Positioned(child: Center(child: _buildSelected())),

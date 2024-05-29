@@ -35,7 +35,7 @@ class _TransactionFlowState extends State<TransactionFlow> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
-    _conditionCubit = FlowConditionCubit(condition: widget.condition, currentAccount: widget.account)
+    _conditionCubit = FlowConditionCubit(condition: widget.condition, currentAccount: _conditionCubit.currentAccount)
       ..fetchCategoryData();
     _flowListBloc = FlowListBloc(initCondition: _conditionCubit.condition);
 
@@ -195,11 +195,16 @@ class _TransactionFlowState extends State<TransactionFlow> {
           },
         ),
       ),
-      const SizedBox(
-        width: Constant.margin,
+      IconButton(
+        style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Colors.white)),
+        onPressed: () => TransactionRoutes.chartNavigator(context, account: _conditionCubit.currentAccount).push(),
+        icon: const Icon(
+          Icons.pie_chart_outline_outlined,
+          color: ConstantColor.primaryColor,
+        ),
       ),
       Builder(builder: (context) {
-        return TextButton(
+        return IconButton(
           style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Colors.white)),
           onPressed: () {
             showModalBottomSheet(
@@ -212,8 +217,9 @@ class _TransactionFlowState extends State<TransactionFlow> {
                   );
                 });
           },
-          child: const Row(
-            children: [Text("筛选"), Icon(Icons.filter_alt_outlined)],
+          icon: const Icon(
+            Icons.filter_alt_outlined,
+            color: ConstantColor.primaryColor,
           ),
         );
       })
@@ -291,12 +297,12 @@ class _TransactionFlowState extends State<TransactionFlow> {
         model.categoryName,
       ),
       subtitle: Text(model.categoryFatherName),
-      trailing: Text.rich(AmountTextSpan.sameHeight(
+      trailing: AmountText.sameHeight(
         model.amount,
         textStyle: const TextStyle(fontSize: ConstantFontSize.headline, fontWeight: FontWeight.normal),
         incomeExpense: model.incomeExpense,
         displayModel: IncomeExpenseDisplayModel.symbols,
-      )),
+      ),
     );
   }
 

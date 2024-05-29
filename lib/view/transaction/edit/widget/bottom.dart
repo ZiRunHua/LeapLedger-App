@@ -47,12 +47,10 @@ class _BottomState extends State<Bottom> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             _buildButtonGroup(),
-            Text.rich(
-              AmountTextSpan.sameHeight(
-                _bloc.trans.amount,
-                textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
-                dollarSign: true,
-              ),
+            AmountText.sameHeight(
+              _bloc.trans.amount,
+              textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
+              dollarSign: true,
             ),
             const Divider(),
             SingleChildScrollView(

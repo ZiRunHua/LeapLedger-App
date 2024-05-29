@@ -145,7 +145,12 @@ class _ShareHomeState extends State<ShareHome> {
           },
         ),
         _buildNavigationCard(
-            text: "邀请",
+          text: "图表分析",
+          icon: Icons.pie_chart_outline_outlined,
+          onTap: () => TransactionRoutes.chartNavigator(context, account: ShareHomeBloc.account!).push(),
+        ),
+        _buildNavigationCard(
+            text: "查看邀请",
             icon: Icons.send_outlined,
             onTap: () async {
               await AccountRoutes.pushAccountUserInvitation(context, account: ShareHomeBloc.account!);

@@ -9,8 +9,8 @@ import 'package:keepaccount_app/model/user/model.dart';
 import 'package:keepaccount_app/routes/routes.dart';
 import 'package:keepaccount_app/util/enter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:keepaccount_app/view/navigation/navigation.dart';
 import 'package:keepaccount_app/view/transaction/chart/transaction_chart.dart';
-
 import 'common/global.dart';
 import 'package:keepaccount_app/common/current.dart';
 
@@ -21,22 +21,23 @@ Future<void> main() async {
 Future<void> init() async {
   const String envName = String.fromEnvironment("ENV");
   Current.env = ENV.values.firstWhere((e) => e.toString().split('.').last == envName);
+
+  await SharedPreferencesCache.init();
+  await Global.init();
   await initCache();
   Routes.init();
-  await Global.init();
+
   //await Global.init().then((value) => Global.cache.clear());
   await Current.init();
 }
 
 initCache() async {
-  await SharedPreferencesCache.init();
   UserBloc.getToCache();
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
@@ -87,7 +88,10 @@ class MyApp extends StatelessWidget {
                 }
               },
             )
-          ], child: const TransactionChart()),
+          ], child: Navigation()),
+          // TransactionChart(
+          //       account: UserBloc.currentAccount,
+          //     )
           builder: EasyLoading.init(builder: (context, child) {
             return MediaQuery(
               data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),

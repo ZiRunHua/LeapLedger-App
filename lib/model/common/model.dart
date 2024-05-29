@@ -28,6 +28,19 @@ class StatusFlagModel {
   }
 }
 
+@JsonSerializable(fieldRename: FieldRename.pascal)
+class AmountDateModel {
+  late int amount;
+  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  late DateTime date;
+  late DateType type;
+  AmountDateModel({required this.amount, required this.type, required this.date});
+
+  factory AmountDateModel.fromJson(Map<String, dynamic> json) => _$AmountDateModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AmountDateModelToJson(this);
+}
+
 ///金额笔数数据模型
 @JsonSerializable(fieldRename: FieldRename.pascal)
 class AmountCountModel {
@@ -50,14 +63,55 @@ class AmountCountModel {
     count -= model.count;
   }
 
-  addTransEditModel(TransactionEditModel model) {
-    amount += model.amount;
+  bool addTransEditModel(TransactionEditModel editModel) {
+    amount += editModel.amount;
     count += 1;
+    return true;
   }
 
-  subTransEditModel(TransactionEditModel model) {
-    amount -= model.amount;
+  bool subTransEditModel(TransactionEditModel editModel) {
+    amount -= editModel.amount;
     count -= 1;
+    return true;
+  }
+}
+
+///带时间的金额笔数数据模型
+@JsonSerializable(fieldRename: FieldRename.pascal)
+class AmountCountWithTimeModel extends AmountCountModel {
+  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  late DateTime startTime;
+  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  late DateTime endTime;
+  AmountCountWithTimeModel({
+    required int amount,
+    required int count,
+    required startTime,
+    required endTime,
+  }) : super(amount, count);
+
+  AmountCountWithTimeModel.fromAmountCountModel(
+      {required AmountCountModel model, required DateTime startTime, required DateTime endTime})
+      : this(amount: model.amount, count: model.count, startTime: startTime, endTime: endTime);
+
+  factory AmountCountWithTimeModel.fromJson(Map<String, dynamic> json) => _$AmountCountWithTimeModelFromJson(json);
+  @override
+  Map<String, dynamic> toJson() => _$AmountCountWithTimeModelToJson(this);
+
+  @override
+  bool addTransEditModel(TransactionEditModel editModel) {
+    if (startTime.isAfter(editModel.tradeTime) || endTime.isBefore(editModel.tradeTime)) {
+      return false;
+    }
+    return super.addTransEditModel(editModel);
+  }
+
+  @override
+  bool subTransEditModel(TransactionEditModel editModel) {
+    if (startTime.isAfter(editModel.tradeTime) || endTime.isBefore(editModel.tradeTime)) {
+      return false;
+    }
+    return super.addTransEditModel(editModel);
   }
 }
 
@@ -92,6 +146,7 @@ class InExStatisticModel {
   }
 }
 
+///带时间的收支统计接口数据模型
 @JsonSerializable(fieldRename: FieldRename.pascal)
 class InExStatisticWithTimeModel extends InExStatisticModel {
   Duration get timeDuration => endTime.difference(startTime);
@@ -116,19 +171,6 @@ class InExStatisticWithTimeModel extends InExStatisticModel {
     if (startTime.isAfter(editModel.tradeTime) || endTime.isBefore(editModel.tradeTime)) {
       return false;
     }
-    if (isAdd) {
-      if (editModel.incomeExpense == IncomeExpense.income) {
-        income.addTransEditModel(editModel);
-      } else {
-        expense.addTransEditModel(editModel);
-      }
-    } else {
-      if (editModel.incomeExpense == IncomeExpense.income) {
-        income.subTransEditModel(editModel);
-      } else {
-        expense.subTransEditModel(editModel);
-      }
-    }
-    return true;
+    return super.handleTransEditModel(editModel: editModel, isAdd: isAdd);
   }
 }

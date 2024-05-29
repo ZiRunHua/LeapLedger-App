@@ -115,13 +115,13 @@ class _TimePeriodStatisticsState extends State<TimePeriodStatistics> {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Text.rich(
-          AmountTextSpan.sameHeight(amount,
-              textStyle: TextStyle(
-                fontSize: ConstantFontSize.bodySmall,
-                fontWeight: FontWeight.normal,
-                color: color,
-              )),
+        AmountText.sameHeight(
+          amount,
+          textStyle: TextStyle(
+            fontSize: ConstantFontSize.bodySmall,
+            fontWeight: FontWeight.normal,
+            color: color,
+          ),
         ),
         const SizedBox(width: Constant.margin / 2),
         Text(name, style: const TextStyle(color: ConstantColor.greyText)),

@@ -1,32 +1,16 @@
-import 'dart:math';
+part of 'common.dart';
 
-import 'package:intl/intl.dart' show DateFormat;
-import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/common/model.dart';
-import 'package:keepaccount_app/model/transaction/model.dart';
-import 'package:keepaccount_app/view/transaction/chart/model/enter.dart';
-import 'package:keepaccount_app/widget/amount/enter.dart';
-import 'package:keepaccount_app/widget/common/common.dart';
-
-part 'total_header.dart';
-part 'category_pie_chart.dart';
-part 'category_amount_rank.dart';
-part 'statistics_line_chart.dart';
-part 'transaction_amount_rank.dart';
-
-class CommonExpandedView extends StatefulWidget {
-  const CommonExpandedView({
+class CommonExpandableList extends StatefulWidget {
+  const CommonExpandableList({
     super.key,
     required this.children,
   });
   final List<Widget> children;
   @override
-  State<CommonExpandedView> createState() => _CommonExpandedViewState();
+  State<CommonExpandableList> createState() => _CommonExpandableListState();
 }
 
-class _CommonExpandedViewState extends State<CommonExpandedView> with SingleTickerProviderStateMixin {
+class _CommonExpandableListState extends State<CommonExpandableList> with SingleTickerProviderStateMixin {
   final int initialDisplays = 3;
   late final AnimationController _controller;
   @override
@@ -34,7 +18,9 @@ class _CommonExpandedViewState extends State<CommonExpandedView> with SingleTick
     _controller = AnimationController(
       duration: const Duration(seconds: 1),
       vsync: this,
-    )..addListener(() => setState(() {}));
+    )
+      ..addListener(() => setState(() {}))
+      ..drive(CurveTween(curve: Curves.easeInOut));
     super.initState();
   }
 
@@ -42,7 +28,7 @@ class _CommonExpandedViewState extends State<CommonExpandedView> with SingleTick
   @override
   Widget build(BuildContext context) {
     return AnimatedSize(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 500),
       alignment: Alignment.topCenter,
       child: Column(
         children: [

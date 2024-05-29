@@ -104,12 +104,15 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
   Widget _buildDetail(TransactionModel data) {
     return Column(mainAxisSize: MainAxisSize.min, children: [
       _buildListTile(
-        leading: "金额",
-        trailingWidget: Text.rich(AmountTextSpan.sameHeight(
-          data.amount,
-          textStyle: const TextStyle(fontSize: ConstantFontSize.body, fontWeight: FontWeight.bold, color: Colors.black),
-        )),
-      ),
+          leading: "金额",
+          trailingWidget: AmountText.sameHeight(
+            data.amount,
+            textStyle: const TextStyle(
+              fontSize: ConstantFontSize.body,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          )),
       ConstantWidget.divider.list,
       _buildListTile(
         leading: "分类",

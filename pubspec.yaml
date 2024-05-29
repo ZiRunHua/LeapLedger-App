@@ -47,6 +47,7 @@ dependencies:
   meta: ^1.10.0
   path_provider: 2.1.2
   uuid: ^4.4.0
+  timezone: ^0.9.3
   
 dev_dependencies:
   flutter_test:

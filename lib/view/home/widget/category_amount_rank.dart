@@ -46,26 +46,14 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> {
         }
       },
       child: _Func._buildCard(
-          title: "本月支出排行",
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 500),
-                curve: Curves.easeInOut,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Column(
-                      children: List.generate(
-                    _presentData.length,
-                    (index) => _buildListTile(_presentData[index], index + 1),
-                  )),
-                ),
-              ),
-              _buildBottomContent(),
-            ],
-          )),
+        title: "本月支出排行",
+        child: CommonExpandableList(
+          children: List.generate(
+            _presentData.length,
+            (index) => _buildListTile(_presentData[index], index + 1),
+          ),
+        ),
+      ),
     );
   }
 
@@ -87,8 +75,8 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> {
           subtitle: data.amount != 0 ? AmountDivider(data.amount.toDouble() / maxAmount.toDouble()) : null,
           trailing: Padding(
             padding: EdgeInsets.zero,
-            child: SameHightAmount(
-              amount: data.amount,
+            child: AmountText.sameHeight(
+              data.amount,
               textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black87),
             ),
           ),

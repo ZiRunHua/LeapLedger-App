@@ -25,6 +25,7 @@ import 'package:keepaccount_app/view/account/user/invite/account_user_invite_dia
 import 'package:keepaccount_app/view/transaction/category/father/edit/transaction_category_father_edit_dialog.dart';
 import 'package:keepaccount_app/view/transaction/category/mapping/transaction_category_mapping.dart';
 import 'package:keepaccount_app/view/transaction/category/template/transaction_category_template.dart';
+import 'package:keepaccount_app/view/transaction/chart/transaction_chart.dart';
 import 'package:keepaccount_app/view/transaction/detail/transaction_detail_bottom_sheet.dart';
 import 'package:keepaccount_app/view/transaction/edit/transaction_edit.dart';
 import 'package:keepaccount_app/view/transaction/flow/transaction_flow.dart';

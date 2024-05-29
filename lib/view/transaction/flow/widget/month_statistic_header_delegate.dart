@@ -4,7 +4,7 @@ class MonthStatisticHeaderDelegate extends SliverPersistentHeaderDelegate {
   MonthStatisticHeaderDelegate(this.data);
 
   static TextStyle amountStyle = const TextStyle(color: Colors.black, fontSize: ConstantFontSize.headline);
-  final double height = 56 + Constant.margin * 2;
+  final double height = 56.5 + Constant.margin * 2;
 
   final InExStatisticWithTimeModel data;
   @override
@@ -99,8 +99,8 @@ class MonthStatisticHeaderDelegate extends SliverPersistentHeaderDelegate {
           style: const TextStyle(color: ConstantColor.greyText, fontSize: ConstantFontSize.bodySmall),
         ),
         const SizedBox(width: Constant.margin / 2),
-        SameHightAmount(
-          amount: amount,
+        AmountText.sameHeight(
+          amount,
           textStyle: TextStyle(color: amountColor, fontSize: ConstantFontSize.body),
         )
       ],

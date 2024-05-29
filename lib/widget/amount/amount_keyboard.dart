@@ -264,11 +264,11 @@ class _TextAmountKeyboardState extends State<TextAmountKeyboard> {
           margin: const EdgeInsets.all(Constant.margin),
           alignment: Alignment.centerRight,
           child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-            Text.rich(AmountTextSpan.sameHeight(
+            AmountText.sameHeight(
               amount,
               textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
               dollarSign: true,
-            )),
+            ),
             SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 reverse: true,

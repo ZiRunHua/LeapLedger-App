@@ -7,6 +7,15 @@ class TransactionRoutes {
     return TransactionEditNavigator(context, mode: mode, transaction: transaction, account: account);
   }
 
+  static TransactionChartNavigator chartNavigator(
+    BuildContext context, {
+    required AccountDetailModel account,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) {
+    return TransactionChartNavigator(context, account: account, startDate: startDate, endDate: endDate);
+  }
+
   static pushFlow(
     BuildContext context, {
     TransactionQueryCondModel? condition,
@@ -100,5 +109,20 @@ class TransactionImportNavigator extends RouterNavigator {
   bool get guard => TransactionRouterGuard.import(account: account);
   Future<bool> push() async {
     return await _push(context, TransactionImport(account: account));
+  }
+}
+
+class TransactionChartNavigator extends RouterNavigator {
+  final AccountDetailModel account;
+  final DateTime? startDate, endDate;
+  TransactionChartNavigator(
+    BuildContext context, {
+    required this.account,
+    this.startDate,
+    this.endDate,
+  }) : super(context: context);
+
+  Future<bool> push() async {
+    return await _push(context, TransactionChart(account: account, startDate: startDate, endDate: endDate));
   }
 }

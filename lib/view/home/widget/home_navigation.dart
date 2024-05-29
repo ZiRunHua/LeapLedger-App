@@ -39,6 +39,11 @@ class HomeNavigationState extends State<HomeNavigation> {
           icon: Icons.settings_outlined,
           onTap: () => TransactionCategoryRoutes.setting(context, account: account).pushTree(),
         ),
+        navigatorButton(
+          "图表分析",
+          icon: Icons.pie_chart_outline_outlined,
+          onTap: () => TransactionRoutes.chartNavigator(context, account: account).push(),
+        ),
         Offstage(
           offstage: false == TransactionRouterGuard.import(account: account),
           child: navigatorButton(

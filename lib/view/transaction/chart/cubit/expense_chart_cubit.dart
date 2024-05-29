@@ -1,22 +1,24 @@
 part of 'enter.dart';
 
 class ExpenseChartCubit extends Cubit<ExpenseChartState> {
-  ExpenseChartCubit({required this.account, DateTime? startMonth, DateTime? endMonth}) : super(ExpenseChartInitial()) {
-    this.startMonth = startMonth ?? Time.getFirstSecondOfMonth();
-    this.endMonth = endMonth ?? Time.getLastSecondOfMonth();
+  ExpenseChartCubit({required this.account, DateTime? startDate, DateTime? endDate}) : super(ExpenseChartInitial()) {
+    this.startDate = startDate == null ? Time.getFirstSecondOfMonth() : Time.getFirstSecondOfDay(date: startDate);
+    this.endDate = endDate == null ? Time.getLastSecondOfMonth() : Time.getLastSecondOfDay(date: endDate);
   }
 
   final ie = IncomeExpense.expense;
   late AccountDetailModel account;
-  late DateTime startMonth, endMonth;
+  late DateTime startDate, endDate;
 
   load() async {
-    await Future.wait<void>([loadTotal(), loadDayStatistic(), loadCategoryRank()]);
+    await Future.wait<void>([loadTotal(), loadDayStatistic(), loadCategoryRank(), loadTransRanking()]);
     emit(ExpenseChartLoaded());
   }
 
-  updateDate() async {
-    await Future.wait<void>([loadTotal(), loadDayStatistic(), loadCategoryRank()]);
+  updateDate({required DateTime start, required DateTime end}) async {
+    startDate = Time.getFirstSecondOfDay(date: start);
+    endDate = Time.getLastSecondOfDay(date: end);
+    await Future.wait<void>([loadTotal(), loadDayStatistic(), loadCategoryRank(), loadTransRanking()]);
     emit(ExpenseChartLoaded());
   }
 
@@ -24,24 +26,43 @@ class ExpenseChartCubit extends Cubit<ExpenseChartState> {
   Future<void> loadTotal() async {
     var data = await TransactionApi.getTotal(TransactionQueryCondModel(
       accountId: account.id,
-      startTime: startMonth,
-      endTime: endMonth,
+      startTime: startDate,
+      endTime: endDate,
     ));
-    if (total == null) {
+    if (data == null) {
       return;
     }
-    total = data!.expense;
+    total = data.expense;
     emit(ExpenseTotalLoaded());
   }
 
-  List<DayAmountStatisticApiModel> dayStatistics = [];
+  List<AmountDateModel> statistics = [];
   Future<void> loadDayStatistic() async {
-    dayStatistics = await TransactionApi.getDayStatistic(
-      accountId: account.id,
-      ie: ie,
-      startTime: startMonth,
-      endTime: endMonth,
-    );
+    if (startDate.year != endDate.year || startDate.month != endDate.month) {
+      var data = await TransactionApi.getMonthStatistic(TransactionQueryCondModel(
+        accountId: account.id,
+        startTime: startDate,
+        endTime: endDate,
+        incomeExpense: ie,
+      ));
+      statistics = List.generate(
+        data.length,
+        (index) =>
+            AmountDateModel(amount: data[index].expense.amount, date: data[index].startTime, type: DateType.month),
+      ).reversed.toList();
+    } else {
+      var data = await TransactionApi.getDayStatistic(
+        accountId: account.id,
+        ie: ie,
+        startTime: startDate,
+        endTime: endDate,
+      );
+      statistics = List.generate(
+        data.length,
+        (index) => AmountDateModel(amount: data[index].amount, date: data[index].date, type: DateType.day),
+      ).toList();
+    }
+
     emit(ExpenseDayStatisticsLoaded());
   }
 
@@ -51,20 +72,20 @@ class ExpenseChartCubit extends Cubit<ExpenseChartState> {
       data: await TransactionApi.getCategoryAmountRank(
         accountId: account.id,
         ie: ie,
-        startTime: startMonth,
-        endTime: endMonth,
+        startTime: startDate,
+        endTime: endDate,
       ),
     );
     emit(ExpenseCategoryRankLoaded());
   }
 
-  List<TransactionModel> amountRankinglist = [];
-  Future<void> loadAmountRankgin() async {
-    amountRankinglist = await TransactionApi.getAmountRank(
+  List<TransactionModel> transRankinglist = [];
+  Future<void> loadTransRanking() async {
+    transRankinglist = await TransactionApi.getAmountRank(
       accountId: account.id,
       ie: ie,
-      startTime: startMonth,
-      endTime: endMonth,
+      startTime: startDate,
+      endTime: endDate,
     );
     emit(ExpenseTransRankLoaded());
   }

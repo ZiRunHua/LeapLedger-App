@@ -5,14 +5,14 @@ class Time {
     return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
   }
 
-  static DateTime getFirstSecondOfYear({int numberOfYears = 0, DateTime? date}) {
+  static DateTime getFirstSecondOfDay({DateTime? date}) {
     date ??= DateTime.now();
-    return DateTime(date.year + numberOfYears);
+    return DateTime(date.year, date.month, date.day);
   }
 
-  static DateTime getLastSecondOfYear({int numberOfYears = 0, DateTime? date}) {
+  static DateTime getLastSecondOfDay({DateTime? date}) {
     date ??= DateTime.now();
-    return DateTime(date.year + numberOfYears + 1).add(const Duration(seconds: -1));
+    return DateTime(date.year, date.month, date.day, 23, 59, 59);
   }
 
   static DateTime getLastMonth({DateTime? date}) {
@@ -46,5 +46,15 @@ class Time {
     DateTime targetDate = DateTime(targetYear, targetMonth, 1);
     DateTime firstSecond = DateTime(targetDate.year, targetDate.month, targetDate.day, 0, 0, 0);
     return firstSecond;
+  }
+
+  static DateTime getFirstSecondOfYear({int numberOfYears = 0, DateTime? date}) {
+    date ??= DateTime.now();
+    return DateTime(date.year + numberOfYears);
+  }
+
+  static DateTime getLastSecondOfYear({int numberOfYears = 0, DateTime? date}) {
+    date ??= DateTime.now();
+    return DateTime(date.year + numberOfYears + 1).add(const Duration(seconds: -1));
   }
 }

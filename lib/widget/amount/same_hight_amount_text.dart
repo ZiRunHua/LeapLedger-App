@@ -60,6 +60,8 @@ class SameHightAmountTextSpan extends StatelessWidget {
   }
 }
 
+enum IncomeExpenseDisplayModel { color, symbols }
+
 class AmountTextSpan extends TextSpan {
   const AmountTextSpan({
     String? text,
@@ -108,18 +110,60 @@ class AmountTextSpan extends TextSpan {
       }
     }
 
-    double amountInDollars = amount / 100.0;
-    String formattedAmount = amountInDollars.toStringAsFixed(2);
-    List<String> parts = formattedAmount.split('.');
     return AmountTextSpan(
-      text: text + (dollarSign ? '￥${parts[0]}' : parts[0]),
+      text: text + (dollarSign ? '￥${(amount / 100).toStringAsFixed(2)}' : (amount / 100).toStringAsFixed(2)),
       style: textStyle,
-      children: [
-        TextSpan(
-          text: '.${parts[1]}',
-          style: textStyle,
-        ),
-      ],
+    );
+  }
+}
+
+class AmountText extends Text {
+  const AmountText(
+    super.data, {
+    super.key,
+    super.style,
+    super.strutStyle,
+    super.textAlign,
+    super.textDirection,
+    super.locale,
+    super.softWrap,
+    super.overflow,
+    super.textScaler,
+    super.maxLines,
+    super.semanticsLabel,
+    super.textWidthBasis,
+    super.textHeightBehavior,
+    super.selectionColor,
+  });
+
+  factory AmountText.sameHeight(int amount,
+      {TextStyle? textStyle,
+      bool dollarSign = false,
+      IncomeExpense? incomeExpense,
+      IncomeExpenseDisplayModel? displayModel}) {
+    String text = '';
+    if (displayModel == IncomeExpenseDisplayModel.color) {
+      text = "";
+      if (incomeExpense == IncomeExpense.income) {
+        textStyle = textStyle != null
+            ? textStyle.merge(const TextStyle(color: ConstantColor.incomeAmount))
+            : const TextStyle(color: ConstantColor.incomeAmount);
+      } else if (incomeExpense == IncomeExpense.expense) {
+        textStyle = textStyle != null
+            ? textStyle.merge(const TextStyle(color: ConstantColor.expenseAmount))
+            : const TextStyle(color: ConstantColor.expenseAmount);
+      }
+    } else if (displayModel == IncomeExpenseDisplayModel.symbols) {
+      if (incomeExpense == IncomeExpense.income) {
+        text = "+";
+      } else if (incomeExpense == IncomeExpense.expense) {
+        text = "-";
+      }
+    }
+
+    return AmountText(
+      text + (dollarSign ? '￥${(amount / 100).toStringAsFixed(2)}' : (amount / 100).toStringAsFixed(2)),
+      style: textStyle,
     );
   }
 }

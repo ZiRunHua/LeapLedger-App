@@ -11,8 +11,6 @@ enum PageStatus { loading, expanding, contracting, noData }
 
 class _CategoryAmountRankState extends State<CategoryAmountRank> with SingleTickerProviderStateMixin {
   List<CategoryRank> get list => widget.ranks.data;
-  late final CategoryRank header;
-  final int initialDisplays = 3;
   late final AnimationController _controller;
   @override
   void initState() {
@@ -23,56 +21,42 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> with SingleTick
       vsync: this,
     )..addListener(() => setState(() {}));
 
-    header = list.first;
     WidgetsBinding.instance.addPostFrameCallback((_) => _controller.forward());
   }
 
-  bool stateOfExpansion = false;
   double amountWidth = 0;
   @override
   Widget build(BuildContext context) {
     var textPainter = TextPainter(
-      text: _buildAmount(header.amount),
+      text: _buildAmount(list.first.amount),
       maxLines: 1,
       textDirection: TextDirection.ltr,
     )..layout();
     amountWidth = textPainter.size.width + Constant.margin / 2;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        AnimatedSize(
-          duration: const Duration(milliseconds: 300),
-          alignment: Alignment.topCenter,
-          child: Column(
-            children: List.generate(
-              stateOfExpansion ? list.length : min(list.length, initialDisplays),
-              (index) => _buildListTile(list[index]),
-            ),
-          ),
-        ),
-        _buildBottomContent(),
-      ],
+    return CommonExpandedView(
+      children: List.generate(
+        list.length,
+        (index) => _buildListTile(list[index]),
+      ),
     );
   }
 
   _buildListTile(CategoryRank data) {
     return ListTile(
       dense: true,
-      isThreeLine: true,
       leading: Icon(
         data.icon,
         color: ConstantColor.primary80AlphaColor,
         size: Constant.iconSize,
       ),
       title: Text(
-        data.name,
+        '${data.name} （${data.amountProportiontoString()}）',
         style: const TextStyle(fontSize: ConstantFontSize.body),
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildProgress(data.amount != 0 ? data.amount / header.amount : 0),
-          Text(data.amountProportiontoString())
+          _buildProgress(data.amount != 0 ? data.amount / list.first.amount : 0),
         ],
       ),
       trailing: SizedBox(
@@ -107,36 +91,6 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> with SingleTick
       backgroundColor: const Color.fromRGBO(245, 245, 245, 1),
       valueColor: const AlwaysStoppedAnimation<Color>(ConstantColor.primaryColor),
       borderRadius: BorderRadius.circular(2),
-    );
-  }
-
-  _buildBottomContent() {
-    late List<Widget> list;
-    if (!stateOfExpansion) {
-      list = const [
-        Icon(Icons.keyboard_double_arrow_down_outlined, size: ConstantFontSize.largeHeadline),
-        Text("展开"),
-      ];
-    } else {
-      list = const [
-        Icon(Icons.keyboard_double_arrow_up_outlined, size: ConstantFontSize.largeHeadline),
-        Text("合起"),
-      ];
-    }
-    return TextButton(
-      onPressed: () {
-        stateOfExpansion = !stateOfExpansion;
-        if (stateOfExpansion) {
-          _controller.reset();
-          _controller.forward();
-        }
-        setState(() {});
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: list,
-      ),
     );
   }
 }

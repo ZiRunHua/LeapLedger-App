@@ -24,12 +24,12 @@ class TransList extends StatelessWidget {
       leading: Icon(model.categoryIcon),
       title: Text(model.categoryName),
       subtitle: Text("${model.categoryFatherName}  ${DateFormat('HH:mm:ss').format(model.tradeTime)}"),
-      trailing: Text.rich(AmountTextSpan.sameHeight(
+      trailing: AmountText.sameHeight(
         model.amount,
         incomeExpense: model.incomeExpense,
         textStyle: const TextStyle(fontSize: 18, color: Colors.black),
         displayModel: IncomeExpenseDisplayModel.symbols,
-      )),
+      ),
     );
   }
 }
