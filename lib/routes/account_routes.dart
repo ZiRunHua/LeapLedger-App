@@ -152,7 +152,7 @@ class AccountListNavigator extends RouterNavigator {
               Navigator.pop<AccountDetailModel>(context, account);
               return account;
             },
-        type: onlyCanEdit ? ViewAccountListType.onlyCanEdit : ViewAccountListType.onlyCanEdit,
+        type: onlyCanEdit ? ViewAccountListType.onlyCanEdit : ViewAccountListType.all,
       ));
 
   Future<bool> push() async => await _push(

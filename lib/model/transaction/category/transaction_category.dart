@@ -37,4 +37,16 @@ class TransactionCategoryModel extends BaseTransactionCategoryModel {
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         );
+  factory TransactionCategoryModel.prototypeData() {
+    return TransactionCategoryModel(
+      id: 0,
+      name: 'prototypeData',
+      icon: Icons.account_circle,
+      fatherId: 0,
+      accountId: 0,
+      incomeExpense: IncomeExpense.expense,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+  }
 }

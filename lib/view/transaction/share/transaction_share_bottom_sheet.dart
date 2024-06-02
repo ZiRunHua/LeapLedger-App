@@ -168,10 +168,11 @@ class TransactionShareDialog extends StatelessWidget {
     if (imageByte == null) {
       return;
     }
-    if (false == await FileOperation.saveImage(imageByte)) {
-      CommonToast.tipToast("保存失败");
-    } else {
+    var path = await FileOperation.saveImage(imageByte);
+    if (path != null) {
       CommonToast.tipToast("保存成功");
+    } else {
+      CommonToast.tipToast("保存失败");
     }
   }
 }

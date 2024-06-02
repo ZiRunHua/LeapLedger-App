@@ -149,17 +149,18 @@ class InExStatisticModel {
 ///带时间的收支统计接口数据模型
 @JsonSerializable(fieldRename: FieldRename.pascal)
 class InExStatisticWithTimeModel extends InExStatisticModel {
-  Duration get timeDuration => endTime.difference(startTime);
   // 日均收入
-  int get dayAverageIncome => income.amount != 0 ? income.amount ~/ timeDuration.inDays : 0;
+  int get dayAverageIncome => income.amount != 0 ? income.amount ~/ numberOfDays : 0;
   // 日均支出
-  int get dayAverageExpense => expense.amount != 0 ? expense.amount ~/ timeDuration.inDays : 0;
-
+  int get dayAverageExpense => expense.amount != 0 ? expense.amount ~/ numberOfDays : 0;
+  late final int numberOfDays;
   @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
-  late DateTime startTime;
+  late final DateTime startTime;
   @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
-  late DateTime endTime;
-  InExStatisticWithTimeModel({super.income, super.expense, required this.startTime, required this.endTime});
+  late final DateTime endTime;
+  InExStatisticWithTimeModel({super.income, super.expense, required this.startTime, required this.endTime}) {
+    numberOfDays = endTime.add(Duration(seconds: 1)).difference(startTime).inDays;
+  }
 
   factory InExStatisticWithTimeModel.fromJson(Map<String, dynamic> json) => _$InExStatisticWithTimeModelFromJson(json);
   @override

@@ -17,11 +17,21 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
     _conditionCubit = BlocProvider.of<FlowConditionCubit>(context);
     _conditionCubit.fetchCategoryData();
     _formKey = GlobalKey<FormState>();
+    getAmountStr(int amount) {
+      String str = (amount / 100).toStringAsFixed(2);
+      if (str.endsWith('.00')) {
+        return str.substring(0, str.length - 3);
+      } else if (str.endsWith('0')) {
+        return str.substring(0, str.length - 1);
+      }
+      return str;
+    }
+
     if (_condition.minimumAmount != null) {
-      _minAmountController.text = _condition.minimumAmount.toString();
+      _minAmountController.text = getAmountStr(_condition.minimumAmount!);
     }
     if (_condition.maximumAmount != null) {
-      _maxAmountController.text = _condition.maximumAmount.toString();
+      _maxAmountController.text = getAmountStr(_condition.maximumAmount!);
     }
     super.initState();
   }

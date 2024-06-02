@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 共享外部存储中的根目录 -->
+    <external-path
+        name="Pictures"
+        path="." />
+    <!-- 如果需要共享其他目录，请在此添加定义 -->
+</paths>

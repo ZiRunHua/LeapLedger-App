@@ -8,6 +8,7 @@ class UserDrawerHeader extends StatefulWidget {
 }
 
 class _UserDrawerHeaderState extends State<UserDrawerHeader> {
+  UserModel get user => UserBloc.user;
   @override
   Widget build(BuildContext context) {
     return DividerTheme(
@@ -30,14 +31,12 @@ class _UserDrawerHeaderState extends State<UserDrawerHeader> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    BlocListener<UserBloc, UserState>(
-                        listener: (_, state) {
-                          if (state is UserUpdateInfoSuccess) {
-                            setState(() {});
-                          }
-                        },
-                        child: buildUsername(context)),
-                    _buildEmail(context, "share_account_c@gamil.com")
+                    BlocBuilder<UserBloc, UserState>(
+                      builder: (_, state) {
+                        return buildUsername(context);
+                      },
+                    ),
+                    _buildEmail(context, user.email)
                   ],
                 ),
               ),
@@ -63,7 +62,7 @@ class _UserDrawerHeaderState extends State<UserDrawerHeader> {
                   context: context,
                   builder: (BuildContext context) {
                     return CommonDialog.editOne<String>(context,
-                        fieldName: "编辑昵称", initValue: UserBloc.user.username, onSave: onSubmit);
+                        fieldName: "编辑昵称", initValue: user.username, onSave: onSubmit);
                   });
             },
             child: Row(
@@ -71,9 +70,19 @@ class _UserDrawerHeaderState extends State<UserDrawerHeader> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  UserBloc.user.username,
+                  user.username,
                   style: const TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
-                )
+                ),
+                GestureDetector(
+                    onTap: () {
+                      Clipboard.setData(ClipboardData(text: user.uniqueUsername));
+                      CommonToast.tipToast("用户名已复制");
+                    },
+                    child: Icon(
+                      Icons.copy_outlined,
+                      color: Colors.white,
+                      size: 16,
+                    ))
               ],
             )));
   }

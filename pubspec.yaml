@@ -24,12 +24,10 @@ dependencies:
   intl: 0.18.1
   drag_and_drop_lists: ^0.3.3
   material_segmented_control: ^5.0.0
-  http: ^1.0.0
   yaml: ^3.1.2
   fluttertoast: 8.2.2
   shared_preferences: ^2.2.0
   dio: 5.3.0
-  pretty_dio_logger: ^1.1.0
   dio_cache_interceptor: 3.5.0
   dio_cache_interceptor_hive_store: 3.2.2
   package_info_plus: ^4.0.2
@@ -40,14 +38,15 @@ dependencies:
   excel: ^2.1.0
   file_picker: 6.1.1
   csv: ^5.0.2
-  permission_handler: ^10.4.3
+  permission_handler: ^11.3.1
   build_runner: ^2.4.5
-  flutter_lints: ^2.0.0
   json_serializable: ^6.7.0
   meta: ^1.10.0
-  path_provider: 2.1.2
+  path_provider: ^2.1.0
   uuid: ^4.4.0
   timezone: ^0.9.3
+  screenshot: ^2.5.0
+  url_launcher: ^6.2.6
   
 dev_dependencies:
   flutter_test:

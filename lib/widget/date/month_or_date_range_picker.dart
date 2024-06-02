@@ -184,10 +184,14 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
             onDateTimeChanged: (DateTime newDate) {
               if (selectedStartInputButton) {
                 startDate = newDate;
-                if (minStartDate.isAfter(startDate) || startDate.isAfter(endDate)) endDate = maxEndDate;
+                if (minStartDate.isAfter(startDate))
+                  endDate = maxEndDate;
+                else if (startDate.isAfter(endDate)) endDate = startDate.copyWith();
               } else {
                 endDate = newDate;
-                if (endDate.isAfter(maxEndDate) || startDate.isAfter(endDate)) startDate = minStartDate;
+                if (endDate.isAfter(maxEndDate))
+                  startDate = minStartDate;
+                else if (startDate.isAfter(endDate)) startDate = endDate.copyWith();
               }
               setState(() {});
             },

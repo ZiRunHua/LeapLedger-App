@@ -14,6 +14,7 @@ class UserModel {
   late DateTime updateTime;
   UserModel();
 
+  String get uniqueUsername => username + "#" + id.toString();
   bool get isValid => id > 0;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);

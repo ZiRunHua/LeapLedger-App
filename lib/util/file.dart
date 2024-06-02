@@ -14,9 +14,9 @@ class FileOperation {
     return null;
   }
 
-  static Future<bool> saveImage(Uint8List imageBytes) async {
+  static Future<String?> saveImage(Uint8List imageBytes) async {
     if (false == (await Permission.manageExternalStorage.request()).isGranted) {
-      return false;
+      return null;
     }
 
     try {
@@ -24,17 +24,20 @@ class FileOperation {
       File file = File('${tempDir.path}/example.png');
       await file.writeAsBytes(imageBytes);
 
-      Directory? storageDir = await getExternalStorageDirectory();
-      if (storageDir == null) {
-        return false;
+      String targetPath = '/storage/emulated/0/Pictures/${Current.packageInfo.appName}';
+      if (await Directory(targetPath).exists()) {
+      } else {
+        try {
+          await Directory(targetPath).create(recursive: true);
+        } catch (e) {
+          return null;
+        }
       }
-
-      String newPath = '${storageDir.path}/example.png';
-      await file.copy(newPath);
-
-      return true;
+      targetPath += '/${DateTime.now().millisecondsSinceEpoch}.png';
+      await file.copy(targetPath);
+      return targetPath;
     } catch (e) {
-      return false;
+      return null;
     }
   }
 }

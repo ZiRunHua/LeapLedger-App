@@ -25,7 +25,7 @@ class UserHomeHeaderCardApiModel extends InExStatisticWithTimeModel {
   UserHomeHeaderCardApiModel(
       {AmountCountModel? income, AmountCountModel? expense, required super.startTime, required super.endTime})
       : super(income: income, expense: expense);
-  int? get days => endTime.difference(startTime).inDays;
+  int? get days => endTime.add(Duration(seconds: 1)).difference(startTime).inDays;
   int get dayExpenseAmountaverage {
     if (days == null || expense.amount <= 0) {
       return 0;

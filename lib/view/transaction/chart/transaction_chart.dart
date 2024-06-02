@@ -44,6 +44,7 @@ class _TransactionChartState extends State<TransactionChart> {
         child: Scaffold(
           backgroundColor: ConstantColor.greyBackground,
           appBar: AppBar(
+            primary: true,
             centerTitle: true,
             title: const TabBar(tabs: <Widget>[Tab(text: '支 出'), Tab(text: '收 入')]),
             actions: _buildAction(),
@@ -162,14 +163,15 @@ class _ExpenseTabState extends State<ExpenseTab> with AutomaticKeepAliveClientMi
   Widget build(BuildContext context) {
     super.build(context);
     return Container(
-        padding: const EdgeInsets.symmetric(horizontal: Constant.padding, vertical: Constant.margin),
-        child: RefreshIndicator(
-          onRefresh: () async => await _cubit.load(),
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: _buildContant(),
-          ),
-        ));
+      padding: const EdgeInsets.symmetric(horizontal: Constant.padding, vertical: Constant.margin),
+      child: RefreshIndicator(
+        onRefresh: () async => await _cubit.load(),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: _buildContant(),
+        ),
+      ),
+    );
   }
 
   Widget _buildContant() {
@@ -202,14 +204,14 @@ class _ExpenseTabState extends State<ExpenseTab> with AutomaticKeepAliveClientMi
         BlocBuilder<ExpenseChartCubit, ExpenseChartState>(
           buildWhen: (_, current) => current is ExpenseCategoryRankLoaded,
           builder: (context, state) {
-            if (_cubit.categoryRankingList == null || _cubit.categoryRankingList!.isEmpty) {
+            if (_cubit.categoryRankingList == null) {
               return const SizedBox();
             }
             return CommonCard.withTitle(
               title: "分类",
               child: Column(children: [
                 CategoryPieChart(_cubit.categoryRankingList!),
-                CategoryAmountRank(_cubit.categoryRankingList!)
+                if (_cubit.categoryRankingList!.isNotEmpty) CategoryAmountRank(_cubit.categoryRankingList!)
               ]),
             );
           },
@@ -279,14 +281,14 @@ class _IncomeTabState extends State<IncomeTab> with AutomaticKeepAliveClientMixi
         BlocBuilder<IncomeChartCubit, IncomeChartState>(
           buildWhen: (_, current) => current is IncomeCategoryRankLoaded,
           builder: (context, state) {
-            if (_cubit.categoryRankingList == null || _cubit.categoryRankingList!.isEmpty) {
+            if (_cubit.categoryRankingList == null) {
               return const SizedBox();
             }
             return CommonCard.withTitle(
               title: "分类",
               child: Column(children: [
                 CategoryPieChart(_cubit.categoryRankingList!),
-                CategoryAmountRank(_cubit.categoryRankingList!)
+                if (_cubit.categoryRankingList!.isNotEmpty) CategoryAmountRank(_cubit.categoryRankingList!)
               ]),
             );
           },

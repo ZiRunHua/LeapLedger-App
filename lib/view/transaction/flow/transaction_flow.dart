@@ -35,7 +35,7 @@ class _TransactionFlowState extends State<TransactionFlow> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
-    _conditionCubit = FlowConditionCubit(condition: widget.condition, currentAccount: _conditionCubit.currentAccount)
+    _conditionCubit = FlowConditionCubit(condition: widget.condition, currentAccount: widget.account)
       ..fetchCategoryData();
     _flowListBloc = FlowListBloc(initCondition: _conditionCubit.condition);
 
@@ -197,7 +197,12 @@ class _TransactionFlowState extends State<TransactionFlow> {
       ),
       IconButton(
         style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Colors.white)),
-        onPressed: () => TransactionRoutes.chartNavigator(context, account: _conditionCubit.currentAccount).push(),
+        onPressed: () => TransactionRoutes.chartNavigator(
+          context,
+          account: _conditionCubit.currentAccount,
+          startDate: _conditionCubit.condition.startTime,
+          endDate: _conditionCubit.condition.endTime,
+        ).push(),
         icon: const Icon(
           Icons.pie_chart_outline_outlined,
           color: ConstantColor.primaryColor,
@@ -283,10 +288,14 @@ class _TransactionFlowState extends State<TransactionFlow> {
     );
   }
 
+  bool get isShareAccount => _conditionCubit.currentAccount.isShare;
+
   /// 单条交易
   late Widget Function(TransactionModel model) _buildOneTransactionFunc;
   late Widget Function(TransactionModel currentTrans, TransactionModel? lastTrans) _buildDateFunc;
   Widget _buildListTile(TransactionModel model) {
+    String subtitleStr = model.categoryFatherName;
+    if (isShareAccount) subtitleStr += "  ${model.userName}";
     return ListTile(
       onTap: () =>
           TransactionRoutes.pushDetailBottomSheet(context, account: _conditionCubit.currentAccount, transaction: model),
@@ -296,7 +305,7 @@ class _TransactionFlowState extends State<TransactionFlow> {
       title: Text(
         model.categoryName,
       ),
-      subtitle: Text(model.categoryFatherName),
+      subtitle: Text(subtitleStr),
       trailing: AmountText.sameHeight(
         model.amount,
         textStyle: const TextStyle(fontSize: ConstantFontSize.headline, fontWeight: FontWeight.normal),

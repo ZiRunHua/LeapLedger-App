@@ -12,8 +12,6 @@ class CategoryPieChart extends StatefulWidget {
 class _CategoryPieChartState extends State<CategoryPieChart> {
   @override
   void initState() {
-    assert(widget.categoryRanks.isNotEmpty);
-
     super.initState();
   }
 
@@ -54,6 +52,9 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
 
   CategoryRank get selected => rankList[touchedIndex];
   Widget _buildSelected() {
+    if (rankList.isEmpty) {
+      return const Text("无数据", style: TextStyle(letterSpacing: 4));
+    }
     return DefaultTextStyle.merge(
       style: const TextStyle(fontSize: ConstantFontSize.bodySmall),
       child: Column(
@@ -79,14 +80,28 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
     );
   }
 
+  List<CategoryRank> emptyData = [
+    CategoryRank.empty(amount: 8)..setAmountProportion(10),
+    CategoryRank.empty(amount: 2)..setAmountProportion(10),
+  ];
   List<PieChartSectionData> showingSections() {
+    var list = rankList;
+    var totalAmount = this.totalAmount;
+    if (rankList.isEmpty) {
+      // 空数据处理
+      list = emptyData;
+      totalAmount = 0;
+      for (var element in emptyData) {
+        totalAmount += element.amount;
+      }
+    }
     CategoryRank rank;
     int accumulate = 0;
     return List.generate(
-      rankList.length,
+      list.length,
       (index) {
         final isTouched = index == touchedIndex;
-        rank = rankList[index];
+        rank = list[index];
         accumulate += totalAmount - rank.amount;
         return _buildSectionData(
           rank: rank,
@@ -94,7 +109,7 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
           color: Color.lerp(
             ConstantColor.primaryColor,
             ConstantColor.secondaryColor,
-            accumulate / totalAmount / rankList.length,
+            accumulate == 0 ? 0 : accumulate / totalAmount / list.length,
           ),
         );
       },
