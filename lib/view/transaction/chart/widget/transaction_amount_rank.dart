@@ -8,7 +8,10 @@ class TransactionAmountRank extends StatelessWidget {
     return CommonExpandedView(
         children: List.generate(
       transLsit.length,
-      (index) => CommonListTile.fromTransModel(transLsit[index]),
+      (index) => CommonListTile.fromTransModel(
+        transLsit[index],
+        displayModel: null,
+      ),
     ));
   }
 }

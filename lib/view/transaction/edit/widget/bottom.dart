@@ -187,9 +187,7 @@ class _BottomState extends State<Bottom> {
   String keyboradInput = "", keyboradHistory = "";
 
 // 事件
-  void onComplete(bool isAgain, int? amount) {
-    _bloc.add(TransactionSave(isAgain, amount: amount));
-  }
+  void onComplete(bool isAgain, int? amount) => _bloc.add(TransactionSave(isAgain, amount: amount));
 
   void onRefreshKeyborad(int amount, String input, String history) {
     setState(() {

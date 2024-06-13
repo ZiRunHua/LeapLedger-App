@@ -17,9 +17,28 @@ class TransactionCategoryFatherEditDialog extends StatefulWidget {
 }
 
 class _TransactionCategoryFatherEditDialogState extends State<TransactionCategoryFatherEditDialog> {
-  TransactionCategoryFatherModel get model => widget.model;
+  late TransactionCategoryFatherModel model;
   AccountDetailModel get account => widget.account;
   final TransCatFatherBloc _bloc = TransCatFatherBloc();
+
+  initData() {
+    model = widget.model.copyWith();
+  }
+
+  @override
+  void initState() {
+    initData();
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant TransactionCategoryFatherEditDialog oldWidget) {
+    if (oldWidget.model.id != model.id) {
+      initData();
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();

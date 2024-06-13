@@ -44,7 +44,7 @@ class FlowListBloc extends Bloc<FlowListEvent, FlowListState> {
     List<TransactionModel> newList = [];
     await Future.wait([
       Future(() async {
-        monthStatistic = await TransactionApi.getMonthStatistic(condition);
+        monthStatistic = (await TransactionApi.getMonthStatistic(condition)).reversed.toList();
       }),
       Future(() async {
         newList = await TransactionApi.getList(condition, limit, offset);

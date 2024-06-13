@@ -21,5 +21,6 @@ class AccountChange extends EditEvent {
 class TransactionSave extends EditEvent {
   final bool isAgain;
   final int? amount;
-  TransactionSave(this.isAgain, {this.amount});
+  final IncomeExpense? ie;
+  TransactionSave(this.isAgain, {this.amount, this.ie});
 }

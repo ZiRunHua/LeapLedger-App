@@ -104,7 +104,7 @@ class _StatisticsLineChartState extends State<StatisticsLineChart> {
             barWidth: 1,
             spots: List.generate(
               data.length,
-              (index) => FlSpot(index.toDouble(), data[index].amount.toDouble()),
+              (index) => FlSpot(index.toDouble(), (data[index].amount / 100).toDouble()),
             ),
             dotData: FlDotData(
                 //折线节点

@@ -18,7 +18,8 @@ class TransList extends StatelessWidget {
 
   Widget _buildTrans(BuildContext context, TransactionModel model) {
     return ListTile(
-      onTap: () => TransactionRoutes.pushDetailBottomSheet(context, account: account, transaction: model),
+      onTap: () =>
+          TransactionRoutes.detailNavigator(context, account: account, transaction: model).showModalBottomSheet(),
       dense: true,
       titleAlignment: ListTileTitleAlignment.center,
       leading: Icon(model.categoryIcon),

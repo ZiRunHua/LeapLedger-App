@@ -54,7 +54,7 @@ class CommonDialog extends AlertDialog {
           ],
         );
       },
-    ).then((value) => isFinish = value);
+    ).then((value) => isFinish = value!);
     return isFinish;
   }
 
@@ -70,7 +70,7 @@ class CommonDialog extends AlertDialog {
           title: Text(title),
           content: content,
           actions: <Widget>[
-            TextButton(onPressed: () => Navigator.of(context).pop(getPopData()), child: const Text('取消')),
+            TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('取消')),
             ElevatedButton(
                 onPressed: () {
                   onSave();

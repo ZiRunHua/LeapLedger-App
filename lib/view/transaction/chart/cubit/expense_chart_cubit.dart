@@ -9,7 +9,7 @@ class ExpenseChartCubit extends Cubit<ExpenseChartState> {
   final ie = IncomeExpense.expense;
   late AccountDetailModel account;
   late DateTime startDate, endDate;
-
+  int get days => endDate.add(Duration(seconds: 1)).difference(startDate).inDays;
   load() async {
     await Future.wait<void>([loadTotal(), loadDayStatistic(), loadCategoryRank(), loadTransRanking()]);
     emit(ExpenseChartLoaded());
@@ -38,7 +38,7 @@ class ExpenseChartCubit extends Cubit<ExpenseChartState> {
 
   List<AmountDateModel> statistics = [];
   Future<void> loadDayStatistic() async {
-    if (startDate.year != endDate.year || startDate.month != endDate.month) {
+    if (endDate.difference(startDate).inDays > 60) {
       var data = await TransactionApi.getMonthStatistic(TransactionQueryCondModel(
         accountId: account.id,
         startTime: startDate,
@@ -49,7 +49,7 @@ class ExpenseChartCubit extends Cubit<ExpenseChartState> {
         data.length,
         (index) =>
             AmountDateModel(amount: data[index].expense.amount, date: data[index].startTime, type: DateType.month),
-      ).reversed.toList();
+      ).toList();
     } else {
       var data = await TransactionApi.getDayStatistic(
         accountId: account.id,

@@ -18,34 +18,38 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
   List<CategoryRank> get rankList => widget.categoryRanks.data;
   int get totalAmount => widget.categoryRanks.totalAmount;
 
-  final double centerSpaceRadius = 56;
+  double centerSpaceRadius = 56;
 
   int touchedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: centerSpaceRadius * (1.3 + 1.61 * 0.61) * 2,
-      child: Stack(
-        children: [
-          Positioned(child: Center(child: _buildSelected())),
-          PieChart(
-            PieChartData(
-              pieTouchData: PieTouchData(
-                touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                  if (pieTouchResponse == null || pieTouchResponse.touchedSection == null) {
-                  } else if (pieTouchResponse.touchedSection!.touchedSectionIndex >= 0) {
-                    touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
-                    setState(() {});
-                  }
-                },
+    centerSpaceRadius = MediaQuery.of(context).size.width * 0.14;
+    return Padding(
+      padding: EdgeInsets.only(bottom: centerSpaceRadius * 0.62),
+      child: SizedBox(
+        height: centerSpaceRadius * (1.3 + 1.61 * 0.61) * 2,
+        child: Stack(
+          children: [
+            Positioned(child: Center(child: _buildSelected())),
+            PieChart(
+              PieChartData(
+                pieTouchData: PieTouchData(
+                  touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                    if (pieTouchResponse == null || pieTouchResponse.touchedSection == null) {
+                    } else if (pieTouchResponse.touchedSection!.touchedSectionIndex >= 0) {
+                      touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
+                      setState(() {});
+                    }
+                  },
+                ),
+                borderData: FlBorderData(show: false),
+                sectionsSpace: 1,
+                centerSpaceRadius: centerSpaceRadius,
+                sections: _buildSections(),
               ),
-              borderData: FlBorderData(show: false),
-              sectionsSpace: 1,
-              centerSpaceRadius: centerSpaceRadius,
-              sections: showingSections(),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -65,11 +69,12 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
           Icon(selected.icon, size: 28),
           Text(
             selected.name,
-            style: const TextStyle(letterSpacing: Constant.margin / 2),
+            style: const TextStyle(fontSize: ConstantFontSize.body, letterSpacing: Constant.margin / 2),
           ),
-          Text.rich(
-            AmountTextSpan.sameHeight(selected.amount),
-            style: const TextStyle(fontSize: ConstantFontSize.body, fontWeight: FontWeight.w500),
+          AmountText.sameHeight(
+            selected.amount,
+            unit: true,
+            textStyle: const TextStyle(fontSize: ConstantFontSize.body, fontWeight: FontWeight.w500),
           ),
           Text(
             "${selected.count}笔",
@@ -84,7 +89,7 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
     CategoryRank.empty(amount: 8)..setAmountProportion(10),
     CategoryRank.empty(amount: 2)..setAmountProportion(10),
   ];
-  List<PieChartSectionData> showingSections() {
+  List<PieChartSectionData> _buildSections() {
     var list = rankList;
     var totalAmount = this.totalAmount;
     if (rankList.isEmpty) {
@@ -122,12 +127,12 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
       value: rank.amountProportion / 100,
       title: rank.amountProportiontoString(),
       showTitle: isTouched,
-      titlePositionPercentageOffset: 1.61,
+      titlePositionPercentageOffset: 1.55,
       radius: isTouched ? centerSpaceRadius * 1.61 * 0.61 : centerSpaceRadius * 0.61,
       titleStyle: TextStyle(
         fontSize: isTouched ? ConstantFontSize.bodyLarge : ConstantFontSize.body,
         color: ConstantColor.greyText,
-        shadows: const [Shadow(color: Colors.black, blurRadius: 2)],
+        shadows: const [Shadow(color: ConstantColor.greyText, blurRadius: 1)],
       ),
     );
   }

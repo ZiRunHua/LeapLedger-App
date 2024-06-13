@@ -20,8 +20,10 @@ class CommonExpandedView extends StatefulWidget {
   const CommonExpandedView({
     super.key,
     required this.children,
+    this.onStateChanged,
   });
   final List<Widget> children;
+  final VoidCallback? onStateChanged;
   @override
   State<CommonExpandedView> createState() => _CommonExpandedViewState();
 }
@@ -76,6 +78,7 @@ class _CommonExpandedViewState extends State<CommonExpandedView> with SingleTick
           _controller.reset();
           _controller.forward();
         }
+        if (widget.onStateChanged != null) widget.onStateChanged!();
         setState(() {});
       },
       child: Row(

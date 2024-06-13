@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+1
+version: 1.0.1+1
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -47,6 +47,8 @@ dependencies:
   timezone: ^0.9.3
   screenshot: ^2.5.0
   url_launcher: ^6.2.6
+  auto_size_text: ^3.0.0
+  device_info_plus: ^9.1.2
   
 dev_dependencies:
   flutter_test:

@@ -45,7 +45,6 @@ class _TransactionFlowState extends State<TransactionFlow> {
     data = shimmerData;
   }
 
-  @override
   void dispose() {
     _flowListBloc.close();
     _conditionCubit.close();
@@ -297,8 +296,11 @@ class _TransactionFlowState extends State<TransactionFlow> {
     String subtitleStr = model.categoryFatherName;
     if (isShareAccount) subtitleStr += "  ${model.userName}";
     return ListTile(
-      onTap: () =>
-          TransactionRoutes.pushDetailBottomSheet(context, account: _conditionCubit.currentAccount, transaction: model),
+      onTap: () => TransactionRoutes.detailNavigator(
+        context,
+        account: _conditionCubit.currentAccount,
+        transaction: model,
+      ).showModalBottomSheet(),
       dense: true,
       titleAlignment: ListTileTitleAlignment.center,
       leading: Icon(model.categoryIcon, color: ConstantColor.primaryColor),

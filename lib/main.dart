@@ -10,7 +10,6 @@ import 'package:keepaccount_app/routes/routes.dart';
 import 'package:keepaccount_app/util/enter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:keepaccount_app/view/navigation/navigation.dart';
-import 'package:keepaccount_app/view/transaction/chart/transaction_chart.dart';
 import 'common/global.dart';
 import 'package:keepaccount_app/common/current.dart';
 
@@ -27,7 +26,7 @@ Future<void> init() async {
   await initCache();
   Routes.init();
 
-  //await Global.init().then((value) => Global.cache.clear());
+  //await Global.cache.clear();
   await Current.init();
 }
 
@@ -81,7 +80,14 @@ class MyApp extends StatelessWidget {
             BlocListener<AccountBloc, AccountState>(
               listener: (context, state) {
                 if (state is AccountDeleteSuccess) {
-                  BlocProvider.of<UserBloc>(context).add(UpdateCurrentInfoEvent(state.currentInfo));
+                  var newCurrentInfo = state.currentInfo;
+                  if (UserBloc.currentAccount.id != newCurrentInfo.currentAccount.id) {
+                    BlocProvider.of<UserBloc>(context).add(SetCurrentAccount(state.currentInfo.currentAccount));
+                  }
+                  if (UserBloc.currentShareAccount.id != newCurrentInfo.currentShareAccount.id) {
+                    BlocProvider.of<UserBloc>(context)
+                        .add(SetCurrentShareAccount(state.currentInfo.currentShareAccount));
+                  }
                 } else if (state is AccountSaveSuccess) {
                   BlocProvider.of<UserBloc>(context).add(UpdateCurrentInfoEvent(
                       UserCurrentModel(currentAccount: state.account, currentShareAccount: state.account)));

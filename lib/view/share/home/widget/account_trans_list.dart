@@ -42,8 +42,8 @@ class _AccountTransListState extends State<AccountTransList> {
             : CommonListTile.fromTransModel(
                 list[index ~/ 2],
                 displayUser: true,
-                onTap: () =>
-                    TransactionRoutes.pushDetailBottomSheet(context, account: account, transaction: list[index ~/ 2]),
+                onTap: () => TransactionRoutes.detailNavigator(context, account: account, transaction: list[index ~/ 2])
+                    .showModalBottomSheet(),
               ),
       );
     } else {

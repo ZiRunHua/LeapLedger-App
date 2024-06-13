@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:keepaccount_app/common/global.dart';
 import 'package:keepaccount_app/model/transaction/model.dart';
@@ -39,6 +40,19 @@ class AmountDateModel {
   factory AmountDateModel.fromJson(Map<String, dynamic> json) => _$AmountDateModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$AmountDateModelToJson(this);
+
+  String getDateByType() {
+    switch (type) {
+      case DateType.day:
+        return DateFormat('d日').format(date);
+      case DateType.month:
+        return DateFormat('M月').format(date);
+      case DateType.year:
+        return DateFormat('yy年').format(date);
+      default:
+        return DateFormat('yy年MM月dd日').format(date);
+    }
+  }
 }
 
 ///金额笔数数据模型
@@ -153,6 +167,7 @@ class InExStatisticWithTimeModel extends InExStatisticModel {
   int get dayAverageIncome => income.amount != 0 ? income.amount ~/ numberOfDays : 0;
   // 日均支出
   int get dayAverageExpense => expense.amount != 0 ? expense.amount ~/ numberOfDays : 0;
+  @JsonKey(includeFromJson: false, includeToJson: false)
   late final int numberOfDays;
   @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
   late final DateTime startTime;

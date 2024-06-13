@@ -55,64 +55,76 @@ class _AccountUserDetailButtomSheetState extends State<AccountUserDetailButtomSh
           DecoratedBox(
             decoration: const BoxDecoration(color: Colors.white),
             child: Container(
-                decoration: const BoxDecoration(
-                  borderRadius: ConstantDecoration.bottomSheetBorderRadius,
-                  color: ConstantColor.greyBackground,
-                ),
-                padding: const EdgeInsets.symmetric(
-                    vertical: Constant.buttomSheetRadius / 2,
-                    horizontal: Constant.buttomSheetRadius / 2 - Constant.margin),
-                child: BlocBuilder<AccountUserDetailCubit, AccountUserDetailState>(
-                  buildWhen: (_, state) => state is! AccountUserDetailUpdate,
-                  builder: (context, state) {
-                    if (state is AccountUserDetailLoad) {
-                      return Column(children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            _buildTotal(Icons.today_outlined, "今日", state.todayTotal),
-                            _buildTotal(Icons.calendar_month_outlined, "本月", state.monthTotal),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(Constant.margin),
-                          child: DecoratedBox(
-                            decoration: const BoxDecoration(
-                              borderRadius: ConstantDecoration.borderRadius,
-                              color: Colors.white,
-                            ),
-                            child: Column(
-                              children: [
-                                ...List.generate(
-                                  state.recentTrans == null ? 0 : state.recentTrans!.length * 2,
-                                  (index) => index % 2 > 0
-                                      ? ConstantWidget.divider.indented
-                                      : CommonListTile.fromTransModel(state.recentTrans![index ~/ 2]),
-                                ),
-                                ListTile(
-                                  title: const Text(
-                                    "查看更多交易",
-                                    textAlign: TextAlign.right,
-                                  ),
-                                  trailing: const Icon(Icons.chevron_right_outlined),
-                                  onTap: () => _onLookMore(state.recentTrans?.lastOrNull),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ]);
-                    } else {
-                      return const SizedBox(
-                        height: 300,
-                        child: Center(child: ConstantWidget.activityIndicator),
-                      );
-                    }
-                  },
-                )),
+              decoration: const BoxDecoration(
+                borderRadius: ConstantDecoration.bottomSheetBorderRadius,
+                color: ConstantColor.greyBackground,
+              ),
+              padding: const EdgeInsets.symmetric(
+                vertical: Constant.buttomSheetRadius / 2,
+                horizontal: Constant.buttomSheetRadius / 2 - Constant.margin,
+              ),
+              child: BlocBuilder<AccountUserDetailCubit, AccountUserDetailState>(
+                buildWhen: (_, state) => state is! AccountUserDetailUpdate,
+                builder: (context, state) {
+                  if (state is AccountUserDetailLoad) {
+                    return _buildContent(
+                      todayTotal: state.todayTotal,
+                      monthTotal: state.monthTotal,
+                      recentTrans: state.recentTrans,
+                    );
+                  }
+                  return const SizedBox();
+                },
+              ),
+            ),
           )
         ],
       ),
+    );
+  }
+
+  Widget _buildContent({
+    InExStatisticModel? todayTotal,
+    InExStatisticModel? monthTotal,
+    List<TransactionModel>? recentTrans,
+  }) {
+    return Column(
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            _buildTotal(Icons.today_outlined, "今日", todayTotal),
+            _buildTotal(Icons.calendar_month_outlined, "本月", monthTotal),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.all(Constant.margin),
+          child: DecoratedBox(
+            decoration: const BoxDecoration(
+              borderRadius: ConstantDecoration.borderRadius,
+              color: Colors.white,
+            ),
+            child: Column(
+              children: [
+                ...List.generate(
+                  recentTrans == null ? 0 : recentTrans.length * 2,
+                  (index) => index % 2 > 0
+                      ? ConstantWidget.divider.indented
+                      : CommonListTile.fromTransModel(recentTrans![index ~/ 2]),
+                ),
+                ListTile(
+                  title: const Text(
+                    "查看更多交易",
+                    textAlign: TextAlign.right,
+                  ),
+                  trailing: const Icon(Icons.chevron_right_outlined),
+                  onTap: () => _onLookMore(recentTrans?.lastOrNull),
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -144,7 +156,6 @@ class _AccountUserDetailButtomSheetState extends State<AccountUserDetailButtomSh
         decoration: const BoxDecoration(borderRadius: ConstantDecoration.borderRadius, color: Colors.white),
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Column(
               children: [
@@ -152,62 +163,58 @@ class _AccountUserDetailButtomSheetState extends State<AccountUserDetailButtomSh
                 Text(
                   text,
                   style: const TextStyle(
-                      fontSize: ConstantFontSize.body,
-                      color: ConstantColor.greyText,
-                      letterSpacing: ConstantFontSize.letterSpacing),
+                    fontSize: ConstantFontSize.body,
+                    color: ConstantColor.greyText,
+                    letterSpacing: ConstantFontSize.letterSpacing,
+                  ),
                 ),
               ],
             ),
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text.rich(
-                  TextSpan(
-                      style: const TextStyle(
-                          fontSize: ConstantFontSize.largeHeadline,
-                          fontWeight: FontWeight.bold,
-                          color: ConstantColor.expenseAmount),
-                      children: [
-                        const TextSpan(
-                          text: "支出  ",
-                          style: TextStyle(
-                              fontSize: ConstantFontSize.body,
-                              color: ConstantColor.greyText,
-                              fontWeight: FontWeight.normal),
-                        ),
-                        AmountTextSpan.sameHeight(data.expense.amount,
-                            dollarSign: false,
-                            displayModel: IncomeExpenseDisplayModel.color,
-                            incomeExpense: IncomeExpense.expense),
-                      ]),
+            Expanded(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildAmount(amount: data.expense.amount, ie: IncomeExpense.expense),
+                    const SizedBox(height: Constant.margin / 2),
+                    _buildAmount(amount: data.income.amount, ie: IncomeExpense.income),
+                  ],
                 ),
-                const SizedBox(height: Constant.margin / 2),
-                Text.rich(
-                  TextSpan(
-                      style: const TextStyle(
-                          fontSize: ConstantFontSize.largeHeadline,
-                          fontWeight: FontWeight.bold,
-                          color: ConstantColor.incomeAmount),
-                      children: [
-                        const TextSpan(
-                          text: "收入  ",
-                          style: TextStyle(
-                              fontSize: ConstantFontSize.body,
-                              color: ConstantColor.greyText,
-                              fontWeight: FontWeight.normal),
-                        ),
-                        AmountTextSpan.sameHeight(data.income.amount,
-                            dollarSign: false,
-                            displayModel: IncomeExpenseDisplayModel.color,
-                            incomeExpense: IncomeExpense.income),
-                      ]),
-                ),
-              ],
+              ),
             )
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildAmount({required int amount, required IncomeExpense ie}) {
+    return Text.rich(
+      TextSpan(
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: ConstantFontSize.largeHeadline,
+          color: ie == IncomeExpense.income ? ConstantColor.incomeAmount : ConstantColor.expenseAmount,
+        ),
+        children: [
+          TextSpan(
+            text: ie == IncomeExpense.income ? "收入  " : "支出  ",
+            style: TextStyle(
+              fontSize: ConstantFontSize.body,
+              color: ConstantColor.greyText,
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+          AmountTextSpan.sameHeight(
+            amount,
+            dollarSign: false,
+            displayModel: IncomeExpenseDisplayModel.color,
+            incomeExpense: ie,
+          ),
+        ],
       ),
     );
   }

@@ -24,8 +24,7 @@ class AccountEditState extends State<AccountEdit> {
   final _formKey = GlobalKey<FormState>();
   late AccountModel account;
   late final AccountEditMode mode;
-  @override
-  void initState() {
+  void initData() {
     if (widget.account != null && widget.account!.isValid) {
       mode = AccountEditMode.update;
     } else {
@@ -34,9 +33,22 @@ class AccountEditState extends State<AccountEdit> {
     if (widget.account == null) {
       account = AccountDetailModel.fromJson({});
     } else {
-      account = widget.account!;
+      account = widget.account!.copy();
     }
+  }
+
+  @override
+  void initState() {
+    initData();
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(AccountEdit oldWidget) {
+    if (widget.account != oldWidget.account) {
+      initData();
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override

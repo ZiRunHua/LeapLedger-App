@@ -31,6 +31,7 @@ class UserPasswordUpdateState extends State<UserPasswordUpdate> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('修改密码'),
       ),
