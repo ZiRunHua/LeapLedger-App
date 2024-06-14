@@ -9,32 +9,48 @@ class CategoryAmountRank extends StatefulWidget {
 
 enum PageStatus { loading, expanding, contracting, noData }
 
-class _CategoryAmountRankState extends State<CategoryAmountRank> {
-  final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
-  int maxAmount = 0;
+class _CategoryAmountRankState extends State<CategoryAmountRank> with SingleTickerProviderStateMixin {
+  late List<TransactionCategoryAmountRankApiModel> data;
+  late int maxAmount = 0;
+
+  late final AnimationController _controller;
+  @override
+  void initState() {
+    initData();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    )..addListener(() => setState(() {}));
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => _controller.forward());
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(CategoryAmountRank oldWidget) {
+    if (widget.data != oldWidget.data) {
+      initData();
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  void initData() {
+    data = widget.data;
+    if (data.length > 0) {
+      maxAmount = data.first.amount;
+    } else {
+      maxAmount = 0;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return _Func._buildCard(
-        title: "本月支出排行",
-        child: BlocBuilder<HomeBloc, HomeState>(
-          buildWhen: (_, state) => state is HomeCategoryAmountRank,
-          builder: (context, state) {
-            if (state is HomeCategoryAmountRank) {
-              if (state.rankingList.length > 0) {
-                maxAmount = state.rankingList.first.amount;
-              } else {
-                maxAmount = 0;
-              }
-              return CommonExpandableList(
-                children: List.generate(
-                  state.rankingList.length,
-                  (index) => _buildListTile(state.rankingList[index], index + 1),
-                ),
-              );
-            }
-            return SizedBox();
-          },
-        ));
+      title: "本月支出排行",
+      child: CommonExpandableList(
+        children: List.generate(data.length, (index) => _buildListTile(data[index])),
+      ),
+    );
   }
 
   _buildListTile(TransactionCategoryAmountRankApiModel data) {
@@ -61,6 +77,15 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> {
             ),
           ),
         ));
+  }
+
+  _buildProgress(double value) {
+    return LinearProgressIndicator(
+      value: min(_controller.value, value),
+      backgroundColor: const Color.fromRGBO(245, 245, 245, 1),
+      valueColor: const AlwaysStoppedAnimation<Color>(ConstantColor.primaryColor),
+      borderRadius: BorderRadius.circular(2),
+    );
   }
 }
 
