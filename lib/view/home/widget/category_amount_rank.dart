@@ -1,8 +1,8 @@
 part of 'enter.dart';
 
 class CategoryAmountRank extends StatefulWidget {
-  const CategoryAmountRank({super.key});
-
+  const CategoryAmountRank({super.key, required this.data});
+  final List<TransactionCategoryAmountRankApiModel> data;
   @override
   State<CategoryAmountRank> createState() => _CategoryAmountRankState();
 }
@@ -37,7 +37,7 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> {
         ));
   }
 
-  _buildListTile(TransactionCategoryAmountRankApiModel data, int number) {
+  _buildListTile(TransactionCategoryAmountRankApiModel data) {
     return GestureDetector(
         onTap: () => _Func._pushTransactionFlow(
             context,
@@ -52,7 +52,7 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> {
             data.category.name,
             style: const TextStyle(fontSize: ConstantFontSize.body),
           ),
-          subtitle: data.amount != 0 ? AmountDivider(data.amount.toDouble() / maxAmount.toDouble()) : null,
+          subtitle: data.amount != 0 ? _buildProgress(data.amount / maxAmount) : _buildProgress(0),
           trailing: Padding(
             padding: EdgeInsets.zero,
             child: AmountText.sameHeight(

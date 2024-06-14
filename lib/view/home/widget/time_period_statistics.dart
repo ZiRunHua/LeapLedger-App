@@ -1,33 +1,49 @@
 part of 'enter.dart';
 
 class TimePeriodStatistics extends StatefulWidget {
-  const TimePeriodStatistics({super.key});
-
+  const TimePeriodStatistics({super.key, this.data});
+  final UserHomeTimePeriodStatisticsApiModel? data;
   @override
   State<TimePeriodStatistics> createState() => _TimePeriodStatisticsState();
 }
 
 class _TimePeriodStatisticsState extends State<TimePeriodStatistics> {
-  final today = DateTime.now();
-  late final UserHomeTimePeriodStatisticsApiModel _shimmeData;
+  late UserHomeTimePeriodStatisticsApiModel data;
   @override
   void initState() {
-    _shimmeData = UserHomeTimePeriodStatisticsApiModel(
-      todayData: InExStatisticWithTimeModel(startTime: today, endTime: today),
-      yearData: InExStatisticWithTimeModel(
-        startTime: today.subtract(const Duration(days: 1)),
-        endTime: today.subtract(const Duration(days: 1)),
-      ),
-      weekData: InExStatisticWithTimeModel(
-        startTime: today.subtract(Duration(days: today.weekday - 1)),
-        endTime: today.subtract(Duration(days: 7 - today.weekday)),
-      ),
-      yesterdayData: InExStatisticWithTimeModel(
-        startTime: DateTime(today.year, 1, 1),
-        endTime: DateTime(today.year + 1, 1, 1).subtract(const Duration(days: 1)),
-      ),
-    );
+    initData();
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(TimePeriodStatistics oldWidget) {
+    if (widget.data != oldWidget.data) {
+      initData();
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  void initData() {
+    if (widget.data == null) {
+      var today = DateTime.now();
+      data = UserHomeTimePeriodStatisticsApiModel(
+        todayData: InExStatisticWithTimeModel(startTime: today, endTime: today),
+        yearData: InExStatisticWithTimeModel(
+          startTime: today.subtract(const Duration(days: 1)),
+          endTime: today.subtract(const Duration(days: 1)),
+        ),
+        weekData: InExStatisticWithTimeModel(
+          startTime: today.subtract(Duration(days: today.weekday - 1)),
+          endTime: today.subtract(Duration(days: 7 - today.weekday)),
+        ),
+        yesterdayData: InExStatisticWithTimeModel(
+          startTime: DateTime(today.year, 1, 1),
+          endTime: DateTime(today.year + 1, 1, 1).subtract(const Duration(days: 1)),
+        ),
+      );
+    } else {
+      data = widget.data!;
+    }
   }
 
   @override
@@ -36,31 +52,19 @@ class _TimePeriodStatisticsState extends State<TimePeriodStatistics> {
       title: "收支报告",
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
-        child: BlocBuilder<HomeBloc, HomeState>(
-          buildWhen: (_, state) => state is HomeTimePeriodStatisticsLoaded,
-          builder: (context, state) {
-            if (state is HomeTimePeriodStatisticsLoaded) {
-              return _buildContent(state.data);
-            }
-            return _buildContent(_shimmeData);
-          },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildListTile(icon: Icons.calendar_today_outlined, title: "今日", data: data.todayData),
+            ConstantWidget.divider.list,
+            _buildListTile(icon: Icons.event_outlined, title: "昨日", data: data.yesterdayData),
+            ConstantWidget.divider.list,
+            _buildListTile(icon: Icons.date_range_outlined, title: "本周", data: data.weekData),
+            ConstantWidget.divider.list,
+            _buildListTile(icon: Icons.public_outlined, title: "今年", data: data.yearData),
+          ],
         ),
       ),
-    );
-  }
-
-  Widget _buildContent(UserHomeTimePeriodStatisticsApiModel data) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildListTile(icon: Icons.calendar_today_outlined, title: "今日", data: data.todayData),
-        ConstantWidget.divider.list,
-        _buildListTile(icon: Icons.event_outlined, title: "昨日", data: data.yesterdayData),
-        ConstantWidget.divider.list,
-        _buildListTile(icon: Icons.date_range_outlined, title: "本周", data: data.weekData),
-        ConstantWidget.divider.list,
-        _buildListTile(icon: Icons.public_outlined, title: "今年", data: data.yearData),
-      ],
     );
   }
 

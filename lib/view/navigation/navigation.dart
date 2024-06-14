@@ -112,7 +112,7 @@ class _NavigationState extends State<Navigation> {
   Widget buildPageByType(TabPage page) {
     switch (page) {
       case TabPage.home:
-        return const Home();
+        return Home();
       case TabPage.share:
         return const Center(
           child: ShareHome(),

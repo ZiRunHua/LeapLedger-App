@@ -5,7 +5,7 @@ sealed class HomeState {}
 final class HomeInitial extends HomeState {}
 
 final class HomeHeaderLoaded extends HomeState {
-  final UserHomeHeaderCardApiModel data;
+  final InExStatisticWithTimeModel data;
   HomeHeaderLoaded(this.data);
 }
 
