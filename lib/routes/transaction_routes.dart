@@ -28,19 +28,9 @@ class TransactionRoutes {
         ));
   }
 
-  static pushDetailBottomSheet(BuildContext context,
-      {required AccountDetailModel account, TransactionModel? transaction, int? transactionId}) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => BlocProvider(
-        create: (context) => TransactionBloc(),
-        child: TransactionDetailBottomSheet(
-          account: account,
-          transaction: transaction,
-          transactionId: transactionId,
-        ),
-      ),
-    );
+  static TransactionDetailNavigator detailNavigator(BuildContext context,
+      {required AccountDetailModel account, TransactionModel? transaction}) {
+    return TransactionDetailNavigator(context, account: account, transaction: transaction);
   }
 
   static void showShareDialog(BuildContext context, {required TransactionShareModel shareModel}) {
@@ -74,6 +64,18 @@ class TransactionRouterGuard {
 
   static bool import({required AccountDetailModel account}) {
     return !account.isReader;
+  }
+}
+
+class TransactionDetailNavigator extends RouterNavigator {
+  final TransactionModel? transaction;
+  final AccountDetailModel account;
+  TransactionDetailNavigator(BuildContext context, {required this.account, this.transaction}) : super(context: context);
+  Future<bool> showModalBottomSheet() async {
+    return await _modalBottomSheetShow(
+      context,
+      TransactionDetailBottomSheet(account: account, transaction: transaction),
+    );
   }
 }
 

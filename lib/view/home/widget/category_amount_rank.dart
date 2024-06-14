@@ -1,63 +1,59 @@
 part of 'enter.dart';
 
 class CategoryAmountRank extends StatefulWidget {
-  const CategoryAmountRank({super.key});
-
+  const CategoryAmountRank({super.key, required this.data});
+  final List<TransactionCategoryAmountRankApiModel> data;
   @override
   State<CategoryAmountRank> createState() => _CategoryAmountRankState();
 }
 
 enum PageStatus { loading, expanding, contracting, noData }
 
-class _CategoryAmountRankState extends State<CategoryAmountRank> {
-  final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
+class _CategoryAmountRankState extends State<CategoryAmountRank> with SingleTickerProviderStateMixin {
+  late List<TransactionCategoryAmountRankApiModel> data;
+  late int maxAmount = 0;
 
-  /// 排行数据
-  List<TransactionCategoryAmountRankApiModel> _rankingList = [];
+  late final AnimationController _controller;
+  @override
+  void initState() {
+    initData();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    )..addListener(() => setState(() {}));
 
-  /// 当前展示数据
-  List<TransactionCategoryAmountRankApiModel> _presentData = [];
-  final int initialQuantity = 3;
-  PageStatus currentStatus = PageStatus.loading;
-  int maxAmount = 0;
-  initPresentData() {
-    _presentData = [];
-    for (int index = 0; index < initialQuantity && index < _rankingList.length; index++) {
-      _presentData.add(_rankingList[index]);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _controller.forward());
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(CategoryAmountRank oldWidget) {
+    if (widget.data != oldWidget.data) {
+      initData();
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  void initData() {
+    data = widget.data;
+    if (data.length > 0) {
+      maxAmount = data.first.amount;
+    } else {
+      maxAmount = 0;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<HomeBloc, HomeState>(
-      listener: (context, state) {
-        if (state is HomeCategoryAmountRank) {
-          setState(() {
-            if (state.rankingList.isNotEmpty) {
-              currentStatus = PageStatus.contracting;
-            } else {
-              currentStatus = PageStatus.noData;
-            }
-            _rankingList = state.rankingList;
-            var first = _rankingList.firstOrNull;
-            maxAmount = first != null ? first.amount : 0;
-            initPresentData();
-          });
-        }
-      },
-      child: _Func._buildCard(
-        title: "本月支出排行",
-        child: CommonExpandableList(
-          children: List.generate(
-            _presentData.length,
-            (index) => _buildListTile(_presentData[index], index + 1),
-          ),
-        ),
+    return _Func._buildCard(
+      title: "本月支出排行",
+      child: CommonExpandableList(
+        children: List.generate(data.length, (index) => _buildListTile(data[index])),
       ),
     );
   }
 
-  _buildListTile(TransactionCategoryAmountRankApiModel data, int number) {
+  _buildListTile(TransactionCategoryAmountRankApiModel data) {
     return GestureDetector(
         onTap: () => _Func._pushTransactionFlow(
             context,
@@ -72,7 +68,7 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> {
             data.category.name,
             style: const TextStyle(fontSize: ConstantFontSize.body),
           ),
-          subtitle: data.amount != 0 ? AmountDivider(data.amount.toDouble() / maxAmount.toDouble()) : null,
+          subtitle: data.amount != 0 ? _buildProgress(data.amount / maxAmount) : _buildProgress(0),
           trailing: Padding(
             padding: EdgeInsets.zero,
             child: AmountText.sameHeight(
@@ -83,49 +79,13 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> {
         ));
   }
 
-  _buildBottomContent() {
-    switch (currentStatus) {
-      case PageStatus.loading:
-        // 加载中状态
-        return const Center(child: CircularProgressIndicator());
-      case PageStatus.contracting:
-        // 合起状态
-        return TextButton(
-          onPressed: () {
-            //点击展开
-            setState(() {
-              currentStatus = PageStatus.expanding;
-              _presentData = _rankingList;
-            });
-          },
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [Icon(Icons.keyboard_double_arrow_down_outlined, size: 19), Text("展开")],
-          ),
-        );
-      case PageStatus.expanding:
-        // 展开状态
-        return TextButton(
-          onPressed: () {
-            //点击合并
-            setState(() {
-              currentStatus = PageStatus.contracting;
-              initPresentData();
-            });
-          },
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [Icon(Icons.keyboard_double_arrow_up_outlined, size: 19), Text("合起")],
-          ),
-        );
-      default:
-        return SizedBox(
-          height: 64,
-          child: Center(child: NoData.transactionText(context, account: UserBloc.currentAccount)),
-        );
-    }
+  _buildProgress(double value) {
+    return LinearProgressIndicator(
+      value: min(_controller.value, value),
+      backgroundColor: const Color.fromRGBO(245, 245, 245, 1),
+      valueColor: const AlwaysStoppedAnimation<Color>(ConstantColor.primaryColor),
+      borderRadius: BorderRadius.circular(2),
+    );
   }
 }
 

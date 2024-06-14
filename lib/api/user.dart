@@ -14,6 +14,12 @@ class UserApi {
     return response;
   }
 
+  static Future<ResponseBody> requestTour({required String deviceNumber}) async {
+    ResponseBody response =
+        await ApiServer.request(Method.post, '$pubilcBaseUrl$baseUrl/tour', data: {'DeviceNumber': deviceNumber});
+    return response;
+  }
+
   static Future<ResponseBody> setCurrentAccount(int accountId) async {
     ResponseBody response =
         await ApiServer.request(Method.put, '$baseUrl/client/current/account', data: {'Id': accountId});

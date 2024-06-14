@@ -168,7 +168,8 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
           children: [
             Expanded(flex: 5, child: _buildInputButton(isStartInputButton: true)),
             const Expanded(
-                child: Padding(padding: EdgeInsets.all(Constant.margin), child: Divider(color: Colors.black87))),
+              child: Padding(padding: EdgeInsets.all(Constant.margin), child: Divider(color: Colors.black87)),
+            ),
             Expanded(flex: 5, child: _buildInputButton(isStartInputButton: false)),
           ],
         ),
@@ -178,9 +179,11 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
           child: CupertinoDatePicker(
             key: selectedStartInputButton ? startDatePickerKey : endDatePickerKey,
             mode: CupertinoDatePickerMode.date,
-            initialDateTime: selectedStartInputButton ? startDate : endDate,
-            minimumYear: 2000,
-            maximumYear: 2050,
+            initialDateTime: selectedStartInputButton
+                ? (startDate.year >= Constant.minYear ? startDate : Constant.minDateTime)
+                : (endDate.year <= Constant.maxYear ? endDate : Constant.maxDateTime),
+            minimumYear: Constant.minYear,
+            maximumYear: Constant.maxYear,
             onDateTimeChanged: (DateTime newDate) {
               if (selectedStartInputButton) {
                 startDate = newDate;

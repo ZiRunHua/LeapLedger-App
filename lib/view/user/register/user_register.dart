@@ -36,6 +36,7 @@ class UserRegisterState extends State<UserRegister> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: BlocListener<UserBloc, UserState>(
           listener: (context, state) {
@@ -45,13 +46,13 @@ class UserRegisterState extends State<UserRegister> {
             }
           },
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 80),
                 const Padding(
-                  padding: EdgeInsets.all(10),
+                  padding: EdgeInsets.all(Constant.margin),
                   child: Text(
                     "注册",
                     style: TextStyle(

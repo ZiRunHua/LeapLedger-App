@@ -34,7 +34,7 @@ class FormSelecter {
           Icons.accessibility_new_outlined,
           Icons.perm_phone_msg_outlined,
           Icons.build_circle_outlined,
-          Icons.work_outlined,
+          Icons.work_outline,
           Icons.comment_outlined,
           Icons.construction_outlined,
           Icons.sentiment_very_satisfied_outlined,

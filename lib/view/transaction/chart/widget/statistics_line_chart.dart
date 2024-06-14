@@ -9,6 +9,67 @@ class StatisticsLineChart extends StatefulWidget {
 
 class _StatisticsLineChartState extends State<StatisticsLineChart> {
   List<AmountDateModel> get list => widget.list;
+  late List<String?> dateTitle;
+  @override
+  void initState() {
+    setDateTitle();
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(StatisticsLineChart oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.list != oldWidget.list) {
+      setDateTitle();
+    }
+  }
+
+  setDateTitle() {
+    int lastIndex = 0, interval = list.length >= 10 ? list.length ~/ 5 : 1;
+    dateTitle = List.generate(this.list.length, (index) {
+      var rand = list[index];
+      switch (rand.type) {
+        case DateType.day:
+          if (index == 0 || index == list.length - 1) {
+            lastIndex = index;
+            return DateFormat('d日').format(rand.date);
+          } else if (rand.date.day == 1) {
+            lastIndex = index;
+            return DateFormat("M月").format(rand.date);
+          } else if (index == lastIndex + interval) {
+            lastIndex = index;
+            return DateFormat('d日').format(rand.date);
+          }
+          return null;
+        case DateType.month:
+          if (index == 0 || index == list.length - 1) {
+            lastIndex = index;
+            return DateFormat('M月').format(rand.date);
+          } else if (rand.date.month == 1) {
+            lastIndex = index;
+            return DateFormat('yy年M月').format(rand.date);
+          } else if (index == lastIndex + interval) {
+            lastIndex = index;
+            return DateFormat('M月').format(rand.date);
+          }
+          return null;
+        case DateType.year:
+          return DateFormat('yy年').format(rand.date);
+        default:
+          return DateFormat('d日').format(rand.date);
+      }
+    });
+  }
+
+  LineTooltipItem _buildToolcontent(LineBarSpot touchedSpot) {
+    return LineTooltipItem(
+        list[touchedSpot.x.toInt()].getDateByType() + '\n' + touchedSpot.y.toStringAsFixed(2),
+        const TextStyle(
+          color: ConstantColor.primaryColor,
+          fontSize: ConstantFontSize.body,
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -18,14 +79,7 @@ class _StatisticsLineChartState extends State<StatisticsLineChart> {
           lineTouchData: LineTouchData(
             touchTooltipData: LineTouchTooltipData(
               getTooltipItems: (List<LineBarSpot> touchedSpots) {
-                return touchedSpots.map((LineBarSpot touchedSpot) {
-                  return LineTooltipItem(
-                      (touchedSpot.y / 100).toStringAsFixed(2),
-                      const TextStyle(
-                        color: ConstantColor.primaryColor,
-                        fontSize: ConstantFontSize.body,
-                      ));
-                }).toList();
+                return touchedSpots.map(_buildToolcontent).toList();
               },
             ),
             getTouchLineEnd: (data, index) => double.infinity,
@@ -35,10 +89,11 @@ class _StatisticsLineChartState extends State<StatisticsLineChart> {
                   FlLine(color: ConstantColor.primaryColor, strokeWidth: 2),
                   FlDotData(
                     getDotPainter: (spot, percent, barData, index) => FlDotCirclePainter(
-                        radius: 4,
-                        color: ConstantColor.primaryColor.withOpacity(0.5),
-                        strokeWidth: 2,
-                        strokeColor: ConstantColor.greyText),
+                      radius: 4,
+                      color: ConstantColor.primaryColor.withOpacity(0.5),
+                      strokeWidth: 2,
+                      strokeColor: ConstantColor.greyText,
+                    ),
                   ),
                 );
               }).toList();
@@ -72,9 +127,15 @@ class _StatisticsLineChartState extends State<StatisticsLineChart> {
               sideTitles: SideTitles(
                 showTitles: true,
                 getTitlesWidget: (value, context) {
-                  return _buildDayTitle(list[value.toInt()]);
+                  if (value % 1 != 0 || dateTitle[value.toInt()] == null) {
+                    return const SizedBox();
+                  }
+                  return Text(
+                    dateTitle[value.toInt()]!,
+                    style: const TextStyle(color: ConstantColor.greyText, fontSize: ConstantFontSize.bodySmall),
+                  );
                 },
-                interval: list.length / 6 > 0 ? list.length / 6 : 1,
+                interval: 1,
               ),
             ),
           ),
@@ -85,10 +146,7 @@ class _StatisticsLineChartState extends State<StatisticsLineChart> {
               barWidth: 1,
               spots: List.generate(
                 list.length,
-                (index) => FlSpot(
-                  index.toDouble(),
-                  list[index].amount.toDouble(),
-                ),
+                (index) => FlSpot(index.toDouble(), (list[index].amount / 100).toDouble()),
               ),
               dotData: FlDotData(
                   //折线节点
@@ -107,27 +165,6 @@ class _StatisticsLineChartState extends State<StatisticsLineChart> {
           ],
         ),
       ),
-    );
-  }
-
-  _buildDayTitle(AmountDateModel rand) {
-    late String title;
-    switch (rand.type) {
-      case DateType.day:
-        title = DateFormat('d日').format(rand.date);
-        break;
-      case DateType.month:
-        title = DateFormat('MM月').format(rand.date);
-        break;
-      case DateType.year:
-        title = DateFormat('yyyy年').format(rand.date);
-        break;
-      default:
-        title = DateFormat('d日').format(rand.date);
-    }
-    return Text(
-      title,
-      style: const TextStyle(color: ConstantColor.greyText, fontSize: ConstantFontSize.bodySmall),
     );
   }
 }

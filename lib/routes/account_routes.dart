@@ -202,8 +202,10 @@ class AccountUserDetailNavigator extends RouterNavigator {
   AccountUserDetailNavigator(BuildContext context, {required this.accountUser, required this.account, this.onEdit})
       : super(context: context);
 
-  Future<bool> showModalBottomSheet() async =>
-      await _modalBottomSheetShow(context, AccountUserDetailButtomSheet(accountUser: accountUser, account: account));
+  Future<bool> showModalBottomSheet() async => await _modalBottomSheetShow(
+        context,
+        AccountUserDetailButtomSheet(accountUser: accountUser, account: account, onEdit: onEdit),
+      );
 }
 
 class AccountUserEditNavigator extends RouterNavigator {

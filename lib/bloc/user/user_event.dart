@@ -16,6 +16,10 @@ class UserRegisterEvent extends UserEvent {
   UserRegisterEvent(this.email, this.username, this.password, this.captcha);
 }
 
+class UserRequestTourEvent extends UserEvent {
+  UserRequestTourEvent();
+}
+
 // 忘记密码与修改密码当作同一种事件 通过type以区分二者来调用不同的接口
 class UserPasswordUpdateEvent extends UserEvent {
   final String email, password, captcha;

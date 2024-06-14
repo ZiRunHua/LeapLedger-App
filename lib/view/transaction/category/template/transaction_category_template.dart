@@ -35,13 +35,11 @@ class _TransactionCategoryTemplateState extends State<TransactionCategoryTemplat
             templateList = state.list;
           });
         } else if (state is AccountTransCategoryInitSuccess) {
-          Navigator.pop(context);
+          Navigator.pop<AccountDetailModel>(context, state.account);
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text("选择交易类型"),
-        ),
+        appBar: AppBar(title: const Text("选择交易类型")),
         body: child,
       ),
     );

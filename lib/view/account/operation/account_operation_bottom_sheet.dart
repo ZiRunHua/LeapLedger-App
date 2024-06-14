@@ -25,6 +25,13 @@ class _AccountOperationBottomSheetState extends State<AccountOperationBottomShee
     super.initState();
   }
 
+  bool _isPopped = false;
+  void pop<T extends Object?>(T value) {
+    if (_isPopped) return;
+    _isPopped = true;
+    Navigator.pop<T>(context, value);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
@@ -34,14 +41,14 @@ class _AccountOperationBottomSheetState extends State<AccountOperationBottomShee
             listener: (context, state) {
               if (state is AccountDeleteSuccess) {
                 var isDelete = true;
-                Navigator.pop<bool>(context, isDelete);
+                pop<bool>(isDelete);
               }
             }),
         BlocListener<UserBloc, UserState>(
             listenWhen: (_, state) => state is CurrentAccountChanged,
             listener: (context, state) {
               if (state is CurrentAccountChanged) {
-                Navigator.pop<AccountDetailModel>(context, UserBloc.currentAccount);
+                pop<AccountDetailModel>(UserBloc.currentAccount);
               }
             })
       ],
@@ -110,12 +117,8 @@ class _AccountOperationBottomSheetState extends State<AccountOperationBottomShee
   }
 
   _onDetail(BuildContext context) async {
-    var page = AccountRoutes.edit(context, account: widget.account);
+    var page = TransactionRoutes.chartNavigator(context, account: widget.account);
     await page.push();
-    var newAccount = page.getReturn();
-    if (newAccount != null && mounted) {
-      Navigator.pop<AccountDetailModel>(context, newAccount);
-    }
   }
 
   _onEdit(BuildContext context) async {
@@ -123,7 +126,7 @@ class _AccountOperationBottomSheetState extends State<AccountOperationBottomShee
     await page.push();
     var newAccount = page.getReturn();
     if (newAccount != null && mounted) {
-      Navigator.pop<AccountDetailModel>(context, newAccount);
+      pop<AccountDetailModel>(newAccount);
     }
   }
 

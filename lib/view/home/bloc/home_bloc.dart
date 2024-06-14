@@ -3,6 +3,8 @@ import 'package:keepaccount_app/api/api_server.dart';
 import 'package:keepaccount_app/api/model/model.dart';
 import 'package:keepaccount_app/bloc/user/user_bloc.dart';
 import 'package:keepaccount_app/common/global.dart';
+import 'package:keepaccount_app/model/account/model.dart';
+import 'package:keepaccount_app/model/common/model.dart';
 import 'package:keepaccount_app/model/transaction/model.dart';
 import 'package:keepaccount_app/util/enter.dart';
 
@@ -10,10 +12,12 @@ part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  HomeBloc() : super(HomeInitial()) {
+  HomeBloc({required this.account}) : super(HomeInitial()) {
     on<HomeFetchDataEvent>(_fetchData);
+    on<HomeAccountChangeEvent>((HomeAccountChangeEvent event, emit) => _handleAccountChange(event.account, emit));
     on<HomeStatisticUpdateEvent>(_updateStatistic);
   }
+  late AccountDetailModel account;
 
   /// 日统计列表
   late List<DayAmountStatisticApiModel> dayStatistic;
@@ -38,8 +42,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     ]);
   }
 
+  _handleAccountChange(AccountDetailModel account, emit) async {
+    if (account.id != this.account.id) {
+      this.account = account;
+      await _fetchData(HomeFetchDataEvent(), emit);
+    }
+    this.account = account;
+  }
+
   _fetchHomeData(HomeFetchDataEvent event, emit) async {
-    homeData = await UserApi.getHome(accountId: UserBloc.currentAccount.id);
+    homeData = await UserApi.getHome(accountId: account.id);
     if (homeData.headerCard != null) {
       emit(HomeHeaderLoaded(homeData.headerCard!));
     }
@@ -49,14 +61,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   _fetchDayStatistic(HomeFetchDataEvent event, emit) async {
-    dayStatistic = await TransactionApi.getDayStatistic(
-        accountId: UserBloc.currentAccount.id, startTime: startTime, endTime: endTime);
+    dayStatistic = await TransactionApi.getDayStatistic(accountId: account.id, startTime: startTime, endTime: endTime);
     emit(HomeStatisticsLineChart(dayStatistic));
   }
 
   _fetchTransactionCategoryAmountRank(HomeFetchDataEvent event, emit) async {
     rankingList = await TransactionApi.getCategoryAmountRank(
-      accountId: UserBloc.currentAccount.id,
+      accountId: account.id,
       ie: IncomeExpense.expense,
       limit: 9,
       startTime: startTime,

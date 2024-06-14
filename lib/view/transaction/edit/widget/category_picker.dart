@@ -84,6 +84,7 @@ class _CategoryPickerState extends State<CategoryPicker> with AutomaticKeepAlive
 
   void _onTap(TransactionCategoryModel category) {
     _bloc.trans.categoryId = category.id;
+    _bloc.trans.incomeExpense = category.incomeExpense;
     setState(() {});
   }
 }

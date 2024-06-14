@@ -22,7 +22,7 @@ class AccountTotal extends StatelessWidget {
         margin: const EdgeInsets.all(Constant.margin),
         decoration: const BoxDecoration(borderRadius: ConstantDecoration.borderRadius, color: Colors.white),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Column(
@@ -31,63 +31,78 @@ class AccountTotal extends StatelessWidget {
                 Text(
                   text,
                   style: const TextStyle(
-                      fontSize: ConstantFontSize.body,
-                      color: ConstantColor.greyText,
-                      letterSpacing: ConstantFontSize.letterSpacing),
+                    fontSize: ConstantFontSize.body,
+                    color: ConstantColor.greyText,
+                    letterSpacing: ConstantFontSize.letterSpacing,
+                  ),
                 ),
               ],
             ),
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text.rich(
-                  TextSpan(
-                      style: const TextStyle(
-                          fontSize: ConstantFontSize.largeHeadline,
-                          fontWeight: FontWeight.bold,
-                          color: ConstantColor.expenseAmount),
+            Expanded(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        AmountTextSpan.sameHeight(data.expense.amount,
-                            dollarSign: false,
-                            displayModel: IncomeExpenseDisplayModel.color,
-                            incomeExpense: IncomeExpense.expense),
-                        const TextSpan(
-                          text: "  支",
-                          style: TextStyle(
-                              fontSize: ConstantFontSize.body,
-                              color: ConstantColor.greyText,
-                              fontWeight: FontWeight.normal),
-                        ),
-                      ]),
+                        _buildAmount(data.expense.amount, IncomeExpense.expense),
+                        const SizedBox(height: Constant.margin / 2),
+                        _buildAmount(data.income.amount, IncomeExpense.income),
+                      ],
+                    ),
+                    _buildIe()
+                  ],
                 ),
-                const SizedBox(height: Constant.margin / 2),
-                Text.rich(
-                  TextSpan(
-                      style: const TextStyle(
-                          fontSize: ConstantFontSize.largeHeadline,
-                          fontWeight: FontWeight.bold,
-                          color: ConstantColor.incomeAmount),
-                      children: [
-                        AmountTextSpan.sameHeight(data.income.amount,
-                            dollarSign: false,
-                            displayModel: IncomeExpenseDisplayModel.color,
-                            incomeExpense: IncomeExpense.income),
-                        const TextSpan(
-                          text: "  收",
-                          style: TextStyle(
-                              fontSize: ConstantFontSize.body,
-                              color: ConstantColor.greyText,
-                              fontWeight: FontWeight.normal),
-                        ),
-                      ]),
-                ),
-              ],
-            )
+              ),
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildAmount(int amount, IncomeExpense ie) {
+    return AmountText.sameHeight(
+      amount,
+      textStyle: TextStyle(
+        fontSize: ConstantFontSize.largeHeadline,
+        fontWeight: FontWeight.bold,
+      ),
+      dollarSign: false,
+      displayModel: IncomeExpenseDisplayModel.color,
+      incomeExpense: ie,
+    );
+  }
+
+  Widget _buildIe() {
+    return const Column(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "  支",
+          style: TextStyle(
+            fontSize: ConstantFontSize.body,
+            color: ConstantColor.greyText,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+        SizedBox(height: Constant.margin / 2),
+        Text(
+          "  收",
+          style: TextStyle(
+            fontSize: ConstantFontSize.body,
+            color: ConstantColor.greyText,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+      ],
     );
   }
 }

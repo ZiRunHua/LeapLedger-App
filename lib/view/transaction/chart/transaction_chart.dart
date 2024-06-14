@@ -183,7 +183,12 @@ class _ExpenseTabState extends State<ExpenseTab> with AutomaticKeepAliveClientMi
             if (_cubit.total == null) {
               return const SizedBox();
             }
-            return CommonCard.withTitle(child: TotalHeader(data: _cubit.total!, type: IncomeExpense.expense));
+            return CommonCard.withTitle(
+                child: TotalHeader(
+              data: _cubit.total!,
+              type: IncomeExpense.expense,
+              days: _cubit.days,
+            ));
           },
         ),
         BlocBuilder<ExpenseChartCubit, ExpenseChartState>(
@@ -275,7 +280,12 @@ class _IncomeTabState extends State<IncomeTab> with AutomaticKeepAliveClientMixi
             if (_cubit.total == null) {
               return const SizedBox();
             }
-            return CommonCard.withTitle(child: TotalHeader(data: _cubit.total!, type: IncomeExpense.expense));
+            return CommonCard.withTitle(
+                child: TotalHeader(
+              data: _cubit.total!,
+              type: IncomeExpense.expense,
+              days: _cubit.days,
+            ));
           },
         ),
         BlocBuilder<IncomeChartCubit, IncomeChartState>(

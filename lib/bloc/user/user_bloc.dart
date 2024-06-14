@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keepaccount_app/api/api_server.dart';
 import 'package:keepaccount_app/api/model/model.dart';
 import 'package:keepaccount_app/bloc/captcha/captcha_bloc.dart';
+import 'package:keepaccount_app/common/current.dart';
 import 'package:keepaccount_app/common/global.dart';
 import 'package:keepaccount_app/model/account/model.dart';
 import 'package:keepaccount_app/model/user/model.dart';
@@ -31,6 +32,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<UserLoginEvent>(_login);
     on<UserLogoutEvent>(_logout);
     on<UserRegisterEvent>(_register);
+    on<UserRequestTourEvent>(_requestTour);
     on<UserPasswordUpdateEvent>(_updatePassword);
     on<UserInfoUpdateEvent>(_updateInfo);
     on<UpdateCurrentInfoEvent>((event, emit) async {
@@ -45,13 +47,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   }
 
   void _login(UserLoginEvent event, Emitter<UserState> emit) async {
-    var bytes = utf8.encode(event.userAccount + event.password);
-    var password = sha256.convert(bytes).toString();
+    var userAccount = event.userAccount.trim();
+    var password = event.password.trim();
+    var captcha = event.captcha.trim();
+    if (userAccount.isEmpty || password.isEmpty || captcha.isEmpty) {
+      emit(UserLoginFailState("请输入"));
+    }
+    var bytes = utf8.encode(userAccount + password);
+    password = sha256.convert(bytes).toString();
     var response = await UserApi.login(
-      event.userAccount,
+      userAccount,
       password,
       CaptchaBloc.currentCaptchaId,
-      event.captcha,
+      captcha,
     );
     if (response.isSuccess) {
       UserBloc.currentAccount = AccountDetailModel.fromJson(response.data['CurrentAccount']);
@@ -87,6 +95,22 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     } else {
       emit(UserRegisterFailState());
     }
+  }
+
+  void _requestTour(UserRequestTourEvent event, Emitter<UserState> emit) async {
+    if (Current.deviceId == null) {
+      return;
+    }
+    var response = await UserApi.requestTour(deviceNumber: Current.deviceId!);
+    if (false == response.isSuccess) return;
+    UserBloc.currentAccount = AccountDetailModel.fromJson(response.data['CurrentAccount']);
+    UserBloc.currentShareAccount = AccountDetailModel.fromJson(response.data['CurrentShareAccount']);
+    token = response.data['Token'];
+    user = UserModel.fromJson(response.data['User']);
+    UserBloc.saveToCache();
+    emit(UserLoginedState());
+    emit(CurrentAccountChanged());
+    emit(CurrentShareAccountChanged());
   }
 
   void _updatePassword(UserPasswordUpdateEvent event, Emitter<UserState> emit) async {

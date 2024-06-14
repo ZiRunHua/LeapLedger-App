@@ -45,6 +45,7 @@ class CommonListTile extends ListTile {
     bool displayUser = false,
     bool displayTime = true,
     VoidCallback? onTap,
+    IncomeExpenseDisplayModel? displayModel = IncomeExpenseDisplayModel.symbols,
   }) : this(
             key: key,
             dense: true,
@@ -77,7 +78,7 @@ class CommonListTile extends ListTile {
                           model.amount,
                           textStyle: const TextStyle(fontSize: ConstantFontSize.headline, fontWeight: FontWeight.w500),
                           incomeExpense: model.incomeExpense,
-                          displayModel: IncomeExpenseDisplayModel.symbols,
+                          displayModel: displayModel,
                         )
                       ],
               ),

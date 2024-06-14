@@ -9,6 +9,7 @@ class IncomeChartCubit extends Cubit<IncomeChartState> {
   final ie = IncomeExpense.income;
   late AccountDetailModel account;
   late DateTime startDate, endDate;
+  int get days => endDate.add(Duration(seconds: 1)).difference(startDate).inDays;
 
   load() async {
     await Future.wait<void>([loadTotal(), loadCategoryRank(), loadTransRanking()]);

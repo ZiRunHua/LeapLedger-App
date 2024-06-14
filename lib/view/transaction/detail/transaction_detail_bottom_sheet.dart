@@ -173,16 +173,15 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
     ]);
   }
 
-  handleDelete() {
+  _handleDelete() {
     if (transaction == null) {
       return;
     }
     BlocProvider.of<TransactionBloc>(context).add(TransactionDelete(widget.account, transaction!));
-    Navigator.pop(context);
   }
 
   void _onDelete() {
-    CommonDialog.showDeleteConfirmationDialog(context, handleDelete).then((bool isFinish) {
+    CommonDialog.showDeleteConfirmationDialog(context, _handleDelete).then((bool isFinish) {
       if (isFinish) {
         Navigator.pop(context);
       }

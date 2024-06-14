@@ -115,10 +115,10 @@ class TransactionCategoryTreeBloc extends Bloc<TransactionCategoryTreeEvent, Tra
 
   _updateChild(UpdateChildEvent event, Emitter<TransactionCategoryTreeState> emit) async {
     if (!canEdit) return;
-    _list.map((e) {
-      for (int i = 0; i < e.children.length; i++) {
-        if (e.children[i].id == event.transactionCategoryModel.id) {
-          e.children[i] = event.transactionCategoryModel;
+    _list.forEach((element) {
+      for (int i = 0; i < element.children.length; i++) {
+        if (element.children[i].id == event.transactionCategoryModel.id) {
+          element.children[i] = event.transactionCategoryModel;
           break;
         }
       }

@@ -1,12 +1,12 @@
 part of 'enter.dart';
 
 class TotalHeader extends StatelessWidget {
-  const TotalHeader({super.key, required this.type, required this.data});
+  const TotalHeader({super.key, required this.type, required this.data, required this.days});
   final AmountCountModel data;
   final IncomeExpense type;
-
   int get amount => data.amount;
   int get count => data.count;
+  final int days;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -25,7 +25,7 @@ class TotalHeader extends StatelessWidget {
                 endIndent: Constant.margin / 2,
               ),
               Expanded(
-                  child: _buildColumn(title: "日均${type.label}", amount: amount != 0 ? (amount / count).round() : 0)),
+                  child: _buildColumn(title: "日均${type.label}", amount: amount != 0 ? (amount / days).round() : 0)),
             ],
           ),
         ));

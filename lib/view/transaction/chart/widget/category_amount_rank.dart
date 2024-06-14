@@ -34,6 +34,10 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> with SingleTick
     )..layout();
     amountWidth = textPainter.size.width + Constant.margin / 2;
     return CommonExpandedView(
+      onStateChanged: () {
+        _controller.reset();
+        _controller.forward();
+      },
       children: List.generate(
         list.length,
         (index) => _buildListTile(list[index]),
@@ -53,35 +57,21 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> with SingleTick
         '${data.name} （${data.amountProportiontoString()}）',
         style: const TextStyle(fontSize: ConstantFontSize.body),
       ),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildProgress(data.amount != 0 ? data.amount / list.first.amount : 0),
-        ],
-      ),
+      subtitle: _buildProgress(data.amount != 0 ? data.amount / list.first.amount : 0),
       trailing: SizedBox(
         width: amountWidth,
-        child: Text.rich(
-          TextSpan(
-            children: [
-              _buildAmount(data.amount),
-              const TextSpan(text: "\n"),
-              TextSpan(
-                text: "${data.count}笔",
-                style: const TextStyle(fontSize: ConstantFontSize.bodySmall),
-              ),
-            ],
-          ),
-          textAlign: TextAlign.right,
+        child: Align(
+          alignment: Alignment.centerRight,
+          child: Text.rich(_buildAmount(data.amount)),
         ),
       ),
     );
   }
 
-  AmountTextSpan _buildAmount(int amount) {
+  TextSpan _buildAmount(int amount) {
     return AmountTextSpan.sameHeight(
       amount,
-      textStyle: const TextStyle(fontSize: ConstantFontSize.body, fontWeight: FontWeight.normal),
+      textStyle: const TextStyle(fontSize: ConstantFontSize.body, fontWeight: FontWeight.w500),
     );
   }
 

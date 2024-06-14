@@ -268,10 +268,10 @@ class TransactionQueryCondModel {
     if (startTime.isAfter(trans.tradeTime) || endTime.isBefore(trans.tradeTime)) {
       return false;
     }
-    if (false == userIds.contains(trans.userId)) {
+    if (userIds.isNotEmpty && false == userIds.contains(trans.userId)) {
       return false;
     }
-    if (false == categoryIds.contains(trans.categoryId)) {
+    if (categoryIds.isNotEmpty && false == categoryIds.contains(trans.categoryId)) {
       return false;
     }
     if (incomeExpense != null && incomeExpense != trans.incomeExpense) {

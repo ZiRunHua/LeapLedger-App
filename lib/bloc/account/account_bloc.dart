@@ -87,6 +87,6 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     if (responseData == null) {
       return;
     }
-    emit(AccountTransCategoryInitSuccess());
+    emit(AccountTransCategoryInitSuccess(responseData));
   }
 }

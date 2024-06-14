@@ -1,13 +1,28 @@
 part of 'enter.dart';
 
 class StatisticsLineChart extends StatefulWidget {
-  const StatisticsLineChart({super.key});
-
+  const StatisticsLineChart({super.key, required this.data});
+  final List<DayAmountStatisticApiModel> data;
   @override
   State<StatisticsLineChart> createState() => _StatisticsLineChartState();
 }
 
 class _StatisticsLineChartState extends State<StatisticsLineChart> {
+  late List<DayAmountStatisticApiModel> data;
+  @override
+  void initState() {
+    data = widget.data;
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(StatisticsLineChart oldWidget) {
+    if (widget.data != oldWidget.data) {
+      data = widget.data;
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
   @override
   Widget build(BuildContext context) {
     return _Func._buildCard(
@@ -16,21 +31,13 @@ class _StatisticsLineChartState extends State<StatisticsLineChart> {
         aspectRatio: 1.6,
         child: Padding(
           padding: const EdgeInsets.all(Constant.padding),
-          child: BlocBuilder<HomeBloc, HomeState>(
-            buildWhen: (_, state) => state is HomeStatisticsLineChart,
-            builder: (context, state) {
-              if (state is HomeStatisticsLineChart) {
-                return _buildLineChart(state.expenseList);
-              }
-              return const Center(child: CircularProgressIndicator());
-            },
-          ),
+          child: _buildLineChart(),
         ),
       ),
     );
   }
 
-  Widget _buildLineChart(List<DayAmountStatisticApiModel> data) {
+  Widget _buildLineChart() {
     if (data.isEmpty) {
       return const SizedBox();
     }
@@ -104,7 +111,7 @@ class _StatisticsLineChartState extends State<StatisticsLineChart> {
             barWidth: 1,
             spots: List.generate(
               data.length,
-              (index) => FlSpot(index.toDouble(), data[index].amount.toDouble()),
+              (index) => FlSpot(index.toDouble(), (data[index].amount / 100).toDouble()),
             ),
             dotData: FlDotData(
                 //折线节点

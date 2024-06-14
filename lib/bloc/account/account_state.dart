@@ -53,5 +53,6 @@ final class AccountTemplateListLoaded extends AccountState {
 }
 
 final class AccountTransCategoryInitSuccess extends AccountState {
-  AccountTransCategoryInitSuccess();
+  final AccountDetailModel account;
+  AccountTransCategoryInitSuccess(this.account);
 }

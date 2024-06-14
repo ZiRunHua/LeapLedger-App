@@ -1,63 +1,45 @@
 part of 'enter.dart';
 
-class HomeNavigation extends StatefulWidget {
-  const HomeNavigation({super.key});
-
-  @override
-  HomeNavigationState createState() => HomeNavigationState();
-}
-
-class HomeNavigationState extends State<HomeNavigation> {
-  AccountDetailModel account = UserBloc.currentAccount;
+class HomeNavigation extends StatelessWidget {
+  HomeNavigation({required this.account});
+  final AccountDetailModel account;
   @override
   Widget build(BuildContext context) {
-    return UserBloc.listenerCurrentAccountIdUpdate(
-      () {
-        setState(() {
-          account = UserBloc.currentAccount;
-        });
-      },
-      SizedBox(
-        height: 48,
-        width: MediaQuery.of(context).size.width,
-        child: _buidlButtonGroup(),
+    return SizedBox(
+      height: 48,
+      width: MediaQuery.of(context).size.width,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: [
+          _navigatorButton(
+            account.name,
+            icon: Icons.sync_outlined,
+            onTap: () => AccountRoutes.listByCurrentAccount(context).push(),
+          ),
+          _navigatorButton(
+            "交易类型",
+            icon: Icons.settings_outlined,
+            onTap: () => TransactionCategoryRoutes.setting(context, account: account).pushTree(),
+          ),
+          _navigatorButton(
+            "图表分析",
+            icon: Icons.pie_chart_outline_outlined,
+            onTap: () => TransactionRoutes.chartNavigator(context, account: account).push(),
+          ),
+          Offstage(
+            offstage: false == TransactionRouterGuard.import(account: account),
+            child: _navigatorButton(
+              "导入账单",
+              icon: Icons.upload_outlined,
+              onTap: () => TransactionRoutes.import(context, account: account).push(),
+            ),
+          )
+        ],
       ),
     );
   }
 
-  Widget _buidlButtonGroup() {
-    return ListView(
-      scrollDirection: Axis.horizontal,
-      children: [
-        navigatorButton(
-          account.name,
-          icon: Icons.sync_outlined,
-          onTap: () => AccountRoutes.listByCurrentAccount(context).push(),
-        ),
-        navigatorButton(
-          "交易类型",
-          icon: Icons.settings_outlined,
-          onTap: () => TransactionCategoryRoutes.setting(context, account: account).pushTree(),
-        ),
-        navigatorButton(
-          "图表分析",
-          icon: Icons.pie_chart_outline_outlined,
-          onTap: () => TransactionRoutes.chartNavigator(context, account: account).push(),
-        ),
-        Offstage(
-          offstage: false == TransactionRouterGuard.import(account: account),
-          child: navigatorButton(
-            "导入账单",
-            icon: Icons.upload_outlined,
-            onTap: () => TransactionRoutes.import(context, account: account).push(),
-          ),
-        )
-      ],
-    );
-  }
-
-  Widget navigatorButton(String title,
-      {IconData? titleIcon, String? subTitle, IconData? icon, required VoidCallback onTap}) {
+  Widget _navigatorButton(String title, {IconData? icon, required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -78,9 +60,7 @@ class HomeNavigationState extends State<HomeNavigation> {
                 color: ConstantColor.primaryColor,
                 size: 24,
               ),
-              const SizedBox(
-                width: Constant.margin / 2,
-              ),
+              const SizedBox(width: Constant.margin / 2),
               Text(title),
             ],
           )),

@@ -49,4 +49,25 @@ class TransactionCategoryModel extends BaseTransactionCategoryModel {
       updatedAt: DateTime.now(),
     );
   }
+  TransactionCategoryModel copyWith({
+    int? id,
+    String? name,
+    IconData? icon,
+    int? fatherId,
+    int? accountId,
+    IncomeExpense? incomeExpense,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return TransactionCategoryModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      icon: icon ?? this.icon,
+      fatherId: fatherId ?? this.fatherId,
+      accountId: accountId ?? this.accountId,
+      incomeExpense: incomeExpense ?? this.incomeExpense,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
 }

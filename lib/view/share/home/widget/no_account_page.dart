@@ -19,8 +19,14 @@ class NoAccountPage extends StatelessWidget {
               _buildButton(
                 Icons.add_outlined,
                 "新建共享账本",
-                () => AccountRoutes.edit(context, account: AccountDetailModel.fromJson({})..type = AccountType.share)
-                    .push(),
+                () {
+                  var page =
+                      AccountRoutes.edit(context, account: AccountDetailModel.fromJson({})..type = AccountType.share);
+                  page.push();
+                  if (page.getReturn() != null) {
+                    BlocProvider.of<UserBloc>(context).add(SetCurrentShareAccount(page.getReturn()!));
+                  }
+                },
               ),
               _buildButton(Icons.send_outlined, "查看邀请", () {
                 UserRoutes.pushNamed(context, UserRoutes.accountInvitation)
