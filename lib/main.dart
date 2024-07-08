@@ -64,6 +64,12 @@ class MyApp extends StatelessWidget {
             ),
             primaryColor: ConstantColor.primaryColor,
             dividerColor: Colors.transparent,
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(Colors.blue),
+                foregroundColor: MaterialStatePropertyAll(Colors.white),
+              ),
+            ),
             floatingActionButtonTheme: const FloatingActionButtonThemeData(
               backgroundColor: Colors.blue,
               shape: CircleBorder(),
@@ -76,28 +82,28 @@ class MyApp extends StatelessWidget {
             ),
             useMaterial3: true,
           ),
-          home: MultiBlocListener(listeners: [
-            BlocListener<AccountBloc, AccountState>(
-              listener: (context, state) {
-                if (state is AccountDeleteSuccess) {
-                  var newCurrentInfo = state.currentInfo;
-                  if (UserBloc.currentAccount.id != newCurrentInfo.currentAccount.id) {
-                    BlocProvider.of<UserBloc>(context).add(SetCurrentAccount(state.currentInfo.currentAccount));
+          home: MultiBlocListener(
+            listeners: [
+              BlocListener<AccountBloc, AccountState>(
+                listener: (context, state) {
+                  if (state is AccountDeleteSuccess) {
+                    var newCurrentInfo = state.currentInfo;
+                    if (UserBloc.currentAccount.id != newCurrentInfo.currentAccount.id) {
+                      BlocProvider.of<UserBloc>(context).add(SetCurrentAccount(state.currentInfo.currentAccount));
+                    }
+                    if (UserBloc.currentShareAccount.id != newCurrentInfo.currentShareAccount.id) {
+                      BlocProvider.of<UserBloc>(context)
+                          .add(SetCurrentShareAccount(state.currentInfo.currentShareAccount));
+                    }
+                  } else if (state is AccountSaveSuccess) {
+                    BlocProvider.of<UserBloc>(context).add(UpdateCurrentInfoEvent(
+                        UserCurrentModel(currentAccount: state.account, currentShareAccount: state.account)));
                   }
-                  if (UserBloc.currentShareAccount.id != newCurrentInfo.currentShareAccount.id) {
-                    BlocProvider.of<UserBloc>(context)
-                        .add(SetCurrentShareAccount(state.currentInfo.currentShareAccount));
-                  }
-                } else if (state is AccountSaveSuccess) {
-                  BlocProvider.of<UserBloc>(context).add(UpdateCurrentInfoEvent(
-                      UserCurrentModel(currentAccount: state.account, currentShareAccount: state.account)));
-                }
-              },
-            )
-          ], child: Navigation()),
-          // TransactionChart(
-          //       account: UserBloc.currentAccount,
-          //     )
+                },
+              )
+            ],
+            child: Navigation(),
+          ),
           builder: EasyLoading.init(builder: (context, child) {
             return MediaQuery(
               data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),

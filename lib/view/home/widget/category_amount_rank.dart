@@ -45,6 +45,7 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> with SingleTick
 
   @override
   Widget build(BuildContext context) {
+    if (data.length == 0) return SizedBox();
     return _Func._buildCard(
       title: "本月支出排行",
       child: CommonExpandableList(

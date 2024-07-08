@@ -22,14 +22,12 @@ class Home extends StatelessWidget {
             listenWhen: (_, state) => state is TransactionStatisticUpdate,
             listener: (context, state) {
               if (state is TransactionStatisticUpdate) {
-                BlocProvider.of<HomeBloc>(context).add(HomeStatisticUpdateEvent(state.oldTrans, state.newTrans));
+                _bloc.add(HomeStatisticUpdateEvent(state.oldTrans, state.newTrans));
               }
             },
             child: BlocListener<UserBloc, UserState>(
               listenWhen: (_, state) => state is CurrentAccountChanged,
-              listener: (_, state) => BlocProvider.of<HomeBloc>(context).add(HomeAccountChangeEvent(
-                account: UserBloc.currentAccount,
-              )),
+              listener: (_, state) => _bloc.add(HomeAccountChangeEvent(account: UserBloc.currentAccount)),
               child: _buildContent(),
             ),
           ),
