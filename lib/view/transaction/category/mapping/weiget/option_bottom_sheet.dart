@@ -2,7 +2,7 @@ part of 'enter.dart';
 
 class OptionBottomSheet extends StatelessWidget {
   const OptionBottomSheet({super.key, required this.unmapped});
-  final List<BaseTransactionCategoryModel> unmapped;
+  final List<TransactionCategoryBaseModel> unmapped;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class OptionBottomSheet extends StatelessWidget {
             title: Center(
               child: Text(unmapped[index].name),
             ),
-            onTap: () => Navigator.pop<BaseTransactionCategoryModel>(context, unmapped[index]),
+            onTap: () => Navigator.pop<TransactionCategoryBaseModel>(context, unmapped[index]),
           );
         },
         separatorBuilder: (BuildContext context, int index) {

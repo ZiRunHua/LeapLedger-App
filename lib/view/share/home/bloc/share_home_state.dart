@@ -3,11 +3,16 @@ part of 'share_home_bloc.dart';
 @immutable
 sealed class ShareHomeState {}
 
-final class ShareHomeInitial extends ShareHomeState {}
+abstract class ShareHomePageState extends ShareHomeState {}
+
+final class ShareHomeInitial extends ShareHomePageState {}
 
 /// 无共享账本
-final class NoShareAccount extends ShareHomeState {}
+final class NoShareAccount extends ShareHomePageState {}
 
+final class ShareHomeLoaded extends ShareHomePageState {}
+
+/// 无共享账本
 /// 账本关联关系加载完成
 final class AccountMappingLoad extends ShareHomeState {
   final AccountMappingModel? mapping;

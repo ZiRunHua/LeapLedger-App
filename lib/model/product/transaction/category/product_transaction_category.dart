@@ -1,7 +1,7 @@
 part of '../../model.dart';
 
 @JsonSerializable(fieldRename: FieldRename.pascal)
-class ProductTransactionCategoryModel extends BaseTransactionCategoryModel {
+class ProductTransactionCategoryModel extends TransactionCategoryBaseModel {
   @JsonKey(defaultValue: '')
   late String uniqueKey;
   ProductTransactionCategoryModel(

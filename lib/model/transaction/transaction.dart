@@ -1,51 +1,170 @@
 part of 'model.dart';
 
-/// 交易模型
+/// 交易编辑模型
 @JsonSerializable(fieldRename: FieldRename.pascal)
-class TransactionModel {
+class TransactionEditModel {
   @JsonKey(defaultValue: 0)
   late int id;
   @JsonKey(defaultValue: 0)
   late int userId;
-  @JsonKey(defaultValue: '')
-  late String userName;
   @JsonKey(defaultValue: 0)
   late int accountId;
-  @JsonKey(defaultValue: '')
-  late String accountName;
+  @JsonKey(defaultValue: 0)
+  late int categoryId;
   @JsonKey(defaultValue: IncomeExpense.income)
   late IncomeExpense incomeExpense;
   @JsonKey(defaultValue: 0)
-  late int categoryId;
-  @JsonKey(fromJson: Json.iconDataFormJson, toJson: Json.iconDataToJson)
-  late IconData categoryIcon;
-  @JsonKey(defaultValue: '')
-  late String categoryName;
-  @JsonKey(defaultValue: '')
-  late String categoryFatherName;
-  @JsonKey(defaultValue: 0)
   late int amount;
-  @JsonKey(defaultValue: '')
+  @JsonKey(defaultValue: "")
   late String remark;
   @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
   late DateTime tradeTime;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
-  late DateTime createTime;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
-  late DateTime updateTime;
-  TransactionModel();
-  factory TransactionModel.fromJson(Map<String, dynamic> json) => _$TransactionModelFromJson(json);
-  Map<String, dynamic> toJson() => _$TransactionModelToJson(this);
 
-  TransactionEditModel get editModel => TransactionEditModel(
-      id: id > 0 ? id : null,
+  bool get isValid => id > 0;
+  TransactionEditModel({
+    this.id = 0,
+    required this.userId,
+    required this.accountId,
+    required this.categoryId,
+    required this.incomeExpense,
+    required this.amount,
+    required this.remark,
+    required this.tradeTime,
+  });
+  TransactionEditModel.prototypeData() {
+    id = 0;
+    userId = 0;
+    accountId = 0;
+    categoryId = 0;
+    incomeExpense = IncomeExpense.expense;
+    amount = 0;
+    remark = "";
+    tradeTime = DateTime.now();
+  }
+
+  factory TransactionEditModel.fromJson(Map<String, dynamic> json) => _$TransactionEditModelFromJson(json);
+  Map<String, dynamic> toJson() => _$TransactionEditModelToJson(this);
+  TransactionEditModel copy() {
+    return TransactionEditModel(
+      id: id,
       userId: userId,
       accountId: accountId,
       categoryId: categoryId,
       incomeExpense: incomeExpense,
       amount: amount,
       remark: remark,
-      tradeTime: tradeTime);
+      tradeTime: tradeTime,
+    );
+  }
+}
+
+/// 交易信息模型
+@JsonSerializable(fieldRename: FieldRename.pascal)
+class TransactionInfoModel extends TransactionEditModel {
+  @JsonKey(defaultValue: '')
+  late String userName;
+  @JsonKey(defaultValue: '')
+  late String accountName;
+  @JsonKey(fromJson: Json.iconDataFormJson, toJson: Json.iconDataToJson)
+  late IconData categoryIcon;
+  @JsonKey(defaultValue: '')
+  late String categoryName;
+  @JsonKey(defaultValue: '')
+  late String categoryFatherName;
+  @override
+  @JsonKey(fromJson: null, toJson: null)
+  @UtcDateTimeConverter()
+  late DateTime tradeTime;
+  TransactionInfoModel({
+    super.id = 0,
+    super.userId = 0,
+    this.userName = '',
+    super.accountId = 0,
+    this.accountName = '',
+    super.incomeExpense = IncomeExpense.expense,
+    super.categoryId = 0,
+    this.categoryIcon = Json.defaultIconData,
+    this.categoryName = '',
+    this.categoryFatherName = '',
+    super.amount = 0,
+    super.remark = '',
+    required this.tradeTime,
+  }) : super(tradeTime: tradeTime);
+  factory TransactionInfoModel.fromJson(Map<String, dynamic> json) => _$TransactionInfoModelFromJson(json);
+  Map<String, dynamic> toJson() => _$TransactionInfoModelToJson(this);
+
+  TransactionInfoModel.prototypeData() : this(tradeTime: DateTime.now());
+  setAccount(AccountModel account) {
+    accountId = account.id;
+    accountName = account.name;
+  }
+
+  setUser(UserModel user) {
+    userId = user.id;
+    userName = user.username;
+  }
+
+  setCategory(TransactionCategoryModel category) {
+    categoryId = category.id;
+    categoryName = category.name;
+    categoryIcon = category.icon;
+    categoryFatherName = category.fatherName;
+    incomeExpense = category.incomeExpense;
+  }
+
+  TransactionInfoModel copy() {
+    return TransactionInfoModel(
+      id: id,
+      userId: userId,
+      userName: userName,
+      accountId: accountId,
+      accountName: accountName,
+      incomeExpense: incomeExpense,
+      categoryId: categoryId,
+      categoryIcon: categoryIcon,
+      categoryName: categoryName,
+      categoryFatherName: categoryFatherName,
+      amount: amount,
+      remark: remark,
+      tradeTime: tradeTime,
+    );
+  }
+}
+
+/// 交易模型
+@JsonSerializable(fieldRename: FieldRename.pascal)
+class TransactionModel extends TransactionInfoModel {
+  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  late DateTime createTime;
+  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  late DateTime updateTime;
+  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  late DateTime tradeTime;
+  TransactionModel({
+    super.id = 0,
+    super.userId = 0,
+    super.userName = '',
+    super.accountId = 0,
+    super.accountName = '',
+    super.incomeExpense = IncomeExpense.expense,
+    super.categoryId = 0,
+    super.categoryIcon = Json.defaultIconData,
+    super.categoryName = '',
+    super.categoryFatherName = '',
+    super.amount = 0,
+    super.remark = '',
+    required this.tradeTime,
+    required this.createTime,
+    required this.updateTime,
+  }) : super(tradeTime: tradeTime);
+  factory TransactionModel.fromJson(Map<String, dynamic> json) => _$TransactionModelFromJson(json);
+  Map<String, dynamic> toJson() => _$TransactionModelToJson(this);
+
+  TransactionModel.prototypeData()
+      : this(tradeTime: DateTime.now(), createTime: DateTime.now(), updateTime: DateTime.now());
+
+  TransactionCategoryBaseModel get categoryBaseModel =>
+      TransactionCategoryBaseModel(id: id, name: categoryName, icon: categoryIcon, incomeExpense: incomeExpense);
 
   TransactionShareModel getShareModelByConfig(UserTransactionShareConfigModel config) {
     TransactionShareModel model = TransactionShareModel(
@@ -71,54 +190,6 @@ class TransactionModel {
       model.remark = remark;
     }
     return model;
-  }
-}
-
-/// 交易编辑模型
-@JsonSerializable(fieldRename: FieldRename.pascal)
-class TransactionEditModel {
-  late int? id;
-  late int userId;
-  late int accountId;
-  late int categoryId;
-  late IncomeExpense incomeExpense;
-  late int amount;
-  late String remark;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
-  late DateTime tradeTime;
-  TransactionEditModel({
-    this.id,
-    required this.userId,
-    required this.accountId,
-    required this.categoryId,
-    required this.incomeExpense,
-    required this.amount,
-    required this.remark,
-    required this.tradeTime,
-  });
-  TransactionEditModel.init() {
-    id = null;
-    userId = 0;
-    accountId = 0;
-    categoryId = 0;
-    incomeExpense = IncomeExpense.expense;
-    amount = 0;
-    remark = "";
-    tradeTime = DateTime.now();
-  }
-  factory TransactionEditModel.fromJson(Map<String, dynamic> json) => _$TransactionEditModelFromJson(json);
-  Map<String, dynamic> toJson() => _$TransactionEditModelToJson(this);
-  TransactionEditModel copy() {
-    return TransactionEditModel(
-      id: id,
-      userId: userId,
-      accountId: accountId,
-      categoryId: categoryId,
-      incomeExpense: incomeExpense,
-      amount: amount,
-      remark: remark,
-      tradeTime: tradeTime,
-    );
   }
 }
 
@@ -285,4 +356,117 @@ class TransactionQueryCondModel {
     }
     return true;
   }
+}
+
+enum TransactionTimingType implements Comparable<TransactionTimingType> {
+  @JsonValue("administrator")
+  once(name: '执行一次', value: 'once'),
+  @JsonValue("everyday")
+  everyday(name: '每天', value: 'everyday'),
+  @JsonValue("everyweek")
+  everyweek(name: '每周', value: 'everyweek'),
+  @JsonValue("everymonth")
+  everymonth(name: '每月', value: 'everymonth'),
+  @JsonValue("lastDayOfMonth")
+  lastDayOfMonth(name: '每月最后一天', value: 'lastDayOfMonth');
+
+  const TransactionTimingType({required this.name, required this.value});
+  final String name;
+  final String value;
+  int compareTo(TransactionTimingType other) {
+    return index.compareTo(other.index);
+  }
+
+  static int compare(TransactionTimingType a, TransactionTimingType b) => a.compareTo(b);
+
+  static List<SelectOption<TransactionTimingType>> get selectOptions =>
+      TransactionTimingType.values.map((type) => type.toSelectOption()).toList();
+
+  SelectOption<TransactionTimingType> toSelectOption() {
+    return SelectOption<TransactionTimingType>(name: name, value: this);
+  }
+}
+
+@JsonSerializable(fieldRename: FieldRename.pascal)
+class TransactionTimingModel {
+  final int id;
+  int accountId;
+  int userId;
+  TransactionTimingType type;
+  int offsetDays;
+  @UtcDateTimeConverter()
+  DateTime nextTime;
+  @UtcDateTimeConverter()
+  final DateTime updatedAt;
+  @UtcDateTimeConverter()
+  final DateTime createdAt;
+  TransactionTimingModel({
+    required this.id,
+    required this.accountId,
+    required this.userId,
+    required this.type,
+    required this.offsetDays,
+    required this.nextTime,
+    required this.updatedAt,
+    required this.createdAt,
+  });
+  TransactionTimingModel.prototypeData()
+      : this(
+          id: 0,
+          accountId: 0,
+          userId: 0,
+          type: TransactionTimingType.everyday,
+          offsetDays: 0,
+          nextTime: DateTime.now(),
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        );
+  factory TransactionTimingModel.fromJson(Map<String, dynamic> json) => _$TransactionTimingModelFromJson(json);
+  Map<String, dynamic> toJson() => _$TransactionTimingModelToJson(this);
+
+  toDisplay() {
+    switch (type) {
+      case TransactionTimingType.once:
+        return "执行一次";
+      case TransactionTimingType.everyday:
+        return "每天";
+      case TransactionTimingType.everyweek:
+        return "每" + DateFormat("E").format(nextTime);
+      case TransactionTimingType.everymonth:
+        return "每月" + DateFormat("d").format(nextTime);
+      case TransactionTimingType.lastDayOfMonth:
+        return "每月最后一天";
+    }
+  }
+
+  updateoffsetDaysByNextTime() {
+    switch (type) {
+      case TransactionTimingType.once:
+        offsetDays = 0;
+      case TransactionTimingType.everyday:
+        offsetDays = 1;
+      case TransactionTimingType.everyweek:
+        offsetDays = nextTime.weekday;
+      case TransactionTimingType.everymonth:
+        offsetDays = nextTime.day;
+      case TransactionTimingType.lastDayOfMonth:
+        offsetDays = 0;
+    }
+  }
+
+  setUser(UserModel user) {
+    userId = user.id;
+  }
+
+  setAccount(AccountModel account) {
+    accountId = account.id;
+  }
+}
+
+DateTime dateTimeFromJson(dynamic timestamp) {
+  return timestamp;
+}
+
+DateTime? dateTimeToJson(DateTime? dateTime) {
+  return dateTime;
 }

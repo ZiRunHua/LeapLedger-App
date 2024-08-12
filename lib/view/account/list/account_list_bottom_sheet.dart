@@ -24,6 +24,14 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
     super.initState();
   }
 
+  @override
+  void didUpdateWidget(covariant AccountListBottomSheet oldWidget) {
+    if (widget.selectedAccount != oldWidget.selectedAccount) {
+      selectedAccount = widget.selectedAccount;
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
   void _fetchData() {
     switch (widget.type) {
       case ViewAccountListType.onlyCanEdit:
@@ -80,7 +88,7 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
               ));
         }
 
-        return Container(
+        return DecoratedBox(
           decoration: ConstantDecoration.bottomSheet,
           child: Column(
             mainAxisSize: MainAxisSize.min,

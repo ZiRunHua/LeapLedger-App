@@ -9,6 +9,14 @@ class Json {
     return dateTime != null ? (dateTime.millisecondsSinceEpoch + Global.serverTimeDifference) ~/ 1000 : 0;
   }
 
+  static DateTime UtcFromJson(dynamic timestamp) {
+    return DateTime.fromMillisecondsSinceEpoch(timestamp != null ? timestamp * 1000 - Global.serverTimeDifference : 0);
+  }
+
+  static int UtcToJson(DateTime? dateTime) {
+    return dateTime != null ? (dateTime.millisecondsSinceEpoch + Global.serverTimeDifference) ~/ 1000 : 0;
+  }
+
   static DateTime? optionDateTimeFromJson(dynamic timestamp) {
     return timestamp != null
         ? DateTime.fromMillisecondsSinceEpoch(timestamp * 1000 - Global.serverTimeDifference)
@@ -86,3 +94,17 @@ const Map<String, IconData> _iconMap = {
   'luggage': Icons.luggage_outlined,
   'grid_view': Icons.grid_view_outlined,
 };
+
+class UtcDateTimeConverter implements JsonConverter<DateTime, String> {
+  const UtcDateTimeConverter();
+
+  @override
+  DateTime fromJson(String json) {
+    return DateTime.parse(json);
+  }
+
+  @override
+  String toJson(DateTime dateTime) {
+    return dateTime.toUtc().toIso8601String();
+  }
+}

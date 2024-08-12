@@ -1,9 +1,6 @@
 part of 'routes.dart';
 
 class TransactionCategoryRoutes {
-  static const String _base = 'transactionCategory';
-  static String edit = '$_base/edit';
-  static String mapping = '$_base/mapping';
   static void init() {}
   static TransactionCategoryEditNavigator editNavigator(BuildContext context,
       {required AccountDetailModel account, required TransactionCategoryModel transactionCategory}) {
@@ -15,20 +12,21 @@ class TransactionCategoryRoutes {
     return TransactionCategoryFatherEditNavigator(context, father: father, account: account);
   }
 
-  static TransactionCategorySettingNavigator setting(BuildContext context,
-      {required AccountDetailModel account, AccountDetailModel? relatedAccount}) {
-    return TransactionCategorySettingNavigator(context, account: account, relatedAccount: relatedAccount);
+  static TransactionCategorySettingNavigator settingNavigator(
+    BuildContext context, {
+    required AccountDetailModel account,
+    AccountDetailModel? relatedAccount,
+    IncomeExpense initialType = IncomeExpense.expense,
+  }) {
+    return TransactionCategorySettingNavigator(context,
+        account: account, relatedAccount: relatedAccount, initialType: initialType);
   }
 
-  static Route<TransactionCategoryTemplate> getTemplateRoute(BuildContext context, {required AccountModel account}) {
-    return MaterialPageRoute(
-      builder: (context) => TransactionCategoryTemplate(
-        account: account,
-      ),
-    );
+  static CategoryTemplateNavigator templateNavigator(BuildContext context, {required AccountDetailModel account}) {
+    return CategoryTemplateNavigator(context, account: account);
   }
 
-  static AccountTransactionCategoryMappingNavigator accountMapping(BuildContext context,
+  static AccountTransactionCategoryMappingNavigator accountMappingNavigator(BuildContext context,
       {required AccountDetailModel parentAccount,
       required AccountDetailModel childAccount,
       List<MapEntry<TransactionCategoryFatherModel, List<TransactionCategoryModel>>>? parentCategoryTree,
@@ -40,7 +38,7 @@ class TransactionCategoryRoutes {
         childCategoryList: childCategoryList);
   }
 
-  static ProductTransactionCategoryMappingNavigator productMapping(
+  static ProductTransactionCategoryMappingNavigator productMappingNavigator(
     BuildContext context, {
     required AccountDetailModel account,
     required ProductModel product,
@@ -72,6 +70,15 @@ class TransactionCategoryRouterGuard {
     required List<ProductTransactionCategoryModel>? ptcList,
   }) {
     return !account.isReader;
+  }
+}
+
+class CategoryTemplateNavigator extends RouterNavigator {
+  final AccountDetailModel account;
+  CategoryTemplateNavigator(BuildContext context, {required this.account}) : super(context: context);
+
+  Future<bool> push() async {
+    return await _push(context, TransactionCategoryTemplate(account: account));
   }
 }
 
@@ -120,16 +127,24 @@ class TransactionCategoryFatherEditNavigator extends RouterNavigator {
 
 class TransactionCategorySettingNavigator extends RouterNavigator {
   final AccountDetailModel account;
+  final IncomeExpense initialType;
 
   /// 设置交易关联时是需要用到
   final AccountDetailModel? relatedAccount;
-  TransactionCategorySettingNavigator(BuildContext context, {required this.account, this.relatedAccount})
+  TransactionCategorySettingNavigator(BuildContext context,
+      {required this.account, this.relatedAccount, required this.initialType})
       : super(context: context);
 
   @override
   bool get guard => true;
   Future<bool> pushTree() async {
-    return await _push(context, TransactionCategoryTree(account: account, relatedAccount: relatedAccount));
+    return await _push(
+        context,
+        TransactionCategoryTree(
+          account: account,
+          relatedAccount: relatedAccount,
+          initialType: initialType,
+        ));
   }
 }
 
@@ -184,14 +199,5 @@ class ProductTransactionCategoryMappingNavigator extends RouterNavigator {
         context,
         ProductTransactionCategoryMapping(
             account: account, product: product, categoryTree: categoryTree, ptcList: ptcList));
-  }
-
-  static TransactionCategoryFatherEditNavigator fatherEditNavigator(BuildContext context,
-      {required AccountDetailModel account, required TransactionCategoryFatherModel father}) {
-    return TransactionCategoryFatherEditNavigator(context, father: father, account: account);
-  }
-
-  static TransactionCategorySettingNavigator setting(BuildContext context, {required AccountDetailModel account}) {
-    return TransactionCategorySettingNavigator(context, account: account);
   }
 }

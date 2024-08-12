@@ -81,7 +81,7 @@ class AccountDetailModel extends AccountModel {
   bool get isReader => role == AccountRole.reader;
 
   bool get isShare => type == AccountType.share;
-
+  bool get canEdit => isCreator;
   AccountDetailModel({
     required int id,
     required String name,

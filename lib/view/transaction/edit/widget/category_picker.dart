@@ -11,58 +11,67 @@ class CategoryPicker extends StatefulWidget {
 class _CategoryPickerState extends State<CategoryPicker> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-  List<TransactionCategoryModel> categoryList = [];
-  bool isNoData = false;
-  int? get selected => _bloc.trans.categoryId;
-  late final EditBloc _bloc;
+  int? get selected => _bloc.transInfo.categoryId;
+  late final EditBloc _bloc = BlocProvider.of<EditBloc>(context);
+  late final IncomeExpense type;
+  late final CategoryQueryCond queryCond;
+
   @override
   void initState() {
-    _bloc = BlocProvider.of<EditBloc>(context);
+    type = widget.type;
+    queryCond = CategoryQueryCond(type: type);
     fetchData();
     super.initState();
   }
 
   void fetchData() {
-    categoryList = [];
-    _bloc.add(TransactionCategoryFetch(widget.type));
+    BlocProvider.of<CategoryBloc>(context).add(CategoryListLoadEvent(_bloc.account, cond: queryCond));
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     Widget child;
-    if (isNoData) {
-      child = Center(child: NoData.categoryText(context, account: BlocProvider.of<EditBloc>(context).account));
-    } else if (categoryList.isEmpty) {
-      child = const Center(child: CircularProgressIndicator());
-    } else {
-      child = _buildCategoryGridView();
-    }
-    return BlocListener<EditBloc, EditState>(
-      listener: (context, state) {
-        if (widget.type == IncomeExpense.income && state is IncomeCategoryPickLoaded) {
-          setState(() {
-            categoryList = state.tree;
-            isNoData = categoryList.isEmpty;
-          });
-        } else if (widget.type == IncomeExpense.expense && state is ExpenseCategoryPickLoaded) {
-          setState(() {
-            categoryList = state.tree;
-            isNoData = categoryList.isEmpty;
-          });
-        } else if (state is AccountChanged) {
-          fetchData();
+
+    child = BlocBuilder<CategoryBloc, CategoryState>(
+      buildWhen: (context, state) {
+        if (state is CategoryListLoadedState && state.current(account: _bloc.account, cond: queryCond)) {
+          if (state.list.isNotEmpty) {
+            var selected = state.list.firstWhere(
+              (element) => element.id == _bloc.transInfo.categoryId,
+              orElse: () => state.list.first,
+            );
+            _bloc.transInfo.setCategory(selected);
+          }
+          return true;
         }
+        return false;
       },
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(Constant.padding, Constant.padding, Constant.padding, 0),
-        color: ConstantColor.greyBackground,
-        child: child,
-      ),
+      builder: (context, state) {
+        if (state is CategoryListLoadedState && state.current(account: _bloc.account, cond: queryCond)) {
+          if (state.list.isEmpty) {
+            return Center(child: NoData.categoryText(context, account: BlocProvider.of<EditBloc>(context).account));
+          }
+          return _buildCategoryGridView(state.list);
+        }
+        return SizedBox();
+      },
+    );
+
+    child = BlocListener<EditBloc, EditState>(
+      listener: (context, state) {
+        if (state is AccountChanged) fetchData();
+      },
+      child: child,
+    );
+    return Container(
+      padding: const EdgeInsets.fromLTRB(Constant.padding, Constant.padding, Constant.padding, 0),
+      color: ConstantColor.greyBackground,
+      child: child,
     );
   }
 
-  Widget _buildCategoryGridView() {
+  Widget _buildCategoryGridView(List<TransactionCategoryModel> categoryList) {
     return GridView.builder(
         shrinkWrap: true,
         padding: EdgeInsets.zero,
@@ -74,7 +83,7 @@ class _CategoryPickerState extends State<CategoryPicker> with AutomaticKeepAlive
           childAspectRatio: 0.8,
         ),
         itemBuilder: (BuildContext context, int index) {
-          return CategoryIconAndName(
+          return CategoryIconAndName<TransactionCategoryModel>(
             onTap: _onTap,
             category: categoryList[index],
             isSelected: categoryList[index].id == selected,
@@ -83,8 +92,7 @@ class _CategoryPickerState extends State<CategoryPicker> with AutomaticKeepAlive
   }
 
   void _onTap(TransactionCategoryModel category) {
-    _bloc.trans.categoryId = category.id;
-    _bloc.trans.incomeExpense = category.incomeExpense;
+    _bloc.transInfo.setCategory(category);
     setState(() {});
   }
 }

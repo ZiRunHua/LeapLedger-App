@@ -107,7 +107,7 @@ class FlowConditionCubit extends Cubit<FlowConditionState> {
     emit(FlowConditionChanged(condition));
   }
 
-  selectCategory({required TransactionCategoryModel category}) {
+  selectCategory({required TransactionCategoryBaseModel category}) {
     if (condition.categoryIds.contains(category.id)) {
       condition.categoryIds.remove(category.id);
     } else {

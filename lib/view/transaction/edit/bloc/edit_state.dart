@@ -29,3 +29,8 @@ final class UpdateTransaction extends EditState {
   final TransactionEditModel editModel;
   UpdateTransaction(this.oldTrans, this.editModel);
 }
+
+final class PopTransaction extends EditState {
+  final TransactionInfoModel trans;
+  PopTransaction(this.trans);
+}

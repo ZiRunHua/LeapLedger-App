@@ -4,7 +4,7 @@ class AmountInput extends StatelessWidget {
   static const InputDecoration defaultDecoration = InputDecoration(
     contentPadding: EdgeInsets.all(Constant.padding),
     prefixText: "￥",
-    labelStyle: TextStyle(fontSize: 14),
+    labelStyle: TextStyle(fontSize: ConstantFontSize.body),
     border: OutlineInputBorder(),
     // You can further style the input here
   );
@@ -26,7 +26,6 @@ class AmountInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 48,
-      width: 150,
       child: TextFormField(
         controller: controller,
         style: const TextStyle(fontSize: 14),

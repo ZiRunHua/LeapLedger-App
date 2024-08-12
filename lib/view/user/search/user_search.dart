@@ -23,7 +23,7 @@ class _UserSearchState extends State<UserSearch> {
         refreshListener: _onFetchData,
         loadMoreListener: _onFetchData,
         filter: (UserInfoModel data) {
-          return inputStr == null || data.username.startsWith(inputStr!);
+          return realInputStr == null || data.username.startsWith(realInputStr!);
         });
     _onFetchData(offset: 0, limit: _pageController.limit);
     super.initState();
@@ -44,6 +44,18 @@ class _UserSearchState extends State<UserSearch> {
   }
 
   String? inputStr;
+  String? realInputStr;
+  _changeInputStr(String? value) {
+    inputStr = value;
+    if (inputStr != null) {
+      int hashIndex = inputStr!.indexOf('#');
+      if (hashIndex != -1) {
+        realInputStr = inputStr!.substring(0, hashIndex);
+        return;
+      }
+    }
+    realInputStr = inputStr;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,11 +65,11 @@ class _UserSearchState extends State<UserSearch> {
           style: const TextStyle(fontSize: ConstantFontSize.largeHeadline),
           child: FormInputField.searchInput(
             onChanged: (String? value) {
-              inputStr = value;
+              _changeInputStr(value);
               _pageController.notifyListeners();
             },
             onSubmitted: (String? value) {
-              inputStr = value;
+              _changeInputStr(value);
               _pageController.refresh();
             },
           ),

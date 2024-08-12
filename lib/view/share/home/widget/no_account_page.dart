@@ -17,7 +17,7 @@ class NoAccountPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildButton(
-                Icons.add_outlined,
+                ConstantIcon.add,
                 "新建共享账本",
                 () {
                   var page =

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keepaccount_app/bloc/transaction/category/father/trans_cat_father_bloc.dart';
+import 'package:keepaccount_app/bloc/transaction/category/transaction_category_bloc.dart';
 import 'package:keepaccount_app/model/account/model.dart';
 import 'package:keepaccount_app/model/transaction/category/model.dart';
 import 'package:keepaccount_app/widget/common/common.dart';
@@ -17,23 +17,24 @@ class TransactionCategoryFatherEditDialog extends StatefulWidget {
 }
 
 class _TransactionCategoryFatherEditDialogState extends State<TransactionCategoryFatherEditDialog> {
-  late TransactionCategoryFatherModel model;
+  late TransactionCategoryFatherModel data;
   AccountDetailModel get account => widget.account;
-  final TransCatFatherBloc _bloc = TransCatFatherBloc();
+  late final CategoryBloc _bloc;
 
   initData() {
-    model = widget.model.copyWith();
+    data = widget.model.copyWith();
   }
 
   @override
   void initState() {
     initData();
+    _bloc = BlocProvider.of<CategoryBloc>(context);
     super.initState();
   }
 
   @override
   void didUpdateWidget(covariant TransactionCategoryFatherEditDialog oldWidget) {
-    if (oldWidget.model.id != model.id) {
+    if (oldWidget.model.id != data.id) {
       initData();
     }
     super.didUpdateWidget(oldWidget);
@@ -46,33 +47,31 @@ class _TransactionCategoryFatherEditDialogState extends State<TransactionCategor
       Navigator.pop(context, transactionCategory);
     }
 
-    return BlocProvider<TransCatFatherBloc>.value(
-        value: _bloc,
-        child: BlocListener<TransCatFatherBloc, TransCatFatherState>(
-            listener: (context, state) {
-              if (state is SaveSuccessState) {
-                pop(context, state.transactionCategoryFather);
-              }
-            },
-            child: CommonDialog.edit(
-              context,
-              autoPop: false,
-              title: model.id > 0 ? "编辑交易类型" : "新增交易类型",
-              content: Form(
-                key: formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+    return BlocListener<CategoryBloc, CategoryState>(
+        listener: (context, state) {
+          if (state is CategoryParentSaveSuccessState) {
+            pop(context, state.parent);
+          }
+        },
+        child: CommonDialog.edit(
+          context,
+          autoPop: false,
+          title: data.isValid ? "编辑一级类型" : "新增一级类型",
+          content: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[FormInputField.string('名称', model.name, (text) => model.name = text)],
-                    ),
-                  ],
+                  children: <Widget>[FormInputField.string('名称', data.name, (text) => data.name = text)],
                 ),
-              ),
-              onSave: () => _bloc.add(TransCatFatherSaveEvent(model)),
-              getPopData: () => model,
-            )));
+              ],
+            ),
+          ),
+          onSave: () => _bloc.add(CategoryParentSaveEvent(account, parent: data)),
+          getPopData: () => data,
+        ));
   }
 }

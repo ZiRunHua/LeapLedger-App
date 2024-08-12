@@ -24,16 +24,15 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> with SingleTick
     WidgetsBinding.instance.addPostFrameCallback((_) => _controller.forward());
   }
 
-  double amountWidth = 0;
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var textPainter = TextPainter(
-      text: _buildAmount(list.first.amount),
-      maxLines: 1,
-      textDirection: TextDirection.ltr,
-    )..layout();
-    amountWidth = textPainter.size.width + Constant.margin / 2;
-    return CommonExpandedView(
+    return CommonExpansionList(
       onStateChanged: () {
         _controller.reset();
         _controller.forward();
@@ -53,25 +52,20 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> with SingleTick
         color: ConstantColor.primary80AlphaColor,
         size: Constant.iconSize,
       ),
-      title: Text(
-        '${data.name} （${data.amountProportiontoString()}）',
-        style: const TextStyle(fontSize: ConstantFontSize.body),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            '${data.name} （${data.amountProportiontoString()}）',
+            style: const TextStyle(fontSize: ConstantFontSize.body),
+          ),
+          Text.rich(AmountTextSpan.sameHeight(
+            data.amount,
+            textStyle: const TextStyle(fontSize: ConstantFontSize.body, fontWeight: FontWeight.w500),
+          ))
+        ],
       ),
       subtitle: _buildProgress(data.amount != 0 ? data.amount / list.first.amount : 0),
-      trailing: SizedBox(
-        width: amountWidth,
-        child: Align(
-          alignment: Alignment.centerRight,
-          child: Text.rich(_buildAmount(data.amount)),
-        ),
-      ),
-    );
-  }
-
-  TextSpan _buildAmount(int amount) {
-    return AmountTextSpan.sameHeight(
-      amount,
-      textStyle: const TextStyle(fontSize: ConstantFontSize.body, fontWeight: FontWeight.w500),
     );
   }
 

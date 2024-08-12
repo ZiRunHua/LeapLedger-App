@@ -7,13 +7,13 @@ final class TransactionCategoryMappingLoadEvent extends TransactionCategoryMappi
 
 final class TransactionCategoryMappingAddEvent extends TransactionCategoryMappingEvent {
   final TransactionCategoryModel parent;
-  final BaseTransactionCategoryModel child;
+  final TransactionCategoryBaseModel child;
   TransactionCategoryMappingAddEvent(this.parent, this.child);
 }
 
 final class TransactionCategoryMappingDeleteEvent extends TransactionCategoryMappingEvent {
   final TransactionCategoryModel parent;
-  final BaseTransactionCategoryModel child;
+  final TransactionCategoryBaseModel child;
   TransactionCategoryMappingDeleteEvent(this.parent, this.child);
 }
 

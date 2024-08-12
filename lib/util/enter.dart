@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:keepaccount_app/common/current.dart';
 import 'package:keepaccount_app/common/global.dart';
 import 'package:permission_handler/permission_handler.dart';

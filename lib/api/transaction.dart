@@ -13,8 +13,8 @@ class TransactionApi {
   }
 
   static Future<TransactionModel?> update(TransactionEditModel model) async {
-    assert(model.id != null);
-    ResponseBody response = await ApiServer.request(Method.put, "$baseUrl/${model.id!}", data: model.toJson());
+    assert(model.isValid);
+    ResponseBody response = await ApiServer.request(Method.put, "$baseUrl/${model.id}", data: model.toJson());
     if (false == response.isSuccess) {
       return null;
     }
@@ -128,4 +128,57 @@ class TransactionApi {
     }
     return result;
   }
+
+  static Future<({TransactionInfoModel trans, TransactionTimingModel config})?> addTiming({
+    required int accountId,
+    required TransactionInfoModel trans,
+    required TransactionTimingModel config,
+  }) async {
+    var responseBody = await ApiServer.request(Method.post, accountAuthPrefix(accountId) + '$baseUrl/timing', data: {
+      "Trans": trans.toJson(),
+      "Config": config.toJson(),
+    });
+    if (!responseBody.isSuccess) return null;
+    trans = TransactionInfoModel.fromJson(responseBody.data["Trans"]);
+    config = TransactionTimingModel.fromJson(responseBody.data["Config"]);
+    return (trans: trans, config: config);
+  }
+
+  static Future<({TransactionInfoModel trans, TransactionTimingModel config})?> updateTiming({
+    required int accountId,
+    required TransactionInfoModel trans,
+    required TransactionTimingModel config,
+  }) async {
+    var responseBody =
+        await ApiServer.request(Method.put, accountAuthPrefix(accountId) + '$baseUrl/timing/${config.id}', data: {
+      "Trans": trans.toJson(),
+      "Config": config.toJson(),
+    });
+    if (!responseBody.isSuccess) return null;
+    trans = TransactionInfoModel.fromJson(responseBody.data["Trans"]);
+    config = TransactionTimingModel.fromJson(responseBody.data["Config"]);
+    return (trans: trans, config: config);
+  }
+
+  static Future<List<({TransactionInfoModel trans, TransactionTimingModel config})>> getTimingList(
+      {required int accountId, int offset = 0, int limit = 20}) async {
+    var responseBody = await ApiServer.request(Method.get, accountAuthPrefix(accountId) + '$baseUrl/timing/list',
+        data: {'Offset': offset, 'Limit': limit});
+    List<({TransactionInfoModel trans, TransactionTimingModel config})> list = [];
+    if (!responseBody.isSuccess) return list;
+
+    if (responseBody.isSuccess && responseBody.data['List'] is List) {
+      for (Map<String, dynamic> data in responseBody.data['List'] as List) {
+        list.add((
+          trans: TransactionInfoModel.fromJson(data["Trans"]),
+          config: TransactionTimingModel.fromJson(data["Config"]),
+        ));
+      }
+    }
+    return list;
+  }
+}
+
+String accountAuthPrefix(int accountId) {
+  return '/account/$accountId';
 }

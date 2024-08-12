@@ -1,7 +1,7 @@
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keepaccount_app/bloc/user/user_bloc.dart';
+import 'package:keepaccount_app/bloc/transaction/category/transaction_category_bloc.dart';
 
 import 'package:keepaccount_app/common/global.dart';
 import 'package:keepaccount_app/model/account/model.dart';
@@ -16,7 +16,13 @@ part 'widget/drag_and_drop_lists.dart';
 class TransactionCategoryTree extends StatefulWidget {
   final AccountDetailModel account;
   final AccountDetailModel? relatedAccount;
-  const TransactionCategoryTree({super.key, required this.account, required this.relatedAccount});
+  final IncomeExpense initialType;
+  const TransactionCategoryTree({
+    super.key,
+    required this.account,
+    required this.relatedAccount,
+    required this.initialType,
+  });
 
   @override
   State<TransactionCategoryTree> createState() => _TransactionCategoryTreeState();
@@ -26,11 +32,16 @@ class _TransactionCategoryTreeState extends State<TransactionCategoryTree> with 
   final expenseKey = GlobalKey<_DragAndDropListsState>();
   final incomeKey = GlobalKey<_DragAndDropListsState>();
   late TabController _tabController;
-
+  late final _categoryBloc;
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _categoryBloc = BlocProvider.of<CategoryBloc>(context);
+    _tabController = TabController(
+      length: 2,
+      vsync: this,
+      initialIndex: widget.initialType == IncomeExpense.expense ? 0 : 1,
+    );
   }
 
   @override
@@ -43,7 +54,7 @@ class _TransactionCategoryTreeState extends State<TransactionCategoryTree> with 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('交易类型'),
+        title: const Text('交易类型管理'),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [Tab(text: '支出'), Tab(text: '收入')],
@@ -51,7 +62,7 @@ class _TransactionCategoryTreeState extends State<TransactionCategoryTree> with 
         actions: [
           Offstage(
             offstage: false == widget.account.isCreator,
-            child: IconButton(icon: const Icon(Icons.add_circle_outline), onPressed: () => onAddAction()),
+            child: IconButton(icon: const Icon(ConstantIcon.add), onPressed: () => onAddAction()),
           ),
           Offstage(
             offstage: widget.relatedAccount == null ||
@@ -59,7 +70,7 @@ class _TransactionCategoryTreeState extends State<TransactionCategoryTree> with 
                     parentAccount: widget.account, childAccount: widget.relatedAccount!),
             child: TextButton(
               child: const Text("关联交易"),
-              onPressed: () => TransactionCategoryRoutes.accountMapping(
+              onPressed: () => TransactionCategoryRoutes.accountMappingNavigator(
                 context,
                 parentAccount: widget.account,
                 childAccount: widget.relatedAccount!,
@@ -74,12 +85,20 @@ class _TransactionCategoryTreeState extends State<TransactionCategoryTree> with 
           controller: _tabController,
           children: [
             BlocProvider<TransactionCategoryTreeBloc>(
-              create: (context) => TransactionCategoryTreeBloc(account: widget.account),
-              child: _DragAndDropLists(incomeExpense: IncomeExpense.expense, key: expenseKey),
+              create: (context) => TransactionCategoryTreeBloc(
+                account: widget.account,
+                parentBloc: _categoryBloc,
+                type: IncomeExpense.expense,
+              ),
+              child: _DragAndDropLists(key: expenseKey),
             ),
             BlocProvider<TransactionCategoryTreeBloc>(
-              create: (context) => TransactionCategoryTreeBloc(account: widget.account),
-              child: _DragAndDropLists(incomeExpense: IncomeExpense.income, key: incomeKey),
+              create: (context) => TransactionCategoryTreeBloc(
+                account: widget.account,
+                parentBloc: _categoryBloc,
+                type: IncomeExpense.income,
+              ),
+              child: _DragAndDropLists(key: incomeKey),
             ),
           ],
         ),

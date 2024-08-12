@@ -1,19 +1,94 @@
 part of 'transaction_category_bloc.dart';
 
-abstract class TransactionCategoryState {}
+abstract class CategoryState {}
 
-class TransactionCategoryInitial extends TransactionCategoryState {}
+class TransactionCategoryInitial extends CategoryState {}
 
-class SaveSuccessState extends TransactionCategoryState {
-  final TransactionCategoryModel transactionCategory;
-  SaveSuccessState(this.transactionCategory);
+abstract class CategoryOfAccountState extends CategoryState {
+  final AccountDetailModel account;
+  CategoryOfAccountState(this.account);
 }
 
-class SaveFailState extends TransactionCategoryState {
-  final TransactionCategoryModel transactionCategory;
-  SaveFailState(this.transactionCategory);
+class CategoryListLoadedState extends CategoryOfAccountState {
+  final CategoryQueryCond cond;
+  final List<TransactionCategoryModel> list;
+  CategoryListLoadedState(super.account, {required this.cond, required this.list});
+
+  bool current({required AccountDetailModel account, required CategoryQueryCond cond}) {
+    return this.account.id == account.id && this.cond.isSame(cond);
+  }
 }
 
-class DeleteSuccessState extends TransactionCategoryState {}
+class CategoryTreeLoadedState extends CategoryOfAccountState {
+  final CategoryQueryCond cond;
+  final List<MapEntry<TransactionCategoryFatherModel, List<TransactionCategoryModel>>> tree;
+  CategoryTreeLoadedState(super.account, {required this.cond, required this.tree});
 
-class DeleteFailState extends TransactionCategoryState {}
+  bool current({required AccountDetailModel account, required CategoryQueryCond cond}) {
+    return this.account.id == account.id && this.cond.isSame(cond);
+  }
+}
+
+class SaveSuccessState extends CategoryOfAccountState {
+  final TransactionCategoryModel category;
+  SaveSuccessState(super.account, {required this.category});
+}
+
+class SaveFailState extends CategoryOfAccountState {
+  final TransactionCategoryModel category;
+  SaveFailState(super.account, {required this.category});
+}
+
+class DeleteSuccessState extends CategoryOfAccountState {
+  final int categoryId;
+  DeleteSuccessState(super.account, {required this.categoryId});
+}
+
+class DeleteFailState extends CategoryOfAccountState {
+  final int categoryId;
+  DeleteFailState(super.account, {required this.categoryId});
+}
+
+class CategoryMoveSuccessState extends CategoryOfAccountState {
+  final int categoryId;
+  final int? previousId;
+  CategoryMoveSuccessState(super.account, {required this.categoryId, this.previousId});
+}
+
+class CategoryMoveFailState extends CategoryOfAccountState {
+  final int categoryId;
+  final int? previousId;
+  CategoryMoveFailState(super.account, {required this.categoryId, this.previousId});
+}
+
+class CategoryParentSaveSuccessState extends CategoryOfAccountState {
+  final TransactionCategoryFatherModel parent;
+  CategoryParentSaveSuccessState(super.account, {required this.parent});
+}
+
+class CategoryParentSaveFailState extends CategoryOfAccountState {
+  final TransactionCategoryFatherModel parent;
+  CategoryParentSaveFailState(super.account, {required this.parent});
+}
+
+class CategoryParentDeleteSuccessState extends CategoryOfAccountState {
+  final int parentId;
+  CategoryParentDeleteSuccessState(super.account, {required this.parentId});
+}
+
+class CategoryParentDeleteFailState extends CategoryOfAccountState {
+  final int parentId;
+  CategoryParentDeleteFailState(super.account, {required this.parentId});
+}
+
+class CategoryParentMoveSuccessState extends CategoryOfAccountState {
+  final int parentId;
+  final int? previousId;
+  CategoryParentMoveSuccessState(super.account, {required this.parentId, this.previousId});
+}
+
+class CategoryParentMoveFailState extends CategoryOfAccountState {
+  final int parentId;
+  final int? previousId;
+  CategoryParentMoveFailState(super.account, {required this.parentId, this.previousId});
+}

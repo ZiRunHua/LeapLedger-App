@@ -336,19 +336,19 @@ class _TransactionFlowState extends State<TransactionFlow> {
   final List<MapEntry<TransactionCategoryFatherModel, List<TransactionCategoryModel>>> categoryShimmerData = [];
   final Map<InExStatisticWithTimeModel, List<TransactionModel>> shimmerData = {
     InExStatisticWithTimeModel(startTime: Time.getFirstSecondOfMonth(), endTime: Time.getLastSecondOfMonth()): [
-      TransactionModel.fromJson({}),
-      TransactionModel.fromJson({}),
-      TransactionModel.fromJson({}),
-      TransactionModel.fromJson({})
+      TransactionModel.prototypeData(),
+      TransactionModel.prototypeData(),
+      TransactionModel.prototypeData(),
+      TransactionModel.prototypeData()
     ],
     InExStatisticWithTimeModel(
       startTime: Time.getFirstSecondOfPreviousMonths(numberOfMonths: 1),
       endTime: Time.getFirstSecondOfPreviousMonths(numberOfMonths: 1),
     ): [
-      TransactionModel.fromJson({}),
-      TransactionModel.fromJson({}),
-      TransactionModel.fromJson({}),
-      TransactionModel.fromJson({})
+      TransactionModel.prototypeData(),
+      TransactionModel.prototypeData(),
+      TransactionModel.prototypeData(),
+      TransactionModel.prototypeData()
     ]
   };
   Widget _buildShimmer(Widget child) {

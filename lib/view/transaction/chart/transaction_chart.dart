@@ -44,10 +44,12 @@ class _TransactionChartState extends State<TransactionChart> {
         child: Scaffold(
           backgroundColor: ConstantColor.greyBackground,
           appBar: AppBar(
-            primary: true,
-            centerTitle: true,
-            title: const TabBar(tabs: <Widget>[Tab(text: '支 出'), Tab(text: '收 入')]),
+            title: const TabBar(tabs: <Widget>[
+              Tab(child: Text('支出', softWrap: false, overflow: TextOverflow.clip)),
+              Tab(child: Text('收入', softWrap: false, overflow: TextOverflow.clip)),
+            ]),
             actions: _buildAction(),
+            automaticallyImplyLeading: true,
           ),
           body: TabBarView(
             children: <Widget>[
@@ -162,12 +164,12 @@ class _ExpenseTabState extends State<ExpenseTab> with AutomaticKeepAliveClientMi
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: Constant.padding, vertical: Constant.margin),
-      child: RefreshIndicator(
-        onRefresh: () async => await _cubit.load(),
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
+    return RefreshIndicator(
+      onRefresh: () async => await _cubit.load(),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Constant.padding, vertical: Constant.margin),
           child: _buildContant(),
         ),
       ),
@@ -259,12 +261,12 @@ class _IncomeTabState extends State<IncomeTab> with AutomaticKeepAliveClientMixi
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: Constant.padding, vertical: Constant.margin),
-      child: RefreshIndicator(
-        onRefresh: () async => await _cubit.load(),
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
+    return RefreshIndicator(
+      onRefresh: () async => await _cubit.load(),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Constant.padding, vertical: Constant.margin),
           child: _buildContent(),
         ),
       ),
@@ -283,7 +285,7 @@ class _IncomeTabState extends State<IncomeTab> with AutomaticKeepAliveClientMixi
             return CommonCard.withTitle(
                 child: TotalHeader(
               data: _cubit.total!,
-              type: IncomeExpense.expense,
+              type: IncomeExpense.income,
               days: _cubit.days,
             ));
           },

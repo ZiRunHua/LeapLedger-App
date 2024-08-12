@@ -1,9 +1,11 @@
 part of 'package:keepaccount_app/model/transaction/category/model.dart';
 
 @JsonSerializable(fieldRename: FieldRename.pascal)
-class TransactionCategoryModel extends BaseTransactionCategoryModel {
+class TransactionCategoryModel extends TransactionCategoryBaseModel {
   @JsonKey(defaultValue: 0)
   late int fatherId;
+  @JsonKey(defaultValue: '')
+  late String fatherName;
   @JsonKey(defaultValue: 0)
   late int accountId;
   @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
@@ -18,6 +20,7 @@ class TransactionCategoryModel extends BaseTransactionCategoryModel {
     required super.name,
     required super.icon,
     required this.fatherId,
+    required this.fatherName,
     required this.accountId,
     required super.incomeExpense,
     required this.createdAt,
@@ -32,6 +35,7 @@ class TransactionCategoryModel extends BaseTransactionCategoryModel {
           name: "",
           icon: Json.defaultIconData,
           accountId: father.accountId,
+          fatherName: father.name,
           fatherId: father.id,
           incomeExpense: father.incomeExpense,
           createdAt: DateTime.now(),
@@ -42,6 +46,7 @@ class TransactionCategoryModel extends BaseTransactionCategoryModel {
       id: 0,
       name: 'prototypeData',
       icon: Icons.account_circle,
+      fatherName: 'prototypeData',
       fatherId: 0,
       accountId: 0,
       incomeExpense: IncomeExpense.expense,
@@ -53,6 +58,7 @@ class TransactionCategoryModel extends BaseTransactionCategoryModel {
     int? id,
     String? name,
     IconData? icon,
+    String? fatherName,
     int? fatherId,
     int? accountId,
     IncomeExpense? incomeExpense,
@@ -63,11 +69,20 @@ class TransactionCategoryModel extends BaseTransactionCategoryModel {
       id: id ?? this.id,
       name: name ?? this.name,
       icon: icon ?? this.icon,
+      fatherName: fatherName ?? this.fatherName,
       fatherId: fatherId ?? this.fatherId,
       accountId: accountId ?? this.accountId,
       incomeExpense: incomeExpense ?? this.incomeExpense,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
+  }
+}
+
+class CategoryQueryCond {
+  final IncomeExpense? type;
+  CategoryQueryCond({this.type});
+  isSame(CategoryQueryCond cond) {
+    return cond.type == this.type;
   }
 }

@@ -29,36 +29,33 @@ class _TransactionCategoryEditState extends State<TransactionCategoryEdit> {
       data = widget.transactionCategory!.copyWith();
     else
       data = TransactionCategoryModel.fromJson({});
+    _bloc = BlocProvider.of<CategoryBloc>(context);
   }
 
   void pop(BuildContext context, TransactionCategoryModel transactionCategory) {
     Navigator.pop(context, transactionCategory);
   }
 
-  final TransactionCategoryBloc _bloc = TransactionCategoryBloc();
+  late final CategoryBloc _bloc;
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<TransactionCategoryBloc>.value(
-        value: _bloc,
-        child: BlocListener<TransactionCategoryBloc, TransactionCategoryState>(
-            listenWhen: (previous, current) => current is SaveSuccessState,
-            listener: (context, state) {
-              if (state is SaveSuccessState) {
-                pop(context, state.transactionCategory);
-              }
-            },
-            child: Scaffold(
-              appBar: AppBar(
-                title: const Text('编辑交易类型'),
-                actions: <Widget>[
-                  IconButton(
-                    icon: const Icon(Icons.save_outlined, size: Constant.iconSize),
-                    onPressed: () => _bloc.add(TransactionCategorySaveEvent(data)),
-                  ),
-                ],
+    return BlocListener<CategoryBloc, CategoryState>(
+        listenWhen: (previous, current) => current is SaveSuccessState,
+        listener: (context, state) {
+          if (state is SaveSuccessState) pop(context, state.category);
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(data.isValid ? '编辑二级类型' : '新建二级类型'),
+            actions: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.save_outlined, size: Constant.iconSize),
+                onPressed: () => _bloc.add(CategorySaveEvent(widget.account, category: data)),
               ),
-              body: buildForm(),
-            )));
+            ],
+          ),
+          body: buildForm(),
+        ));
   }
 
   Widget buildForm() {

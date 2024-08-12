@@ -55,7 +55,7 @@ class _TabViewState extends State<TabView> with AutomaticKeepAliveClientMixin {
   }
 
   Widget buildList(
-    Map<int, List<BaseTransactionCategoryModel>> relation,
+    Map<int, List<TransactionCategoryBaseModel>> relation,
   ) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
@@ -67,7 +67,7 @@ class _TabViewState extends State<TabView> with AutomaticKeepAliveClientMixin {
   Widget buildCategoryGroup(
     TransactionCategoryFatherModel father,
     List<TransactionCategoryModel> childList,
-    Map<int, List<BaseTransactionCategoryModel>> relation,
+    Map<int, List<TransactionCategoryBaseModel>> relation,
   ) {
     List<Widget> childrenWidget = [];
 
@@ -95,7 +95,7 @@ class _TabViewState extends State<TabView> with AutomaticKeepAliveClientMixin {
 
   Widget buildCategory(
     TransactionCategoryModel category,
-    List<BaseTransactionCategoryModel>? relation,
+    List<TransactionCategoryBaseModel>? relation,
   ) {
     var textSize = (TextPainter(
             text: const TextSpan(text: "测试文字"),
@@ -134,20 +134,20 @@ class _TabViewState extends State<TabView> with AutomaticKeepAliveClientMixin {
                   ))),
         ),
         trailing: GestureDetector(
-          child: const Icon(Icons.add_circle_outline),
+          child: const Icon(ConstantIcon.add),
           onTap: () => onSelect(category),
         ));
   }
 
   _showCustomModalBottomSheet(
-      BuildContext context, List<BaseTransactionCategoryModel> unmapped, TransactionCategoryModel model) async {
+      BuildContext context, List<TransactionCategoryBaseModel> unmapped, TransactionCategoryModel model) async {
     return showModalBottomSheet(
       context: context,
       builder: (_) {
         return OptionBottomSheet(unmapped: unmapped);
       },
     ).then((value) {
-      if (value is BaseTransactionCategoryModel) {
+      if (value is TransactionCategoryBaseModel) {
         BlocProvider.of<TransactionCategoryMappingBloc>(context).add(TransactionCategoryMappingAddEvent(model, value));
       }
     });
@@ -157,7 +157,7 @@ class _TabViewState extends State<TabView> with AutomaticKeepAliveClientMixin {
     _showCustomModalBottomSheet(context, _bloc.unmapped, model);
   }
 
-  onDelete(TransactionCategoryModel category, BaseTransactionCategoryModel prc) {
+  onDelete(TransactionCategoryModel category, TransactionCategoryBaseModel prc) {
     BlocProvider.of<TransactionCategoryMappingBloc>(context).add(TransactionCategoryMappingDeleteEvent(category, prc));
   }
 }

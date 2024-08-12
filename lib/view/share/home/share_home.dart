@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:keepaccount_app/bloc/transaction/transaction_bloc.dart';
 import 'package:keepaccount_app/bloc/user/user_bloc.dart';
 import 'package:keepaccount_app/common/global.dart';
 import 'package:keepaccount_app/model/account/model.dart';
@@ -21,15 +22,15 @@ class _ShareHomeState extends State<ShareHome> {
   late final ShareHomeBloc _bloc;
   @override
   void initState() {
-    _bloc = ShareHomeBloc();
+    _bloc = ShareHomeBloc(transactionBloc: BlocProvider.of<TransactionBloc>(context));
     // 当前账本为共享则加载当前
     if (UserBloc.currentAccount.isValid && UserBloc.currentAccount.type == AccountType.share) {
       _bloc.add(LoadShareHomeEvent(account: UserBloc.currentAccount));
     } else if (UserBloc.currentShareAccount.isValid) {
       _bloc.add(LoadShareHomeEvent(account: UserBloc.currentShareAccount));
     } else {
-      //否则交给bloc处理
-      _bloc.add(LoadShareHomeEvent());
+      // 否则交给bloc处理
+      _bloc.add(LoadShareHomeEvent(account: UserBloc.currentAccount));
     }
     super.initState();
   }
@@ -38,25 +39,22 @@ class _ShareHomeState extends State<ShareHome> {
   Widget build(BuildContext context) {
     return BlocProvider.value(
         value: _bloc,
-        child: MultiBlocListener(
-          listeners: [
-            BlocListener<UserBloc, UserState>(
-              listenWhen: (context, state) {
-                return state is CurrentShareAccountChanged || state is CurrentAccountChanged;
-              },
-              listener: (context, state) {
-                if (UserBloc.currentShareAccount.isValid) {
-                  _bloc.add(ChangeAccountEvent(UserBloc.currentShareAccount));
-                } else if (UserBloc.currentAccount.isValid && UserBloc.currentAccount.type == AccountType.share) {
-                  _bloc.add(ChangeAccountEvent(UserBloc.currentAccount));
-                } else {
-                  // 否则只能传递无效的共享账本 交给bloc处理
-                  _bloc.add(ChangeAccountEvent(UserBloc.currentShareAccount));
-                }
-              },
-            )
-          ],
+        child: BlocListener<UserBloc, UserState>(
+          listenWhen: (context, state) {
+            return state is CurrentShareAccountChanged || state is CurrentAccountChanged;
+          },
+          listener: (context, state) {
+            if (UserBloc.currentShareAccount.isValid) {
+              _bloc.add(ChangeAccountEvent(UserBloc.currentShareAccount));
+            } else if (UserBloc.currentAccount.isValid && UserBloc.currentAccount.type == AccountType.share) {
+              _bloc.add(ChangeAccountEvent(UserBloc.currentAccount));
+            } else {
+              // 否则只能传递无效的共享账本 交给bloc处理
+              _bloc.add(ChangeAccountEvent(UserBloc.currentShareAccount));
+            }
+          },
           child: BlocBuilder<ShareHomeBloc, ShareHomeState>(
+            buildWhen: (previous, current) => current is ShareHomePageState,
             builder: (context, state) {
               if (state is ShareHomeInitial) {
                 return const Center(child: ConstantWidget.activityIndicator);
@@ -69,11 +67,11 @@ class _ShareHomeState extends State<ShareHome> {
                   title: const AccountMenu(),
                   centerTitle: true,
                 ),
-                body: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: Constant.margin, vertical: Constant.margin),
-                  color: ConstantColor.greyBackground,
-                  height: double.infinity,
-                  child: SingleChildScrollView(
+                backgroundColor: ConstantColor.greyBackground,
+                body: RefreshIndicator(
+                  onRefresh: () async => _bloc.add(LoadShareHomeEvent()),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: Constant.margin),
                     child: _buildContent(),
                   ),
                 ),
@@ -84,28 +82,31 @@ class _ShareHomeState extends State<ShareHome> {
   }
 
   Widget _buildContent() {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        BlocBuilder<ShareHomeBloc, ShareHomeState>(
-            buildWhen: (previous, current) => current is AccountTotalLoaded,
-            builder: ((context, state) {
-              if (state is AccountTotalLoaded) {
-                return AccountTotal(todayTransTotal: state.todayTransTotal, monthTransTotal: state.monthTransTotal);
-              } else {
-                return AccountTotal(todayTransTotal: InExStatisticModel(), monthTransTotal: InExStatisticModel());
-              }
-            })),
-        Padding(
+    return CustomScrollView(
+      slivers: [
+        SliverPadding(padding: const EdgeInsets.only(top: Constant.margin)),
+        SliverToBoxAdapter(
+          child: BlocBuilder<ShareHomeBloc, ShareHomeState>(
+              buildWhen: (previous, current) => current is AccountTotalLoaded,
+              builder: ((context, state) {
+                if (state is AccountTotalLoaded) {
+                  return AccountTotal(todayTransTotal: state.todayTransTotal, monthTransTotal: state.monthTransTotal);
+                } else {
+                  return AccountTotal(todayTransTotal: InExStatisticModel(), monthTransTotal: InExStatisticModel());
+                }
+              })),
+        ),
+        SliverPadding(
           padding: const EdgeInsets.all(Constant.margin),
-          child: SizedBox(
+          sliver: SliverToBoxAdapter(
+              child: SizedBox(
             height: 48,
             width: MediaQuery.of(context).size.width,
             child: _buildOperationalNavigation(),
-          ),
+          )),
         ),
-        const AccountUserCard(),
-        const AccountTransList()
+        SliverToBoxAdapter(child: const AccountUserCard()),
+        SliverToBoxAdapter(child: const AccountTransList())
       ],
     );
   }
@@ -138,7 +139,7 @@ class _ShareHomeState extends State<ShareHome> {
           icon: Icons.settings_outlined,
           onTap: () {
             if (ShareHomeBloc.account != null) {
-              TransactionCategoryRoutes.setting(context,
+              TransactionCategoryRoutes.settingNavigator(context,
                       account: ShareHomeBloc.account!, relatedAccount: _bloc.accountMapping?.relatedAccount)
                   .pushTree();
             }

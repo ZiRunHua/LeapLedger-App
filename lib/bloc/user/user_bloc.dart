@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keepaccount_app/api/api_server.dart';
 import 'package:keepaccount_app/api/model/model.dart';
+import 'package:keepaccount_app/bloc/account/account_bloc.dart';
 import 'package:keepaccount_app/bloc/captcha/captcha_bloc.dart';
 import 'package:keepaccount_app/common/current.dart';
 import 'package:keepaccount_app/common/global.dart';
@@ -21,8 +23,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   static bool get isLogin => token != "" && user.isValid;
 
-  UserBloc() : super(UserInitial()) {
+  UserBloc(this._accountBloc) : super(UserInitial()) {
     getToCache();
+    parentBlocSubscription = _accountBloc.stream.listen(_accountBlocListen);
     on<SetCurrentAccount>((event, emit) async {
       await _setCurrentAccount(event.account, emit);
     });
@@ -44,6 +47,26 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   static UserBloc of(BuildContext context) {
     return BlocProvider.of<UserBloc>(context);
+  }
+
+  final AccountBloc _accountBloc;
+  late final StreamSubscription parentBlocSubscription;
+  _accountBlocListen(AccountState state) {
+    if (state is AccountDeleteSuccess) {
+      this.add(UpdateCurrentInfoEvent(state.currentInfo));
+    } else if (state is AccountSaveSuccess) {
+      this.add(SetCurrentAccount(state.account));
+      if (state.account.type == AccountType.independent) {
+      } else if (state.account.type == AccountType.share) {
+        this.add(SetCurrentShareAccount(state.account));
+      }
+    }
+  }
+
+  @override
+  Future<void> close() async {
+    parentBlocSubscription.cancel();
+    await super.close();
   }
 
   void _login(UserLoginEvent event, Emitter<UserState> emit) async {
@@ -80,7 +103,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     UserBloc.currentAccount = AccountDetailModel.fromJson({});
     UserBloc.currentShareAccount = AccountDetailModel.fromJson({});
     token = "";
-    UserBloc.saveToCache();
+    await UserBloc.saveToCache();
   }
 
   void _register(UserRegisterEvent event, Emitter<UserState> emit) async {
@@ -151,19 +174,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   _updateCurrentInfo(UserCurrentModel data, Emitter<UserState> emit) async {
     var needSaveCache = false;
-    var isUpdateCurrent = data.currentAccount.isValid && data.currentAccount.id == currentAccount.id;
+    var isUpdateCurrent = data.currentAccount.isValid;
     if (isUpdateCurrent && false == data.currentAccount.isSame(currentAccount)) {
       UserBloc.currentAccount = data.currentAccount.copy();
       emit(CurrentAccountChanged());
       needSaveCache = true;
     }
 
-    isUpdateCurrent = data.currentShareAccount.isValid && data.currentShareAccount.id == currentShareAccount.id;
-    if (isUpdateCurrent && false == data.currentShareAccount.isSame(currentShareAccount)) {
+    if (false == data.currentShareAccount.isSame(currentShareAccount)) {
       UserBloc.currentShareAccount = data.currentShareAccount.copy();
       emit(CurrentShareAccountChanged());
       needSaveCache = true;
     }
+
     if (needSaveCache) {
       UserBloc.saveToCache();
     }

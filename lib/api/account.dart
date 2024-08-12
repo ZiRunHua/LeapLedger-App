@@ -143,21 +143,21 @@ class AccountApi {
   // 获取信息
   static Future<
       ({
-        InExStatisticModel? todayTransTotal,
-        InExStatisticModel? currentMonthTransTotal,
+        InExStatisticWithTimeModel? todayTransTotal,
+        InExStatisticWithTimeModel? currentMonthTransTotal,
         List<TransactionModel>? recentTrans,
       })> getInfo({required int accountId, required List<InfoType> types}) async {
     ResponseBody response =
         await ApiServer.request(Method.get, '$baseUrl/$accountId/info', data: {"Types": types.toJson()});
-    InExStatisticModel? todayTotal;
-    InExStatisticModel? monthTotal;
+    InExStatisticWithTimeModel? todayTotal;
+    InExStatisticWithTimeModel? monthTotal;
     List<TransactionModel>? recentTrans;
     if (response.isSuccess) {
       if (response.data['TodayTransTotal'] != null) {
-        todayTotal = InExStatisticModel.fromJson(response.data['TodayTransTotal']);
+        todayTotal = InExStatisticWithTimeModel.fromJson(response.data['TodayTransTotal']);
       }
       if (response.data['CurrentMonthTransTotal'] != null) {
-        monthTotal = InExStatisticModel.fromJson(response.data['CurrentMonthTransTotal']);
+        monthTotal = InExStatisticWithTimeModel.fromJson(response.data['CurrentMonthTransTotal']);
       }
       if (response.data['RecentTrans'] != null && response.data['RecentTrans'] is List) {
         recentTrans = [];

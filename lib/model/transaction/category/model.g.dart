@@ -13,6 +13,7 @@ TransactionCategoryModel _$TransactionCategoryModelFromJson(
       name: json['Name'] as String? ?? '',
       icon: Json.iconDataFormJson(json['Icon']),
       fatherId: (json['FatherId'] as num?)?.toInt() ?? 0,
+      fatherName: json['FatherName'] as String? ?? '',
       accountId: (json['AccountId'] as num?)?.toInt() ?? 0,
       incomeExpense:
           $enumDecodeNullable(_$IncomeExpenseEnumMap, json['IncomeExpense']) ??
@@ -29,6 +30,7 @@ Map<String, dynamic> _$TransactionCategoryModelToJson(
       'Icon': Json.iconDataToJson(instance.icon),
       'IncomeExpense': _$IncomeExpenseEnumMap[instance.incomeExpense]!,
       'FatherId': instance.fatherId,
+      'FatherName': instance.fatherName,
       'AccountId': instance.accountId,
       'CreatedAt': Json.dateTimeToJson(instance.createdAt),
       'UpdatedAt': Json.dateTimeToJson(instance.updatedAt),

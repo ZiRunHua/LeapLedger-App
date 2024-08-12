@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/intl_standalone.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:keepaccount_app/config/config.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -11,7 +13,7 @@ import 'package:keepaccount_app/util/enter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-
+import 'package:geolocator/geolocator.dart';
 part 'constant.dart';
 part 'no_data.dart';
 
@@ -26,12 +28,19 @@ class Global {
   static late final Directory tempDirectory;
   // Millisecond time difference from the server
   static late final int serverTimeDifference;
+  static late final String locale;
   static Future init() async {
     config.init();
+    await setLocal();
     serverTimeDifference = _getTimeDifference();
     getTemporaryDirectory().then((dir) {
       tempDirectory = dir;
     });
+  }
+
+  static setLocal() async {
+    locale = await getLocal();
+    Intl.defaultLocale = locale;
   }
 
   static void showOverlayLoader() {
@@ -59,7 +68,7 @@ enum IncomeExpense {
 
 enum UserAction { register, updatePassword, forgetPassword }
 
-enum TransactionEditMode { add, update }
+enum TransactionEditMode { add, update, popTrans }
 
 enum DateType {
   @JsonValue("day")
@@ -98,4 +107,17 @@ _getTimeDifference() {
       convertedTime.millisecondsSinceEpoch -
       convertedTime.timeZoneOffset.inMilliseconds;
   return (timeDifference ~/ 10000) * 10000;
+}
+
+Future<String> getLocal() async {
+  LocationPermission permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+      return 'zh_CN';
+    }
+  } else if (permission == LocationPermission.deniedForever) {
+    return 'zh_CN';
+  }
+  return await findSystemLocale();
 }

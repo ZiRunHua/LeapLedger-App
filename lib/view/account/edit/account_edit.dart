@@ -22,7 +22,7 @@ class AccountEdit extends StatefulWidget {
 
 class AccountEditState extends State<AccountEdit> {
   final _formKey = GlobalKey<FormState>();
-  late AccountModel account;
+  late AccountDetailModel account;
   late final AccountEditMode mode;
   void initData() {
     if (widget.account != null && widget.account!.isValid) {
@@ -57,8 +57,8 @@ class AccountEditState extends State<AccountEdit> {
         listener: (context, state) async {
           if (state is AccountSaveSuccess) {
             if (mode == AccountEditMode.add) {
-              await Navigator.push(context, TransactionCategoryRoutes.getTemplateRoute(context, account: state.account))
-                  .then((value) => Navigator.pop<AccountDetailModel>(context, state.account));
+              var templatePage = TransactionCategoryRoutes.templateNavigator(context, account: state.account);
+              await templatePage.push().then((value) => Navigator.pop<AccountDetailModel>(context, state.account));
             } else {
               Navigator.pop<AccountDetailModel>(context, state.account);
             }

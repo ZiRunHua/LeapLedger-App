@@ -5,6 +5,11 @@ sealed class TransactionState {}
 
 final class TransactionInitial extends TransactionState {}
 
+abstract class AccountRelatedTransactionState extends TransactionState {
+  final int accountId;
+  AccountRelatedTransactionState(this.accountId);
+}
+
 final class TransactionLoaded extends TransactionState {
   final TransactionModel transaction;
   TransactionLoaded(this.transaction);
@@ -22,22 +27,25 @@ final class TransactionDataVerificationFails extends TransactionState {
 }
 
 /// 添加成功
-final class TransactionAddSuccess extends TransactionState {
+final class TransactionAddSuccess extends AccountRelatedTransactionState {
   final TransactionModel trans;
-  TransactionAddSuccess(this.trans);
+  TransactionAddSuccess(this.trans) : super(trans.accountId);
 }
 
 /// 修改成功
-final class TransactionUpdateSuccess extends TransactionState {
+final class TransactionUpdateSuccess extends AccountRelatedTransactionState {
   final TransactionModel oldTrans;
   final TransactionModel newTrans;
-  TransactionUpdateSuccess(this.oldTrans, this.newTrans);
+
+  TransactionUpdateSuccess(this.oldTrans, this.newTrans) : super(oldTrans.accountId) {
+    assert(oldTrans.accountId == newTrans.accountId);
+  }
 }
 
 /// 删除成功
-final class TransactionDeleteSuccess extends TransactionState {
+final class TransactionDeleteSuccess extends AccountRelatedTransactionState {
   final TransactionModel delTrans;
-  TransactionDeleteSuccess(this.delTrans);
+  TransactionDeleteSuccess(this.delTrans) : super(0);
 }
 
 /// 统计数据修改

@@ -2,7 +2,7 @@ part of 'enter.dart';
 
 class HeaderCard extends StatelessWidget {
   const HeaderCard(this.data, {super.key});
-  final List<BaseTransactionCategoryModel> data;
+  final List<TransactionCategoryBaseModel> data;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class HeaderCard extends StatelessWidget {
     );
   }
 
-  Widget buildItem(BaseTransactionCategoryModel model) {
+  Widget buildItem(TransactionCategoryBaseModel model) {
     return Chip(
         label: Text(
           model.name,

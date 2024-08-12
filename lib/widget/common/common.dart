@@ -20,7 +20,6 @@ import 'package:shimmer/shimmer.dart';
 
 export 'page/enter.dart';
 
-part 'common_expansion_tile.dart';
 part 'common_card.dart';
 part 'common_captcha.dart';
 part 'common_email_captcha.dart';
@@ -31,4 +30,4 @@ part 'common_dialog.dart';
 part 'common_avatar_painter.dart';
 part 'common_list_tile.dart';
 part 'common_lable.dart';
-part 'common_expandable_list.dart';
+part 'common_expansion_list.dart';

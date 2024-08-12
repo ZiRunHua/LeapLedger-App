@@ -57,4 +57,15 @@ class Time {
     date ??= DateTime.now();
     return DateTime(date.year + numberOfYears + 1).add(const Duration(seconds: -1));
   }
+
+  static List<DateTime> getDays(DateTime start, DateTime end) {
+    start = getFirstSecondOfDay(date: start);
+    end = getFirstSecondOfDay(date: end);
+    List<DateTime> list = [start];
+    while (end.isAfter(start)) {
+      start = start.add(Duration(days: 1));
+      list.add(start);
+    }
+    return list;
+  }
 }

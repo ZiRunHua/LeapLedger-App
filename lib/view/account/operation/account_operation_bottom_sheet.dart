@@ -112,7 +112,7 @@ class _AccountOperationBottomSheetState extends State<AccountOperationBottomShee
   }
 
   _onCategory(BuildContext context) async {
-    var page = TransactionCategoryRoutes.setting(context, account: widget.account);
+    var page = TransactionCategoryRoutes.settingNavigator(context, account: widget.account);
     await page.pushTree();
   }
 

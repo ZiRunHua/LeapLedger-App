@@ -27,7 +27,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       return;
     }
     emit(TransactionAddSuccess(trans));
-    _handleStatisticUpdate(emit, newTrans: trans.editModel);
+    _handleStatisticUpdate(emit, newTrans: trans);
   }
 
   _handleUpdate(TransactionUpdate event, emit) async {
@@ -44,8 +44,13 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       return;
     }
     CommonToast.tipToast("编辑成功");
-    emit(TransactionUpdateSuccess(event.oldTrans, newTrans));
-    _handleStatisticUpdate(emit, oldTrans: event.oldTrans.editModel, newTrans: newTrans.editModel);
+    if (event.oldTrans.accountId != newTrans.accountId) {
+      emit(TransactionUpdateSuccess(event.oldTrans, newTrans));
+    } else {
+      emit(TransactionDeleteSuccess(event.oldTrans));
+      emit(TransactionAddSuccess(newTrans));
+    }
+    _handleStatisticUpdate(emit, oldTrans: event.oldTrans, newTrans: newTrans);
   }
 
   _handleDelete(TransactionDelete event, emit) async {
@@ -59,7 +64,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     }
     CommonToast.tipToast("删除成功");
     emit(TransactionDeleteSuccess(event.trans));
-    _handleStatisticUpdate(emit, oldTrans: event.trans.editModel);
+    _handleStatisticUpdate(emit, oldTrans: event.trans);
   }
 
   _handleStatisticUpdate(emit, {TransactionEditModel? oldTrans, TransactionEditModel? newTrans}) {

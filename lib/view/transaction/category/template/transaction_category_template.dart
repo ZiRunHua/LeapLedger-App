@@ -6,7 +6,7 @@ import 'package:keepaccount_app/model/account/model.dart';
 
 class TransactionCategoryTemplate extends StatefulWidget {
   const TransactionCategoryTemplate({super.key, required this.account});
-  final AccountModel account;
+  final AccountDetailModel account;
   @override
   State<TransactionCategoryTemplate> createState() => _TransactionCategoryTemplateState();
 }

@@ -1,16 +1,18 @@
 part of 'common.dart';
 
-class CommonExpandableList extends StatefulWidget {
-  const CommonExpandableList({
+class CommonExpansionList extends StatefulWidget {
+  const CommonExpansionList({
     super.key,
     required this.children,
+    this.onStateChanged,
   });
   final List<Widget> children;
+  final VoidCallback? onStateChanged;
   @override
-  State<CommonExpandableList> createState() => _CommonExpandableListState();
+  State<CommonExpansionList> createState() => _CommonExpansionListState();
 }
 
-class _CommonExpandableListState extends State<CommonExpandableList> with SingleTickerProviderStateMixin {
+class _CommonExpansionListState extends State<CommonExpansionList> with SingleTickerProviderStateMixin {
   final int initialDisplays = 3;
   late final AnimationController _controller;
   @override
@@ -18,9 +20,7 @@ class _CommonExpandableListState extends State<CommonExpandableList> with Single
     _controller = AnimationController(
       duration: const Duration(seconds: 1),
       vsync: this,
-    )
-      ..addListener(() => setState(() {}))
-      ..drive(CurveTween(curve: Curves.easeInOut));
+    )..addListener(() => setState(() {}));
     super.initState();
   }
 
@@ -28,7 +28,7 @@ class _CommonExpandableListState extends State<CommonExpandableList> with Single
   @override
   Widget build(BuildContext context) {
     return AnimatedSize(
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 300),
       alignment: Alignment.topCenter,
       child: Column(
         children: [
@@ -36,7 +36,7 @@ class _CommonExpandableListState extends State<CommonExpandableList> with Single
             stateOfExpansion ? widget.children.length : min(initialDisplays, widget.children.length),
             (index) => widget.children[index],
           ),
-          _buildBottomContent()
+          if (widget.children.length > initialDisplays) _buildBottomContent()
         ],
       ),
     );
@@ -62,6 +62,7 @@ class _CommonExpandableListState extends State<CommonExpandableList> with Single
           _controller.reset();
           _controller.forward();
         }
+        if (widget.onStateChanged != null) widget.onStateChanged!();
         setState(() {});
       },
       child: Row(

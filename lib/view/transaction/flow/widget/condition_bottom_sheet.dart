@@ -109,7 +109,7 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
               visible: name != null,
               child: Text(
                 name ?? "",
-                style: const TextStyle(fontSize: ConstantFontSize.bodyLarge, color: ConstantColor.greyText),
+                style: const TextStyle(fontSize: ConstantFontSize.bodyLarge, fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -134,7 +134,15 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
               decoration: AmountInput.defaultDecoration.copyWith(labelText: "最低金额"),
             ),
           ),
-          SizedBox(width: 32, child: ConstantWidget.divider.indented),
+          SizedBox(
+              width: 32,
+              child: Divider(
+                color: ConstantColor.greyText,
+                indent: Constant.margin,
+                endIndent: Constant.margin,
+                height: 0.5,
+                thickness: 0.5,
+              )),
           Flexible(
             child: AmountInput(
               controller: _maxAmountController,
@@ -158,29 +166,35 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
         style: ButtonStyle(
           visualDensity: VisualDensity.compact,
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
           ),
           textStyle: MaterialStateProperty.all<TextStyle>(const TextStyle(color: Colors.white)),
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
               if (states.contains(MaterialState.selected)) {
-                return selectedIncomeExpense == IncomeExpense.income
-                    ? ConstantColor.incomeAmount
-                    : ConstantColor.expenseAmount;
+                return ConstantColor.primaryColor;
               }
               return Colors.white;
             },
           ),
         ),
         onSelectionChanged: (value) => _conditionCubit.changeIncomeExpense(ie: value.first),
-        segments: const [
+        segments: [
           ButtonSegment(
             value: IncomeExpense.income,
-            label: Text("收入", style: TextStyle(fontSize: ConstantFontSize.body)),
+            label: Text("收入",
+                style: TextStyle(
+                  fontSize: ConstantFontSize.body,
+                  color: selectedIncomeExpense == IncomeExpense.income ? Colors.white : null,
+                )),
           ),
           ButtonSegment(
             value: IncomeExpense.expense,
-            label: Text("支出", style: TextStyle(fontSize: ConstantFontSize.body)),
+            label: Text("支出",
+                style: TextStyle(
+                  fontSize: ConstantFontSize.body,
+                  color: selectedIncomeExpense == IncomeExpense.expense ? Colors.white : null,
+                )),
           )
         ],
       ),
@@ -215,8 +229,6 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
       shrinkWrap: true,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 5,
-        crossAxisSpacing: Constant.margin,
-        mainAxisSpacing: Constant.margin,
       ),
       itemCount: list.length,
       itemBuilder: (context, index) => _buildCategoryIcon(list[index]),

@@ -39,7 +39,7 @@ class PtcCard extends StatelessWidget {
                     ),
                 child: ElevatedButton(
                     onPressed: () {
-                      TransactionCategoryRoutes.productMapping(
+                      TransactionCategoryRoutes.productMappingNavigator(
                         context,
                         account: account,
                         product: product,

@@ -28,9 +28,7 @@ class TransactionShareDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
-            child: _buildImage(),
-          ),
+          Expanded(child: _buildImage()),
           GestureDetector(
               onTap: () => _onSaveImage(),
               child: Container(
@@ -54,41 +52,57 @@ class TransactionShareDialog extends StatelessWidget {
       children.add(_buildHeader(data.categoryIcon!, data.categoryName!));
     }
     children.add(_buildAmount());
+    List<optionWidget> options = [];
     if (data.tradeTime != null) {
-      children.add(_buildDetail("时间", DateFormat('yyyy-MM-dd').format(data.tradeTime!)));
+      options.add(_buildDetail("时间", DateFormat('yyyy-MM-dd').format(data.tradeTime!)));
     }
     if (data.accountName != null) {
-      children.add(_buildDetail("账本", data.accountName!));
+      options.add(_buildDetail("账本", data.accountName!));
     }
     if (data.createTime != null) {
-      children.add(_buildDetail("记录时间", DateFormat('yyyy-MM-dd HH:mm:ss').format(data.createTime!)));
+      options.add(_buildDetail("记录时间", DateFormat('yyyy-MM-dd HH:mm:ss').format(data.createTime!)));
     }
     if (data.updateTime != null) {
-      children.add(_buildDetail("更新时间", DateFormat('yyyy-MM-dd HH:mm:ss').format(data.updateTime!)));
+      options.add(_buildDetail("更新时间", DateFormat('yyyy-MM-dd HH:mm:ss').format(data.updateTime!)));
     }
     if (data.remark != null) {
-      children.add(_buildDetail("备注", data.remark == "" ? " 无" : data.remark!));
+      options.add(_buildDetail("备注", data.remark == "" ? "无" : data.remark!));
     }
+    children.add(
+      Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: List.generate(options.length, (index) => options[index].title).toList()),
+          Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: List.generate(options.length, (index) => options[index].value).toList(),
+          )
+        ],
+      ),
+    );
     return RepaintBoundary(
         key: repaintKey,
         child: AspectRatio(
           aspectRatio: 0.6,
           child: DecoratedBox(
               decoration: const BoxDecoration(
-                  borderRadius: ConstantDecoration.borderRadius,
-                  color: Colors.white,
-                  image: DecorationImage(
-                    image: AssetImage("assets/image/share_bg.png"),
-                    fit: BoxFit.fitWidth,
-                    alignment: Alignment.bottomCenter,
-                  )),
+                borderRadius: ConstantDecoration.borderRadius,
+                color: Colors.white,
+                image: DecorationImage(
+                  image: AssetImage("assets/image/share_bg.png"),
+                  fit: BoxFit.fitWidth,
+                  alignment: Alignment.bottomCenter,
+                ),
+              ),
               child: FractionallySizedBox(
                 widthFactor: 0.7,
                 heightFactor: 0.7,
                 alignment: FractionalOffset.center,
-                child: Column(
-                  children: children,
-                ),
+                child: Column(children: children),
               )),
         ));
   }
@@ -121,30 +135,20 @@ class TransactionShareDialog extends StatelessWidget {
 
   Widget _buildAmount() {
     return Padding(
-        padding: const EdgeInsets.only(top: Constant.smallPadding, bottom: Constant.padding),
-        child: SameHightAmountTextSpan(
-          amount: data.amount,
+      padding: const EdgeInsets.only(top: Constant.smallPadding, bottom: Constant.padding),
+      child: Text.rich(
+        AmountTextSpan.sameHeight(
+          data.amount,
           incomeExpense: data.incomeExpense,
           displayModel: IncomeExpenseDisplayModel.symbols,
           textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
-        ));
-  }
-
-  Widget _buildDetail(String title, String value) {
-    return Padding(
-      padding: const EdgeInsets.all(2),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(color: Colors.black54),
-          ),
-          Text(value)
-        ],
+        ),
       ),
     );
+  }
+
+  optionWidget _buildDetail(String title, String value) {
+    return optionWidget(title: Text(title, style: const TextStyle(color: Colors.black54)), value: Text(value));
   }
 
   Future<Uint8List?> _getImageData() async {
@@ -177,31 +181,7 @@ class TransactionShareDialog extends StatelessWidget {
   }
 }
 
-class IconAndName extends StatelessWidget {
-  const IconAndName({super.key, required this.icon, required this.name, required this.onTap, this.iconColor});
-  final String name;
-  final IconData icon;
-  final VoidCallback onTap;
-  final Color? iconColor;
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () => onTap(),
-        child: Container(
-          decoration: BoxDecoration(
-            color: iconColor ?? ConstantColor.greyButton,
-            borderRadius: BorderRadius.circular(90),
-          ),
-          width: 48,
-          height: 48,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(icon, size: 28),
-            ],
-          ),
-        ));
-  }
+class optionWidget {
+  final Widget title, value;
+  optionWidget({required this.title, required this.value});
 }

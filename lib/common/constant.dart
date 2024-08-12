@@ -8,10 +8,11 @@ class Constant {
   static const double largePadding = 24.0;
   static const double margin = 8.0;
 
+  static const double buttomHight = 320;
   static const double buttomLetterSpacing = 4.0;
 
   static const double iconSize = 24;
-
+  static const double iconlargeSize = 32;
   static const int maxAmount = 99999999; //最大金额为100万减一 存储单位为分
   static const int minYear = 2000;
   static const int maxYear = 2050;
@@ -83,6 +84,7 @@ class ConstantColor {
   static const Color greyText = Color.fromRGBO(158, 158, 158, 1);
   static const Color greyButton = Color.fromRGBO(238, 238, 238, 1);
   static const Color greyButtonIcon = Colors.grey;
+  static const Color shadowColor = Color.fromRGBO(250, 250, 250, 1);
   static const Color listDividerColor = Color.fromRGBO(238, 238, 238, 1);
 
   static const Color secondaryTextColor = Color.fromRGBO(117, 117, 117, 1); // is Colors.grey.shade800
@@ -91,4 +93,8 @@ class ConstantColor {
 
 class Constantlimit {
   static const int maxTimeRangeForYear = 2;
+}
+
+class ConstantIcon {
+  static const IconData add = Icons.add_circle_outline_rounded;
 }

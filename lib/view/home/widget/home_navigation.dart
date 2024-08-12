@@ -14,17 +14,22 @@ class HomeNavigation extends StatelessWidget {
           _navigatorButton(
             account.name,
             icon: Icons.sync_outlined,
-            onTap: () => AccountRoutes.listByCurrentAccount(context).push(),
+            onTap: () => AccountRoutes.list(context, selectedCurrentAccount: true).push(),
           ),
           _navigatorButton(
             "交易类型",
             icon: Icons.settings_outlined,
-            onTap: () => TransactionCategoryRoutes.setting(context, account: account).pushTree(),
+            onTap: () => TransactionCategoryRoutes.settingNavigator(context, account: account).pushTree(),
           ),
           _navigatorButton(
             "图表分析",
             icon: Icons.pie_chart_outline_outlined,
             onTap: () => TransactionRoutes.chartNavigator(context, account: account).push(),
+          ),
+          _navigatorButton(
+            "交易定时",
+            icon: Icons.timer_outlined,
+            onTap: () => TransactionRoutes.timingListNavigator(context, account: account).push(),
           ),
           Offstage(
             offstage: false == TransactionRouterGuard.import(account: account),

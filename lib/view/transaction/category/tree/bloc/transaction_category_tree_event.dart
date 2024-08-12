@@ -3,14 +3,13 @@ part of 'transaction_category_tree_bloc.dart';
 abstract class TransactionCategoryTreeEvent {}
 
 class LoadEvent extends TransactionCategoryTreeEvent {
-  late IncomeExpense incomeExpense;
-  LoadEvent(this.incomeExpense);
+  final bool refresh;
+  LoadEvent({this.refresh = true});
 }
 
 class MoveChildEvent extends TransactionCategoryTreeEvent {
   final int oldChildIndex, oldFatherIndex, newChildIndex, newFatherIndex;
-  MoveChildEvent(this.oldChildIndex, this.oldFatherIndex, this.newChildIndex,
-      this.newFatherIndex);
+  MoveChildEvent(this.oldChildIndex, this.oldFatherIndex, this.newChildIndex, this.newFatherIndex);
 }
 
 class MoveFatherEvent extends TransactionCategoryTreeEvent {
@@ -26,24 +25,4 @@ class DeleteChildEvent extends TransactionCategoryTreeEvent {
 class DeleteFatherEvent extends TransactionCategoryTreeEvent {
   final int id;
   DeleteFatherEvent(this.id);
-}
-
-class AddChildEvent extends TransactionCategoryTreeEvent {
-  final TransactionCategoryModel transactionCategoryModel;
-  AddChildEvent(this.transactionCategoryModel);
-}
-
-class AddFatherEvent extends TransactionCategoryTreeEvent {
-  final TransactionCategoryFatherModel transactionCategoryFatherModel;
-  AddFatherEvent(this.transactionCategoryFatherModel);
-}
-
-class UpdateChildEvent extends TransactionCategoryTreeEvent {
-  final TransactionCategoryModel transactionCategoryModel;
-  UpdateChildEvent(this.transactionCategoryModel);
-}
-
-class UpdateFatherEvent extends TransactionCategoryTreeEvent {
-  final TransactionCategoryFatherModel transactionCategoryFatherModel;
-  UpdateFatherEvent(this.transactionCategoryFatherModel);
 }

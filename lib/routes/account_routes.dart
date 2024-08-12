@@ -48,17 +48,16 @@ class AccountRoutes {
   static AccountEditNavigator edit(BuildContext context, {AccountDetailModel? account}) =>
       AccountEditNavigator(context, account: account);
 
-  static AccountListNavigator list(BuildContext context, {required AccountDetailModel selectedAccount}) {
-    return AccountListNavigator(context, selectedAccount: selectedAccount);
-  }
-
-  static AccountListNavigator listByCurrentAccount(BuildContext context) {
-    return AccountListNavigator(context, selectedAccount: UserBloc.currentAccount,
-        onSelectedAccount: (AccountDetailModel account) async {
-      var page = AccountRoutes.operationList(context, account: account);
-      await page.showModalBottomSheet();
-      return UserBloc.currentAccount;
-    });
+  static AccountListNavigator list(
+    BuildContext context, {
+    AccountDetailModel? selectedAccount,
+    bool selectedCurrentAccount = false,
+  }) {
+    return AccountListNavigator(
+      context,
+      selectedAccount: selectedAccount,
+      selectedCurrentAccount: selectedCurrentAccount,
+    );
   }
 
   static AccountOperationListNavigator operationList(BuildContext context, {required AccountDetailModel account}) =>
@@ -138,32 +137,59 @@ class AccountEditNavigator extends RouterNavigator {
 }
 
 class AccountListNavigator extends RouterNavigator {
-  final AccountDetailModel selectedAccount;
+  final AccountDetailModel? selectedAccount;
   final SelectAccountCallback? onSelectedAccount;
-  AccountListNavigator(BuildContext context, {required this.selectedAccount, this.onSelectedAccount})
-      : super(context: context);
+  final bool selectedCurrentAccount;
+  AccountListNavigator(
+    BuildContext context, {
+    this.selectedAccount,
+    this.onSelectedAccount,
+    required this.selectedCurrentAccount,
+  }) : super(context: context);
+  Future<AccountDetailModel?> _defaultOnSelectedAccount(AccountDetailModel account) async {
+    Navigator.pop<AccountDetailModel>(context, account);
+    return account;
+  }
+
+  Widget _listenCurrentAccountChanged(
+      Widget Function(AccountDetailModel account, SelectAccountCallback onSelectedAccount) page) {
+    if (selectedCurrentAccount)
+      return BlocBuilder<UserBloc, UserState>(
+        buildWhen: (_, state) => state is CurrentAccountChanged,
+        builder: (context, state) {
+          return page(
+            UserBloc.currentAccount,
+            (AccountDetailModel account) async {
+              var page = AccountRoutes.operationList(context, account: account);
+              await page.showModalBottomSheet();
+              return UserBloc.currentAccount;
+            },
+          );
+        },
+      );
+    assert(selectedAccount != null);
+    return page(selectedAccount!, onSelectedAccount ?? _defaultOnSelectedAccount);
+  }
 
   Future<bool> showModalBottomSheet({bool onlyCanEdit = false}) async => await _modalBottomSheetShow(
-      context,
-      AccountListBottomSheet(
-        selectedAccount: selectedAccount,
-        onSelectedAccount: onSelectedAccount ??
-            (AccountDetailModel account) async {
-              Navigator.pop<AccountDetailModel>(context, account);
-              return account;
-            },
-        type: onlyCanEdit ? ViewAccountListType.onlyCanEdit : ViewAccountListType.all,
-      ));
+        context,
+        _listenCurrentAccountChanged(
+          (account, onSelectedAccount) => AccountListBottomSheet(
+            selectedAccount: account,
+            onSelectedAccount: onSelectedAccount,
+            type: onlyCanEdit ? ViewAccountListType.onlyCanEdit : ViewAccountListType.all,
+          ),
+        ),
+      );
 
   Future<bool> push() async => await _push(
         context,
-        AccountList(
-            selectedAccount: selectedAccount,
-            onSelectedAccount: onSelectedAccount ??
-                (AccountDetailModel account) async {
-                  Navigator.pop<AccountDetailModel>(context, account);
-                  return account;
-                }),
+        _listenCurrentAccountChanged(
+          (account, onSelectedAccount) => AccountList(
+            selectedAccount: account,
+            onSelectedAccount: onSelectedAccount,
+          ),
+        ),
       );
 
   AccountDetailModel? retrunAccount;

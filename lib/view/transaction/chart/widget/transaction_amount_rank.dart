@@ -5,7 +5,7 @@ class TransactionAmountRank extends StatelessWidget {
   final List<TransactionModel> transLsit;
   @override
   Widget build(BuildContext context) {
-    return CommonExpandedView(
+    return CommonExpansionList(
         children: List.generate(
       transLsit.length,
       (index) => CommonListTile.fromTransModel(

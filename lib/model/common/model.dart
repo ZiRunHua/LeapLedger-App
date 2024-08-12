@@ -6,7 +6,7 @@ import 'package:keepaccount_app/model/transaction/model.dart';
 import 'package:keepaccount_app/util/enter.dart';
 part 'model.g.dart';
 
-class BaseTransactionCategoryModel {
+class TransactionCategoryBaseModel {
   late int id;
   @JsonKey(defaultValue: '')
   late String name;
@@ -15,7 +15,7 @@ class BaseTransactionCategoryModel {
   @JsonKey(defaultValue: IncomeExpense.income)
   late IncomeExpense incomeExpense;
 
-  BaseTransactionCategoryModel({required this.id, required this.name, required this.icon, required this.incomeExpense});
+  TransactionCategoryBaseModel({required this.id, required this.name, required this.icon, required this.incomeExpense});
 }
 
 class StatusFlagModel {
@@ -184,7 +184,7 @@ class InExStatisticWithTimeModel extends InExStatisticModel {
   /// 处理交易 以更新统计数据
   @override
   bool handleTransEditModel({required TransactionEditModel editModel, required bool isAdd}) {
-    if (startTime.isAfter(editModel.tradeTime) || endTime.isBefore(editModel.tradeTime)) {
+    if (editModel.tradeTime.isBefore(startTime) || endTime.isBefore(editModel.tradeTime)) {
       return false;
     }
     return super.handleTransEditModel(editModel: editModel, isAdd: isAdd);

@@ -12,10 +12,6 @@ class FlowListMoreDataFetchEvent extends FlowListEvent {
   FlowListMoreDataFetchEvent();
 }
 
-class FlowListUpdateConditionEvent extends FlowListEvent {
-  FlowListUpdateConditionEvent();
-}
-
 class FlowListTransactionAddEvent extends FlowListEvent {
   final TransactionModel trans;
   FlowListTransactionAddEvent(this.trans);

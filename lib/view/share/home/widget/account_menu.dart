@@ -96,7 +96,7 @@ class _AccountMenuState extends State<AccountMenu> {
         child: const Padding(
           padding: EdgeInsets.all(Constant.padding),
           child: Column(
-            children: [Text("新建共享账本"), Icon(Icons.add_outlined)],
+            children: [Text("新建共享账本"), Icon(ConstantIcon.add)],
           ),
         ));
   }

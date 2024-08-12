@@ -15,20 +15,23 @@ class Home extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: Constant.padding, vertical: 0),
       color: ConstantColor.greyBackground,
-      child: SingleChildScrollView(
-        child: BlocProvider.value(
-          value: _bloc..add(HomeFetchDataEvent()),
-          child: BlocListener<TransactionBloc, TransactionState>(
-            listenWhen: (_, state) => state is TransactionStatisticUpdate,
-            listener: (context, state) {
-              if (state is TransactionStatisticUpdate) {
-                _bloc.add(HomeStatisticUpdateEvent(state.oldTrans, state.newTrans));
-              }
-            },
-            child: BlocListener<UserBloc, UserState>(
-              listenWhen: (_, state) => state is CurrentAccountChanged,
-              listener: (_, state) => _bloc.add(HomeAccountChangeEvent(account: UserBloc.currentAccount)),
-              child: _buildContent(),
+      child: RefreshIndicator(
+        onRefresh: () async => _bloc.add(HomeFetchDataEvent()),
+        child: SingleChildScrollView(
+          child: BlocProvider.value(
+            value: _bloc..add(HomeFetchDataEvent()),
+            child: BlocListener<TransactionBloc, TransactionState>(
+              listenWhen: (_, state) => state is TransactionStatisticUpdate,
+              listener: (context, state) {
+                if (state is TransactionStatisticUpdate) {
+                  _bloc.add(HomeStatisticUpdateEvent(state.oldTrans, state.newTrans));
+                }
+              },
+              child: BlocListener<UserBloc, UserState>(
+                listenWhen: (_, state) => state is CurrentAccountChanged,
+                listener: (_, state) => _bloc.add(HomeAccountChangeEvent(account: UserBloc.currentAccount)),
+                child: _buildContent(),
+              ),
             ),
           ),
         ),

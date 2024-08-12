@@ -26,37 +26,81 @@ class TransactionCategoryApi {
     return response;
   }
 
-  static Future<ResponseBody> moveCategoryChild(int id, {int? previous, int? fatherId}) async {
-    return await ApiServer.request(Method.post, '$baseUrl/$id/move',
-        data: {'Previous': previous, 'FatherId': fatherId});
+  static Future<List<TransactionCategoryModel>> getListByCond(
+      {required int accountId, required CategoryQueryCond cond}) async {
+    ResponseBody response = await ApiServer.request(
+      Method.get,
+      '$baseUrl/list',
+      data: {'AccountId': accountId, 'IncomeExpense': cond.type?.name},
+    );
+    List<TransactionCategoryModel> list = [];
+    if (response.isSuccess && response.data['List'] is List) {
+      for (var element in response.data['List']) {
+        list.add(TransactionCategoryModel.fromJson(element));
+      }
+    }
+    return list;
   }
 
-  static Future<ResponseBody> moveCategoryFather(int id, {int? previous}) async {
+  static Future<ResponseBody> getTreeByCond({
+    required int accountId,
+    required CategoryQueryCond cond,
+  }) async {
+    ResponseBody response = await ApiServer.request(
+      Method.get,
+      '$baseUrl/tree',
+      data: {'AccountId': accountId, 'IncomeExpense': cond.type?.name},
+    );
+    return response;
+  }
+
+  static Future<ResponseBody> moveCategory(int id, {int? previous, int? parentId}) async {
+    return await ApiServer.request(Method.post, '$baseUrl/$id/move',
+        data: {'Previous': previous, 'FatherId': parentId});
+  }
+
+  static Future<ResponseBody> moveCategoryParent(int id, {int? previous}) async {
     return await ApiServer.request(Method.post, '$baseUrl/father/$id/move', data: {'Previous': previous});
   }
 
-  static Future<ResponseBody> addCategoryChild(TransactionCategoryModel model) async {
-    return await ApiServer.request(Method.post, baseUrl, data: model.toJson());
+  static Future<TransactionCategoryModel?> addCategory(TransactionCategoryModel model) async {
+    var response = await ApiServer.request(Method.post, baseUrl, data: model.toJson());
+    if (response.isSuccess) {
+      return TransactionCategoryModel.fromJson(response.data);
+    }
+    return null;
   }
 
-  static Future<ResponseBody> addCategoryFather(TransactionCategoryFatherModel model) async {
-    return await ApiServer.request(Method.post, '$baseUrl/father', data: model.toJson());
+  static Future<TransactionCategoryFatherModel?> addCategoryParent(TransactionCategoryFatherModel model) async {
+    var response = await ApiServer.request(Method.post, '$baseUrl/father', data: model.toJson());
+    if (response.isSuccess) {
+      return TransactionCategoryFatherModel.fromJson(response.data);
+    }
+    return null;
   }
 
-  static Future<ResponseBody> deleteCategoryChild(int id) async {
+  static Future<ResponseBody> deleteCategory(int id) async {
     return await ApiServer.request(Method.delete, '$baseUrl/$id');
   }
 
-  static Future<ResponseBody> deleteCategoryFather(int id) async {
+  static Future<ResponseBody> deleteCategoryParent(int id) async {
     return await ApiServer.request(Method.delete, '$baseUrl/father/$id');
   }
 
-  static Future<ResponseBody> updateCategoryChild(TransactionCategoryModel model) async {
-    return await ApiServer.request(Method.put, '$baseUrl/${model.id}', data: model.toJson());
+  static Future<TransactionCategoryModel?> updateCategory(TransactionCategoryModel model) async {
+    var response = await ApiServer.request(Method.put, '$baseUrl/${model.id}', data: model.toJson());
+    if (response.isSuccess) {
+      return TransactionCategoryModel.fromJson(response.data);
+    }
+    return null;
   }
 
-  static Future<ResponseBody> updateCategoryFather(TransactionCategoryFatherModel model) async {
-    return await ApiServer.request(Method.put, '$baseUrl/father/${model.id}', data: model.toJson());
+  static Future<TransactionCategoryFatherModel?> updateCategoryParent(TransactionCategoryFatherModel model) async {
+    var response = await ApiServer.request(Method.put, '$baseUrl/father/${model.id}', data: model.toJson());
+    if (response.isSuccess) {
+      return TransactionCategoryFatherModel.fromJson(response.data);
+    }
+    return null;
   }
 
   static Future<bool> mappingCategory({required int parentId, required int childId}) async {

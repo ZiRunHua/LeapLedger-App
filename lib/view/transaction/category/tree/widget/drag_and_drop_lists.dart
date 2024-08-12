@@ -1,8 +1,7 @@
 part of '../transaction_category_tree.dart';
 
 class _DragAndDropLists extends StatefulWidget {
-  final IncomeExpense incomeExpense;
-  const _DragAndDropLists({Key? key, required this.incomeExpense}) : super(key: key);
+  const _DragAndDropLists({Key? key}) : super(key: key);
 
   @override
   _DragAndDropListsState createState() => _DragAndDropListsState();
@@ -16,7 +15,7 @@ class _DragAndDropListsState extends State<_DragAndDropLists> with AutomaticKeep
   @override
   void initState() {
     _bloc = BlocProvider.of<TransactionCategoryTreeBloc>(context);
-    _bloc.add(LoadEvent(widget.incomeExpense));
+    _bloc.add(LoadEvent());
     super.initState();
   }
 
@@ -28,19 +27,20 @@ class _DragAndDropListsState extends State<_DragAndDropLists> with AutomaticKeep
         if (state is LoadingState) {
           return buildShimmerList();
         } else if (state is LoadedState) {
-          return _buildDragAndDropLists(state.list);
+          return _buildDragAndDropLists();
         }
         return Container();
       },
     );
   }
 
-  _buildDragAndDropLists(List<CategoryData> list) {
+  _buildDragAndDropLists() {
     return Container(
       color: ConstantColor.greyBackground,
       padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
       child: DragAndDropLists(
-          children: List.generate(list.length, (index) => _buildChildrenList(list[index].father, list[index].children)),
+          children: List.generate(
+              _bloc.list.length, (index) => _buildChildrenList(_bloc.list[index].father, _bloc.list[index].children)),
           onItemReorder: _onItemReorder,
           onListReorder: _onListReorder,
           listPadding: const EdgeInsets.only(top: Constant.margin),
@@ -88,8 +88,8 @@ class _DragAndDropListsState extends State<_DragAndDropLists> with AutomaticKeep
       child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.add_circle_outline, size: ConstantFontSize.body, color: ConstantColor.greyText),
-          Text("新建子类型", style: TextStyle(fontSize: ConstantFontSize.body, color: ConstantColor.greyText))
+          Icon(ConstantIcon.add, size: ConstantFontSize.body, color: ConstantColor.greyText),
+          Text("新建二级类型", style: TextStyle(fontSize: ConstantFontSize.body, color: ConstantColor.greyText))
         ],
       ),
       onPressed: () async {
@@ -98,10 +98,7 @@ class _DragAndDropListsState extends State<_DragAndDropLists> with AutomaticKeep
           account: _bloc.account,
           transactionCategory: TransactionCategoryModel.toAdd(father),
         );
-        await page.push();
-        if (page.result != null) {
-          _bloc.add(AddChildEvent(page.result!));
-        }
+        page.push();
       },
     ));
   }
@@ -139,19 +136,12 @@ class _DragAndDropListsState extends State<_DragAndDropLists> with AutomaticKeep
   _updateFather(TransactionCategoryFatherModel father) async {
     //编辑
     var page = TransactionCategoryRoutes.fatherEditNavigator(context, account: _bloc.account, father: father);
-    await page.showDialog();
-    var result = page.getReturn();
-    if (result != null && mounted) {
-      _bloc.add(UpdateFatherEvent(result));
-    }
+    page.showDialog();
   }
 
   _updateChild(TransactionCategoryModel child) async {
     var page = TransactionCategoryRoutes.editNavigator(context, account: _bloc.account, transactionCategory: child);
-    await page.push();
-    if (page.result != null) {
-      _bloc.add(UpdateChildEvent(page.result!));
-    }
+    page.push();
   }
 
   _deleteFather(TransactionCategoryFatherModel fahter) {
@@ -167,17 +157,12 @@ class _DragAndDropListsState extends State<_DragAndDropLists> with AutomaticKeep
   }
 
   addFather() {
-    TransactionCategoryFatherModel model = TransactionCategoryFatherModel.fromJson({})
-      ..incomeExpense = widget.incomeExpense;
+    TransactionCategoryFatherModel model = TransactionCategoryFatherModel.fromJson({})..incomeExpense = _bloc.type;
     showDialog(
         context: context,
         builder: (context) => TransactionCategoryFatherEditDialog(
-              account: UserBloc.currentAccount,
+              account: _bloc.account,
               model: model,
-            )).then((value) {
-      if (value is TransactionCategoryFatherModel && value.isValid) {
-        _bloc.add(AddFatherEvent(value));
-      }
-    });
+            )).then((value) {});
   }
 }

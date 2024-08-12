@@ -20,7 +20,7 @@ class TransactionDetailBottomSheet extends StatefulWidget {
 }
 
 class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSheet> {
-  TransactionModel? transaction = TransactionModel();
+  TransactionModel transaction = TransactionModel.prototypeData();
   String title = "详情";
   @override
   void initState() {
@@ -42,11 +42,7 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
   @override
   Widget build(BuildContext _) {
     Widget detailWidget;
-    if (transaction != null) {
-      detailWidget = _buildDetail(transaction!);
-    } else {
-      detailWidget = const Center(child: Center(child: CircularProgressIndicator()));
-    }
+    detailWidget = _buildDetail(transaction);
 
     return BlocListener<TransactionBloc, TransactionState>(
       listener: (context, state) {
@@ -174,10 +170,10 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
   }
 
   _handleDelete() {
-    if (transaction == null) {
+    if (!transaction.isValid) {
       return;
     }
-    BlocProvider.of<TransactionBloc>(context).add(TransactionDelete(widget.account, transaction!));
+    BlocProvider.of<TransactionBloc>(context).add(TransactionDelete(widget.account, transaction));
   }
 
   void _onDelete() {
@@ -190,16 +186,14 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
 
   _onUpdate() async {
     var page = TransactionRoutes.editNavigator(context,
-        mode: TransactionEditMode.update, account: widget.account, transaction: widget.transaction);
+        mode: TransactionEditMode.update, account: widget.account, originalTrans: widget.transaction);
     await page.push();
-    if (page.getReturn() && mounted) {
+    if (page.finish() && mounted) {
       Navigator.pop(context);
     }
   }
 
   void _onShare() {
-    if (transaction != null) {
-      BlocProvider.of<TransactionBloc>(context).add(TransactionShare(transaction!));
-    }
+    BlocProvider.of<TransactionBloc>(context).add(TransactionShare(transaction));
   }
 }

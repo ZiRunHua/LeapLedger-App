@@ -8,22 +8,22 @@ class TransactionCategoryMappingInitial extends TransactionCategoryMappingState 
 class LoadingState extends TransactionCategoryMappingState {}
 
 abstract class TransactionCategoryMappingLoaded extends TransactionCategoryMappingState {
-  List<BaseTransactionCategoryModel> get unmapped;
-  Map<int, List<BaseTransactionCategoryModel>> get relation;
+  List<TransactionCategoryBaseModel> get unmapped;
+  Map<int, List<TransactionCategoryBaseModel>> get relation;
 }
 
 class TransactionCategoryMappingExpenseLoaded extends TransactionCategoryMappingLoaded {
   @override
-  final List<BaseTransactionCategoryModel> unmapped;
+  final List<TransactionCategoryBaseModel> unmapped;
   @override
-  final Map<int, List<BaseTransactionCategoryModel>> relation;
+  final Map<int, List<TransactionCategoryBaseModel>> relation;
   TransactionCategoryMappingExpenseLoaded(this.unmapped, this.relation);
 }
 
 class TransactionCategoryMappingIncomeLoaded extends TransactionCategoryMappingLoaded {
   @override
-  final List<BaseTransactionCategoryModel> unmapped;
+  final List<TransactionCategoryBaseModel> unmapped;
   @override
-  final Map<int, List<BaseTransactionCategoryModel>> relation;
+  final Map<int, List<TransactionCategoryBaseModel>> relation;
   TransactionCategoryMappingIncomeLoaded(this.unmapped, this.relation);
 }

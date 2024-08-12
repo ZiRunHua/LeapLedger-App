@@ -60,7 +60,7 @@ class NoData {
                 ),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
-                    TransactionCategoryRoutes.setting(context, account: account).pushTree();
+                    TransactionCategoryRoutes.settingNavigator(context, account: account).pushTree();
                   }),
           ],
         ));

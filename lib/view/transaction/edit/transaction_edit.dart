@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:keepaccount_app/bloc/transaction/category/transaction_category_bloc.dart';
 import 'package:keepaccount_app/bloc/transaction/transaction_bloc.dart';
 import 'package:keepaccount_app/common/global.dart';
 import 'package:keepaccount_app/model/account/model.dart';
 import 'package:keepaccount_app/model/transaction/category/model.dart';
 import 'package:keepaccount_app/model/transaction/model.dart';
+import 'package:keepaccount_app/model/user/model.dart';
 import 'package:keepaccount_app/routes/routes.dart';
 import 'package:keepaccount_app/util/enter.dart';
 import 'package:keepaccount_app/view/transaction/edit/bloc/edit_bloc.dart';
@@ -17,10 +19,13 @@ part 'widget/category_picker.dart';
 part 'widget/bottom.dart';
 
 class TransactionEdit extends StatefulWidget {
-  const TransactionEdit({super.key, required this.mode, this.model, required this.account});
+  const TransactionEdit(
+      {super.key, required this.user, required this.account, required this.mode, this.model, this.transInfo});
   final AccountDetailModel account;
+  final UserModel user;
   final TransactionEditMode mode;
   final TransactionModel? model;
+  final TransactionInfoModel? transInfo;
   @override
   State<TransactionEdit> createState() => _TransactionEditState();
 }
@@ -29,7 +34,12 @@ class _TransactionEditState extends State<TransactionEdit> {
   late final EditBloc _bloc;
   @override
   void initState() {
-    _bloc = EditBloc(account: widget.account, trans: widget.model, mode: widget.mode);
+    _bloc = EditBloc(
+        user: widget.user,
+        account: widget.account,
+        trans: widget.model,
+        mode: widget.mode,
+        transInfo: widget.transInfo);
     super.initState();
   }
 
@@ -57,6 +67,8 @@ class _TransactionEditState extends State<TransactionEdit> {
                   BlocProvider.of<TransactionBloc>(context).add(TransactionAdd(state.trans));
                 } else if (state is UpdateTransaction) {
                   BlocProvider.of<TransactionBloc>(context).add(TransactionUpdate(state.oldTrans, state.editModel));
+                } else if (state is PopTransaction) {
+                  Navigator.pop<TransactionInfoModel>(context, state.trans);
                 }
               },
             )
@@ -67,20 +79,21 @@ class _TransactionEditState extends State<TransactionEdit> {
 
   Widget _buildTabView() {
     return DefaultTabController(
-        initialIndex: _bloc.trans.incomeExpense == IncomeExpense.expense ? 0 : 1,
-        length: 2,
-        child: Scaffold(
-          backgroundColor: ConstantColor.greyBackground,
-          appBar: AppBar(
-            centerTitle: true,
-            title: const TabBar(
-              tabs: <Widget>[Tab(text: '支 出'), Tab(text: '收 入')],
-            ),
+      initialIndex: _bloc.transInfo.incomeExpense == IncomeExpense.expense ? 0 : 1,
+      length: 2,
+      child: Scaffold(
+        backgroundColor: ConstantColor.greyBackground,
+        appBar: AppBar(
+          centerTitle: true,
+          title: const TabBar(
+            tabs: <Widget>[Tab(text: '支 出'), Tab(text: '收 入')],
           ),
-          body: const TabBarView(
-            children: <Widget>[CategoryPicker(type: IncomeExpense.expense), CategoryPicker(type: IncomeExpense.income)],
-          ),
-          bottomNavigationBar: const Bottom(),
-        ));
+        ),
+        body: const TabBarView(
+          children: <Widget>[CategoryPicker(type: IncomeExpense.expense), CategoryPicker(type: IncomeExpense.income)],
+        ),
+        bottomNavigationBar: const Bottom(),
+      ),
+    );
   }
 }

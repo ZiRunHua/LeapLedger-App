@@ -1,5 +1,7 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
-import 'package:keepaccount_app/api/api_server.dart';
+import 'package:keepaccount_app/bloc/transaction/category/transaction_category_bloc.dart';
 
 import 'package:keepaccount_app/common/global.dart';
 import 'package:keepaccount_app/model/account/model.dart';
@@ -15,125 +17,99 @@ class CategoryData {
 }
 
 class TransactionCategoryTreeBloc extends Bloc<TransactionCategoryTreeEvent, TransactionCategoryTreeState> {
+  final CategoryBloc parentBloc;
   late List<CategoryData> _list;
+  List<CategoryData> get list => _list;
   final AccountDetailModel account;
-  TransactionCategoryTreeBloc({required this.account}) : super(LoadingState()) {
+  final IncomeExpense type;
+  late final StreamSubscription parentBlocSubscription;
+  bool get canEdit => account.isCreator;
+  TransactionCategoryTreeBloc({required this.account, required this.parentBloc, required this.type})
+      : super(LoadingState()) {
+    parentBlocSubscription = parentBloc.stream.listen(_praentBlocListen);
     on<LoadEvent>(_getTree);
     on<MoveChildEvent>(_moveChild);
     on<MoveFatherEvent>(_moveFather);
     on<DeleteChildEvent>(_deleteChild);
     on<DeleteFatherEvent>(_deleteFather);
-    on<AddChildEvent>(_addChild);
-    on<AddFatherEvent>(_addFather);
-    on<UpdateChildEvent>(_updateChild);
-    on<UpdateFatherEvent>(_updateFather);
   }
-  bool get canEdit => account.isCreator;
+  _praentBlocListen(CategoryState state) {
+    if (state is! CategoryOfAccountState || state.account.id != account.id) {
+      return;
+    }
+    if (state is CategoryTreeLoadedState) {
+      if (state.current(account: account, cond: CategoryQueryCond(type: type))) {
+        _list = state.tree.map((entry) => CategoryData(entry.key, entry.value)).toList();
+        this.add(LoadEvent(refresh: false));
+      }
+    }
+  }
+
+  @override
+  Future<void> close() async {
+    parentBlocSubscription.cancel();
+    await super.close();
+  }
 
   _getTree(LoadEvent event, Emitter<TransactionCategoryTreeState> emit) async {
-    emit(LoadingState());
-
-    List<MapEntry<TransactionCategoryFatherModel, List<TransactionCategoryModel>>> list;
-    list = await ApiServer.getData(
-      () => TransactionCategoryApi.getTree(accountId: account.id, type: event.incomeExpense),
-      TransactionCategoryApi.dataFormatFunc.getTreeDataToList,
-    );
-
-    _list = list.map((entry) => CategoryData(entry.key, entry.value)).toList();
+    if (event.refresh) {
+      emit(LoadingState());
+      parentBloc.add(CategoryTreeLoadEvent(account, cond: CategoryQueryCond(type: type)));
+      return;
+    }
     emit(LoadedState(_list));
   }
 
   _moveChild(MoveChildEvent event, Emitter<TransactionCategoryTreeState> emit) async {
     if (!canEdit) return;
     CategoryData category = _list[event.newFatherIndex];
-
-    ResponseBody responseBody;
+    final int? previousId, parentId;
     if (event.newChildIndex >= 1) {
-      responseBody = await TransactionCategoryApi.moveCategoryChild(
-          _list[event.oldFatherIndex].children[event.oldChildIndex].id,
-          previous: category.children[event.newChildIndex - 1].id);
+      previousId = category.children[event.newChildIndex - 1].id;
+      parentId = null;
     } else {
-      responseBody = await TransactionCategoryApi.moveCategoryChild(
-          _list[event.oldFatherIndex].children[event.oldChildIndex].id,
-          fatherId: category.father.id);
+      previousId = null;
+      parentId = category.father.id;
     }
-    if (responseBody.isSuccess) {
-      TransactionCategoryModel movedItem = _list[event.oldFatherIndex].children.removeAt(event.oldChildIndex);
-      movedItem.fatherId = category.father.id;
-      category.children.insert(event.newChildIndex, movedItem);
-      emit(LoadedState(_list));
-    }
+    parentBloc.add(CategoryMoveEvent(
+      account,
+      categoryId: _list[event.oldFatherIndex].children[event.oldChildIndex].id,
+      previousId: previousId,
+      parentId: parentId,
+    ));
+    // update list
+    TransactionCategoryModel movedItem = _list[event.oldFatherIndex].children.removeAt(event.oldChildIndex);
+    movedItem.fatherId = category.father.id;
+    category.children.insert(event.newChildIndex, movedItem);
+    emit(LoadedState(_list));
   }
 
   _moveFather(MoveFatherEvent event, Emitter<TransactionCategoryTreeState> emit) async {
     if (!canEdit) return;
-    ResponseBody responseBody;
-    CategoryData movedItem = _list.removeAt(event.oldFatherIndex);
+    final CategoryData movedItem = _list.removeAt(event.oldFatherIndex);
+    final int? previousId;
     if (event.newFatherIndex >= 1) {
-      responseBody = await TransactionCategoryApi.moveCategoryFather(movedItem.father.id,
-          previous: _list[event.newFatherIndex - 1].father.id);
+      previousId = _list[event.newFatherIndex - 1].father.id;
     } else {
-      responseBody = await TransactionCategoryApi.moveCategoryFather(movedItem.father.id);
+      previousId = null;
     }
-    if (responseBody.isSuccess) {
-      _list.insert(event.newFatherIndex, movedItem);
-      emit(LoadedState(_list));
-    }
+    parentBloc.add(CategoryParentMoveEvent(
+      account,
+      parentId: movedItem.father.id,
+      previousId: previousId,
+    ));
+    // update list
+    _list.insert(event.newFatherIndex, movedItem);
+    emit(LoadedState(_list));
   }
 
   _deleteChild(DeleteChildEvent event, Emitter<TransactionCategoryTreeState> emit) async {
     if (!canEdit) return;
-    if ((await TransactionCategoryApi.deleteCategoryChild(event.id)).isSuccess) {
-      for (var i = 0; i < _list.length; i++) {
-        _list[i].children.removeWhere((element) => element.id == event.id);
-      }
-      emit(LoadedState(_list));
-    }
+    parentBloc.add(CategoryDeleteEvent(account, categoryId: event.id));
   }
 
   _deleteFather(DeleteFatherEvent event, Emitter<TransactionCategoryTreeState> emit) async {
     if (!canEdit) return;
-    if ((await TransactionCategoryApi.deleteCategoryFather(event.id)).isSuccess) {
-      _list.removeWhere((element) => element.father.id == event.id);
-      emit(LoadedState(_list));
-    }
-  }
-
-  _addChild(AddChildEvent event, Emitter<TransactionCategoryTreeState> emit) async {
-    if (!canEdit) return;
-    var item = _list.firstWhere((element) => element.father.id == event.transactionCategoryModel.fatherId);
-
-    item.children.insert(0, event.transactionCategoryModel);
-    emit(LoadedState(_list));
-  }
-
-  _addFather(AddFatherEvent event, Emitter<TransactionCategoryTreeState> emit) async {
-    if (!canEdit) return;
-    _list.insert(0, CategoryData(event.transactionCategoryFatherModel, []));
-    emit(LoadedState(_list));
-  }
-
-  _updateChild(UpdateChildEvent event, Emitter<TransactionCategoryTreeState> emit) async {
-    if (!canEdit) return;
-    _list.forEach((element) {
-      for (int i = 0; i < element.children.length; i++) {
-        if (element.children[i].id == event.transactionCategoryModel.id) {
-          element.children[i] = event.transactionCategoryModel;
-          break;
-        }
-      }
-    });
-    emit(LoadedState(_list));
-  }
-
-  _updateFather(UpdateFatherEvent event, Emitter<TransactionCategoryTreeState> emit) async {
-    if (!canEdit) return;
-    for (int i = 0; i < _list.length; i++) {
-      if (_list[i].father.id == event.transactionCategoryFatherModel.id) {
-        _list[i].father = event.transactionCategoryFatherModel;
-        break;
-      }
-    }
-    emit(LoadedState(_list));
+    parentBloc.add(CategoryParentDeleteEvent(account, parentId: event.id));
   }
 }

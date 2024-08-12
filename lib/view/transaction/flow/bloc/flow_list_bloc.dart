@@ -112,7 +112,7 @@ class FlowListBloc extends Bloc<FlowListEvent, FlowListState> {
 
   _handleTransAdd(TransactionModel trans, emit) {
     _handleTransInTotal(trans, emit, isAdd: true);
-    var editModel = trans.editModel;
+    TransactionEditModel editModel = trans;
     bool needToUpdate = false;
     InExStatisticWithTimeModel? statistic;
     for (var element in monthStatistic) {
@@ -142,7 +142,7 @@ class FlowListBloc extends Bloc<FlowListEvent, FlowListState> {
 
   _handleTransDel(TransactionModel trans, emit) {
     _handleTransInTotal(trans, emit, isAdd: false);
-    var editModel = trans.editModel;
+    TransactionEditModel editModel = trans;
     bool needToUpdate = false;
     InExStatisticWithTimeModel? statistic;
     for (var element in monthStatistic) {
@@ -161,7 +161,7 @@ class FlowListBloc extends Bloc<FlowListEvent, FlowListState> {
   }
 
   _handleTransInTotal(TransactionModel trans, emit, {bool isAdd = true}) {
-    if (total.handleTransEditModel(editModel: trans.editModel, isAdd: isAdd)) {
+    if (total.handleTransEditModel(editModel: trans, isAdd: isAdd)) {
       emit(FlowListTotalDataFetched());
     }
   }

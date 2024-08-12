@@ -11,47 +11,40 @@ class AccountList extends StatefulWidget {
 
 class AccountListState extends State<AccountList> {
   late AccountDetailModel selectedAccount;
-  late List<AccountDetailModel> list;
   @override
   void initState() {
     selectedAccount = widget.selectedAccount;
-    list = [];
     BlocProvider.of<AccountBloc>(context).add(AccountListFetchEvent());
     super.initState();
   }
 
-  Widget listener(Widget widget) {
-    return BlocListener<AccountBloc, AccountState>(
-      listener: (_, state) {
-        if (state is AccountListLoaded) {
-          setState(() {
-            list = state.list;
-          });
-        }
-      },
-      child: widget,
-    );
+  @override
+  void didUpdateWidget(covariant AccountList oldWidget) {
+    if (widget.selectedAccount != oldWidget.selectedAccount) {
+      selectedAccount = widget.selectedAccount;
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget child;
-    if (list.isEmpty) {
-      child = const ShimmerList();
-    } else {
-      child = _listView();
-    }
-    return listener(
-      Scaffold(
-        appBar: AppBar(title: const Text('我的账本'), actions: [
-          IconButton(icon: const Icon(Icons.add_circle_outline), onPressed: () => AccountRoutes.edit(context).push())
-        ]),
-        body: child,
+    return Scaffold(
+      appBar: AppBar(title: const Text('我的账本'), actions: [
+        IconButton(icon: const Icon(ConstantIcon.add), onPressed: () => AccountRoutes.edit(context).push())
+      ]),
+      body: BlocBuilder<AccountBloc, AccountState>(
+        buildWhen: (_, state) => state is AccountListLoaded,
+        builder: (_, state) {
+          if (state is AccountListLoaded) {
+            return _listView(state.list);
+          }
+          return const ShimmerList();
+        },
       ),
     );
   }
 
-  _listView() {
+  _listView(List<AccountDetailModel> list) {
     return ListView.separated(
       itemCount: list.length,
       itemBuilder: (_, index) {

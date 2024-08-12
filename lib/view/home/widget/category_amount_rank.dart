@@ -44,11 +44,17 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> with SingleTick
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (data.length == 0) return SizedBox();
     return _Func._buildCard(
       title: "本月支出排行",
-      child: CommonExpandableList(
+      child: CommonExpansionList(
         children: List.generate(data.length, (index) => _buildListTile(data[index])),
       ),
     );

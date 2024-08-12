@@ -8,7 +8,6 @@ class Bottom extends StatefulWidget {
 }
 
 class _BottomState extends State<Bottom> {
-  late TransactionEditModel model;
   late EditBloc _bloc;
   @override
   void initState() {
@@ -48,7 +47,7 @@ class _BottomState extends State<Bottom> {
           children: [
             _buildButtonGroup(),
             AmountText.sameHeight(
-              _bloc.trans.amount,
+              _bloc.transInfo.amount,
               textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
               dollarSign: true,
             ),
@@ -82,12 +81,24 @@ class _BottomState extends State<Bottom> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        GestureDetector(
-          onTap: () async {
-            var page = AccountRoutes.userConfig(context, accoount: _bloc.account);
-            await page.showDialog();
-          },
-          child: const Icon(Icons.more_vert_outlined),
+        Visibility(
+          visible: _bloc.mode != TransactionEditMode.popTrans,
+          child: GestureDetector(
+            onTap: () async {
+              var page = AccountRoutes.userConfig(context, accoount: _bloc.account);
+              await page.showDialog();
+            },
+            child: const Icon(Icons.more_vert_outlined),
+          ),
+        ),
+        Visibility(
+          visible: _bloc.mode != TransactionEditMode.popTrans,
+          child: _buildButton(
+              onPressed: () async {
+                TransactionRoutes.timingNavigator(context, account: _bloc.account, trans: _bloc.transInfo);
+              },
+              name: "定时",
+              icon: Icons.timer_outlined),
         ),
         Row(
           mainAxisSize: MainAxisSize.min,
@@ -98,6 +109,7 @@ class _BottomState extends State<Bottom> {
             // 账本
             _buildButton(
                 onPressed: () async {
+                  if (_bloc.mode == TransactionEditMode.popTrans) return;
                   var page = AccountRoutes.list(context, selectedAccount: _bloc.account);
                   await page.showModalBottomSheet(onlyCanEdit: true);
                   AccountDetailModel? resule = page.retrunAccount;
@@ -115,8 +127,8 @@ class _BottomState extends State<Bottom> {
                         return CommonDialog.editOne<String>(
                           context,
                           fieldName: "备注",
-                          onSave: (String? value) => _bloc.trans.remark = value ?? "",
-                          initValue: _bloc.trans.remark,
+                          onSave: (String? value) => _bloc.transInfo.remark = value ?? "",
+                          initValue: _bloc.transInfo.remark,
                         );
                       });
                 },
@@ -128,15 +140,15 @@ class _BottomState extends State<Bottom> {
   }
 
   Widget _buildDateButton() {
-    String buttonName = DateFormat('yyyy-MM-dd').format(_bloc.trans.tradeTime);
-    if (Time.isSameDayComparison(_bloc.trans.tradeTime, DateTime.now())) {
+    String buttonName = DateFormat('yyyy-MM-dd').format(_bloc.transInfo.tradeTime);
+    if (Time.isSameDayComparison(_bloc.transInfo.tradeTime, DateTime.now())) {
       buttonName += " 今天";
     }
     return _buildButton(
         onPressed: () async {
           final DateTime? picked = await showDatePicker(
             context: context,
-            initialDate: _bloc.trans.tradeTime,
+            initialDate: _bloc.transInfo.tradeTime,
             firstDate: Constant.minDateTime,
             lastDate: Constant.maxDateTime,
           );
@@ -186,21 +198,21 @@ class _BottomState extends State<Bottom> {
 
   String keyboradInput = "", keyboradHistory = "";
 
-// 事件
+  /* event */
   void onComplete(bool isAgain, int? amount) => _bloc.add(TransactionSave(isAgain, amount: amount));
 
   void onRefreshKeyborad(int amount, String input, String history) {
     setState(() {
-      _bloc.trans.amount = amount;
+      _bloc.transInfo.amount = amount;
       keyboradInput = input;
       keyboradHistory = history;
     });
   }
 
   void onChangeTradeTime(DateTime time) {
-    if (false == Time.isSameDayComparison(_bloc.trans.tradeTime, time)) {
+    if (false == Time.isSameDayComparison(_bloc.transInfo.tradeTime, time)) {
       setState(() {
-        _bloc.trans.tradeTime = time;
+        _bloc.transInfo.tradeTime = time;
       });
     }
   }

@@ -57,3 +57,222 @@ class FormSelecter {
         onChanged: onChanged);
   }
 }
+
+class SelectOption<T extends Comparable> {
+  final String name;
+  final T value;
+  SelectOption({required this.name, required this.value});
+}
+
+enum SelectMode { bottomSheet }
+
+abstract class bottomSelecter<T extends Comparable> extends StatefulWidget {
+  final T? selected;
+  final List<SelectOption<T>> options;
+  final ValueChanged<SelectOption<T>> onTap;
+  final Color backgroundColor;
+  final double? height;
+  const bottomSelecter({
+    super.key,
+    this.selected,
+    required this.options,
+    required this.onTap,
+    this.backgroundColor = Colors.white,
+    this.height = Constant.buttomHight,
+  });
+}
+
+bottomSelecter createBottomSelect({
+  DateTime? selected,
+  required ValueChanged<SelectOption<DateTime>> onTap,
+  required DateSelectMode mode,
+  required Type type,
+  required Color backgroundColor,
+  double? height,
+}) {
+  assert(mode == DateSelectMode.week || mode == DateSelectMode.month);
+  List<SelectOption<DateTime>> options;
+  if (mode == DateSelectMode.month) {
+    var now = Time.getFirstSecondOfMonth(date: selected ?? DateTime.now());
+    // The month has 28 days
+    options = Time.getDays(now, now.add(Duration(days: 27)))
+        .map((e) => SelectOption<DateTime>(name: DateFormat('d').format(e), value: e))
+        .toList();
+    if (selected != null) options[0] = SelectOption<DateTime>(name: DateFormat('d').format(selected), value: selected);
+  } else {
+    var now = selected ?? DateTime.now();
+    options = Time.getDays(now, now.add(Duration(days: 6)))
+        .map((e) => SelectOption<DateTime>(name: DateFormat('EEE').format(e), value: e))
+        .toList();
+    if (selected != null)
+      options[0] = SelectOption<DateTime>(name: DateFormat('EEE').format(selected), value: selected);
+  }
+  switch (type) {
+    case BottomSelecter:
+      return BottomSelecter<DateTime>(
+          options: options, onTap: onTap, selected: selected, backgroundColor: backgroundColor, height: height);
+    case BottomCupertinoSelecter:
+      return BottomCupertinoSelecter<DateTime>(
+          options: options, onTap: onTap, selected: selected, backgroundColor: backgroundColor, height: height);
+    default:
+      return BottomSelecter<DateTime>(
+          options: options, onTap: onTap, selected: selected, backgroundColor: backgroundColor, height: height);
+  }
+}
+
+enum DateSelectMode {
+  day,
+  week,
+  month;
+
+  String getDateFormat(DateTime date) {
+    {
+      switch (this) {
+        case DateSelectMode.day:
+          return DateFormat('yyyy-MM-dd').format(date);
+        case DateSelectMode.week:
+          return DateFormat('EEEE').format(date);
+        case DateSelectMode.month:
+          return DateFormat('dd日').format(date);
+        default:
+          return DateFormat('yyyy-MM-dd').format(date);
+      }
+    }
+  }
+}
+
+class BottomSelecter<T extends Comparable> extends bottomSelecter<T> {
+  const BottomSelecter(
+      {super.key,
+      required super.options,
+      required super.onTap,
+      super.selected,
+      super.backgroundColor,
+      super.height = null});
+
+  @override
+  State<BottomSelecter<T>> createState() => _BottomSelecterState<T>();
+}
+
+class _BottomSelecterState<T extends Comparable> extends State<BottomSelecter<T>> {
+  T? selected;
+  @override
+  void initState() {
+    selected = widget.selected;
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant BottomSelecter<T> oldWidget) {
+    selected = widget.selected;
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    int selectedIndext = widget.options.indexWhere((element) => element.value == selected);
+    if (selectedIndext < 0) {
+      widget.onTap(widget.options.first);
+      selected = widget.options.first.value;
+    }
+    Widget child = Padding(
+      padding: const EdgeInsets.only(top: Constant.buttomSheetRadius, bottom: Constant.margin),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: widget.backgroundColor,
+          borderRadius: ConstantDecoration.bottomSheetBorderRadius,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: widget.options.map((element) => itemBuilder(context, element)).toList(),
+        ),
+      ),
+    );
+    if (widget.height != null) {
+      child = SizedBox(height: widget.height, child: child);
+    }
+    return child;
+  }
+
+  Widget itemBuilder(BuildContext context, SelectOption<T> option) {
+    return ListTile(
+      selectedTileColor: ConstantColor.greyBackground,
+      selectedColor: ConstantColor.primaryColor,
+      selected: selected == option.value,
+      titleAlignment: ListTileTitleAlignment.center,
+      title: Text(option.name, textAlign: TextAlign.center),
+      onTap: () {
+        selected = option.value;
+        widget.onTap(option);
+        setState(() {});
+      },
+    );
+  }
+}
+
+class BottomCupertinoSelecter<T extends Comparable> extends bottomSelecter<T> {
+  BottomCupertinoSelecter({
+    super.key,
+    required super.options,
+    required super.onTap,
+    super.selected,
+    super.backgroundColor,
+    double? height = Constant.buttomHight,
+  }) : super(height: height ?? Constant.buttomHight);
+
+  @override
+  State<BottomCupertinoSelecter<T>> createState() => _BottomCupertinoSelecterState<T>();
+}
+
+class _BottomCupertinoSelecterState<T extends Comparable> extends State<BottomCupertinoSelecter<T>> {
+  T? selected;
+  @override
+  void initState() {
+    selected = widget.selected;
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant BottomCupertinoSelecter<T> oldWidget) {
+    selected = widget.selected;
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    int selectedIndext = widget.options.indexWhere((element) => element.value == selected);
+    if (selectedIndext < 0) {
+      selectedIndext = 0;
+      widget.onTap(widget.options.first);
+      selected = widget.options.first.value;
+    }
+    return SizedBox(
+      height: widget.height,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: widget.backgroundColor,
+          borderRadius: ConstantDecoration.bottomSheetBorderRadius,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(Constant.margin),
+          child: CupertinoPicker(
+            magnification: 2,
+            squeeze: 1,
+            scrollController: selected != null ? FixedExtentScrollController(initialItem: selectedIndext) : null,
+            itemExtent: 32,
+            onSelectedItemChanged: (int index) => widget.onTap(widget.options[index]),
+            children: List<Widget>.generate(
+                widget.options.length, (int index) => itemBuilder(context, widget.options[index])),
+            looping: true,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget itemBuilder(BuildContext context, SelectOption<T> option) {
+    if (widget.selected != null && widget.selected == option.value) {}
+    return Text(option.name);
+  }
+}

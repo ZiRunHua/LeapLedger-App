@@ -28,11 +28,8 @@ class FormButton {
           ),
         ),
         child: const Text(
-          '保 存',
-          style: TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-          ),
+          '保存',
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, letterSpacing: Constant.margin / 2),
         ),
       ),
     );
@@ -40,7 +37,7 @@ class FormButton {
 
   static Widget mediumElevatedBtn(BuildContext context, String text, Function() submitForm) {
     return SizedBox(
-      width: 250,
+      width: double.infinity,
       child: ElevatedButton(
         style: ButtonStyle(
             shape: MaterialStateProperty.all(const StadiumBorder(side: BorderSide(style: BorderStyle.none)))),
@@ -50,8 +47,7 @@ class FormButton {
         child: Text(
           text,
           style: TextStyle(
-            fontSize: Theme.of(context).primaryTextTheme.titleMedium!.fontSize,
-          ),
+              fontSize: Theme.of(context).primaryTextTheme.titleMedium!.fontSize, letterSpacing: Constant.margin / 2),
         ),
       ),
     );

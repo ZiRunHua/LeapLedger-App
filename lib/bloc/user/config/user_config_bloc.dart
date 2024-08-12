@@ -31,6 +31,7 @@ class UserConfigBloc extends Bloc<UserConfigEvent, UserConfigState> {
     if (data == null) {
       return;
     }
-    emit(UserTransactionShareConfigUpdateSuccess(data));
+    transShareConfig = data;
+    emit(UserTransactionShareConfigUpdateSuccess(transShareConfig!));
   }
 }
