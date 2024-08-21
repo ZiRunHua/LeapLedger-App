@@ -10,9 +10,9 @@ class TransactionCategoryFatherModel {
   late String name;
   @JsonKey(defaultValue: IncomeExpense.income)
   late IncomeExpense incomeExpense;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   late DateTime createdAt;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   late DateTime updatedAt;
   TransactionCategoryFatherModel({
     required this.id,

@@ -21,7 +21,7 @@ class AccountMappingCubit extends Cubit<AccountMappingState> {
 
   changeMapping(AccountDetailModel account) async {
     if (isCurrentMappingAccount(account)) {
-      var isSuccess = await AccountApi.deleteMapping(mappingId: mapping!.id);
+      var isSuccess = await AccountApi.deleteMapping(mappingId: mapping!.id, accountId: account.id);
       if (false == isSuccess) {
         return;
       }
@@ -33,7 +33,8 @@ class AccountMappingCubit extends Cubit<AccountMappingState> {
       }
       this.mapping = mapping;
     } else {
-      var mapping = await AccountApi.updateMapping(mappingId: this.mapping!.id, relatedAccountId: account.id);
+      var mapping = await AccountApi.updateMapping(
+          mappingId: this.mapping!.id, accountId: account.id, relatedAccountId: account.id);
       if (mapping == null) {
         return;
       }

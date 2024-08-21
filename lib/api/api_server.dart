@@ -36,7 +36,7 @@ import 'package:keepaccount_app/widget/toast.dart';
 part 'common.dart';
 part 'user.dart';
 part 'account.dart';
-part 'transaction_category.dart';
+part 'category.dart';
 part 'transaction.dart';
 part 'product.dart';
 

@@ -80,8 +80,8 @@ class AccountTransactionCategoryMappingBloc extends TransactionCategoryMappingBl
     // 获取
     List<TransactionCategoryMappingTreeNodeApiModel> tree = [];
     List<Future<void>> waitGroup = [
-      Future<void>(() async => tree = await TransactionCategoryApi.getCategoryMappingTree(
-          parentAccountId: parentAccount.id, childAccountId: childAccount.id))
+      Future<void>(() async => tree =
+          await CategoryApi.getCategoryMappingTree(parentAccountId: parentAccount.id, childAccountId: childAccount.id))
     ];
     if (childCategoryList == null) waitGroup.add(getList());
     if (parentCategoryTree == null) waitGroup.add(getParentCategoryTree());
@@ -108,19 +108,23 @@ class AccountTransactionCategoryMappingBloc extends TransactionCategoryMappingBl
   }
 
   getParentCategoryTree() async => parentCategoryTree = await ApiServer.getData(
-        () => TransactionCategoryApi.getTree(accountId: parentAccount.id),
-        TransactionCategoryApi.dataFormatFunc.getTreeDataToList,
+        () => CategoryApi.getTree(accountId: parentAccount.id),
+        CategoryApi.dataFormatFunc.getTreeDataToList,
       );
 
   @override
   getList() async => childCategoryList = await ApiServer.getData(
-        () => TransactionCategoryApi.getTree(accountId: childAccount.id),
-        TransactionCategoryApi.dataFormatFunc.getCategoryListByTree,
+        () => CategoryApi.getTree(accountId: childAccount.id),
+        CategoryApi.dataFormatFunc.getCategoryListByTree,
       );
 
   @override
   mapping(TransactionCategoryMappingAddEvent event, Emitter<TransactionCategoryMappingState> emit) async {
-    bool isSuccess = await TransactionCategoryApi.mappingCategory(parentId: event.parent.id, childId: event.child.id);
+    bool isSuccess = await CategoryApi.mappingCategory(
+      parentId: event.parent.id,
+      childId: event.child.id,
+      accountId: event.parent.accountId,
+    );
     if (isSuccess) {
       if (relation[event.parent.id] != null) {
         relation[event.parent.id]?.add(event.child);
@@ -135,8 +139,11 @@ class AccountTransactionCategoryMappingBloc extends TransactionCategoryMappingBl
 
   @override
   deleteMapping(TransactionCategoryMappingDeleteEvent event, Emitter<TransactionCategoryMappingState> emit) async {
-    bool isSuccess =
-        await TransactionCategoryApi.deleteCategoryMapping(parentId: event.parent.id, childId: event.child.id);
+    bool isSuccess = await CategoryApi.deleteCategoryMapping(
+      parentId: event.parent.id,
+      childId: event.child.id,
+      accountId: event.parent.accountId,
+    );
     if (isSuccess) {
       if (relation[event.parent.id] != null) {
         relation[event.parent.id]?.removeWhere((element) => event.child.id == element.id);
@@ -176,7 +183,7 @@ class ProductTransactionCategoryMappingBloc extends TransactionCategoryMappingBl
 
   @override
   load(TransactionCategoryMappingLoadEvent event, Emitter<TransactionCategoryMappingState> emit) async {
-    ResponseBody treeResponse = await ProductApi.getCategorymappingTree(product.uniqueKey);
+    ResponseBody treeResponse = await ProductApi.getCategorymappingTree(product.uniqueKey, accountId: account.id);
     if (childCategoryList == null) {
       await getList();
     }

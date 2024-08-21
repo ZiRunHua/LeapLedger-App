@@ -12,8 +12,8 @@ class TransImportTabBloc extends Bloc<TransImportTabEvent, TransImportTabState> 
     Future<void> incomeFunc() async {
       List<MapEntry<TransactionCategoryFatherModel, List<TransactionCategoryModel>>> expenseTree =
           await ApiServer.getData(
-        () => TransactionCategoryApi.getTree(accountId: account.id, type: IncomeExpense.expense),
-        TransactionCategoryApi.dataFormatFunc.getTreeDataToList,
+        () => CategoryApi.getTree(accountId: account.id, type: IncomeExpense.expense),
+        CategoryApi.dataFormatFunc.getTreeDataToList,
       );
       _tree.addAll(expenseTree);
     }
@@ -21,8 +21,8 @@ class TransImportTabBloc extends Bloc<TransImportTabEvent, TransImportTabState> 
     Future<void> expenseFunc() async {
       List<MapEntry<TransactionCategoryFatherModel, List<TransactionCategoryModel>>> incomeTree =
           await ApiServer.getData(
-        () => TransactionCategoryApi.getTree(accountId: account.id, type: IncomeExpense.income),
-        TransactionCategoryApi.dataFormatFunc.getTreeDataToList,
+        () => CategoryApi.getTree(accountId: account.id, type: IncomeExpense.income),
+        CategoryApi.dataFormatFunc.getTreeDataToList,
       );
       _tree.addAll(incomeTree);
     }
@@ -40,7 +40,11 @@ class TransImportTabBloc extends Bloc<TransImportTabEvent, TransImportTabState> 
   }
 
   uploadFile(TransactionImportUploadBillEvent event, Emitter<TransImportTabState> emit) async {
-    ResponseBody responseBody = await ProductApi.uploadBill(event.product.uniqueKey, event.filePath);
+    ResponseBody responseBody = await ProductApi.uploadBill(
+      event.product.uniqueKey,
+      event.filePath,
+      accountId: account.id,
+    );
     if (responseBody.isSuccess) {}
   }
 }

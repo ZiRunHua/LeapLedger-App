@@ -87,8 +87,10 @@ class AccountApi {
     return result;
   }
 
-  static Future<AccountUserModel?> updateUser({required int id, required AccountRole role}) async {
-    ResponseBody response = await ApiServer.request(Method.put, '$baseUrl/user/$id', data: {'Role': role.value});
+  static Future<AccountUserModel?> updateUser(
+      {required int id, required int accountId, required AccountRole role}) async {
+    ResponseBody response =
+        await ApiServer.request(Method.put, '$baseUrl/$accountId/user/$id', data: {'Role': role.value});
     AccountUserModel? result;
     if (response.isSuccess) {
       result = AccountUserModel.fromJson(response.data);
@@ -204,7 +206,7 @@ class AccountApi {
       "AccountId": accountId,
       "Invitee": inviteeId,
       "Limit": limit,
-      "offset": offset,
+      "Offset": offset,
     });
     List<AccountUserInvitationModle> result = [];
     if (response.isSuccess) {
@@ -220,7 +222,7 @@ class AccountApi {
     ResponseBody response = await ApiServer.request(Method.get, '$baseUrl/user/invitation/list', data: {
       "Invitee": UserBloc.user.id,
       "Limit": limit,
-      "offset": offset,
+      "Offset": offset,
     });
     List<AccountUserInvitationModle> result = [];
     if (response.isSuccess) {
@@ -232,7 +234,7 @@ class AccountApi {
   }
 
   static Future<AccountUserInvitationModle?> acceptInvitation(int id) async {
-    ResponseBody response = await ApiServer.request(Method.post, '$baseUrl/user/invitation/$id/accept');
+    ResponseBody response = await ApiServer.request(Method.put, '$baseUrl/user/invitation/$id/accept');
     if (response.isSuccess) {
       return AccountUserInvitationModle.fromJson(response.data);
     }
@@ -240,7 +242,7 @@ class AccountApi {
   }
 
   static Future<AccountUserInvitationModle?> refuseInvitation(int id) async {
-    ResponseBody response = await ApiServer.request(Method.post, '$baseUrl/user/invitation/$id/refuse');
+    ResponseBody response = await ApiServer.request(Method.put, '$baseUrl/user/invitation/$id/refuse');
     if (response.isSuccess) {
       return AccountUserInvitationModle.fromJson(response.data);
     }
@@ -266,14 +268,18 @@ class AccountApi {
     return null;
   }
 
-  static Future<bool> deleteMapping({required int mappingId}) async {
-    ResponseBody response = await ApiServer.request(Method.delete, '$baseUrl/mapping/$mappingId');
+  static Future<bool> deleteMapping({required int mappingId, required int accountId}) async {
+    ResponseBody response = await ApiServer.request(Method.delete, '$baseUrl/$accountId/mapping/$mappingId');
     return response.isSuccess;
   }
 
   /// 返回null表示失败
-  static Future<AccountMappingModel?> updateMapping({required int mappingId, required int relatedAccountId}) async {
-    ResponseBody response = await ApiServer.request(Method.put, '$baseUrl/mapping/$mappingId',
+  static Future<AccountMappingModel?> updateMapping({
+    required int mappingId,
+    required int accountId,
+    required int relatedAccountId,
+  }) async {
+    ResponseBody response = await ApiServer.request(Method.put, '$baseUrl/$accountId/mapping/$mappingId',
         data: {"RelatedAccountId": relatedAccountId});
     if (response.isSuccess) {
       return AccountMappingModel.fromJson(response.data);

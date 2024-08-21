@@ -115,7 +115,7 @@ class UserApi {
   }) async {
     ResponseBody response = await ApiServer.request(Method.get, '$baseUrl/account/invitation/list', data: {
       "Limit": limit,
-      "offset": offset,
+      "Offset": offset,
     });
     List<AccountUserInvitationModle> result = [];
     if (response.isSuccess) {

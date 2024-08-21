@@ -18,8 +18,10 @@ TransactionCategoryModel _$TransactionCategoryModelFromJson(
       incomeExpense:
           $enumDecodeNullable(_$IncomeExpenseEnumMap, json['IncomeExpense']) ??
               IncomeExpense.income,
-      createdAt: Json.dateTimeFromJson(json['CreatedAt']),
-      updatedAt: Json.dateTimeFromJson(json['UpdatedAt']),
+      createdAt:
+          const UtcDateTimeConverter().fromJson(json['CreatedAt'] as String?),
+      updatedAt:
+          const UtcDateTimeConverter().fromJson(json['UpdatedAt'] as String?),
     );
 
 Map<String, dynamic> _$TransactionCategoryModelToJson(
@@ -32,8 +34,8 @@ Map<String, dynamic> _$TransactionCategoryModelToJson(
       'FatherId': instance.fatherId,
       'FatherName': instance.fatherName,
       'AccountId': instance.accountId,
-      'CreatedAt': Json.dateTimeToJson(instance.createdAt),
-      'UpdatedAt': Json.dateTimeToJson(instance.updatedAt),
+      'CreatedAt': const UtcDateTimeConverter().toJson(instance.createdAt),
+      'UpdatedAt': const UtcDateTimeConverter().toJson(instance.updatedAt),
     };
 
 const _$IncomeExpenseEnumMap = {
@@ -50,8 +52,10 @@ TransactionCategoryFatherModel _$TransactionCategoryFatherModelFromJson(
       incomeExpense:
           $enumDecodeNullable(_$IncomeExpenseEnumMap, json['IncomeExpense']) ??
               IncomeExpense.income,
-      createdAt: Json.dateTimeFromJson(json['CreatedAt']),
-      updatedAt: Json.dateTimeFromJson(json['UpdatedAt']),
+      createdAt:
+          const UtcDateTimeConverter().fromJson(json['CreatedAt'] as String?),
+      updatedAt:
+          const UtcDateTimeConverter().fromJson(json['UpdatedAt'] as String?),
     );
 
 Map<String, dynamic> _$TransactionCategoryFatherModelToJson(
@@ -61,6 +65,6 @@ Map<String, dynamic> _$TransactionCategoryFatherModelToJson(
       'AccountId': instance.accountId,
       'Name': instance.name,
       'IncomeExpense': _$IncomeExpenseEnumMap[instance.incomeExpense]!,
-      'CreatedAt': Json.dateTimeToJson(instance.createdAt),
-      'UpdatedAt': Json.dateTimeToJson(instance.updatedAt),
+      'CreatedAt': const UtcDateTimeConverter().toJson(instance.createdAt),
+      'UpdatedAt': const UtcDateTimeConverter().toJson(instance.updatedAt),
     };

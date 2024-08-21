@@ -32,7 +32,7 @@ class StatusFlagModel {
 @JsonSerializable(fieldRename: FieldRename.pascal)
 class AmountDateModel {
   late int amount;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   late DateTime date;
   late DateType type;
   AmountDateModel({required this.amount, required this.type, required this.date});
@@ -93,9 +93,9 @@ class AmountCountModel {
 ///带时间的金额笔数数据模型
 @JsonSerializable(fieldRename: FieldRename.pascal)
 class AmountCountWithTimeModel extends AmountCountModel {
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   late DateTime startTime;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   late DateTime endTime;
   AmountCountWithTimeModel({
     required int amount,
@@ -169,9 +169,9 @@ class InExStatisticWithTimeModel extends InExStatisticModel {
   int get dayAverageExpense => expense.amount != 0 ? expense.amount ~/ numberOfDays : 0;
   @JsonKey(includeFromJson: false, includeToJson: false)
   late final int numberOfDays;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   late final DateTime startTime;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   late final DateTime endTime;
   InExStatisticWithTimeModel({super.income, super.expense, required this.startTime, required this.endTime}) {
     numberOfDays = endTime.add(Duration(seconds: 1)).difference(startTime).inDays;

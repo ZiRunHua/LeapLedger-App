@@ -37,7 +37,8 @@ class _AccountUserEditDialogState extends State<AccountUserEditDialog> {
             if (selectedRole == accountUser.role) {
               return;
             }
-            var result = await AccountApi.updateUser(id: accountUser.id!, role: selectedRole);
+            var result =
+                await AccountApi.updateUser(id: accountUser.id!, accountId: accountUser.accountId, role: selectedRole);
             if (result != null && mounted) {
               Navigator.of(context).pop<AccountUserModel>(result);
             }

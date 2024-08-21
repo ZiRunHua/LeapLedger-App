@@ -21,12 +21,15 @@ class _TransactionCategoryTemplateState extends State<TransactionCategoryTemplat
 
   @override
   Widget build(BuildContext context) {
-    Widget child;
-    if (templateList == null) {
-      child = const Center(child: CircularProgressIndicator());
-    } else {
-      child = _buildList(templateList!);
-    }
+    var child = BlocBuilder<AccountBloc, AccountState>(
+      buildWhen: (previous, current) => current is AccountTemplateListLoaded,
+      builder: (context, state) {
+        if (state is AccountTemplateListLoaded) {
+          return _buildList(templateList!);
+        }
+        return _buildList([]);
+      },
+    );
 
     return BlocListener<AccountBloc, AccountState>(
       listener: (context, state) {
@@ -38,10 +41,7 @@ class _TransactionCategoryTemplateState extends State<TransactionCategoryTemplat
           Navigator.pop<AccountDetailModel>(context, state.account);
         }
       },
-      child: Scaffold(
-        appBar: AppBar(title: const Text("选择交易类型")),
-        body: child,
-      ),
+      child: Scaffold(appBar: AppBar(title: const Text("选择交易类型")), body: child),
     );
   }
 

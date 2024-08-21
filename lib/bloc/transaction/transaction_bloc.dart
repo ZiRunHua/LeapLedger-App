@@ -58,7 +58,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     if (event.trans.id == 0) {
       return;
     }
-    var response = await TransactionApi.delete(event.trans.id);
+    var response = await TransactionApi.delete(event.trans.id, accountId: event.trans.accountId);
     if (response.isSuccess == false) {
       return;
     }

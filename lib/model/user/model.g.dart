@@ -10,15 +10,17 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel()
   ..id = (json['Id'] as num?)?.toInt() ?? 0
   ..username = json['Username'] as String? ?? ''
   ..email = json['Email'] as String? ?? ''
-  ..createTime = Json.dateTimeFromJson(json['CreateTime'])
-  ..updateTime = Json.dateTimeFromJson(json['UpdateTime']);
+  ..createTime =
+      const UtcDateTimeConverter().fromJson(json['CreateTime'] as String?)
+  ..updateTime =
+      const UtcDateTimeConverter().fromJson(json['UpdateTime'] as String?);
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'Id': instance.id,
       'Username': instance.username,
       'Email': instance.email,
-      'CreateTime': Json.dateTimeToJson(instance.createTime),
-      'UpdateTime': Json.dateTimeToJson(instance.updateTime),
+      'CreateTime': const UtcDateTimeConverter().toJson(instance.createTime),
+      'UpdateTime': const UtcDateTimeConverter().toJson(instance.updateTime),
     };
 
 UserTransactionShareConfigModel _$UserTransactionShareConfigModelFromJson(

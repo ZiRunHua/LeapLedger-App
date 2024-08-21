@@ -26,8 +26,8 @@ class FlowConditionCubit extends Cubit<FlowConditionState> {
     accountId = accountId ?? condition.accountId;
     if (_categoryCache[accountId] == null) {
       _categoryCache[accountId] = await ApiServer.getData(
-        () => TransactionCategoryApi.getTree(accountId: accountId),
-        TransactionCategoryApi.dataFormatFunc.getTreeDataToList,
+        () => CategoryApi.getTree(accountId: accountId!),
+        CategoryApi.dataFormatFunc.getTreeDataToList,
       );
     }
     categorytree = _categoryCache[accountId]!;

@@ -17,8 +17,7 @@ class CommonCaptchaModel {
 @JsonSerializable(fieldRename: FieldRename.pascal)
 class DayAmountStatisticApiModel {
   late int amount;
-
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   DateTime date;
   DayAmountStatisticApiModel({this.amount = 0, required this.date});
 

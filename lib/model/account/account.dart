@@ -17,9 +17,9 @@ class AccountModel {
   late IconData icon;
   @JsonKey(defaultValue: AccountType.independent, unknownEnumValue: AccountType.independent)
   late AccountType type;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   late DateTime createTime;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   late DateTime updateTime;
 
   bool get isValid => id > 0;
@@ -72,7 +72,7 @@ class AccountDetailModel extends AccountModel {
   String creatorName;
   @JsonKey(defaultValue: AccountRole.reader, unknownEnumValue: AccountRole.reader)
   AccountRole role;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   DateTime joinTime;
 
   bool get isCreator => role == AccountRole.creator;
@@ -174,7 +174,7 @@ class AccountUserModel {
   late int accountId;
   late UserInfoModel info;
   late AccountRole role;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   late DateTime createTime;
 
   bool get isValid => id != null && id! > 0;
@@ -254,7 +254,7 @@ class AccountUserInvitationModle {
   UserInfoModel inviter;
   AccountRole role;
   AccountUserInvitationStatus status;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   DateTime createTime;
   AccountUserInvitationModle(
       {required this.account,
@@ -284,9 +284,9 @@ class AccountMappingModel {
   int id;
   AccountModel mainAccount;
   AccountDetailModel relatedAccount;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   DateTime updateTime;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   DateTime createTime;
 
   AccountMappingModel({
@@ -308,9 +308,9 @@ class AccountUserConfigModel {
   int userId;
   int accountId;
   AccountUserTransConfigModel trans;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   DateTime updateTime;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   DateTime createTime;
 
   AccountUserConfigModel({

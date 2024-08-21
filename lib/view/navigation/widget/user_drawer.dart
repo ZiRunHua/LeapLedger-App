@@ -2,16 +2,19 @@ part of '../navigation.dart';
 
 class UserDrawer extends StatelessWidget {
   const UserDrawer({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final Color iconColor = Colors.grey.shade800;
     return Drawer(
       width: 280,
+      backgroundColor: Colors.white,
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
           const UserDrawerHeader(),
           ListTile(
-            leading: const Icon(Icons.key),
+            leading: Icon(Icons.key, color: iconColor),
             title: const Text('修改密码'),
             contentPadding: const EdgeInsets.only(left: 48),
             onTap: () {
@@ -19,13 +22,13 @@ class UserDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.library_books),
+            leading: Icon(Icons.library_books, color: iconColor),
             title: const Text('账本管理'),
             contentPadding: const EdgeInsets.only(left: 48),
             onTap: () => AccountRoutes.list(context, selectedCurrentAccount: true).push(),
           ),
           ListTile(
-            leading: const Icon(Icons.toggle_on_outlined),
+            leading: Icon(Icons.toggle_on_outlined, color: iconColor),
             title: const Text('分享配置'),
             contentPadding: const EdgeInsets.only(left: 48),
             onTap: () {
@@ -33,7 +36,7 @@ class UserDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.send_outlined),
+            leading: Icon(Icons.send_outlined, color: iconColor),
             title: const Text('邀请'),
             contentPadding: const EdgeInsets.only(left: 48),
             onTap: () {
@@ -41,7 +44,7 @@ class UserDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.logout_outlined),
+            leading: Icon(Icons.logout_outlined, color: iconColor),
             title: const Text('退出'),
             contentPadding: const EdgeInsets.only(left: 48),
             onTap: () {

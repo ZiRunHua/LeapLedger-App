@@ -1,14 +1,19 @@
 part of 'api_server.dart';
 
-class TransactionCategoryApi {
-  static String baseUrl = '/transaction/category';
+class CategoryApi {
+  static String baseUrl = '/category';
   static TransactionCategoryApiData dataFormatFunc = TransactionCategoryApiData();
-  static Future<ResponseBody> getTree({IncomeExpense? type, int? accountId}) async {
-    accountId ??= UserBloc.currentAccount.id;
+  static String _buildPrefix(int? accountId) {
+    if (accountId == null) {
+      return baseUrl;
+    }
+    return "/account/" + accountId.toString() + baseUrl;
+  }
 
+  static Future<ResponseBody> getTree({IncomeExpense? type, required int accountId}) async {
     ResponseBody response = await ApiServer.request(
       Method.get,
-      '$baseUrl/tree',
+      _buildPrefix(accountId) + '/tree',
       data: {'AccountId': accountId, 'IncomeExpense': type?.name},
     );
     if (response.isSuccess && response.data['Tree'] is List) {
@@ -30,7 +35,7 @@ class TransactionCategoryApi {
       {required int accountId, required CategoryQueryCond cond}) async {
     ResponseBody response = await ApiServer.request(
       Method.get,
-      '$baseUrl/list',
+      _buildPrefix(accountId) + '/list',
       data: {'AccountId': accountId, 'IncomeExpense': cond.type?.name},
     );
     List<TransactionCategoryModel> list = [];
@@ -48,23 +53,24 @@ class TransactionCategoryApi {
   }) async {
     ResponseBody response = await ApiServer.request(
       Method.get,
-      '$baseUrl/tree',
+      _buildPrefix(accountId) + '/tree',
       data: {'AccountId': accountId, 'IncomeExpense': cond.type?.name},
     );
     return response;
   }
 
-  static Future<ResponseBody> moveCategory(int id, {int? previous, int? parentId}) async {
-    return await ApiServer.request(Method.post, '$baseUrl/$id/move',
+  static Future<ResponseBody> moveCategory(int id, {required int accountId, int? previous, int? parentId}) async {
+    return await ApiServer.request(Method.put, _buildPrefix(accountId) + '/$id/move',
         data: {'Previous': previous, 'FatherId': parentId});
   }
 
-  static Future<ResponseBody> moveCategoryParent(int id, {int? previous}) async {
-    return await ApiServer.request(Method.post, '$baseUrl/father/$id/move', data: {'Previous': previous});
+  static Future<ResponseBody> moveCategoryParent(int id, {required int accountId, int? previous}) async {
+    return await ApiServer.request(Method.put, _buildPrefix(accountId) + '/father/$id/move',
+        data: {'Previous': previous});
   }
 
   static Future<TransactionCategoryModel?> addCategory(TransactionCategoryModel model) async {
-    var response = await ApiServer.request(Method.post, baseUrl, data: model.toJson());
+    var response = await ApiServer.request(Method.post, _buildPrefix(model.accountId), data: model.toJson());
     if (response.isSuccess) {
       return TransactionCategoryModel.fromJson(response.data);
     }
@@ -72,23 +78,28 @@ class TransactionCategoryApi {
   }
 
   static Future<TransactionCategoryFatherModel?> addCategoryParent(TransactionCategoryFatherModel model) async {
-    var response = await ApiServer.request(Method.post, '$baseUrl/father', data: model.toJson());
+    var response =
+        await ApiServer.request(Method.post, _buildPrefix(model.accountId) + '/father', data: model.toJson());
     if (response.isSuccess) {
       return TransactionCategoryFatherModel.fromJson(response.data);
     }
     return null;
   }
 
-  static Future<ResponseBody> deleteCategory(int id) async {
-    return await ApiServer.request(Method.delete, '$baseUrl/$id');
+  static Future<ResponseBody> deleteCategory(int id, {required int accountId}) async {
+    return await ApiServer.request(Method.delete, _buildPrefix(accountId) + '/$id');
   }
 
-  static Future<ResponseBody> deleteCategoryParent(int id) async {
-    return await ApiServer.request(Method.delete, '$baseUrl/father/$id');
+  static Future<ResponseBody> deleteCategoryParent(int id, {required int accountId}) async {
+    return await ApiServer.request(Method.delete, _buildPrefix(accountId) + '/father/$id');
   }
 
   static Future<TransactionCategoryModel?> updateCategory(TransactionCategoryModel model) async {
-    var response = await ApiServer.request(Method.put, '$baseUrl/${model.id}', data: model.toJson());
+    var response = await ApiServer.request(
+      Method.put,
+      _buildPrefix(model.accountId) + '/${model.id}',
+      data: model.toJson(),
+    );
     if (response.isSuccess) {
       return TransactionCategoryModel.fromJson(response.data);
     }
@@ -96,32 +107,44 @@ class TransactionCategoryApi {
   }
 
   static Future<TransactionCategoryFatherModel?> updateCategoryParent(TransactionCategoryFatherModel model) async {
-    var response = await ApiServer.request(Method.put, '$baseUrl/father/${model.id}', data: model.toJson());
+    var response = await ApiServer.request(
+      Method.put,
+      _buildPrefix(model.accountId) + '/father/${model.id}',
+      data: model.toJson(),
+    );
     if (response.isSuccess) {
       return TransactionCategoryFatherModel.fromJson(response.data);
     }
     return null;
   }
 
-  static Future<bool> mappingCategory({required int parentId, required int childId}) async {
-    var response = await ApiServer.request(Method.post, '$baseUrl/$parentId/mapping', data: {
-      "ChildCategoryId": childId,
-    });
+  static Future<bool> mappingCategory({required int parentId, required int childId, required int accountId}) async {
+    var response = await ApiServer.request(
+      Method.post,
+      _buildPrefix(accountId) + '/$parentId/mapping',
+      data: {
+        "ChildCategoryId": childId,
+      },
+    );
     return response.isSuccess;
   }
 
-  static Future<bool> deleteCategoryMapping({required int parentId, required int childId}) async {
-    var response = await ApiServer.request(Method.delete, '$baseUrl/$parentId/mapping', data: {
-      "ChildCategoryId": childId,
-    });
+  static Future<bool> deleteCategoryMapping(
+      {required int parentId, required int childId, required int accountId}) async {
+    var response = await ApiServer.request(
+      Method.delete,
+      _buildPrefix(accountId) + '/$parentId/mapping',
+      data: {
+        "ChildCategoryId": childId,
+      },
+    );
     return response.isSuccess;
   }
 
   static Future<List<TransactionCategoryMappingTreeNodeApiModel>> getCategoryMappingTree(
       {required int parentAccountId, required int childAccountId}) async {
-    var response = await ApiServer.request(Method.get, '$baseUrl/mapping/tree', data: {
-      "ParentAccountId": parentAccountId,
-      "ChildAccountId": childAccountId,
+    var response = await ApiServer.request(Method.get, _buildPrefix(parentAccountId) + '/mapping/tree', data: {
+      "MappingAccountId": childAccountId,
     });
     List<TransactionCategoryMappingTreeNodeApiModel> result = [];
     if (response.isSuccess && response.data['Tree'] is List) {

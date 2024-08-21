@@ -10,13 +10,13 @@ AmountDateModel _$AmountDateModelFromJson(Map<String, dynamic> json) =>
     AmountDateModel(
       amount: (json['Amount'] as num).toInt(),
       type: $enumDecode(_$DateTypeEnumMap, json['Type']),
-      date: Json.dateTimeFromJson(json['Date']),
+      date: const UtcDateTimeConverter().fromJson(json['Date'] as String?),
     );
 
 Map<String, dynamic> _$AmountDateModelToJson(AmountDateModel instance) =>
     <String, dynamic>{
       'Amount': instance.amount,
-      'Date': Json.dateTimeToJson(instance.date),
+      'Date': const UtcDateTimeConverter().toJson(instance.date),
       'Type': _$DateTypeEnumMap[instance.type]!,
     };
 
@@ -43,8 +43,8 @@ AmountCountWithTimeModel _$AmountCountWithTimeModelFromJson(
     AmountCountWithTimeModel(
       amount: (json['Amount'] as num?)?.toInt() ?? 0,
       count: (json['Count'] as num?)?.toInt() ?? 0,
-      startTime: Json.dateTimeFromJson(json['StartTime']),
-      endTime: Json.dateTimeFromJson(json['EndTime']),
+      startTime: json['StartTime'],
+      endTime: json['EndTime'],
     );
 
 Map<String, dynamic> _$AmountCountWithTimeModelToJson(
@@ -52,8 +52,8 @@ Map<String, dynamic> _$AmountCountWithTimeModelToJson(
     <String, dynamic>{
       'Amount': instance.amount,
       'Count': instance.count,
-      'StartTime': Json.dateTimeToJson(instance.startTime),
-      'EndTime': Json.dateTimeToJson(instance.endTime),
+      'StartTime': const UtcDateTimeConverter().toJson(instance.startTime),
+      'EndTime': const UtcDateTimeConverter().toJson(instance.endTime),
     };
 
 InExStatisticModel _$InExStatisticModelFromJson(Map<String, dynamic> json) =>
@@ -81,8 +81,10 @@ InExStatisticWithTimeModel _$InExStatisticWithTimeModelFromJson(
       expense: json['Expense'] == null
           ? null
           : AmountCountModel.fromJson(json['Expense'] as Map<String, dynamic>),
-      startTime: Json.dateTimeFromJson(json['StartTime']),
-      endTime: Json.dateTimeFromJson(json['EndTime']),
+      startTime:
+          const UtcDateTimeConverter().fromJson(json['StartTime'] as String?),
+      endTime:
+          const UtcDateTimeConverter().fromJson(json['EndTime'] as String?),
     );
 
 Map<String, dynamic> _$InExStatisticWithTimeModelToJson(
@@ -90,6 +92,6 @@ Map<String, dynamic> _$InExStatisticWithTimeModelToJson(
     <String, dynamic>{
       'Income': instance.income,
       'Expense': instance.expense,
-      'StartTime': Json.dateTimeToJson(instance.startTime),
-      'EndTime': Json.dateTimeToJson(instance.endTime),
+      'StartTime': const UtcDateTimeConverter().toJson(instance.startTime),
+      'EndTime': const UtcDateTimeConverter().toJson(instance.endTime),
     };

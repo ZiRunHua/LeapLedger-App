@@ -10,8 +10,6 @@ import 'package:keepaccount_app/routes/routes.dart';
 import 'package:keepaccount_app/util/enter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:keepaccount_app/view/navigation/navigation.dart';
-import 'package:keepaccount_app/view/transaction/timing/list/transaction_timing_list.dart';
-import 'package:keepaccount_app/view/transaction/timing/transaction_timing.dart';
 import 'common/global.dart';
 import 'package:keepaccount_app/common/current.dart';
 
@@ -26,10 +24,11 @@ Future<void> init() async {
 
   await SharedPreferencesCache.init();
   await Global.init();
+
+  //await Global.cache.clear();
   await initCache();
   Routes.init();
 
-  //await Global.cache.clear();
   await Current.init();
 }
 

@@ -8,9 +8,9 @@ class TransactionCategoryModel extends TransactionCategoryBaseModel {
   late String fatherName;
   @JsonKey(defaultValue: 0)
   late int accountId;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   late DateTime createdAt;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   late DateTime updatedAt;
 
   bool get isValid => id > 0;

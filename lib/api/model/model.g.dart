@@ -21,14 +21,14 @@ DayAmountStatisticApiModel _$DayAmountStatisticApiModelFromJson(
         Map<String, dynamic> json) =>
     DayAmountStatisticApiModel(
       amount: (json['Amount'] as num?)?.toInt() ?? 0,
-      date: Json.dateTimeFromJson(json['Date']),
+      date: const UtcDateTimeConverter().fromJson(json['Date'] as String?),
     );
 
 Map<String, dynamic> _$DayAmountStatisticApiModelToJson(
         DayAmountStatisticApiModel instance) =>
     <String, dynamic>{
       'Amount': instance.amount,
-      'Date': Json.dateTimeToJson(instance.date),
+      'Date': const UtcDateTimeConverter().toJson(instance.date),
     };
 
 UserInfoUpdateModel _$UserInfoUpdateModelFromJson(Map<String, dynamic> json) =>

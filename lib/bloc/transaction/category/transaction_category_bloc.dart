@@ -20,14 +20,14 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   }
 
   _loadList(CategoryListLoadEvent event, Emitter<CategoryState> emit) async {
-    var list = await TransactionCategoryApi.getListByCond(accountId: event.account.id, cond: event.cond);
+    var list = await CategoryApi.getListByCond(accountId: event.account.id, cond: event.cond);
     emit(CategoryListLoadedState(event.account, cond: event.cond, list: list));
   }
 
   _loadTree(CategoryTreeLoadEvent event, Emitter<CategoryState> emit) async {
     var listTree = await ApiServer.getData(
-      () => TransactionCategoryApi.getTreeByCond(accountId: event.account.id, cond: event.cond),
-      TransactionCategoryApi.dataFormatFunc.getTreeDataToList,
+      () => CategoryApi.getTreeByCond(accountId: event.account.id, cond: event.cond),
+      CategoryApi.dataFormatFunc.getTreeDataToList,
     );
     emit(CategoryTreeLoadedState(event.account, cond: event.cond, tree: listTree));
   }
@@ -39,8 +39,8 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     TransactionCategoryFatherModel? parent,
   }) async {
     List<MapEntry<TransactionCategoryFatherModel, List<TransactionCategoryModel>>> listTree = await ApiServer.getData(
-      () => TransactionCategoryApi.getTreeByCond(accountId: account.id, cond: CategoryQueryCond()),
-      TransactionCategoryApi.dataFormatFunc.getTreeDataToList,
+      () => CategoryApi.getTreeByCond(accountId: account.id, cond: CategoryQueryCond()),
+      CategoryApi.dataFormatFunc.getTreeDataToList,
     );
 
     List<TransactionCategoryModel> list = [];
@@ -82,9 +82,9 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     TransactionCategoryModel? category = event.category;
     category.accountId = event.account.id;
     if (event.category.isValid) {
-      category = await TransactionCategoryApi.updateCategory(category);
+      category = await CategoryApi.updateCategory(category);
     } else {
-      category = await TransactionCategoryApi.addCategory(category);
+      category = await CategoryApi.addCategory(category);
     }
     if (category != null) {
       emit(SaveSuccessState(event.account, category: category));
@@ -95,7 +95,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   }
 
   _delete(CategoryDeleteEvent event, Emitter<CategoryState> emit) async {
-    var response = await TransactionCategoryApi.deleteCategory(event.categoryId);
+    var response = await CategoryApi.deleteCategory(event.categoryId, accountId: event.account.id);
     if (false == response.isSuccess) {
       emit(DeleteFailState(event.account, categoryId: event.categoryId));
       return;
@@ -105,8 +105,9 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   }
 
   _move(CategoryMoveEvent event, Emitter<CategoryState> emit) async {
-    var response = await TransactionCategoryApi.moveCategory(
+    var response = await CategoryApi.moveCategory(
       event.categoryId,
+      accountId: event.account.id,
       previous: event.previousId,
       parentId: event.parentId,
     );
@@ -122,9 +123,9 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     TransactionCategoryFatherModel? parent = event.parent;
     parent.accountId = event.account.id;
     if (event.parent.isValid) {
-      parent = await TransactionCategoryApi.updateCategoryParent(parent);
+      parent = await CategoryApi.updateCategoryParent(parent);
     } else {
-      parent = await TransactionCategoryApi.addCategoryParent(parent);
+      parent = await CategoryApi.addCategoryParent(parent);
     }
     if (parent == null) {
       emit(CategoryParentSaveFailState(event.account, parent: event.parent));
@@ -135,7 +136,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   }
 
   _deleteParent(CategoryParentDeleteEvent event, Emitter<CategoryState> emit) async {
-    var response = await TransactionCategoryApi.deleteCategoryParent(event.parentId);
+    var response = await CategoryApi.deleteCategoryParent(event.parentId, accountId: event.account.id);
     if (false == response.isSuccess) {
       emit(CategoryParentDeleteFailState(event.account, parentId: event.parentId));
       return;
@@ -145,7 +146,11 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   }
 
   _moveParent(CategoryParentMoveEvent event, Emitter<CategoryState> emit) async {
-    var response = await TransactionCategoryApi.moveCategoryParent(event.parentId, previous: event.previousId);
+    var response = await CategoryApi.moveCategoryParent(
+      event.parentId,
+      accountId: event.account.id,
+      previous: event.previousId,
+    );
     if (false == response.isSuccess) {
       emit(CategoryParentMoveFailState(event.account, parentId: event.parentId, previousId: event.previousId));
       return;

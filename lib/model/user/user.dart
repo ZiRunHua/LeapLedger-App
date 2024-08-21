@@ -8,9 +8,9 @@ class UserModel {
   late String username;
   @JsonKey(defaultValue: '')
   late String email;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   late DateTime createTime;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   late DateTime updateTime;
   UserModel();
 

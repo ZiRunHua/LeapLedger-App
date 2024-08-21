@@ -18,7 +18,8 @@ TransactionEditModel _$TransactionEditModelFromJson(
               IncomeExpense.income,
       amount: (json['Amount'] as num?)?.toInt() ?? 0,
       remark: json['Remark'] as String? ?? '',
-      tradeTime: Json.dateTimeFromJson(json['TradeTime']),
+      tradeTime:
+          const UtcDateTimeConverter().fromJson(json['TradeTime'] as String?),
     );
 
 Map<String, dynamic> _$TransactionEditModelToJson(
@@ -31,7 +32,7 @@ Map<String, dynamic> _$TransactionEditModelToJson(
       'IncomeExpense': _$IncomeExpenseEnumMap[instance.incomeExpense]!,
       'Amount': instance.amount,
       'Remark': instance.remark,
-      'TradeTime': Json.dateTimeToJson(instance.tradeTime),
+      'TradeTime': const UtcDateTimeConverter().toJson(instance.tradeTime),
     };
 
 const _$IncomeExpenseEnumMap = {
@@ -59,7 +60,7 @@ TransactionInfoModel _$TransactionInfoModelFromJson(
       amount: (json['Amount'] as num?)?.toInt() ?? 0,
       remark: json['Remark'] as String? ?? '',
       tradeTime:
-          const UtcDateTimeConverter().fromJson(json['TradeTime'] as String),
+          const UtcDateTimeConverter().fromJson(json['TradeTime'] as String?),
     );
 
 Map<String, dynamic> _$TransactionInfoModelToJson(
@@ -72,12 +73,12 @@ Map<String, dynamic> _$TransactionInfoModelToJson(
       'IncomeExpense': _$IncomeExpenseEnumMap[instance.incomeExpense]!,
       'Amount': instance.amount,
       'Remark': instance.remark,
+      'TradeTime': const UtcDateTimeConverter().toJson(instance.tradeTime),
       'UserName': instance.userName,
       'AccountName': instance.accountName,
       'CategoryIcon': Json.iconDataToJson(instance.categoryIcon),
       'CategoryName': instance.categoryName,
       'CategoryFatherName': instance.categoryFatherName,
-      'TradeTime': const UtcDateTimeConverter().toJson(instance.tradeTime),
     };
 
 TransactionModel _$TransactionModelFromJson(Map<String, dynamic> json) =>
@@ -98,9 +99,12 @@ TransactionModel _$TransactionModelFromJson(Map<String, dynamic> json) =>
       categoryFatherName: json['CategoryFatherName'] as String? ?? '',
       amount: (json['Amount'] as num?)?.toInt() ?? 0,
       remark: json['Remark'] as String? ?? '',
-      tradeTime: Json.dateTimeFromJson(json['TradeTime']),
-      createTime: Json.dateTimeFromJson(json['CreateTime']),
-      updateTime: Json.dateTimeFromJson(json['UpdateTime']),
+      tradeTime:
+          const UtcDateTimeConverter().fromJson(json['TradeTime'] as String?),
+      createTime:
+          const UtcDateTimeConverter().fromJson(json['CreateTime'] as String?),
+      updateTime:
+          const UtcDateTimeConverter().fromJson(json['UpdateTime'] as String?),
     );
 
 Map<String, dynamic> _$TransactionModelToJson(TransactionModel instance) =>
@@ -112,14 +116,14 @@ Map<String, dynamic> _$TransactionModelToJson(TransactionModel instance) =>
       'IncomeExpense': _$IncomeExpenseEnumMap[instance.incomeExpense]!,
       'Amount': instance.amount,
       'Remark': instance.remark,
+      'TradeTime': const UtcDateTimeConverter().toJson(instance.tradeTime),
       'UserName': instance.userName,
       'AccountName': instance.accountName,
       'CategoryIcon': Json.iconDataToJson(instance.categoryIcon),
       'CategoryName': instance.categoryName,
       'CategoryFatherName': instance.categoryFatherName,
-      'CreateTime': Json.dateTimeToJson(instance.createTime),
-      'UpdateTime': Json.dateTimeToJson(instance.updateTime),
-      'TradeTime': Json.dateTimeToJson(instance.tradeTime),
+      'CreateTime': const UtcDateTimeConverter().toJson(instance.createTime),
+      'UpdateTime': const UtcDateTimeConverter().toJson(instance.updateTime),
     };
 
 TransactionShareModel _$TransactionShareModelFromJson(
@@ -136,9 +140,12 @@ TransactionShareModel _$TransactionShareModelFromJson(
       categoryName: json['CategoryName'] as String? ?? '',
       categoryFatherName: json['CategoryFatherName'] as String? ?? '',
       remark: json['Remark'] as String? ?? '',
-      tradeTime: Json.dateTimeFromJson(json['TradeTime']),
-      createTime: Json.dateTimeFromJson(json['CreateTime']),
-      updateTime: Json.dateTimeFromJson(json['UpdateTime']),
+      tradeTime:
+          const UtcDateTimeConverter().fromJson(json['TradeTime'] as String?),
+      createTime:
+          const UtcDateTimeConverter().fromJson(json['CreateTime'] as String?),
+      updateTime:
+          const UtcDateTimeConverter().fromJson(json['UpdateTime'] as String?),
     );
 
 Map<String, dynamic> _$TransactionShareModelToJson(
@@ -153,17 +160,28 @@ Map<String, dynamic> _$TransactionShareModelToJson(
       'CategoryFatherName': instance.categoryFatherName,
       'Amount': instance.amount,
       'Remark': instance.remark,
-      'TradeTime': Json.dateTimeToJson(instance.tradeTime),
-      'CreateTime': Json.dateTimeToJson(instance.createTime),
-      'UpdateTime': Json.dateTimeToJson(instance.updateTime),
+      'TradeTime': _$JsonConverterToJson<String?, DateTime>(
+          instance.tradeTime, const UtcDateTimeConverter().toJson),
+      'CreateTime': _$JsonConverterToJson<String?, DateTime>(
+          instance.createTime, const UtcDateTimeConverter().toJson),
+      'UpdateTime': _$JsonConverterToJson<String?, DateTime>(
+          instance.updateTime, const UtcDateTimeConverter().toJson),
     };
+
+Json? _$JsonConverterToJson<Json, Value>(
+  Value? value,
+  Json? Function(Value value) toJson,
+) =>
+    value == null ? null : toJson(value);
 
 TransactionQueryCondModel _$TransactionQueryCondModelFromJson(
         Map<String, dynamic> json) =>
     TransactionQueryCondModel(
       accountId: (json['AccountId'] as num).toInt(),
-      startTime: Json.dateTimeFromJson(json['StartTime']),
-      endTime: Json.dateTimeFromJson(json['EndTime']),
+      startTime:
+          const UtcDateTimeConverter().fromJson(json['StartTime'] as String?),
+      endTime:
+          const UtcDateTimeConverter().fromJson(json['EndTime'] as String?),
       userIds: (json['UserIds'] as List<dynamic>?)
           ?.map((e) => (e as num).toInt())
           .toSet(),
@@ -185,8 +203,8 @@ Map<String, dynamic> _$TransactionQueryCondModelToJson(
       'IncomeExpense': _$IncomeExpenseEnumMap[instance.incomeExpense],
       'MinimumAmount': instance.minimumAmount,
       'MaximumAmount': instance.maximumAmount,
-      'StartTime': Json.dateTimeToJson(instance.startTime),
-      'EndTime': Json.dateTimeToJson(instance.endTime),
+      'StartTime': const UtcDateTimeConverter().toJson(instance.startTime),
+      'EndTime': const UtcDateTimeConverter().toJson(instance.endTime),
     };
 
 TransactionTimingModel _$TransactionTimingModelFromJson(
@@ -198,11 +216,11 @@ TransactionTimingModel _$TransactionTimingModelFromJson(
       type: $enumDecode(_$TransactionTimingTypeEnumMap, json['Type']),
       offsetDays: (json['OffsetDays'] as num).toInt(),
       nextTime:
-          const UtcDateTimeConverter().fromJson(json['NextTime'] as String),
+          const UtcDateTimeConverter().fromJson(json['NextTime'] as String?),
       updatedAt:
-          const UtcDateTimeConverter().fromJson(json['UpdatedAt'] as String),
+          const UtcDateTimeConverter().fromJson(json['UpdatedAt'] as String?),
       createdAt:
-          const UtcDateTimeConverter().fromJson(json['CreatedAt'] as String),
+          const UtcDateTimeConverter().fromJson(json['CreatedAt'] as String?),
     );
 
 Map<String, dynamic> _$TransactionTimingModelToJson(

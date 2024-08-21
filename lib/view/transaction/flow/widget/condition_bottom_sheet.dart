@@ -53,7 +53,7 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
           builder: (context, state) {
             return Stack(children: [
               Container(
-                padding: const EdgeInsets.only(top: Constant.padding),
+                padding: const EdgeInsets.only(top: Constant.buttomSheetRadius),
                 decoration: ConstantDecoration.bottomSheet,
                 height: size.height * 0.8,
                 width: size.width,

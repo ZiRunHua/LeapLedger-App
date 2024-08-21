@@ -13,8 +13,10 @@ AccountModel _$AccountModelFromJson(Map<String, dynamic> json) => AccountModel(
       type: $enumDecodeNullable(_$AccountTypeEnumMap, json['Type'],
               unknownValue: AccountType.independent) ??
           AccountType.independent,
-      createTime: Json.dateTimeFromJson(json['CreateTime']),
-      updateTime: Json.dateTimeFromJson(json['UpdateTime']),
+      createTime:
+          const UtcDateTimeConverter().fromJson(json['CreateTime'] as String?),
+      updateTime:
+          const UtcDateTimeConverter().fromJson(json['UpdateTime'] as String?),
     );
 
 Map<String, dynamic> _$AccountModelToJson(AccountModel instance) =>
@@ -23,8 +25,8 @@ Map<String, dynamic> _$AccountModelToJson(AccountModel instance) =>
       'Name': instance.name,
       'Icon': Json.iconDataToJson(instance.icon),
       'Type': _$AccountTypeEnumMap[instance.type]!,
-      'CreateTime': Json.dateTimeToJson(instance.createTime),
-      'UpdateTime': Json.dateTimeToJson(instance.updateTime),
+      'CreateTime': const UtcDateTimeConverter().toJson(instance.createTime),
+      'UpdateTime': const UtcDateTimeConverter().toJson(instance.updateTime),
     };
 
 const _$AccountTypeEnumMap = {
@@ -40,14 +42,17 @@ AccountDetailModel _$AccountDetailModelFromJson(Map<String, dynamic> json) =>
       type: $enumDecodeNullable(_$AccountTypeEnumMap, json['Type'],
               unknownValue: AccountType.independent) ??
           AccountType.independent,
-      createTime: Json.dateTimeFromJson(json['CreateTime']),
-      updateTime: Json.dateTimeFromJson(json['UpdateTime']),
+      createTime:
+          const UtcDateTimeConverter().fromJson(json['CreateTime'] as String?),
+      updateTime:
+          const UtcDateTimeConverter().fromJson(json['UpdateTime'] as String?),
       creatorId: (json['CreatorId'] as num?)?.toInt() ?? 0,
       creatorName: json['CreatorName'] as String? ?? '',
       role: $enumDecodeNullable(_$AccountRoleEnumMap, json['Role'],
               unknownValue: AccountRole.reader) ??
           AccountRole.reader,
-      joinTime: Json.dateTimeFromJson(json['JoinTime']),
+      joinTime:
+          const UtcDateTimeConverter().fromJson(json['JoinTime'] as String?),
     );
 
 Map<String, dynamic> _$AccountDetailModelToJson(AccountDetailModel instance) =>
@@ -56,12 +61,12 @@ Map<String, dynamic> _$AccountDetailModelToJson(AccountDetailModel instance) =>
       'Name': instance.name,
       'Icon': Json.iconDataToJson(instance.icon),
       'Type': _$AccountTypeEnumMap[instance.type]!,
-      'CreateTime': Json.dateTimeToJson(instance.createTime),
-      'UpdateTime': Json.dateTimeToJson(instance.updateTime),
+      'CreateTime': const UtcDateTimeConverter().toJson(instance.createTime),
+      'UpdateTime': const UtcDateTimeConverter().toJson(instance.updateTime),
       'CreatorId': instance.creatorId,
       'CreatorName': instance.creatorName,
       'Role': _$AccountRoleEnumMap[instance.role]!,
-      'JoinTime': Json.dateTimeToJson(instance.joinTime),
+      'JoinTime': const UtcDateTimeConverter().toJson(instance.joinTime),
     };
 
 const _$AccountRoleEnumMap = {
@@ -78,7 +83,8 @@ AccountUserModel _$AccountUserModelFromJson(Map<String, dynamic> json) =>
       userId: (json['UserId'] as num).toInt(),
       info: UserInfoModel.fromJson(json['Info'] as Map<String, dynamic>),
       role: $enumDecode(_$AccountRoleEnumMap, json['Role']),
-      createTime: Json.dateTimeFromJson(json['CreateTime']),
+      createTime:
+          const UtcDateTimeConverter().fromJson(json['CreateTime'] as String?),
     );
 
 Map<String, dynamic> _$AccountUserModelToJson(AccountUserModel instance) =>
@@ -88,7 +94,7 @@ Map<String, dynamic> _$AccountUserModelToJson(AccountUserModel instance) =>
       'AccountId': instance.accountId,
       'Info': instance.info,
       'Role': _$AccountRoleEnumMap[instance.role]!,
-      'CreateTime': Json.dateTimeToJson(instance.createTime),
+      'CreateTime': const UtcDateTimeConverter().toJson(instance.createTime),
     };
 
 AccountUserInvitationModle _$AccountUserInvitationModleFromJson(
@@ -100,7 +106,8 @@ AccountUserInvitationModle _$AccountUserInvitationModleFromJson(
       inviter: UserInfoModel.fromJson(json['Inviter'] as Map<String, dynamic>),
       role: $enumDecode(_$AccountRoleEnumMap, json['Role']),
       status: $enumDecode(_$AccountUserInvitationStatusEnumMap, json['Status']),
-      createTime: Json.dateTimeFromJson(json['CreateTime']),
+      createTime:
+          const UtcDateTimeConverter().fromJson(json['CreateTime'] as String?),
     );
 
 Map<String, dynamic> _$AccountUserInvitationModleToJson(
@@ -112,7 +119,7 @@ Map<String, dynamic> _$AccountUserInvitationModleToJson(
       'Inviter': instance.inviter,
       'Role': _$AccountRoleEnumMap[instance.role]!,
       'Status': _$AccountUserInvitationStatusEnumMap[instance.status]!,
-      'CreateTime': Json.dateTimeToJson(instance.createTime),
+      'CreateTime': const UtcDateTimeConverter().toJson(instance.createTime),
     };
 
 const _$AccountUserInvitationStatusEnumMap = {
@@ -128,8 +135,10 @@ AccountMappingModel _$AccountMappingModelFromJson(Map<String, dynamic> json) =>
           AccountModel.fromJson(json['MainAccount'] as Map<String, dynamic>),
       relatedAccount: AccountDetailModel.fromJson(
           json['RelatedAccount'] as Map<String, dynamic>),
-      updateTime: Json.dateTimeFromJson(json['UpdateTime']),
-      createTime: Json.dateTimeFromJson(json['CreateTime']),
+      updateTime:
+          const UtcDateTimeConverter().fromJson(json['UpdateTime'] as String?),
+      createTime:
+          const UtcDateTimeConverter().fromJson(json['CreateTime'] as String?),
     );
 
 Map<String, dynamic> _$AccountMappingModelToJson(
@@ -138,8 +147,8 @@ Map<String, dynamic> _$AccountMappingModelToJson(
       'Id': instance.id,
       'MainAccount': instance.mainAccount,
       'RelatedAccount': instance.relatedAccount,
-      'UpdateTime': Json.dateTimeToJson(instance.updateTime),
-      'CreateTime': Json.dateTimeToJson(instance.createTime),
+      'UpdateTime': const UtcDateTimeConverter().toJson(instance.updateTime),
+      'CreateTime': const UtcDateTimeConverter().toJson(instance.createTime),
     };
 
 AccountUserConfigModel _$AccountUserConfigModelFromJson(
@@ -150,8 +159,10 @@ AccountUserConfigModel _$AccountUserConfigModelFromJson(
       accountId: (json['AccountId'] as num).toInt(),
       trans: AccountUserTransConfigModel.fromJson(
           json['Trans'] as Map<String, dynamic>),
-      updateTime: Json.dateTimeFromJson(json['UpdateTime']),
-      createTime: Json.dateTimeFromJson(json['CreateTime']),
+      updateTime:
+          const UtcDateTimeConverter().fromJson(json['UpdateTime'] as String?),
+      createTime:
+          const UtcDateTimeConverter().fromJson(json['CreateTime'] as String?),
     );
 
 Map<String, dynamic> _$AccountUserConfigModelToJson(
@@ -161,8 +172,8 @@ Map<String, dynamic> _$AccountUserConfigModelToJson(
       'UserId': instance.userId,
       'AccountId': instance.accountId,
       'Trans': instance.trans,
-      'UpdateTime': Json.dateTimeToJson(instance.updateTime),
-      'CreateTime': Json.dateTimeToJson(instance.createTime),
+      'UpdateTime': const UtcDateTimeConverter().toJson(instance.updateTime),
+      'CreateTime': const UtcDateTimeConverter().toJson(instance.createTime),
     };
 
 AccountUserTransConfigModel _$AccountUserTransConfigModelFromJson(

@@ -17,7 +17,7 @@ class TransactionEditModel {
   late int amount;
   @JsonKey(defaultValue: "")
   late String remark;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   late DateTime tradeTime;
 
   bool get isValid => id > 0;
@@ -71,10 +71,7 @@ class TransactionInfoModel extends TransactionEditModel {
   late String categoryName;
   @JsonKey(defaultValue: '')
   late String categoryFatherName;
-  @override
-  @JsonKey(fromJson: null, toJson: null)
-  @UtcDateTimeConverter()
-  late DateTime tradeTime;
+
   TransactionInfoModel({
     super.id = 0,
     super.userId = 0,
@@ -88,8 +85,8 @@ class TransactionInfoModel extends TransactionEditModel {
     this.categoryFatherName = '',
     super.amount = 0,
     super.remark = '',
-    required this.tradeTime,
-  }) : super(tradeTime: tradeTime);
+    required super.tradeTime,
+  });
   factory TransactionInfoModel.fromJson(Map<String, dynamic> json) => _$TransactionInfoModelFromJson(json);
   Map<String, dynamic> toJson() => _$TransactionInfoModelToJson(this);
 
@@ -134,12 +131,10 @@ class TransactionInfoModel extends TransactionEditModel {
 /// 交易模型
 @JsonSerializable(fieldRename: FieldRename.pascal)
 class TransactionModel extends TransactionInfoModel {
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   late DateTime createTime;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   late DateTime updateTime;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
-  late DateTime tradeTime;
   TransactionModel({
     super.id = 0,
     super.userId = 0,
@@ -153,10 +148,10 @@ class TransactionModel extends TransactionInfoModel {
     super.categoryFatherName = '',
     super.amount = 0,
     super.remark = '',
-    required this.tradeTime,
+    required super.tradeTime,
     required this.createTime,
     required this.updateTime,
-  }) : super(tradeTime: tradeTime);
+  });
   factory TransactionModel.fromJson(Map<String, dynamic> json) => _$TransactionModelFromJson(json);
   Map<String, dynamic> toJson() => _$TransactionModelToJson(this);
 
@@ -214,11 +209,11 @@ class TransactionShareModel {
   late int amount;
   @JsonKey(defaultValue: '')
   late String? remark;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   late DateTime? tradeTime;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   late DateTime? createTime;
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   late DateTime? updateTime;
   TransactionShareModel({
     required this.id,
@@ -249,10 +244,10 @@ class TransactionQueryCondModel {
   int? minimumAmount;
   int? maximumAmount;
   // 起始时间（时间戳）
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   DateTime startTime;
   // 结束时间（时间戳）
-  @JsonKey(fromJson: Json.dateTimeFromJson, toJson: Json.dateTimeToJson)
+  @UtcDateTimeConverter()
   DateTime endTime;
 
   TransactionQueryCondModel({
