@@ -3,15 +3,16 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keepaccount_app/api/api_server.dart';
-import 'package:keepaccount_app/api/model/model.dart';
-import 'package:keepaccount_app/bloc/account/account_bloc.dart';
-import 'package:keepaccount_app/bloc/captcha/captcha_bloc.dart';
-import 'package:keepaccount_app/common/current.dart';
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/account/model.dart';
-import 'package:keepaccount_app/model/user/model.dart';
-import 'package:keepaccount_app/routes/routes.dart';
+import 'package:leap_ledger_app/api/api_server.dart';
+import 'package:leap_ledger_app/api/model/model.dart';
+import 'package:leap_ledger_app/bloc/account/account_bloc.dart';
+import 'package:leap_ledger_app/bloc/captcha/captcha_bloc.dart';
+import 'package:leap_ledger_app/common/current.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/model/account/model.dart';
+import 'package:leap_ledger_app/model/user/model.dart';
+import 'package:leap_ledger_app/routes/routes.dart';
+import 'package:timezone/timezone.dart' as tz;
 part 'user_event.dart';
 part 'user_state.dart';
 
@@ -239,6 +240,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     user = UserModel.fromJson(prefsData['User'] ?? {});
     UserBloc.currentShareAccount = AccountDetailModel.fromJson(prefsData['CurrentShareAccount'] ?? {});
     UserBloc.currentAccount = AccountDetailModel.fromJson(prefsData['CurrentAccount'] ?? {});
+
     token = prefsData['Token'] ?? '';
   }
 

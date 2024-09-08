@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keepaccount_app/bloc/user/user_bloc.dart';
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/account/model.dart';
-import 'package:keepaccount_app/view/account/template/list/bloc/account_template_list_bloc.dart';
-import 'package:keepaccount_app/widget/common/common.dart';
+import 'package:leap_ledger_app/bloc/user/user_bloc.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/model/account/model.dart';
+import 'package:leap_ledger_app/view/account/template/list/bloc/account_template_list_bloc.dart';
+import 'package:leap_ledger_app/widget/common/common.dart';
 
 class AccountTemplateList extends StatelessWidget {
   const AccountTemplateList({super.key});

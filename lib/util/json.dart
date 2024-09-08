@@ -78,11 +78,27 @@ class UtcDateTimeConverter implements JsonConverter<DateTime, String?> {
 
   @override
   DateTime fromJson(String? json) {
-    return json != null ? DateTime.parse(json) : DateTime.now();
+    return json != null ? DateTime.parse(json).toLocal() : DateTime.now().toLocal();
   }
 
   @override
   String toJson(DateTime dateTime) {
+    return dateTime.toUtc().toIso8601String();
+  }
+}
+
+class UtcTZDateTimeConverter implements JsonConverter<TZDateTime, String?> {
+  const UtcTZDateTimeConverter();
+
+  @override
+  TZDateTime fromJson(String? json) {
+    return json != null
+        ? TZDateTime.parse(getLocation(Constant.defultLocation), json)
+        : TZDateTime.now(getLocation(Constant.defultLocation));
+  }
+
+  @override
+  String toJson(TZDateTime dateTime) {
     return dateTime.toUtc().toIso8601String();
   }
 }

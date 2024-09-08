@@ -1,16 +1,16 @@
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keepaccount_app/bloc/transaction/category/transaction_category_bloc.dart';
+import 'package:leap_ledger_app/bloc/category/category_bloc.dart';
 
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/account/model.dart';
-import 'package:keepaccount_app/model/transaction/category/model.dart';
-import 'package:keepaccount_app/routes/routes.dart';
-import 'package:keepaccount_app/view/transaction/category/father/edit/transaction_category_father_edit_dialog.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/model/account/model.dart';
+import 'package:leap_ledger_app/model/transaction/category/model.dart';
+import 'package:leap_ledger_app/routes/routes.dart';
+import 'package:leap_ledger_app/view/transaction/category/father/edit/transaction_category_father_edit_dialog.dart';
 
-import 'package:keepaccount_app/view/transaction/category/tree/bloc/transaction_category_tree_bloc.dart';
-import 'package:keepaccount_app/widget/common/common.dart';
+import 'package:leap_ledger_app/view/transaction/category/tree/bloc/transaction_category_tree_bloc.dart';
+import 'package:leap_ledger_app/widget/common/common.dart';
 part 'widget/drag_and_drop_lists.dart';
 
 class TransactionCategoryTree extends StatefulWidget {
@@ -68,8 +68,8 @@ class _TransactionCategoryTreeState extends State<TransactionCategoryTree> with 
             offstage: widget.relatedAccount == null ||
                 !TransactionCategoryRouterGuard.accountMapping(
                     parentAccount: widget.account, childAccount: widget.relatedAccount!),
-            child: TextButton(
-              child: const Text("关联交易"),
+            child: IconButton(
+              icon: const Icon(Icons.sync_alt_rounded),
               onPressed: () => TransactionCategoryRoutes.accountMappingNavigator(
                 context,
                 parentAccount: widget.account,

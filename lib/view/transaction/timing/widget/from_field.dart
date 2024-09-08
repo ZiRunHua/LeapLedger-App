@@ -15,7 +15,7 @@ class _FromFieldState extends State<FromField> {
   @override
   void initState() {
     _cubit = BlocProvider.of<TransactionTimingCubit>(context);
-    _controller = TextEditingController(text: _cubit.config!.toDisplay());
+    _controller = TextEditingController(text: _cubit.config.toDisplay());
     super.initState();
   }
 

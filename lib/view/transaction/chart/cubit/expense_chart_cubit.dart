@@ -1,14 +1,17 @@
 part of 'enter.dart';
 
-class ExpenseChartCubit extends Cubit<ExpenseChartState> {
-  ExpenseChartCubit({required this.account, DateTime? startDate, DateTime? endDate}) : super(ExpenseChartInitial()) {
-    this.startDate = startDate == null ? Time.getFirstSecondOfMonth() : Time.getFirstSecondOfDay(date: startDate);
-    this.endDate = endDate == null ? Time.getLastSecondOfMonth() : Time.getLastSecondOfDay(date: endDate);
+class ExpenseChartCubit extends AccountBasedCubit<ExpenseChartState> {
+  ExpenseChartCubit({required super.account, DateTime? startDate, DateTime? endDate}) : super(ExpenseChartInitial()) {
+    this.startDate = startDate == null
+        ? Tz.getFirstSecondOfMonth(date: account.getNowTime())
+        : Tz.getFirstSecondOfDay(date: Tz.getNewByDate(startDate, location));
+    this.endDate = endDate == null
+        ? Tz.getLastSecondOfMonth(date: account.getNowTime())
+        : Tz.getLastSecondOfDay(date: Tz.getNewByDate(endDate, location));
   }
 
   final ie = IncomeExpense.expense;
-  late AccountDetailModel account;
-  late DateTime startDate, endDate;
+  late TZDateTime startDate, endDate;
   int get days => endDate.add(Duration(seconds: 1)).difference(startDate).inDays;
   load() async {
     await Future.wait<void>([loadTotal(), loadDayStatistic(), loadCategoryRank(), loadTransRanking()]);
@@ -16,8 +19,8 @@ class ExpenseChartCubit extends Cubit<ExpenseChartState> {
   }
 
   updateDate({required DateTime start, required DateTime end}) async {
-    startDate = Time.getFirstSecondOfDay(date: start);
-    endDate = Time.getLastSecondOfDay(date: end);
+    startDate = Tz.getFirstSecondOfDay(date: Tz.getNewByDate(start, location));
+    endDate = Tz.getLastSecondOfDay(date: Tz.getNewByDate(end, location));
     await Future.wait<void>([loadTotal(), loadDayStatistic(), loadCategoryRank(), loadTransRanking()]);
     emit(ExpenseChartLoaded());
   }
@@ -47,8 +50,8 @@ class ExpenseChartCubit extends Cubit<ExpenseChartState> {
       ));
       statistics = List.generate(
         data.length,
-        (index) =>
-            AmountDateModel(amount: data[index].expense.amount, date: data[index].startTime, type: DateType.month),
+        (index) => AmountDateModel(
+            amount: data[index].expense.amount, date: getTZDateTime(data[index].startTime), type: DateType.month),
       ).toList();
     } else {
       var data = await TransactionApi.getDayStatistic(
@@ -59,7 +62,8 @@ class ExpenseChartCubit extends Cubit<ExpenseChartState> {
       );
       statistics = List.generate(
         data.length,
-        (index) => AmountDateModel(amount: data[index].amount, date: data[index].date, type: DateType.day),
+        (index) =>
+            AmountDateModel(amount: data[index].amount, date: getTZDateTime(data[index].date), type: DateType.day),
       ).toList();
     }
 

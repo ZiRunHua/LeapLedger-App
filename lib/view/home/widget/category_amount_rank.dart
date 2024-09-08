@@ -14,6 +14,8 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> with SingleTick
   late int maxAmount = 0;
 
   late final AnimationController _controller;
+
+  late final HomeBloc _bloc;
   @override
   void initState() {
     initData();
@@ -21,7 +23,7 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> with SingleTick
       duration: const Duration(seconds: 1),
       vsync: this,
     )..addListener(() => setState(() {}));
-
+    _bloc = BlocProvider.of<HomeBloc>(context);
     WidgetsBinding.instance.addPostFrameCallback((_) => _controller.forward());
     super.initState();
   }
@@ -63,12 +65,15 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> with SingleTick
   _buildListTile(TransactionCategoryAmountRankApiModel data) {
     return GestureDetector(
         onTap: () => _Func._pushTransactionFlow(
-            context,
-            TransactionQueryCondModel(
-                accountId: UserBloc.currentAccount.id,
+              context,
+              TransactionQueryCondModel(
+                accountId: _bloc.account.id,
                 categoryIds: {data.category.id},
-                startTime: HomeBloc.startTime,
-                endTime: HomeBloc.endTime)),
+                startTime: _bloc.startTime,
+                endTime: _bloc.endTime,
+              ),
+              _bloc.account,
+            ),
         child: ListTile(
           leading: Icon(data.category.icon, color: ConstantColor.primaryColor),
           title: Text(
@@ -104,9 +109,7 @@ class AmountDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        // 获取当前渲染的组件的宽度
         double currentWidth = constraints.maxWidth;
-
         return Divider(
             color: ConstantColor.secondaryColor,
             height: 0.5,

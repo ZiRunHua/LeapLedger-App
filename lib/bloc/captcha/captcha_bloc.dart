@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:keepaccount_app/api/api_server.dart';
-import 'package:keepaccount_app/api/model/model.dart';
+import 'package:leap_ledger_app/api/api_server.dart';
+import 'package:leap_ledger_app/api/model/model.dart';
 
 part 'captcha_event.dart';
 part 'captcha_state.dart';

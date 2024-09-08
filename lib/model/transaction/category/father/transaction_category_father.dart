@@ -1,4 +1,4 @@
-part of 'package:keepaccount_app/model/transaction/category/model.dart';
+part of 'package:leap_ledger_app/model/transaction/category/model.dart';
 
 @JsonSerializable(fieldRename: FieldRename.pascal)
 class TransactionCategoryFatherModel {

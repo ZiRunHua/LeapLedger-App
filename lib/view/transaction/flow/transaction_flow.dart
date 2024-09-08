@@ -2,17 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:keepaccount_app/bloc/transaction/transaction_bloc.dart';
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/account/model.dart';
-import 'package:keepaccount_app/model/common/model.dart';
-import 'package:keepaccount_app/model/transaction/category/model.dart';
-import 'package:keepaccount_app/model/transaction/model.dart';
-import 'package:keepaccount_app/routes/routes.dart';
-import 'package:keepaccount_app/util/enter.dart';
-import 'package:keepaccount_app/view/transaction/flow/bloc/enter.dart';
-import 'package:keepaccount_app/view/transaction/flow/widget/enter.dart';
-import 'package:keepaccount_app/widget/amount/enter.dart';
+import 'package:leap_ledger_app/bloc/transaction/transaction_bloc.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/model/account/model.dart';
+import 'package:leap_ledger_app/model/common/model.dart';
+import 'package:leap_ledger_app/model/transaction/category/model.dart';
+import 'package:leap_ledger_app/model/transaction/model.dart';
+import 'package:leap_ledger_app/routes/routes.dart';
+import 'package:leap_ledger_app/util/enter.dart';
+import 'package:leap_ledger_app/view/transaction/flow/bloc/enter.dart';
+import 'package:leap_ledger_app/view/transaction/flow/widget/enter.dart';
+import 'package:leap_ledger_app/widget/amount/enter.dart';
 import 'package:shimmer/shimmer.dart';
 
 class TransactionFlow extends StatefulWidget {
@@ -35,11 +35,10 @@ class _TransactionFlowState extends State<TransactionFlow> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
-    _conditionCubit = FlowConditionCubit(condition: widget.condition, currentAccount: widget.account)
-      ..fetchCategoryData();
+    _conditionCubit = FlowConditionCubit(condition: widget.condition, account: widget.account)..fetchCategoryData();
     _flowListBloc = FlowListBloc(initCondition: _conditionCubit.condition);
 
-    _flowListBloc.add(FlowListDataFetchEvent());
+    _flowListBloc.add(FlowListDataFetchEvent(account: _conditionCubit.account));
     super.initState();
     _scrollController = ScrollController();
     data = shimmerData;
@@ -66,7 +65,7 @@ class _TransactionFlowState extends State<TransactionFlow> {
     child = BlocListener<FlowConditionCubit, FlowConditionState>(
       listener: (context, state) {
         if (state is FlowConditionChanged) {
-          _flowListBloc.add(FlowListDataFetchEvent(condition: state.condition));
+          _flowListBloc.add(FlowListDataFetchEvent(condition: state.condition, account: _conditionCubit.account));
         }
       },
       child: child,
@@ -118,7 +117,7 @@ class _TransactionFlowState extends State<TransactionFlow> {
             body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
               child: RefreshIndicator(
-                onRefresh: () async => _flowListBloc.add(FlowListDataFetchEvent()),
+                onRefresh: () async => _flowListBloc.add(FlowListDataFetchEvent(account: _conditionCubit.account)),
                 child: NotificationListener<ScrollNotification>(
                   onNotification: (scrollNotification) {
                     if (scrollNotification is ScrollEndNotification && _scrollController.position.extentAfter == 0) {
@@ -176,9 +175,9 @@ class _TransactionFlowState extends State<TransactionFlow> {
   List<Widget> _buildActions() {
     return [
       TextButton(
-        style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Colors.white)),
+        style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll<Color>(Colors.white)),
         onPressed: () async {
-          var page = AccountRoutes.list(context, selectedAccount: _conditionCubit.currentAccount);
+          var page = AccountRoutes.list(context, selectedAccount: _conditionCubit.account);
           await page.showModalBottomSheet();
           if (page.retrunAccount != null) {
             _conditionCubit.updateAccount(page.retrunAccount!);
@@ -187,18 +186,15 @@ class _TransactionFlowState extends State<TransactionFlow> {
         child: BlocBuilder<FlowConditionCubit, FlowConditionState>(
           buildWhen: (_, state) => state is FlowCurrentAccountChanged,
           builder: (context, state) {
-            return Row(children: [
-              Icon(_conditionCubit.currentAccount.icon, size: 18),
-              Text(_conditionCubit.currentAccount.name)
-            ]);
+            return Row(children: [Icon(_conditionCubit.account.icon, size: 18), Text(_conditionCubit.account.name)]);
           },
         ),
       ),
       IconButton(
-        style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Colors.white)),
+        style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll<Color>(Colors.white)),
         onPressed: () => TransactionRoutes.chartNavigator(
           context,
-          account: _conditionCubit.currentAccount,
+          account: _conditionCubit.account,
           startDate: _conditionCubit.condition.startTime,
           endDate: _conditionCubit.condition.endTime,
         ).push(),
@@ -209,7 +205,7 @@ class _TransactionFlowState extends State<TransactionFlow> {
       ),
       Builder(builder: (context) {
         return IconButton(
-          style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Colors.white)),
+          style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll<Color>(Colors.white)),
           onPressed: () {
             showModalBottomSheet(
                 isScrollControlled: true,
@@ -287,7 +283,7 @@ class _TransactionFlowState extends State<TransactionFlow> {
     );
   }
 
-  bool get isShareAccount => _conditionCubit.currentAccount.isShare;
+  bool get isShareAccount => _conditionCubit.account.isShare;
 
   /// 单条交易
   late Widget Function(TransactionModel model) _buildOneTransactionFunc;
@@ -298,7 +294,7 @@ class _TransactionFlowState extends State<TransactionFlow> {
     return ListTile(
       onTap: () => TransactionRoutes.detailNavigator(
         context,
-        account: _conditionCubit.currentAccount,
+        account: _conditionCubit.account,
         transaction: model,
       ).showModalBottomSheet(),
       dense: true,
@@ -325,7 +321,7 @@ class _TransactionFlowState extends State<TransactionFlow> {
       return Padding(
         padding: const EdgeInsets.only(left: Constant.padding, top: Constant.margin),
         child: Text(
-          DateFormat("dd日").format(currentTrans.tradeTime),
+          DateFormat("dd日").format(widget.account.getTZDateTime(currentTrans.tradeTime)),
           style: const TextStyle(fontWeight: FontWeight.w500),
         ),
       );

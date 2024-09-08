@@ -20,7 +20,8 @@ class TransactionApi {
 
   static Future<TransactionModel?> update(TransactionEditModel model) async {
     assert(model.isValid);
-    ResponseBody response = await ApiServer.request(Method.put, _buildPrefix(model.accountId), data: model.toJson());
+    ResponseBody response =
+        await ApiServer.request(Method.put, _buildPrefix(model.accountId) + "/${model.id}", data: model.toJson());
     if (false == response.isSuccess) {
       return null;
     }

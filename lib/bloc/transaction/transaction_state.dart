@@ -49,6 +49,7 @@ final class TransactionDeleteSuccess extends AccountRelatedTransactionState {
 }
 
 /// 统计数据修改
+/// 将会引起其他bloc中的统计数据更新，进而更新页面数据
 final class TransactionStatisticUpdate extends TransactionState {
   final TransactionEditModel? oldTrans;
   final TransactionEditModel? newTrans;

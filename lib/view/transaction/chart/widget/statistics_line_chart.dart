@@ -103,14 +103,11 @@ class _StatisticsLineChartState extends State<StatisticsLineChart> {
           backgroundColor: ConstantColor.secondaryColor,
           gridData: FlGridData(
             //背景网格线条
-            verticalInterval: 0.5,
+            verticalInterval: 1,
             show: true,
             drawHorizontalLine: false,
             drawVerticalLine: true,
             getDrawingVerticalLine: (value) {
-              if (value % 1 == 0.5) {
-                return FlLine(color: Colors.white, strokeWidth: 0);
-              }
               return FlLine(color: Colors.white, strokeWidth: 1);
             },
           ),

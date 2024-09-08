@@ -39,8 +39,8 @@ class FormButton {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        style: ButtonStyle(
-            shape: MaterialStateProperty.all(const StadiumBorder(side: BorderSide(style: BorderStyle.none)))),
+        style:
+            ButtonStyle(shape: WidgetStateProperty.all(const StadiumBorder(side: BorderSide(style: BorderStyle.none)))),
         onPressed: () {
           submitForm();
         },

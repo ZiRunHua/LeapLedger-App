@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:keepaccount_app/model/common/model.dart';
-import 'package:keepaccount_app/model/transaction/category/model.dart';
-import 'package:keepaccount_app/model/transaction/model.dart';
-import 'package:keepaccount_app/util/enter.dart';
+import 'package:leap_ledger_app/model/common/model.dart';
+import 'package:leap_ledger_app/model/transaction/category/model.dart';
+import 'package:leap_ledger_app/model/transaction/model.dart';
+import 'package:leap_ledger_app/util/enter.dart';
 part 'common.dart';
 part 'user.dart';
 part 'transaction.dart';

@@ -27,7 +27,7 @@ class _HeaderCardState extends State<HeaderCard> {
           borderRadius: ConstantDecoration.borderRadius,
         ),
         child: PopScope(
-            onPopInvoked: (_) => _conditionCubit.sync(),
+            onPopInvokedWithResult: (_, result) => _conditionCubit.sync(),
             child: BlocBuilder<FlowListBloc, FlowListState>(
               buildWhen: (_, state) => state is FlowListTotalDataFetched || state is FlowListLoading,
               builder: (context, state) {
@@ -71,14 +71,14 @@ class _HeaderCardState extends State<HeaderCard> {
             )));
   }
 
-  DateTime get startDate => _conditionCubit.condition.startTime;
-  DateTime get endDate => _conditionCubit.condition.endTime;
+  TZDateTime get startDate => _conditionCubit.condition.startTime;
+  TZDateTime get endDate => _conditionCubit.condition.endTime;
 
   /// 时间范围
   Widget _buildDateRange() {
     String dateText;
-    bool isFirstSecondOfMonth = startDate == DateTime(startDate.year, startDate.month, 1, 0, 0, 0);
-    bool isLastSecondOfMonth = endDate == Time.getLastSecondOfMonth(date: endDate);
+    bool isFirstSecondOfMonth = Tz.isFirstSecondOfMonth(startDate);
+    bool isLastSecondOfMonth = Tz.isLastSecondOfMonth(endDate);
     if (isFirstSecondOfMonth && isLastSecondOfMonth) {
       if (startDate.year == endDate.year && startDate.month == endDate.month) {
         dateText = DateFormat('yyyy-MM').format(startDate);

@@ -24,7 +24,7 @@ class FileOperation {
       File file = File('${tempDir.path}/example.png');
       await file.writeAsBytes(imageBytes);
 
-      String targetPath = '/storage/emulated/0/Pictures/${Current.packageInfo.appName}';
+      String targetPath = '/storage/emulated/0/Pictures/LeapLedger';
       if (await Directory(targetPath).exists()) {
       } else {
         try {

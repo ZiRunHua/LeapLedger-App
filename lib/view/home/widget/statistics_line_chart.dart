@@ -9,8 +9,10 @@ class StatisticsLineChart extends StatefulWidget {
 
 class _StatisticsLineChartState extends State<StatisticsLineChart> {
   late List<DayAmountStatisticApiModel> data;
+  late final HomeBloc _bloc;
   @override
   void initState() {
+    _bloc = BlocProvider.of<HomeBloc>(context);
     data = widget.data;
     super.initState();
   }
@@ -94,7 +96,7 @@ class _StatisticsLineChartState extends State<StatisticsLineChart> {
             sideTitles: SideTitles(
               showTitles: true,
               getTitlesWidget: (value, context) {
-                return Text(DateFormat('d日').format(data[value.toInt()].date),
+                return Text(DateFormat('d日').format(_bloc.getTZDateTime(data[value.toInt()].date)),
                     style: const TextStyle(
                       color: Colors.grey,
                       fontSize: ConstantFontSize.bodySmall,

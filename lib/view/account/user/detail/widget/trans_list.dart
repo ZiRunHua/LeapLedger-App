@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:keepaccount_app/model/account/model.dart';
-import 'package:keepaccount_app/model/transaction/model.dart';
-import 'package:keepaccount_app/routes/routes.dart';
-import 'package:keepaccount_app/widget/amount/enter.dart';
+import 'package:leap_ledger_app/model/account/model.dart';
+import 'package:leap_ledger_app/model/transaction/model.dart';
+import 'package:leap_ledger_app/routes/routes.dart';
+import 'package:leap_ledger_app/widget/amount/enter.dart';
 
 class TransList extends StatelessWidget {
   const TransList({super.key, required this.list, required this.account});

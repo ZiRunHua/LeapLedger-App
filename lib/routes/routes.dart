@@ -1,49 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keepaccount_app/bloc/user/user_bloc.dart';
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/account/model.dart';
+import 'package:leap_ledger_app/bloc/user/user_bloc.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/model/account/model.dart';
 
-import 'package:keepaccount_app/model/product/model.dart';
-import 'package:keepaccount_app/model/transaction/category/model.dart';
-import 'package:keepaccount_app/model/transaction/model.dart';
-import 'package:keepaccount_app/model/user/model.dart';
-import 'package:keepaccount_app/view/account/detail/account_detail.dart';
+import 'package:leap_ledger_app/model/product/model.dart';
+import 'package:leap_ledger_app/model/transaction/category/model.dart';
+import 'package:leap_ledger_app/model/transaction/model.dart';
+import 'package:leap_ledger_app/model/user/model.dart';
+import 'package:leap_ledger_app/view/account/detail/account_detail.dart';
 
-import 'package:keepaccount_app/view/account/edit/account_edit.dart';
+import 'package:leap_ledger_app/view/account/edit/account_edit.dart';
 
-import 'package:keepaccount_app/view/account/list/enter.dart';
-import 'package:keepaccount_app/view/account/mapping/account_mapping_bottom_sheet.dart';
-import 'package:keepaccount_app/view/account/operation/account_operation_bottom_sheet.dart';
-import 'package:keepaccount_app/view/account/template/list/account_template_list.dart';
-import 'package:keepaccount_app/view/account/user/config/account_user_config_dialog.dart';
-import 'package:keepaccount_app/view/account/user/detail/account_user_detail_buttom_sheet.dart';
-import 'package:keepaccount_app/view/account/user/edit/user_detail_edit.dart';
-import 'package:keepaccount_app/view/account/user/invitation/account_user_invitation.dart';
-import 'package:keepaccount_app/view/account/user/invite/account_user_invite_dialog.dart';
-import 'package:keepaccount_app/view/transaction/category/father/edit/transaction_category_father_edit_dialog.dart';
-import 'package:keepaccount_app/view/transaction/category/mapping/transaction_category_mapping.dart';
-import 'package:keepaccount_app/view/transaction/category/template/transaction_category_template.dart';
-import 'package:keepaccount_app/view/transaction/chart/transaction_chart.dart';
-import 'package:keepaccount_app/view/transaction/detail/transaction_detail_bottom_sheet.dart';
-import 'package:keepaccount_app/view/transaction/edit/transaction_edit.dart';
-import 'package:keepaccount_app/view/transaction/flow/transaction_flow.dart';
-import 'package:keepaccount_app/view/transaction/share/transaction_share_bottom_sheet.dart';
-import 'package:keepaccount_app/view/transaction/timing/cubit/transaction_timing_cubit.dart';
-import 'package:keepaccount_app/view/transaction/timing/list/transaction_timing_list.dart';
-import 'package:keepaccount_app/view/transaction/timing/transaction_timing.dart';
-import 'package:keepaccount_app/view/user/account/invitation/user_acount_invitation.dart';
-import 'package:keepaccount_app/view/user/config/transaction/share/user_config_transaction_share.dart';
+import 'package:leap_ledger_app/view/account/list/enter.dart';
+import 'package:leap_ledger_app/view/account/mapping/account_mapping_bottom_sheet.dart';
+import 'package:leap_ledger_app/view/account/operation/account_operation_bottom_sheet.dart';
+import 'package:leap_ledger_app/view/account/template/list/account_template_list.dart';
+import 'package:leap_ledger_app/view/account/user/config/account_user_config_dialog.dart';
+import 'package:leap_ledger_app/view/account/user/detail/account_user_detail_buttom_sheet.dart';
+import 'package:leap_ledger_app/view/account/user/edit/user_detail_edit.dart';
+import 'package:leap_ledger_app/view/account/user/invitation/account_user_invitation.dart';
+import 'package:leap_ledger_app/view/account/user/invite/account_user_invite_dialog.dart';
+import 'package:leap_ledger_app/view/transaction/category/father/edit/transaction_category_father_edit_dialog.dart';
+import 'package:leap_ledger_app/view/transaction/category/mapping/transaction_category_mapping.dart';
+import 'package:leap_ledger_app/view/transaction/category/template/transaction_category_template.dart';
+import 'package:leap_ledger_app/view/transaction/chart/transaction_chart.dart';
+import 'package:leap_ledger_app/view/transaction/detail/transaction_detail_bottom_sheet.dart';
+import 'package:leap_ledger_app/view/transaction/edit/transaction_edit.dart';
+import 'package:leap_ledger_app/view/transaction/flow/transaction_flow.dart';
+import 'package:leap_ledger_app/view/transaction/share/transaction_share_bottom_sheet.dart';
+import 'package:leap_ledger_app/view/transaction/timing/cubit/transaction_timing_cubit.dart';
+import 'package:leap_ledger_app/view/transaction/timing/list/transaction_timing_list.dart';
+import 'package:leap_ledger_app/view/transaction/timing/transaction_timing.dart';
+import 'package:leap_ledger_app/view/user/account/invitation/user_acount_invitation.dart';
+import 'package:leap_ledger_app/view/user/config/transaction/share/user_config_transaction_share.dart';
 
-import 'package:keepaccount_app/view/user/login/user_login.dart';
-import 'package:keepaccount_app/view/transaction/category/edit/transaction_category_edit.dart';
-import 'package:keepaccount_app/view/transaction/category/tree/transaction_category_tree.dart';
-import 'package:keepaccount_app/view/transaction/import/transaction_import.dart';
-import 'package:keepaccount_app/view/user/password/update/user_password_update.dart';
-import 'package:keepaccount_app/view/user/register/user_register.dart';
-import 'package:keepaccount_app/view/user/forgetPassword/user_forgetPassword.dart';
-import 'package:keepaccount_app/view/user/search/user_search.dart';
-import 'package:keepaccount_app/widget/common/common.dart';
+import 'package:leap_ledger_app/view/user/login/user_login.dart';
+import 'package:leap_ledger_app/view/transaction/category/edit/transaction_category_edit.dart';
+import 'package:leap_ledger_app/view/transaction/category/tree/transaction_category_tree.dart';
+import 'package:leap_ledger_app/view/transaction/import/transaction_import.dart';
+import 'package:leap_ledger_app/view/user/password/update/user_password_update.dart';
+import 'package:leap_ledger_app/view/user/register/user_register.dart';
+import 'package:leap_ledger_app/view/user/forgetPassword/user_forgetPassword.dart';
+import 'package:leap_ledger_app/view/user/search/user_search.dart';
+import 'package:leap_ledger_app/widget/common/common.dart';
 
 part "animation.dart";
 part 'account_routes.dart';
@@ -53,7 +53,6 @@ part 'transaction_routes.dart';
 
 class Routes {
   static const String home = 'home';
-  static const String login = 'login';
   static Route<dynamic>? generateRoute(RouteSettings settings) {
     // 公共路由
     Route<dynamic>? publicRoute = publicRoutes(settings);

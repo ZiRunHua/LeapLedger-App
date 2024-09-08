@@ -4,6 +4,8 @@ sealed class HomeEvent {}
 
 class HomeFetchDataEvent extends HomeEvent {}
 
+class HomeFetchCategoryAmountRankDataEvent extends HomeEvent {}
+
 class HomeAccountChangeEvent extends HomeEvent {
   final AccountDetailModel account;
 
@@ -11,7 +13,7 @@ class HomeAccountChangeEvent extends HomeEvent {
 }
 
 class HomeStatisticUpdateEvent extends HomeEvent {
-  final TransactionEditModel? oldTrnas;
+  final TransactionEditModel? oldTrans;
   final TransactionEditModel? newTrans;
-  HomeStatisticUpdateEvent(this.oldTrnas, this.newTrans);
+  HomeStatisticUpdateEvent(this.oldTrans, this.newTrans);
 }

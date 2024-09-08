@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/transaction/model.dart';
-import 'package:keepaccount_app/util/enter.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/model/transaction/model.dart';
+import 'package:leap_ledger_app/util/enter.dart';
+import 'package:timezone/timezone.dart';
 part 'model.g.dart';
 
 class TransactionCategoryBaseModel {
@@ -170,9 +171,9 @@ class InExStatisticWithTimeModel extends InExStatisticModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   late final int numberOfDays;
   @UtcDateTimeConverter()
-  late final DateTime startTime;
+  late DateTime startTime;
   @UtcDateTimeConverter()
-  late final DateTime endTime;
+  late DateTime endTime;
   InExStatisticWithTimeModel({super.income, super.expense, required this.startTime, required this.endTime}) {
     numberOfDays = endTime.add(Duration(seconds: 1)).difference(startTime).inDays;
   }
@@ -188,5 +189,10 @@ class InExStatisticWithTimeModel extends InExStatisticModel {
       return false;
     }
     return super.handleTransEditModel(editModel: editModel, isAdd: isAdd);
+  }
+
+  setLocation(Location l) {
+    startTime = TZDateTime.from(startTime, l);
+    endTime = TZDateTime.from(endTime, l);
   }
 }

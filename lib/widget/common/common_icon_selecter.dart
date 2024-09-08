@@ -13,22 +13,22 @@ class _CommonIconSelecterState extends State<CommonIconSelecter> {
   late IconData value = widget.value;
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: GridView.builder(
-            itemCount: widget.iconList.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 5, // 每行显示的项目数量
-              crossAxisSpacing: 24.0, // x轴间距
-              mainAxisSpacing: 24.0, // 主轴间距
-            ),
-            itemBuilder: (BuildContext context, int index) {
-              return buildIcon(context, widget.iconList[index]);
-            }),
-      ),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: GridView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: widget.iconList.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 5,
+            crossAxisSpacing: 24.0,
+            mainAxisSpacing: 24.0,
+          ),
+          itemBuilder: (BuildContext context, int index) {
+            return buildIcon(context, widget.iconList[index]);
+          }),
     );
   }
 

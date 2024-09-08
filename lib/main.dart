@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:keepaccount_app/bloc/account/account_bloc.dart';
-import 'package:keepaccount_app/bloc/transaction/category/transaction_category_bloc.dart';
-import 'package:keepaccount_app/bloc/transaction/transaction_bloc.dart';
-import 'package:keepaccount_app/bloc/user/config/user_config_bloc.dart';
-import 'package:keepaccount_app/bloc/user/user_bloc.dart';
-import 'package:keepaccount_app/routes/routes.dart';
-import 'package:keepaccount_app/util/enter.dart';
+import 'package:intl/intl.dart';
+import 'package:leap_ledger_app/bloc/account/account_bloc.dart';
+import 'package:leap_ledger_app/bloc/category/category_bloc.dart';
+import 'package:leap_ledger_app/bloc/transaction/transaction_bloc.dart';
+import 'package:leap_ledger_app/bloc/user/config/user_config_bloc.dart';
+import 'package:leap_ledger_app/bloc/user/user_bloc.dart';
+import 'package:leap_ledger_app/routes/routes.dart';
+import 'package:leap_ledger_app/util/enter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:keepaccount_app/view/navigation/navigation.dart';
+import 'package:leap_ledger_app/view/navigation/navigation.dart';
 import 'common/global.dart';
-import 'package:keepaccount_app/common/current.dart';
+import 'package:leap_ledger_app/common/current.dart';
+import 'package:timezone/data/latest_all.dart' as tzData;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,14 +23,12 @@ Future<void> main() async {
 Future<void> init() async {
   const String envName = String.fromEnvironment("ENV");
   Current.env = ENV.values.firstWhere((e) => e.toString().split('.').last == envName);
-
+  tzData.initializeTimeZones();
   await SharedPreferencesCache.init();
   await Global.init();
-
   //await Global.cache.clear();
   await initCache();
   Routes.init();
-
   await Current.init();
 }
 
@@ -52,6 +52,8 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           supportedLocales: const [
             Locale('zh', 'CN'),
+            Locale('en'),
+            Locale('es'),
           ],
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,
@@ -61,6 +63,12 @@ class MyApp extends StatelessWidget {
           navigatorKey: Global.navigatorKey,
           title: 'Flutter Demo',
           theme: ThemeData(
+            tabBarTheme: const TabBarTheme(
+              dividerHeight: 0,
+              overlayColor: WidgetStatePropertyAll<Color>(
+                Colors.white,
+              ),
+            ),
             colorScheme: const ColorScheme.light(
               primary: ConstantColor.primaryColor,
               secondary: ConstantColor.secondaryColor,
@@ -74,8 +82,8 @@ class MyApp extends StatelessWidget {
             ),
             elevatedButtonTheme: ElevatedButtonThemeData(
               style: ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll(Colors.blue),
-                foregroundColor: MaterialStatePropertyAll(Colors.white),
+                backgroundColor: WidgetStatePropertyAll(Colors.blue),
+                foregroundColor: WidgetStatePropertyAll(Colors.white),
               ),
             ),
             floatingActionButtonTheme: const FloatingActionButtonThemeData(

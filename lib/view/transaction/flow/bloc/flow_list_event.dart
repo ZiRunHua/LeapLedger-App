@@ -5,7 +5,8 @@ sealed class FlowListEvent {}
 
 class FlowListDataFetchEvent extends FlowListEvent {
   final TransactionQueryCondModel? condition;
-  FlowListDataFetchEvent({this.condition});
+  final AccountDetailModel account;
+  FlowListDataFetchEvent({this.condition, required this.account});
 }
 
 class FlowListMoreDataFetchEvent extends FlowListEvent {

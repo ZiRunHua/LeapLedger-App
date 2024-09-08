@@ -17,30 +17,37 @@ class AccountModel {
   late IconData icon;
   @JsonKey(defaultValue: AccountType.independent, unknownEnumValue: AccountType.independent)
   late AccountType type;
+  @JsonKey(defaultValue: 'Asia/Shanghai', disallowNullValue: true)
+  late String location;
   @UtcDateTimeConverter()
   late DateTime createTime;
   @UtcDateTimeConverter()
   late DateTime updateTime;
 
   bool get isValid => id > 0;
-
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  late final Location timeLocation;
   AccountModel({
     required this.id,
     required this.name,
     required this.icon,
     required this.type,
+    required this.location,
     required this.createTime,
     required this.updateTime,
-  });
+  }) {
+    timeLocation = getLocation(location.isEmpty ? Constant.defultLocation : location);
+  }
 
-  AccountModel.prototypeData()
+  AccountModel.prototypeData(DateTime time)
       : this(
           id: 0,
           name: "test",
           icon: Icons.abc,
+          location: Constant.defultLocation,
           type: AccountType.independent,
-          createTime: DateTime.now(),
-          updateTime: DateTime.now(),
+          createTime: time,
+          updateTime: time,
         );
 
   factory AccountModel.fromJson(Map<String, dynamic> json) => _$AccountModelFromJson(json);
@@ -58,6 +65,8 @@ class AccountModel {
     name = other.name;
     icon = other.icon;
     type = other.type;
+    location = other.location;
+    timeLocation = other.timeLocation;
     createTime = other.createTime;
     updateTime = other.updateTime;
   }
@@ -83,25 +92,18 @@ class AccountDetailModel extends AccountModel {
   bool get isShare => type == AccountType.share;
   bool get canEdit => isCreator;
   AccountDetailModel({
-    required int id,
-    required String name,
-    required IconData icon,
-    required AccountType type,
-    required DateTime createTime,
-    required DateTime updateTime,
+    required super.id,
+    required super.name,
+    required super.icon,
+    required super.type,
+    required super.location,
+    required super.createTime,
+    required super.updateTime,
     required this.creatorId,
     required this.creatorName,
     required this.role,
     required this.joinTime,
-  }) : super(
-          id: id,
-          name: name,
-          icon: icon,
-          type: type,
-          createTime: createTime,
-          updateTime: updateTime,
-        );
-
+  });
   factory AccountDetailModel.fromJson(Map<String, dynamic> json) => _$AccountDetailModelFromJson(json);
 
   @override
@@ -126,6 +128,7 @@ class AccountDetailModel extends AccountModel {
       name: name,
       icon: icon,
       type: type,
+      location: location,
       createTime: createTime,
       updateTime: updateTime,
       creatorId: creatorId,
@@ -141,6 +144,7 @@ class AccountDetailModel extends AccountModel {
       name: 'prototypeData',
       icon: Icons.account_circle,
       type: AccountType.share,
+      location: Constant.defultLocation,
       createTime: DateTime.now(),
       updateTime: DateTime.now(),
       creatorId: 0,
@@ -148,6 +152,14 @@ class AccountDetailModel extends AccountModel {
       role: AccountRole.reader,
       joinTime: DateTime.now(),
     );
+  }
+
+  TZDateTime getTZDateTime(DateTime time) {
+    return TZDateTime.from(time, timeLocation);
+  }
+
+  TZDateTime getNowTime() {
+    return TZDateTime.now(timeLocation);
   }
 }
 
@@ -264,15 +276,15 @@ class AccountUserInvitationModle {
       required this.role,
       required this.status,
       required this.createTime});
-  AccountUserInvitationModle.prototypeData()
+  AccountUserInvitationModle.prototypeData(DateTime time)
       : this(
           id: 1,
-          account: AccountModel.prototypeData(),
+          account: AccountModel.prototypeData(time),
           invitee: UserInfoModel(email: "testtesttest@qq.com", username: "test", id: 1),
           inviter: UserInfoModel(email: "testtesttest@qq.com", username: "test", id: 1),
           role: AccountRole.ownEditor,
           status: AccountUserInvitationStatus.waiting,
-          createTime: DateTime.now(),
+          createTime: time,
         );
   factory AccountUserInvitationModle.fromJson(Map<String, dynamic> json) => _$AccountUserInvitationModleFromJson(json);
 

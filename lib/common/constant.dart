@@ -18,6 +18,8 @@ class Constant {
   static const int maxYear = 2050;
   static DateTime minDateTime = DateTime(minYear);
   static DateTime maxDateTime = DateTime(maxYear);
+
+  static String defultLocation = 'Asia/Shanghai';
 }
 
 class ConstantFontSize {

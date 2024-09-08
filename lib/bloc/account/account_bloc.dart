@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keepaccount_app/api/api_server.dart';
-import 'package:keepaccount_app/bloc/user/user_bloc.dart';
-import 'package:keepaccount_app/model/account/model.dart';
-import 'package:keepaccount_app/model/user/model.dart';
+import 'package:leap_ledger_app/api/api_server.dart';
+import 'package:leap_ledger_app/bloc/user/user_bloc.dart';
+import 'package:leap_ledger_app/model/account/model.dart';
+import 'package:leap_ledger_app/model/user/model.dart';
 
 part 'account_event.dart';
 part 'account_state.dart';

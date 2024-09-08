@@ -6,18 +6,25 @@ part of 'model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-AccountModel _$AccountModelFromJson(Map<String, dynamic> json) => AccountModel(
-      id: (json['Id'] as num?)?.toInt() ?? 0,
-      name: json['Name'] as String? ?? '',
-      icon: Json.iconDataFormJson(json['Icon']),
-      type: $enumDecodeNullable(_$AccountTypeEnumMap, json['Type'],
-              unknownValue: AccountType.independent) ??
-          AccountType.independent,
-      createTime:
-          const UtcDateTimeConverter().fromJson(json['CreateTime'] as String?),
-      updateTime:
-          const UtcDateTimeConverter().fromJson(json['UpdateTime'] as String?),
-    );
+AccountModel _$AccountModelFromJson(Map<String, dynamic> json) {
+  $checkKeys(
+    json,
+    disallowNullValues: const ['Location'],
+  );
+  return AccountModel(
+    id: (json['Id'] as num?)?.toInt() ?? 0,
+    name: json['Name'] as String? ?? '',
+    icon: Json.iconDataFormJson(json['Icon']),
+    type: $enumDecodeNullable(_$AccountTypeEnumMap, json['Type'],
+            unknownValue: AccountType.independent) ??
+        AccountType.independent,
+    location: json['Location'] as String? ?? 'Asia/Shanghai',
+    createTime:
+        const UtcDateTimeConverter().fromJson(json['CreateTime'] as String?),
+    updateTime:
+        const UtcDateTimeConverter().fromJson(json['UpdateTime'] as String?),
+  );
+}
 
 Map<String, dynamic> _$AccountModelToJson(AccountModel instance) =>
     <String, dynamic>{
@@ -25,6 +32,7 @@ Map<String, dynamic> _$AccountModelToJson(AccountModel instance) =>
       'Name': instance.name,
       'Icon': Json.iconDataToJson(instance.icon),
       'Type': _$AccountTypeEnumMap[instance.type]!,
+      'Location': instance.location,
       'CreateTime': const UtcDateTimeConverter().toJson(instance.createTime),
       'UpdateTime': const UtcDateTimeConverter().toJson(instance.updateTime),
     };
@@ -34,26 +42,32 @@ const _$AccountTypeEnumMap = {
   AccountType.share: 'share',
 };
 
-AccountDetailModel _$AccountDetailModelFromJson(Map<String, dynamic> json) =>
-    AccountDetailModel(
-      id: (json['Id'] as num?)?.toInt() ?? 0,
-      name: json['Name'] as String? ?? '',
-      icon: Json.iconDataFormJson(json['Icon']),
-      type: $enumDecodeNullable(_$AccountTypeEnumMap, json['Type'],
-              unknownValue: AccountType.independent) ??
-          AccountType.independent,
-      createTime:
-          const UtcDateTimeConverter().fromJson(json['CreateTime'] as String?),
-      updateTime:
-          const UtcDateTimeConverter().fromJson(json['UpdateTime'] as String?),
-      creatorId: (json['CreatorId'] as num?)?.toInt() ?? 0,
-      creatorName: json['CreatorName'] as String? ?? '',
-      role: $enumDecodeNullable(_$AccountRoleEnumMap, json['Role'],
-              unknownValue: AccountRole.reader) ??
-          AccountRole.reader,
-      joinTime:
-          const UtcDateTimeConverter().fromJson(json['JoinTime'] as String?),
-    );
+AccountDetailModel _$AccountDetailModelFromJson(Map<String, dynamic> json) {
+  $checkKeys(
+    json,
+    disallowNullValues: const ['Location'],
+  );
+  return AccountDetailModel(
+    id: (json['Id'] as num?)?.toInt() ?? 0,
+    name: json['Name'] as String? ?? '',
+    icon: Json.iconDataFormJson(json['Icon']),
+    type: $enumDecodeNullable(_$AccountTypeEnumMap, json['Type'],
+            unknownValue: AccountType.independent) ??
+        AccountType.independent,
+    location: json['Location'] as String? ?? 'Asia/Shanghai',
+    createTime:
+        const UtcDateTimeConverter().fromJson(json['CreateTime'] as String?),
+    updateTime:
+        const UtcDateTimeConverter().fromJson(json['UpdateTime'] as String?),
+    creatorId: (json['CreatorId'] as num?)?.toInt() ?? 0,
+    creatorName: json['CreatorName'] as String? ?? '',
+    role: $enumDecodeNullable(_$AccountRoleEnumMap, json['Role'],
+            unknownValue: AccountRole.reader) ??
+        AccountRole.reader,
+    joinTime:
+        const UtcDateTimeConverter().fromJson(json['JoinTime'] as String?),
+  );
+}
 
 Map<String, dynamic> _$AccountDetailModelToJson(AccountDetailModel instance) =>
     <String, dynamic>{
@@ -61,6 +75,7 @@ Map<String, dynamic> _$AccountDetailModelToJson(AccountDetailModel instance) =>
       'Name': instance.name,
       'Icon': Json.iconDataToJson(instance.icon),
       'Type': _$AccountTypeEnumMap[instance.type]!,
+      'Location': instance.location,
       'CreateTime': const UtcDateTimeConverter().toJson(instance.createTime),
       'UpdateTime': const UtcDateTimeConverter().toJson(instance.updateTime),
       'CreatorId': instance.creatorId,

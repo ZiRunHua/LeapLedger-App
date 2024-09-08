@@ -10,8 +10,8 @@ class HeaderCard extends StatelessWidget {
       decoration: ConstantDecoration.cardDecoration,
       margin: EdgeInsets.zero,
       child: GridView.builder(
-          shrinkWrap: true, // 让网格视图适应内容大小
-          physics: const NeverScrollableScrollPhysics(), // 禁止滚动
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
           padding: EdgeInsets.zero,
           itemCount: data.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

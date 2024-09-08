@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
-import 'package:keepaccount_app/model/account/model.dart';
+import 'package:leap_ledger_app/model/account/model.dart';
 
 class AccountDetail extends StatelessWidget {
   const AccountDetail({super.key});

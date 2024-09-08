@@ -1,20 +1,20 @@
 import 'package:bloc/bloc.dart';
-import 'package:keepaccount_app/model/account/model.dart';
+import 'package:leap_ledger_app/bloc/common/enter.dart';
+import 'package:leap_ledger_app/model/account/model.dart';
 
 part 'navigation_event.dart';
 part 'navigation_state.dart';
 
 enum TabPage { home, flow, share, userHome }
 
-class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
-  NavigationBloc(this.account) : super(InHomePage()) {
+class NavigationBloc extends AccountBasedBloc<NavigationEvent, NavigationState> {
+  NavigationBloc({required super.account}) : super(InHomePage()) {
     on<NavigateToHomePage>(_navigateToHomePage);
     on<NavigateToFlowPage>(_navigateToFlowPage);
     on<NavigateToSharePage>(_navigateToSharePage);
     on<NavigateToUserHomePage>(_navigateToUserHomePage);
     on<ChangeAccountEvent>(_changeAccount);
   }
-  late AccountDetailModel account;
   TabPage currentDisplayPage = TabPage.home;
   _changeAccount(ChangeAccountEvent event, Emitter<NavigationState> emit) {
     account = event.account;

@@ -52,12 +52,13 @@ class _AccountTransListState extends State<AccountTransList> {
   }
 
   void _onLookMore(AccountDetailModel account, TransactionModel? trans) {
-    DateTime startTime, endTime = DateTime.now();
+    TZDateTime startTime, endTime;
     if (trans == null) {
-      startTime = DateTime.now().add(const Duration(days: -7));
+      startTime = account.getNowTime().add(const Duration(days: -7));
     } else {
-      startTime = trans.tradeTime.add(const Duration(days: -7));
+      startTime = account.getTZDateTime(trans.tradeTime).add(const Duration(days: -7));
     }
+    endTime = startTime.add(const Duration(days: 7));
     TransactionRoutes.pushFlow(context,
         account: account,
         condition: TransactionQueryCondModel(accountId: account.id, startTime: startTime, endTime: endTime));

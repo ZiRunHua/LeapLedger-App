@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/account/model.dart';
-import 'package:keepaccount_app/widget/common/common.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/model/account/model.dart';
+import 'package:leap_ledger_app/widget/common/common.dart';
 
 import 'cubit/user_account_invitation_cubit.dart';
 
@@ -53,7 +53,7 @@ class _UserAccountInvitationState extends State<UserAccountInvitation> {
           },
           child: CommonPageList<AccountUserInvitationModle>(
             buildListOne: _buildListTile,
-            prototypeData: AccountUserInvitationModle.prototypeData(),
+            prototypeData: AccountUserInvitationModle.prototypeData(DateTime.now()),
             initRefresh: true,
             controller: _pageController,
           ),

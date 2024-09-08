@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:keepaccount_app/api/api_server.dart';
+import 'package:leap_ledger_app/api/api_server.dart';
 
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/account/model.dart';
-import 'package:keepaccount_app/model/user/model.dart';
-import 'package:keepaccount_app/widget/common/common.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/model/account/model.dart';
+import 'package:leap_ledger_app/model/user/model.dart';
+import 'package:leap_ledger_app/widget/common/common.dart';
 
 class AccountUserInviteDialog extends StatefulWidget {
   AccountUserInviteDialog({super.key, required this.account, required UserInfoModel userInfo}) {

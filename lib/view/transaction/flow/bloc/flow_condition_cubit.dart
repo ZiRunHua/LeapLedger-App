@@ -1,23 +1,25 @@
 part of 'enter.dart';
 
-class FlowConditionCubit extends Cubit<FlowConditionState> {
-  final TransactionQueryCondModel _defaultCondition = TransactionQueryCondModel(
-    accountId: UserBloc.currentAccount.id,
-    startTime: DateTime(DateTime.now().year, DateTime.now().month - 6),
-    endTime: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 23, 59, 59),
-  );
-
+class FlowConditionCubit extends AccountBasedCubit<FlowConditionState> {
   late TransactionQueryCondModel condition, _condition;
-  late AccountDetailModel currentAccount;
   Map<int, List<MapEntry<TransactionCategoryFatherModel, List<TransactionCategoryModel>>>> _categoryCache = {};
   List<AccountDetailModel> accountList = [];
 
   ///condition和currentAccount要么都传 要么都不传
   ///不传时会取默认值
-  FlowConditionCubit({TransactionQueryCondModel? condition, required this.currentAccount})
-      : assert(condition?.accountId == currentAccount.id),
+  FlowConditionCubit({TransactionQueryCondModel? condition, required super.account})
+      : assert(condition?.accountId == account.id),
         super(FlowConditionInitial()) {
-    _condition = condition ?? _defaultCondition;
+    if (condition == null) {
+      var nowTime = UserBloc.currentAccount.getNowTime();
+      _condition = TransactionQueryCondModel(
+        accountId: UserBloc.currentAccount.id,
+        startTime: TZDateTime(nowTime.location, nowTime.year, nowTime.month - 6),
+        endTime: TZDateTime(nowTime.location, nowTime.year, nowTime.month, nowTime.day, 23, 59, 59),
+      );
+    } else {
+      _condition = condition;
+    }
     this.condition = _condition.copyWith();
   }
 
@@ -74,8 +76,8 @@ class FlowConditionCubit extends Cubit<FlowConditionState> {
     condition.incomeExpense = _condition.incomeExpense;
     condition.minimumAmount = _condition.minimumAmount;
     condition.maximumAmount = _condition.maximumAmount;
-    condition.startTime = _condition.startTime.copyWith();
-    condition.endTime = _condition.endTime.copyWith();
+    condition.startTime = Tz.copy(_condition.startTime);
+    condition.endTime = Tz.copy(_condition.endTime);
   }
 
   updateAccount(AccountDetailModel account) async {
@@ -84,7 +86,9 @@ class FlowConditionCubit extends Cubit<FlowConditionState> {
     }
     condition.accountId = account.id;
     _condition.accountId = account.id;
-    currentAccount = account;
+    condition.categoryIds.clear();
+    _condition.categoryIds.clear();
+    account = account;
     emit(FlowConditionChanged(condition));
     emit(FlowCurrentAccountChanged());
     await fetchCategoryData(accountId: account.id);
@@ -97,13 +101,15 @@ class FlowConditionCubit extends Cubit<FlowConditionState> {
   }
 
   updateTime({required DateTime startTime, required DateTime endTime}) {
-    if (endTime.isAtSameMomentAs(condition.startTime) && endTime.isAtSameMomentAs(endTime)) {
+    var tzStartTime = Tz.getNewByDate(startTime, location);
+    var tzEndTime = Tz.getNewByDate(endTime, location);
+    if (tzEndTime.isAtSameMomentAs(condition.startTime) && endTime.isAtSameMomentAs(tzStartTime)) {
       return;
     }
-    condition.startTime = startTime;
-    condition.endTime = endTime;
-    _condition.startTime = startTime.copyWith();
-    _condition.endTime = endTime.copyWith();
+    condition.startTime = tzStartTime;
+    condition.endTime = tzEndTime;
+    _condition.startTime = Tz.copy(tzStartTime);
+    _condition.endTime = Tz.copy(tzEndTime);
     emit(FlowConditionChanged(condition));
   }
 

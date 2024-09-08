@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/account/model.dart';
-import 'package:keepaccount_app/util/enter.dart';
-import 'package:keepaccount_app/view/transaction/chart/cubit/enter.dart';
-import 'package:keepaccount_app/view/transaction/chart/widget/enter.dart';
-import 'package:keepaccount_app/widget/common/common.dart';
-import 'package:keepaccount_app/widget/date/enter.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/model/account/model.dart';
+import 'package:leap_ledger_app/util/enter.dart';
+import 'package:leap_ledger_app/view/transaction/chart/cubit/enter.dart';
+import 'package:leap_ledger_app/view/transaction/chart/widget/enter.dart';
+import 'package:leap_ledger_app/widget/common/common.dart';
+import 'package:leap_ledger_app/widget/date/enter.dart';
 
 class TransactionChart extends StatefulWidget {
   const TransactionChart({super.key, required this.account, this.startDate, this.endDate});
@@ -47,7 +47,7 @@ class _TransactionChartState extends State<TransactionChart> {
             title: const TabBar(tabs: <Widget>[
               Tab(child: Text('支出', softWrap: false, overflow: TextOverflow.clip)),
               Tab(child: Text('收入', softWrap: false, overflow: TextOverflow.clip)),
-            ]),
+            ], dividerHeight: 0),
             actions: _buildAction(),
             automaticallyImplyLeading: true,
           ),
@@ -137,7 +137,7 @@ class DateButton extends StatelessWidget {
             onIncomeDateChanged(start: date.start, end: date.end);
           }
         },
-        style: const ButtonStyle(side: MaterialStatePropertyAll(BorderSide(color: ConstantColor.greyButton))),
+        style: const ButtonStyle(side: WidgetStatePropertyAll(BorderSide(color: ConstantColor.greyButton))),
         child: Text(text));
   }
 }

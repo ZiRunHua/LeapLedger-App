@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 
-import 'package:keepaccount_app/common/global.dart' show Constant, ConstantColor, ConstantDecoration, ConstantFontSize;
-import 'package:keepaccount_app/model/transaction/model.dart' show TransactionShareModel;
-import 'package:keepaccount_app/util/enter.dart' show FileOperation;
-import 'package:keepaccount_app/widget/amount/enter.dart';
-import 'package:keepaccount_app/widget/common/common.dart';
+import 'package:leap_ledger_app/common/global.dart' show Constant, ConstantColor, ConstantDecoration, ConstantFontSize;
+import 'package:leap_ledger_app/model/transaction/model.dart' show TransactionShareModel;
+import 'package:leap_ledger_app/util/enter.dart' show FileOperation;
+import 'package:leap_ledger_app/widget/amount/enter.dart';
+import 'package:leap_ledger_app/widget/common/common.dart';
 
 class TransactionShareDialog extends StatelessWidget {
   TransactionShareDialog({super.key, required this.data});

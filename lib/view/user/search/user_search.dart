@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keepaccount_app/bloc/user/user_bloc.dart';
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/user/model.dart';
-import 'package:keepaccount_app/widget/common/common.dart';
-import 'package:keepaccount_app/widget/form/form.dart';
+import 'package:leap_ledger_app/bloc/user/user_bloc.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/model/user/model.dart';
+import 'package:leap_ledger_app/widget/common/common.dart';
+import 'package:leap_ledger_app/widget/form/form.dart';
 
 class UserSearch extends StatefulWidget {
   const UserSearch({super.key});

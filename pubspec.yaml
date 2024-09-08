@@ -1,4 +1,4 @@
-name: keepaccount_app
+name: leap_ledger_app
 description: A new Flutter project.
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -7,7 +7,7 @@ version: 0.6.0
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
-  flutter: "3.16.0"
+  flutter: "3.24.1"
 
 dependencies:
   flutter:
@@ -20,24 +20,21 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   flutter_bloc: ^8.1.0
-  fl_chart: 0.62.0
-  intl: 0.18.1
-  drag_and_drop_lists: ^0.3.3
+  fl_chart: ^0.69.0
+  intl: ^0.19.0
+  drag_and_drop_lists: ^0.4.1
   material_segmented_control: ^5.0.0
   yaml: ^3.1.2
-  fluttertoast: 8.2.2
+  fluttertoast: ^8.2.2
   shared_preferences: ^2.2.0
-  dio: 5.3.0
-  dio_cache_interceptor: 3.5.0
-  dio_cache_interceptor_hive_store: 3.2.2
-  package_info_plus: ^4.0.2
+  dio: ^5.7.0
+  dio_cache_interceptor: ^3.5.0
+  dio_cache_interceptor_hive_store: ^3.2.2
   crypto: ^3.0.3
   json_annotation: ^4.8.1
   shimmer: ^3.0.0
   flutter_easyloading: ^3.0.5
-  excel: ^2.1.0
-  file_picker: 6.1.1
-  csv: ^5.0.2
+  file_picker: ^8.1.2
   permission_handler: ^11.3.1
   build_runner: ^2.4.5
   json_serializable: ^6.7.0
@@ -45,12 +42,11 @@ dependencies:
   path_provider: ^2.1.0
   uuid: ^4.4.0
   timezone: ^0.9.3
-  screenshot: ^2.5.0
   url_launcher: ^6.2.6
   auto_size_text: ^3.0.0
-  device_info_plus: ^9.1.2
-  geolocator: ^11.1.0
-  
+  geolocator: ^13.0.1  
+  flutter_timezone: 3.0.1
+  device_info_plus: ^10.1.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

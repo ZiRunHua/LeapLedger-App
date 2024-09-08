@@ -1,18 +1,18 @@
-import 'package:bloc/bloc.dart';
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/account/model.dart';
-import 'package:keepaccount_app/model/transaction/category/model.dart';
-import 'package:keepaccount_app/model/transaction/model.dart';
-import 'package:keepaccount_app/model/user/model.dart';
+import 'package:leap_ledger_app/bloc/common/enter.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/model/account/model.dart';
+import 'package:leap_ledger_app/model/transaction/category/model.dart';
+import 'package:leap_ledger_app/model/transaction/model.dart';
+import 'package:leap_ledger_app/model/user/model.dart';
 import 'package:meta/meta.dart';
 
 part 'edit_event.dart';
 part 'edit_state.dart';
 
-class EditBloc extends Bloc<EditEvent, EditState> {
+class EditBloc extends AccountBasedBloc<EditEvent, EditState> {
   EditBloc(
       {required this.user,
-      required this.account,
+      required super.account,
       required this.mode,
       TransactionModel? trans,
       TransactionInfoModel? transInfo})
@@ -28,7 +28,7 @@ class EditBloc extends Bloc<EditEvent, EditState> {
         assert(mode == TransactionEditMode.update && trans != null);
         canAgain = false;
         _originalTrans = trans!;
-        this.transInfo = _originalTrans!;
+        this.transInfo = _originalTrans!.copy();
         break;
       case TransactionEditMode.popTrans:
         canAgain = false;
@@ -42,7 +42,6 @@ class EditBloc extends Bloc<EditEvent, EditState> {
     on<TransactionSave>(_save);
   }
   UserModel user;
-  AccountDetailModel account;
   late TransactionInfoModel transInfo;
   late TransactionModel? _originalTrans;
 

@@ -140,22 +140,25 @@ class _BottomState extends State<Bottom> {
   }
 
   Widget _buildDateButton() {
-    String buttonName = DateFormat('yyyy-MM-dd').format(_bloc.transInfo.tradeTime);
-    if (Time.isSameDayComparison(_bloc.transInfo.tradeTime, DateTime.now())) {
+    var tradeTime = _bloc.getTZDateTime(_bloc.transInfo.tradeTime);
+    var nowTime = _bloc.nowTime;
+    String buttonName = DateFormat('yyyy-MM-dd').format(tradeTime);
+    if (Time.isSameDayComparison(tradeTime, DateTime.now())) {
       buttonName += " 今天";
     }
     return _buildButton(
         onPressed: () async {
           final DateTime? picked = await showDatePicker(
             context: context,
-            initialDate: _bloc.transInfo.tradeTime,
+            initialDate: _bloc.account.getTZDateTime(tradeTime),
+            currentDate: nowTime,
             firstDate: Constant.minDateTime,
             lastDate: Constant.maxDateTime,
           );
           if (picked == null) {
             return;
           }
-          onChangeTradeTime(picked);
+          onChangeTradeTime(Tz.getNewByDate(picked, _bloc.location));
         },
         name: buttonName,
         icon: Icons.access_time_outlined);

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/account/model.dart';
-import 'package:keepaccount_app/view/account/user/invitation/cubit/account_user_invitation_cubit.dart';
-import 'package:keepaccount_app/widget/common/common.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/model/account/model.dart';
+import 'package:leap_ledger_app/view/account/user/invitation/cubit/account_user_invitation_cubit.dart';
+import 'package:leap_ledger_app/widget/common/common.dart';
 
 class AccountUserInvitation extends StatefulWidget {
   const AccountUserInvitation({super.key, required this.account});
@@ -50,7 +50,7 @@ class _AccountUserInvitationState extends State<AccountUserInvitation> {
           },
           child: CommonPageList<AccountUserInvitationModle>(
             buildListOne: _buildListTile,
-            prototypeData: AccountUserInvitationModle.prototypeData(),
+            prototypeData: AccountUserInvitationModle.prototypeData(DateTime.now()),
             initRefresh: true,
             controller: _pageController,
           ),

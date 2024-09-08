@@ -47,7 +47,7 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return PopScope(
-        onPopInvoked: (_) => _conditionCubit.sync(),
+        onPopInvokedWithResult: (bool didPop, bool? result) => _conditionCubit.sync(),
         child: BlocBuilder<FlowConditionCubit, FlowConditionState>(
           buildWhen: (_, state) => state is FlowEditingConditionUpdate,
           builder: (context, state) {
@@ -165,13 +165,13 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
         showSelectedIcon: false,
         style: ButtonStyle(
           visualDensity: VisualDensity.compact,
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
           ),
-          textStyle: MaterialStateProperty.all<TextStyle>(const TextStyle(color: Colors.white)),
-          backgroundColor: MaterialStateProperty.resolveWith<Color>(
-            (Set<MaterialState> states) {
-              if (states.contains(MaterialState.selected)) {
+          textStyle: WidgetStateProperty.all<TextStyle>(const TextStyle(color: Colors.white)),
+          backgroundColor: WidgetStateProperty.resolveWith<Color>(
+            (Set<WidgetState> states) {
+              if (states.contains(WidgetState.selected)) {
                 return ConstantColor.primaryColor;
               }
               return Colors.white;
@@ -229,6 +229,7 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
       shrinkWrap: true,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 5,
+        mainAxisSpacing: 1,
       ),
       itemCount: list.length,
       itemBuilder: (context, index) => _buildCategoryIcon(list[index]),
@@ -254,7 +255,7 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
             width: 100,
             child: OutlinedButton(
               style: ButtonStyle(
-                  shape: MaterialStateProperty.all(const StadiumBorder(side: BorderSide(style: BorderStyle.none)))),
+                  shape: WidgetStateProperty.all(const StadiumBorder(side: BorderSide(style: BorderStyle.none)))),
               onPressed: () {
                 _minAmountController.clear();
                 _maxAmountController.clear();
@@ -266,7 +267,7 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
           width: 100,
           child: ElevatedButton(
             style: ButtonStyle(
-                shape: MaterialStateProperty.all(const StadiumBorder(side: BorderSide(style: BorderStyle.none)))),
+                shape: WidgetStateProperty.all(const StadiumBorder(side: BorderSide(style: BorderStyle.none)))),
             onPressed: () {
               _conditionCubit.save();
               Navigator.of(context).pop();

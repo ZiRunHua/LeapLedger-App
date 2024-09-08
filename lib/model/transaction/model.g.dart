@@ -13,9 +13,7 @@ TransactionEditModel _$TransactionEditModelFromJson(
       userId: (json['UserId'] as num?)?.toInt() ?? 0,
       accountId: (json['AccountId'] as num?)?.toInt() ?? 0,
       categoryId: (json['CategoryId'] as num?)?.toInt() ?? 0,
-      incomeExpense:
-          $enumDecodeNullable(_$IncomeExpenseEnumMap, json['IncomeExpense']) ??
-              IncomeExpense.income,
+      incomeExpense: $enumDecode(_$IncomeExpenseEnumMap, json['IncomeExpense']),
       amount: (json['Amount'] as num?)?.toInt() ?? 0,
       remark: json['Remark'] as String? ?? '',
       tradeTime:
@@ -50,7 +48,7 @@ TransactionInfoModel _$TransactionInfoModelFromJson(
       accountName: json['AccountName'] as String? ?? '',
       incomeExpense:
           $enumDecodeNullable(_$IncomeExpenseEnumMap, json['IncomeExpense']) ??
-              IncomeExpense.income,
+              IncomeExpense.expense,
       categoryId: (json['CategoryId'] as num?)?.toInt() ?? 0,
       categoryIcon: json['CategoryIcon'] == null
           ? Json.defaultIconData
@@ -90,7 +88,7 @@ TransactionModel _$TransactionModelFromJson(Map<String, dynamic> json) =>
       accountName: json['AccountName'] as String? ?? '',
       incomeExpense:
           $enumDecodeNullable(_$IncomeExpenseEnumMap, json['IncomeExpense']) ??
-              IncomeExpense.income,
+              IncomeExpense.expense,
       categoryId: (json['CategoryId'] as num?)?.toInt() ?? 0,
       categoryIcon: json['CategoryIcon'] == null
           ? Json.defaultIconData
@@ -179,9 +177,9 @@ TransactionQueryCondModel _$TransactionQueryCondModelFromJson(
     TransactionQueryCondModel(
       accountId: (json['AccountId'] as num).toInt(),
       startTime:
-          const UtcDateTimeConverter().fromJson(json['StartTime'] as String?),
+          const UtcTZDateTimeConverter().fromJson(json['StartTime'] as String?),
       endTime:
-          const UtcDateTimeConverter().fromJson(json['EndTime'] as String?),
+          const UtcTZDateTimeConverter().fromJson(json['EndTime'] as String?),
       userIds: (json['UserIds'] as List<dynamic>?)
           ?.map((e) => (e as num).toInt())
           .toSet(),
@@ -203,8 +201,8 @@ Map<String, dynamic> _$TransactionQueryCondModelToJson(
       'IncomeExpense': _$IncomeExpenseEnumMap[instance.incomeExpense],
       'MinimumAmount': instance.minimumAmount,
       'MaximumAmount': instance.maximumAmount,
-      'StartTime': const UtcDateTimeConverter().toJson(instance.startTime),
-      'EndTime': const UtcDateTimeConverter().toJson(instance.endTime),
+      'StartTime': const UtcTZDateTimeConverter().toJson(instance.startTime),
+      'EndTime': dateTimeToJson(instance.endTime),
     };
 
 TransactionTimingModel _$TransactionTimingModelFromJson(

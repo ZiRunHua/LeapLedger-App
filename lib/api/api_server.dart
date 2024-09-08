@@ -1,7 +1,8 @@
+import 'dart:async';
 import 'dart:collection';
 import 'dart:core';
 import 'dart:io';
-import 'package:keepaccount_app/model/common/model.dart';
+import 'package:leap_ledger_app/model/common/model.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:dio/dio.dart'
@@ -20,18 +21,18 @@ import 'package:dio/dio.dart'
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 
-import 'package:keepaccount_app/api/model/model.dart';
-import 'package:keepaccount_app/bloc/user/user_bloc.dart';
-import 'package:keepaccount_app/common/current.dart';
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/account/model.dart';
+import 'package:leap_ledger_app/api/model/model.dart';
+import 'package:leap_ledger_app/bloc/user/user_bloc.dart';
+import 'package:leap_ledger_app/common/current.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/model/account/model.dart';
 
-import 'package:keepaccount_app/model/transaction/category/model.dart';
-import 'package:keepaccount_app/model/transaction/model.dart';
-import 'package:keepaccount_app/model/user/model.dart';
-import 'package:keepaccount_app/routes/routes.dart';
-import 'package:keepaccount_app/util/enter.dart';
-import 'package:keepaccount_app/widget/toast.dart';
+import 'package:leap_ledger_app/model/transaction/category/model.dart';
+import 'package:leap_ledger_app/model/transaction/model.dart';
+import 'package:leap_ledger_app/model/user/model.dart';
+import 'package:leap_ledger_app/routes/routes.dart';
+import 'package:leap_ledger_app/util/enter.dart';
+import 'package:leap_ledger_app/widget/toast.dart';
 
 part 'common.dart';
 part 'user.dart';
@@ -61,18 +62,18 @@ class ApiServer {
         return handler.next(options);
       },
     ))
-    ..interceptors.add(
-      DioCacheInterceptor(
-        options: CacheOptions(
-          maxStale: const Duration(days: 7),
-          keyBuilder: (RequestOptions request) {
-            return _uuid.v5(Uuid.NAMESPACE_URL, request.uri.toString() + request.data.toString());
-          },
-          store: HiveCacheStore(Global.tempDirectory.path),
-          policy: CachePolicy.request,
-        ),
-      ),
-    )
+    // ..interceptors.add(
+    //   DioCacheInterceptor(
+    //     options: CacheOptions(
+    //       maxStale: const Duration(days: 7),
+    //       keyBuilder: (RequestOptions request) {
+    //         return _uuid.v5(Namespace.url.value, request.uri.toString() + request.data.toString());
+    //       },
+    //       store: HiveCacheStore(Global.tempDirectory.path),
+    //       policy: CachePolicy.request,
+    //     ),
+    //   ),
+    // )
     ..interceptors.add(QueuedInterceptor())
     ..interceptors.add(LogInterceptor(
       request: true,
@@ -88,13 +89,10 @@ class ApiServer {
       switch (method) {
         case Method.get:
           response = await dio.get(path, data: data, options: options);
-
         case Method.post:
           response = await dio.post(path, data: data, options: options);
-
         case Method.put:
           response = await dio.put(path, data: data, options: options);
-
         case Method.delete:
           response = await dio.delete(path, data: data, options: options);
       }
@@ -111,6 +109,7 @@ class ApiServer {
     return dataFormatFunc(response);
   }
 
+  static Completer<bool> logining = Completer()..complete(false);
   static Future<ResponseBody> request(Method method, String path, {Object? data, Map<String, dynamic>? header}) async {
     Options options = Options(headers: header ?? {});
     Response? response = await _issueRequest(method, path, data, options);
@@ -121,21 +120,35 @@ class ApiServer {
     int code = response.statusCode!;
     if (code >= 200 && (code < 300 || code == 304)) {
       return ResponseBody(response.data);
-    } else if (code == 401) {
+    } else if (code == 401 || code == 403) {
       if (Global.navigatorKey.currentState != null) {
         bool isShowOverlayLoader = Global.isShowOverlayLoader();
         if (isShowOverlayLoader) {
           Global.hideOverlayLoader();
         }
-        return await Global.navigatorKey.currentState!.pushNamed(UserRoutes.login).then((value) {
-          if (isShowOverlayLoader) {
-            Global.showOverlayLoader();
-          }
-          if (value == true) {
+        if (!logining.isCompleted) {
+          if (await logining.future) {
             return request(method, path, data: data, header: header);
           }
-          return getResponseBodyAndShowError(null, errorMsg: "未登录");
-        });
+        } else if (response.requestOptions.headers[HttpHeaders.authorizationHeader]
+                .toString()
+                .compareTo(UserBloc.token) !=
+            0) {
+          return request(method, path, data: data, header: header);
+        } else {
+          logining = Completer<bool>();
+          return await Global.navigatorKey.currentState!.pushNamed(UserRoutes.login).then((value) {
+            if (isShowOverlayLoader) {
+              Global.showOverlayLoader();
+            }
+            if (value == true) {
+              logining.complete(true);
+              return request(method, path, data: data, header: header);
+            }
+            logining.complete(false);
+            return getResponseBodyAndShowError(null, errorMsg: "未登录");
+          });
+        }
       }
       return getResponseBodyAndShowError(null, errorMsg: "未登录");
     }

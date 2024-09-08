@@ -78,7 +78,7 @@ abstract class bottomSelecter<T extends Comparable> extends StatefulWidget {
     required this.options,
     required this.onTap,
     this.backgroundColor = Colors.white,
-    this.height = Constant.buttomHight,
+    this.height,
   });
 }
 
@@ -170,27 +170,40 @@ class _BottomSelecterState<T extends Comparable> extends State<BottomSelecter<T>
 
   @override
   Widget build(BuildContext context) {
-    int selectedIndext = widget.options.indexWhere((element) => element.value == selected);
-    if (selectedIndext < 0) {
-      widget.onTap(widget.options.first);
-      selected = widget.options.first.value;
+    // int selectedIndext = widget.options.indexWhere((element) => element.value == selected);
+    // if (selectedIndext < 0) {
+    //   widget.onTap(widget.options.first);
+    //   selected = widget.options.first.value;
+    // }
+    Widget child;
+    if (widget.options.length > 5) {
+      child = ListView.builder(
+        itemCount: widget.options.length,
+        itemBuilder: (context, index) {
+          return itemBuilder(context, widget.options[index]);
+        },
+      );
+    } else {
+      child = Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: widget.options.map((element) => itemBuilder(context, element)).toList(),
+      );
     }
-    Widget child = Padding(
+    child = Padding(
       padding: const EdgeInsets.only(top: Constant.buttomSheetRadius, bottom: Constant.margin),
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: widget.backgroundColor,
           borderRadius: ConstantDecoration.bottomSheetBorderRadius,
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: widget.options.map((element) => itemBuilder(context, element)).toList(),
-        ),
+        child: child,
       ),
     );
     if (widget.height != null) {
       child = SizedBox(height: widget.height, child: child);
+    } else {
+      child = SizedBox(height: MediaQuery.of(context).size.height / 2, child: child);
     }
     return child;
   }
@@ -274,5 +287,56 @@ class _BottomCupertinoSelecterState<T extends Comparable> extends State<BottomCu
   Widget itemBuilder(BuildContext context, SelectOption<T> option) {
     if (widget.selected != null && widget.selected == option.value) {}
     return Text(option.name);
+  }
+}
+
+class FilterBottomSelecter extends StatefulWidget {
+  const FilterBottomSelecter(
+      {super.key,
+      this.selected,
+      required this.options,
+      required this.onTap,
+      required this.backgroundColor,
+      this.listHeight});
+  final String? selected;
+  final List<SelectOption<String>> options;
+  final ValueChanged<SelectOption<String>> onTap;
+  final Color backgroundColor;
+  final double? listHeight;
+  @override
+  State<FilterBottomSelecter> createState() => _FilterBottomSelecterState();
+}
+
+class _FilterBottomSelecterState extends State<FilterBottomSelecter> {
+  String input = "";
+  List<SelectOption<String>> get options => widget.options.where((value) => value.value.contains(input)).toList();
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
+          child: FormInputField.general<String>(
+            onChanged: (String? input) {
+              this.input = input ?? "";
+              setState(() {});
+            },
+            decoration: const InputDecoration(
+              icon: Icon(Icons.search_rounded),
+              border: UnderlineInputBorder(),
+              hoverColor: Colors.black,
+            ),
+          ),
+        ),
+        BottomSelecter(
+          options: options,
+          onTap: widget.onTap,
+          selected: widget.selected,
+          backgroundColor: widget.backgroundColor,
+          height: widget.listHeight,
+        ),
+      ],
+    );
   }
 }

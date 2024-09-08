@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:keepaccount_app/api/api_server.dart';
-import 'package:keepaccount_app/model/account/model.dart';
+import 'package:leap_ledger_app/api/api_server.dart';
+import 'package:leap_ledger_app/model/account/model.dart';
 import 'package:meta/meta.dart';
 
 part 'account_user_config_state.dart';

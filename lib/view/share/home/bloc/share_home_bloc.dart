@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keepaccount_app/api/api_server.dart';
-import 'package:keepaccount_app/bloc/transaction/transaction_bloc.dart';
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/account/model.dart';
-import 'package:keepaccount_app/model/common/model.dart';
-import 'package:keepaccount_app/model/transaction/model.dart';
+import 'package:leap_ledger_app/api/api_server.dart';
+import 'package:leap_ledger_app/bloc/transaction/transaction_bloc.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/model/account/model.dart';
+import 'package:leap_ledger_app/model/common/model.dart';
+import 'package:leap_ledger_app/model/transaction/model.dart';
 
 part 'share_home_event.dart';
 part 'share_home_state.dart';
@@ -39,6 +39,7 @@ class ShareHomeBloc extends Bloc<ShareHomeEvent, ShareHomeState> {
   late final TransactionBloc _transBloc;
   late final StreamSubscription _transBlocSubscription;
   _transBlocListen(TransactionState state) {
+    if (account == null) return;
     if (state is TransactionStatisticUpdate) {
       if (account!.id == state.oldTrans?.accountId || account!.id == state.newTrans?.accountId) {
         this.add(UpdateTotal(state.oldTrans, state.newTrans));
@@ -167,6 +168,8 @@ class ShareHomeBloc extends Bloc<ShareHomeEvent, ShareHomeState> {
     }
     var record = await AccountApi.getInfo(
         accountId: account!.id, types: [InfoType.todayTransTotal, InfoType.currentMonthTransTotal]);
+    record.todayTransTotal!.setLocation(account!.timeLocation);
+    record.currentMonthTransTotal!.setLocation(account!.timeLocation);
     todayTransTotal = record.todayTransTotal;
     monthTransTotal = record.currentMonthTransTotal;
     emit(AccountTotalLoaded(todayTransTotal!, monthTransTotal!));
@@ -177,10 +180,12 @@ class ShareHomeBloc extends Bloc<ShareHomeEvent, ShareHomeState> {
       return;
     }
     if (oldTrans != null && oldTrans.accountId == account!.id) {
+      oldTrans.setLocation(account!.timeLocation);
       todayTransTotal!.handleTransEditModel(editModel: oldTrans, isAdd: false);
       monthTransTotal!.handleTransEditModel(editModel: oldTrans, isAdd: false);
     }
     if (newTrans != null && newTrans.accountId == account!.id) {
+      newTrans.setLocation(account!.timeLocation);
       todayTransTotal!.handleTransEditModel(editModel: newTrans, isAdd: true);
       monthTransTotal!.handleTransEditModel(editModel: newTrans, isAdd: true);
     }
@@ -193,12 +198,13 @@ class ShareHomeBloc extends Bloc<ShareHomeEvent, ShareHomeState> {
       return;
     }
     recentTrans = await AccountApi.getRecentTrans(accountId: account!.id);
+    recentTrans.forEach((trans) => trans.setLocation(account!.timeLocation));
     emit(AccountRecentTransLoaded(recentTrans));
   }
 
   Future<void> _addRecentTrans(emit, {required TransactionModel trans}) async {
     if (account == null || account!.id != trans.accountId) return;
-
+    trans.setLocation(account!.timeLocation);
     var length = recentTrans.length;
     for (int i = 0; i < length; i++) {
       if (recentTrans[i].tradeTime.isBefore(trans.tradeTime)) {
@@ -212,7 +218,7 @@ class ShareHomeBloc extends Bloc<ShareHomeEvent, ShareHomeState> {
 
   Future<void> _deleteRecentTrans(emit, {required TransactionModel trans}) async {
     if (account == null || account!.id != trans.accountId) return;
-
+    trans.setLocation(account!.timeLocation);
     var index = recentTrans.indexWhere((element) => trans.id == element.id);
     if (index < 0) return;
     recentTrans.removeAt(index);

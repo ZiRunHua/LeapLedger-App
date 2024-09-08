@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keepaccount_app/bloc/user/user_bloc.dart';
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/widget/common/common.dart';
-import 'package:keepaccount_app/widget/toast.dart';
+import 'package:leap_ledger_app/bloc/user/user_bloc.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/widget/common/common.dart';
+import 'package:leap_ledger_app/widget/toast.dart';
 
 class UserPasswordUpdate extends StatefulWidget {
   const UserPasswordUpdate({Key? key}) : super(key: key);
@@ -78,7 +78,7 @@ class UserPasswordUpdateState extends State<UserPasswordUpdate> {
         width: 270,
         child: ElevatedButton(
           style: ButtonStyle(
-              shape: MaterialStateProperty.all(const StadiumBorder(side: BorderSide(style: BorderStyle.none)))),
+              shape: WidgetStateProperty.all(const StadiumBorder(side: BorderSide(style: BorderStyle.none)))),
           child: Text('修改', style: Theme.of(context).primaryTextTheme.headlineSmall),
           onPressed: () {
             triggerUpdateEvent();

@@ -29,9 +29,10 @@ class FlowListBloc extends Bloc<FlowListEvent, FlowListState> {
 
   bool hasMore = true;
   int offset = 0, limit = 10;
-  _initList() {
+  _initList(Location l) {
     list = {};
     for (var element in monthStatistic) {
+      element.setLocation(l);
       list[element] = [];
     }
   }
@@ -52,8 +53,9 @@ class FlowListBloc extends Bloc<FlowListEvent, FlowListState> {
     ]);
     // 处理列表数据
     offset = newList.length;
-    _initList();
+    _initList(event.account.timeLocation);
     for (var element in newList) {
+      element.setLocation(event.account.timeLocation);
       _setListData(element);
     }
     hasMore = list.isNotEmpty;

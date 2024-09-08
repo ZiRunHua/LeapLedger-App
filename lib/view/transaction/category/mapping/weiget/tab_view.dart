@@ -154,7 +154,8 @@ class _TabViewState extends State<TabView> with AutomaticKeepAliveClientMixin {
   }
 
   onSelect(TransactionCategoryModel model) {
-    _showCustomModalBottomSheet(context, _bloc.unmapped, model);
+    _showCustomModalBottomSheet(
+        context, _bloc.unmapped.where((element) => element.incomeExpense == widget.type).toList(), model);
   }
 
   onDelete(TransactionCategoryModel category, TransactionCategoryBaseModel prc) {

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keepaccount_app/api/model/model.dart';
-import 'package:keepaccount_app/bloc/user/user_bloc.dart';
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/transaction/model.dart';
-import 'package:keepaccount_app/model/user/model.dart';
-import 'package:keepaccount_app/routes/routes.dart';
-import 'package:keepaccount_app/util/enter.dart';
-import 'package:keepaccount_app/view/home/home.dart';
-import 'package:keepaccount_app/view/share/home/share_home.dart';
-import 'package:keepaccount_app/widget/common/common.dart';
+import 'package:leap_ledger_app/api/model/model.dart';
+import 'package:leap_ledger_app/bloc/user/user_bloc.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/model/transaction/model.dart';
+import 'package:leap_ledger_app/model/user/model.dart';
+import 'package:leap_ledger_app/routes/routes.dart';
+import 'package:leap_ledger_app/util/enter.dart';
+import 'package:leap_ledger_app/view/home/home.dart';
+import 'package:leap_ledger_app/view/share/home/share_home.dart';
+import 'package:leap_ledger_app/widget/common/common.dart';
 
 import 'bloc/navigation_bloc.dart';
 
@@ -32,8 +32,9 @@ class _NavigationState extends State<Navigation> {
   @override
   void initState() {
     UserBloc.checkUserState(context);
-    _bloc = NavigationBloc(UserBloc.currentAccount);
+    _bloc = NavigationBloc(account: UserBloc.currentAccount);
     _pages = [Home(), ShareHome()];
+
     super.initState();
   }
 
@@ -60,8 +61,8 @@ class _NavigationState extends State<Navigation> {
                 } else if (state is InFlowPage) {
                   var condition = TransactionQueryCondModel(
                     accountId: _bloc.account.id,
-                    startTime: Time.getFirstSecondOfMonth(),
-                    endTime: DateTime.now(),
+                    startTime: Tz.getFirstSecondOfMonth(date: _bloc.nowTime),
+                    endTime: _bloc.nowTime,
                   );
                   TransactionRoutes.pushFlow(context, condition: condition, account: _bloc.account);
                 }

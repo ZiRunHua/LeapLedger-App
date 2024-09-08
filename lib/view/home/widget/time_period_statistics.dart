@@ -9,8 +9,10 @@ class TimePeriodStatistics extends StatefulWidget {
 
 class _TimePeriodStatisticsState extends State<TimePeriodStatistics> {
   late UserHomeTimePeriodStatisticsApiModel data;
+  late final HomeBloc _bloc;
   @override
   void initState() {
+    _bloc = BlocProvider.of<HomeBloc>(context);
     initData();
     super.initState();
   }
@@ -25,7 +27,7 @@ class _TimePeriodStatisticsState extends State<TimePeriodStatistics> {
 
   void initData() {
     if (widget.data == null) {
-      var today = DateTime.now();
+      var today = Time.getFirstSecondOfDay(date: DateTime.now());
       data = UserHomeTimePeriodStatisticsApiModel(
         todayData: InExStatisticWithTimeModel(startTime: today, endTime: today),
         yearData: InExStatisticWithTimeModel(
@@ -71,16 +73,20 @@ class _TimePeriodStatisticsState extends State<TimePeriodStatistics> {
   Widget _buildListTile({required IconData icon, required String title, required InExStatisticWithTimeModel data}) {
     String date;
     Function() onTap;
-    DateTime startTime = data.startTime;
-    DateTime endTime = data.endTime;
+    TZDateTime startTime = _bloc.getTZDateTime(data.startTime);
+    TZDateTime endTime = _bloc.getTZDateTime(data.endTime);
+
     if (Time.isSameDayComparison(startTime, endTime)) {
       date = DateFormat("yyyy年MM月dd日").format(startTime);
     } else {
       date = "${DateFormat("MM月dd日").format(startTime)}-${DateFormat("MM月dd日").format(endTime)}";
     }
     onTap = () {
-      _Func._pushTransactionFlow(context,
-          TransactionQueryCondModel(accountId: UserBloc.currentAccount.id, startTime: startTime, endTime: endTime));
+      _Func._pushTransactionFlow(
+        context,
+        TransactionQueryCondModel(accountId: _bloc.account.id, startTime: startTime, endTime: endTime),
+        _bloc.account,
+      );
     };
     return GestureDetector(
         onTap: () => onTap(),

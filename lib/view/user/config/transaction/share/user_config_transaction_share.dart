@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keepaccount_app/api/api_server.dart' show UserTransactionShareConfigFlag;
-import 'package:keepaccount_app/bloc/user/config/user_config_bloc.dart';
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/user/model.dart' show UserTransactionShareConfigModel;
+import 'package:leap_ledger_app/api/api_server.dart' show UserTransactionShareConfigFlag;
+import 'package:leap_ledger_app/bloc/user/config/user_config_bloc.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/model/user/model.dart' show UserTransactionShareConfigModel;
 
 class UserConfigTransactionShare extends StatefulWidget {
   const UserConfigTransactionShare({super.key});
@@ -108,17 +108,17 @@ class _UserConfigTransactionShareState extends State<UserConfigTransactionShare>
               children: [
                 Text(name),
                 Switch(
-                    trackOutlineColor: const MaterialStatePropertyAll<Color>(Colors.white),
-                    thumbColor: const MaterialStatePropertyAll<Color>(Colors.white),
-                    trackColor: MaterialStateProperty.resolveWith((states) {
-                      if (states.contains(MaterialState.selected)) {
+                    trackOutlineColor: const WidgetStatePropertyAll<Color>(Colors.white),
+                    thumbColor: const WidgetStatePropertyAll<Color>(Colors.white),
+                    trackColor: WidgetStateProperty.resolveWith((states) {
+                      if (states.contains(WidgetState.selected)) {
                         return ConstantColor.primaryColor;
                       }
                       return Colors.grey.shade400;
                     }),
                     value: value,
                     onChanged: onChanged,
-                    trackOutlineWidth: const MaterialStatePropertyAll<double>(0)),
+                    trackOutlineWidth: const WidgetStatePropertyAll<double>(0)),
               ],
             ),
           )),

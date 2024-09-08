@@ -1,15 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keepaccount_app/bloc/transaction/transaction_bloc.dart';
-import 'package:keepaccount_app/bloc/user/user_bloc.dart';
+import 'package:leap_ledger_app/bloc/account/account_bloc.dart';
+import 'package:leap_ledger_app/bloc/category/category_bloc.dart';
+import 'package:leap_ledger_app/bloc/transaction/transaction_bloc.dart';
+import 'package:leap_ledger_app/bloc/user/user_bloc.dart';
 
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/view/home/bloc/home_bloc.dart';
-import 'package:keepaccount_app/view/home/widget/enter.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/view/home/bloc/home_bloc.dart';
+import 'package:leap_ledger_app/view/home/widget/enter.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   final HomeBloc _bloc = HomeBloc(account: UserBloc.currentAccount);
+  @override
+  void initState() {
+    _bloc.add(HomeFetchDataEvent());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,21 +33,36 @@ class Home extends StatelessWidget {
         onRefresh: () async => _bloc.add(HomeFetchDataEvent()),
         child: SingleChildScrollView(
           child: BlocProvider.value(
-            value: _bloc..add(HomeFetchDataEvent()),
-            child: BlocListener<TransactionBloc, TransactionState>(
-              listenWhen: (_, state) => state is TransactionStatisticUpdate,
-              listener: (context, state) {
-                if (state is TransactionStatisticUpdate) {
-                  _bloc.add(HomeStatisticUpdateEvent(state.oldTrans, state.newTrans));
-                }
-              },
-              child: BlocListener<UserBloc, UserState>(
-                listenWhen: (_, state) => state is CurrentAccountChanged,
-                listener: (_, state) => _bloc.add(HomeAccountChangeEvent(account: UserBloc.currentAccount)),
+              value: _bloc,
+              child: MultiBlocListener(
+                listeners: [
+                  BlocListener<UserBloc, UserState>(
+                    listenWhen: (_, state) => state is CurrentAccountChanged,
+                    listener: (_, state) => _bloc.add(HomeAccountChangeEvent(account: UserBloc.currentAccount)),
+                  ),
+                  BlocListener<AccountBloc, AccountState>(
+                    listenWhen: (_, state) => state is AccountTransCategoryInitSuccess,
+                    listener: (context, state) {
+                      if (state is AccountTransCategoryInitSuccess) _bloc.add(HomeFetchCategoryAmountRankDataEvent());
+                    },
+                  ),
+                  BlocListener<CategoryBloc, CategoryState>(
+                    listenWhen: (_, state) => state is CategoryOfAccountState && state.account.id == _bloc.account.id,
+                    listener: (context, state) {
+                      if (state is CategoryOfAccountState) _bloc.add(HomeFetchCategoryAmountRankDataEvent());
+                    },
+                  ),
+                  BlocListener<TransactionBloc, TransactionState>(
+                    listenWhen: (_, state) => state is TransactionStatisticUpdate,
+                    listener: (context, state) {
+                      if (state is TransactionStatisticUpdate) {
+                        _bloc.add(HomeStatisticUpdateEvent(state.oldTrans, state.newTrans));
+                      }
+                    },
+                  ),
+                ],
                 child: _buildContent(),
-              ),
-            ),
-          ),
+              )),
         ),
       ),
     );

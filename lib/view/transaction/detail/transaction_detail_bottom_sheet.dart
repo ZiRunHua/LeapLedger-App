@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:keepaccount_app/bloc/transaction/transaction_bloc.dart';
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/account/model.dart';
-import 'package:keepaccount_app/model/transaction/model.dart';
-import 'package:keepaccount_app/routes/routes.dart';
-import 'package:keepaccount_app/widget/amount/enter.dart';
-import 'package:keepaccount_app/widget/common/common.dart';
+import 'package:leap_ledger_app/bloc/transaction/transaction_bloc.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/model/account/model.dart';
+import 'package:leap_ledger_app/model/transaction/model.dart';
+import 'package:leap_ledger_app/routes/routes.dart';
+import 'package:leap_ledger_app/widget/amount/enter.dart';
+import 'package:leap_ledger_app/widget/common/common.dart';
 
 class TransactionDetailBottomSheet extends StatefulWidget {
   const TransactionDetailBottomSheet({required this.account, this.transaction, this.transactionId, super.key})
@@ -150,7 +150,7 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
           child: OutlinedButton(
             onPressed: _onDelete,
             style: const ButtonStyle(
-              side: MaterialStatePropertyAll<BorderSide>(BorderSide(color: ConstantColor.primaryColor)),
+              side: WidgetStatePropertyAll<BorderSide>(BorderSide(color: ConstantColor.primaryColor)),
             ),
             child: const Text(
               "删除",

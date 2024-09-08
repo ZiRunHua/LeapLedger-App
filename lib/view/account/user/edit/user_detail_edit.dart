@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:keepaccount_app/api/api_server.dart';
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/account/model.dart';
+import 'package:leap_ledger_app/api/api_server.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/model/account/model.dart';
 
 class AccountUserEditDialog extends StatefulWidget {
   AccountUserEditDialog({super.key, required this.account, required AccountUserModel accountUser}) {

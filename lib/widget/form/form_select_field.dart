@@ -13,6 +13,7 @@ class BaseFormSelectField extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
             padding: const EdgeInsets.all(Constant.margin),
@@ -21,10 +22,12 @@ class BaseFormSelectField extends StatelessWidget {
           Expanded(
             child: TextFormField(
               textAlign: TextAlign.right,
+              textAlignVertical: TextAlignVertical.center,
               controller: controller,
               readOnly: true,
               decoration: InputDecoration(
-                suffixIcon: Icon(Icons.keyboard_arrow_right_rounded, color: ConstantColor.greyButtonIcon),
+                suffixIcon:
+                    enabled ? Icon(Icons.keyboard_arrow_right_rounded, color: ConstantColor.greyButtonIcon) : null,
                 floatingLabelBehavior: FloatingLabelBehavior.auto,
                 border: InputBorder.none,
               ),
@@ -39,19 +42,23 @@ class BaseFormSelectField extends StatelessWidget {
 }
 
 class FormSelectField<T extends Comparable> extends StatefulWidget {
-  FormSelectField({
-    super.key,
-    required this.label,
-    required this.options,
-    this.initialValue,
-    required this.onTap,
-    this.selectMode = SelectMode.bottomSheet,
-  });
+  FormSelectField(
+      {super.key,
+      required this.label,
+      required this.options,
+      this.initialValue,
+      required this.onTap,
+      this.selectMode = SelectMode.bottomSheet,
+      this.canEdit = true,
+      this.buildSelecter});
   final String label;
   final List<SelectOption<T>> options;
   final T? initialValue;
   final void Function(T data) onTap;
   final SelectMode selectMode;
+  final bool canEdit;
+  final Widget Function({required List<SelectOption<T>> options, required void Function(SelectOption<T> value) onTap})?
+      buildSelecter;
   @override
   _FormSelectFieldState<T> createState() => _FormSelectFieldState<T>();
 }
@@ -74,14 +81,25 @@ class _FormSelectFieldState<T extends Comparable> extends State<FormSelectField<
 
   @override
   Widget build(BuildContext context) {
-    return BaseFormSelectField(label: widget.label, controller: _controller, onTap: _onTapInput);
+    return BaseFormSelectField(
+      label: widget.label,
+      controller: _controller,
+      onTap: _onTapInput,
+      enabled: widget.canEdit,
+    );
   }
 
   _onTapInput() {
     switch (widget.selectMode) {
       default:
-        showBottomSheet(
-            context: context, builder: (context) => BottomSelecter(options: widget.options, onTap: _onSelcted));
+        showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) {
+              return widget.buildSelecter != null
+                  ? widget.buildSelecter!(options: widget.options, onTap: _onSelcted)
+                  : BottomSelecter<T>(options: widget.options, onTap: _onSelcted);
+            });
     }
   }
 

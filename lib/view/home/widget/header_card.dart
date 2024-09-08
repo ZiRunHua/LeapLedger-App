@@ -9,8 +9,10 @@ class HeaderCard extends StatefulWidget {
 
 class _HeaderCardState extends State<HeaderCard> {
   late InExStatisticWithTimeModel data;
+  late final HomeBloc _bloc;
   @override
   void initState() {
+    _bloc = BlocProvider.of<HomeBloc>(context);
     initData();
     super.initState();
   }
@@ -25,10 +27,7 @@ class _HeaderCardState extends State<HeaderCard> {
 
   void initData() {
     if (widget.data == null)
-      data = InExStatisticWithTimeModel(
-        startTime: HomeBloc.startTime,
-        endTime: HomeBloc.endTime,
-      );
+      data = InExStatisticWithTimeModel(startTime: _bloc.startTime, endTime: _bloc.endTime);
     else
       data = widget.data!;
   }
@@ -38,18 +37,12 @@ class _HeaderCardState extends State<HeaderCard> {
     return GestureDetector(
       onTap: () => _Func._pushTransactionFlow(
         context,
-        TransactionQueryCondModel(
-          accountId: UserBloc.currentAccount.id,
-          startTime: HomeBloc.startTime,
-          endTime: HomeBloc.endTime,
-        ),
+        TransactionQueryCondModel(accountId: _bloc.account.id, startTime: _bloc.startTime, endTime: _bloc.endTime),
+        _bloc.account,
       ),
       child: _Func._buildCard(
         background: ConstantColor.primaryColor,
-        child: Container(
-          padding: const EdgeInsets.all(Constant.padding),
-          child: _buildContent(),
-        ),
+        child: Container(padding: const EdgeInsets.all(Constant.padding), child: _buildContent()),
       ),
     );
   }
@@ -103,7 +96,7 @@ class _HeaderCardState extends State<HeaderCard> {
       ),
       padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
       child: Text(
-        "${DateFormat('MM月dd日').format(start)}-${DateFormat('MM月dd日').format(end)}",
+        "${DateFormat('MM月dd日').format(_bloc.getTZDateTime(start))}-${DateFormat('MM月dd日').format(_bloc.getTZDateTime(end))}",
         style: const TextStyle(fontSize: ConstantFontSize.body),
       ),
     );

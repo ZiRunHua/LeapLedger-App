@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keepaccount_app/bloc/account/account_bloc.dart';
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/account/model.dart';
-import 'package:keepaccount_app/routes/routes.dart';
-import 'package:keepaccount_app/widget/common/common.dart';
-import 'package:keepaccount_app/widget/form/form.dart';
-import 'package:keepaccount_app/widget/icon/enter.dart';
+import 'package:leap_ledger_app/bloc/account/account_bloc.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/model/account/model.dart';
+import 'package:leap_ledger_app/routes/routes.dart';
+import 'package:leap_ledger_app/widget/common/common.dart';
+import 'package:leap_ledger_app/widget/form/form.dart';
+import 'package:leap_ledger_app/widget/icon/enter.dart';
+import 'package:timezone/src/env.dart' as tz;
 
 enum AccountEditMode {
   add,
@@ -65,16 +66,19 @@ class AccountEditState extends State<AccountEdit> {
           }
         },
         child: Scaffold(
-            appBar: AppBar(
-              title: Text(mode == AccountEditMode.add ? "添加账本" : "编辑账本"),
-              actions: <Widget>[
-                IconButton(icon: const Icon(Icons.save, size: 24), onPressed: _onSave),
-              ],
-            ),
-            body: Padding(
-              padding: const EdgeInsets.all(Constant.padding),
+          appBar: AppBar(
+            title: Text(mode == AccountEditMode.add ? "添加账本" : "编辑账本"),
+            actions: <Widget>[
+              IconButton(icon: const Icon(Icons.save, size: 24), onPressed: _onSave),
+            ],
+          ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
               child: buildForm(),
-            )));
+            ),
+          ),
+        ));
   }
 
   Widget buildForm() {
@@ -83,55 +87,93 @@ class AccountEditState extends State<AccountEdit> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          _buildRadio(),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: Constant.padding),
             child: CircularIcon(icon: account.icon),
           ),
-          FormInputField.string('名称', account.name, (text) => account.name = text),
-          const SizedBox(
-            height: 16,
+          SizedBox(
+            width: 250,
+            child: FormInputField.string('名称', account.name, (text) => account.name = text),
           ),
-          FormSelecter.accountIcon(account.icon, onChanged: _onSelectIcon),
+          const SizedBox(height: Constant.padding),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Constant.margin),
+            child: FormSelecter.accountIcon(account.icon, onChanged: _onSelectIcon),
+          ),
+          _buildRadio(),
+          FormSelectField<String>(
+            options: _options(),
+            label: "地区",
+            initialValue: account.location,
+            onTap: (data) {
+              account.location = data;
+              Navigator.pop(context);
+            },
+            canEdit: mode == AccountEditMode.add,
+            buildSelecter: ({required onTap, required options}) => FilterBottomSelecter(
+              options: options,
+              onTap: onTap,
+              backgroundColor: Colors.white,
+              listHeight: MediaQuery.of(context).size.height * 2 / 3,
+            ),
+          ),
         ],
       ),
     );
   }
 
+  List<SelectOption<String>> _options() {
+    List<SelectOption<String>> list = [];
+    tz.timeZoneDatabase.locations.forEach((key, value) {
+      list.add(SelectOption<String>(name: value.name, value: key));
+    });
+    return list;
+  }
+
   Widget _buildRadio() {
-    return SizedBox(
-      width: MediaQuery.sizeOf(context).width,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Text(
-            "类型：",
-            style: TextStyle(color: ConstantColor.secondaryTextColor, fontSize: ConstantFontSize.body),
-          ),
-          SizedBox(
-            width: 100,
-            child: RadioListTile<AccountType>(
-              contentPadding: EdgeInsets.zero,
-              title: const Text("独立"),
-              value: AccountType.independent,
-              groupValue: account.type,
-              onChanged: _onClickRadio,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: Constant.margin, horizontal: Constant.padding),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(Constant.margin),
+              child: Text("类型", style: TextStyle(letterSpacing: Constant.margin / 2)),
             ),
-          ),
-          SizedBox(
-            width: 100,
-            child: RadioListTile<AccountType>(
-              title: const Text("共享"),
-              contentPadding: EdgeInsets.zero,
-              value: AccountType.share,
-              groupValue: account.type,
-              onChanged: _onClickRadio,
-            ),
-          ),
-        ],
+            Padding(
+                padding: const EdgeInsets.all(Constant.margin),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 100,
+                      child: RadioListTile<AccountType>(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text("独立"),
+                        value: AccountType.independent,
+                        groupValue: account.type,
+                        onChanged: _onClickRadio,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 100,
+                      child: RadioListTile<AccountType>(
+                        title: const Text("共享"),
+                        contentPadding: EdgeInsets.zero,
+                        value: AccountType.share,
+                        groupValue: account.type,
+                        onChanged: _onClickRadio,
+                      ),
+                    ),
+                  ],
+                ))
+          ],
+        ),
       ),
     );
   }

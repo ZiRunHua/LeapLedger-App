@@ -1,4 +1,4 @@
-import 'package:keepaccount_app/config/server.dart';
+import 'package:leap_ledger_app/config/server.dart';
 
 class Config {
   late Server server;

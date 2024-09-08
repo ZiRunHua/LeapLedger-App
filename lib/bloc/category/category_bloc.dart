@@ -1,11 +1,11 @@
 import 'package:bloc/bloc.dart';
-import 'package:keepaccount_app/api/api_server.dart';
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/account/model.dart';
-import 'package:keepaccount_app/model/transaction/category/model.dart';
+import 'package:leap_ledger_app/api/api_server.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/model/account/model.dart';
+import 'package:leap_ledger_app/model/transaction/category/model.dart';
 
-part 'transaction_category_event.dart';
-part 'transaction_category_state.dart';
+part 'category_event.dart';
+part 'category_state.dart';
 
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   CategoryBloc() : super(TransactionCategoryInitial()) {

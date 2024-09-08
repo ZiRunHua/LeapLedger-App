@@ -11,7 +11,6 @@ class TransactionEditModel {
   late int accountId;
   @JsonKey(defaultValue: 0)
   late int categoryId;
-  @JsonKey(defaultValue: IncomeExpense.income)
   late IncomeExpense incomeExpense;
   @JsonKey(defaultValue: 0)
   late int amount;
@@ -56,6 +55,10 @@ class TransactionEditModel {
       tradeTime: tradeTime,
     );
   }
+
+  setLocation(Location l) {
+    tradeTime = TZDateTime.from(tradeTime, l);
+  }
 }
 
 /// 交易信息模型
@@ -90,7 +93,7 @@ class TransactionInfoModel extends TransactionEditModel {
   factory TransactionInfoModel.fromJson(Map<String, dynamic> json) => _$TransactionInfoModelFromJson(json);
   Map<String, dynamic> toJson() => _$TransactionInfoModelToJson(this);
 
-  TransactionInfoModel.prototypeData() : this(tradeTime: DateTime.now());
+  TransactionInfoModel.prototypeData() : this(tradeTime: DateTime.now().toLocal());
   setAccount(AccountModel account) {
     accountId = account.id;
     accountName = account.name;
@@ -125,6 +128,10 @@ class TransactionInfoModel extends TransactionEditModel {
       remark: remark,
       tradeTime: tradeTime,
     );
+  }
+
+  setLocation(Location l) {
+    super.setLocation(l);
   }
 }
 
@@ -186,6 +193,12 @@ class TransactionModel extends TransactionInfoModel {
     }
     return model;
   }
+
+  setLocation(Location l) {
+    updateTime = TZDateTime.from(tradeTime, l);
+    createTime = TZDateTime.from(tradeTime, l);
+    super.setLocation(l);
+  }
 }
 
 /// 交易分享模型
@@ -244,11 +257,11 @@ class TransactionQueryCondModel {
   int? minimumAmount;
   int? maximumAmount;
   // 起始时间（时间戳）
-  @UtcDateTimeConverter()
-  DateTime startTime;
-  // 结束时间（时间戳）
-  @UtcDateTimeConverter()
-  DateTime endTime;
+  @UtcTZDateTimeConverter()
+  TZDateTime startTime;
+  @UtcTZDateTimeConverter()
+  @JsonKey(toJson: dateTimeToJson, fromJson: null)
+  TZDateTime endTime;
 
   TransactionQueryCondModel({
     required this.accountId,
@@ -271,8 +284,8 @@ class TransactionQueryCondModel {
     IncomeExpense? incomeExpense,
     int? minimumAmount,
     int? maximumAmount,
-    DateTime? startTime,
-    DateTime? endTime,
+    TZDateTime? startTime,
+    TZDateTime? endTime,
   }) {
     return TransactionQueryCondModel(
       accountId: accountId ?? this.accountId,
@@ -318,8 +331,6 @@ class TransactionQueryCondModel {
     }
     return true;
   }
-
-  factory TransactionQueryCondModel.fromJson(Map<String, dynamic> json) => _$TransactionQueryCondModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$TransactionQueryCondModelToJson(this);
 
@@ -458,10 +469,6 @@ class TransactionTimingModel {
   }
 }
 
-DateTime dateTimeFromJson(dynamic timestamp) {
-  return timestamp;
-}
-
-DateTime? dateTimeToJson(DateTime? dateTime) {
-  return dateTime;
+String dateTimeToJson(TZDateTime dateTime) {
+  return dateTime.toUtc().toIso8601String();
 }

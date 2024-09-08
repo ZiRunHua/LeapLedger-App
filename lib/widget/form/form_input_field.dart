@@ -2,21 +2,32 @@ part of 'form.dart';
 
 class FormInputField {
   static Widget string(String fieldName, String initialValue, void Function(String)? onChanged) {
-    return TextFormField(
-      initialValue: initialValue,
-      decoration: InputDecoration(
-        labelText: fieldName,
-        border: const OutlineInputBorder(),
-
-        // You can further style the input here
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: Constant.margin, horizontal: Constant.padding),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+              child: TextFormField(
+            textAlignVertical: TextAlignVertical.center,
+            initialValue: initialValue,
+            decoration: InputDecoration(
+              labelText: fieldName,
+              border: const OutlineInputBorder(),
+            ),
+            maxLength: 6,
+            onChanged: onChanged,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return '请输入一个$fieldName';
+              }
+              return null;
+            },
+          ))
+        ],
       ),
-      onChanged: onChanged,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return '请输入一个$fieldName';
-        }
-        return null;
-      },
     );
   }
 
@@ -60,7 +71,7 @@ class FormInputField {
       initialValue: initialValueString,
       keyboardType: type,
       decoration: decoration ??
-          (fieldName == null
+          (fieldName != null
               ? InputDecoration(
                   labelText: fieldName,
                   border: const OutlineInputBorder(),

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keepaccount_app/common/global.dart';
-import 'package:keepaccount_app/model/account/model.dart';
-import 'package:keepaccount_app/model/common/model.dart';
-import 'package:keepaccount_app/model/transaction/model.dart';
-import 'package:keepaccount_app/routes/routes.dart';
-import 'package:keepaccount_app/view/account/user/detail/cubit/account_user_detail_cubit.dart';
+import 'package:leap_ledger_app/common/global.dart';
+import 'package:leap_ledger_app/model/account/model.dart';
+import 'package:leap_ledger_app/model/common/model.dart';
+import 'package:leap_ledger_app/model/transaction/model.dart';
+import 'package:leap_ledger_app/routes/routes.dart';
+import 'package:leap_ledger_app/view/account/user/detail/cubit/account_user_detail_cubit.dart';
 
-import 'package:keepaccount_app/widget/amount/enter.dart';
-import 'package:keepaccount_app/widget/common/common.dart';
+import 'package:leap_ledger_app/widget/amount/enter.dart';
+import 'package:leap_ledger_app/widget/common/common.dart';
+import 'package:timezone/timezone.dart';
 
 class AccountUserDetailButtomSheet extends StatefulWidget {
   const AccountUserDetailButtomSheet({super.key, required this.accountUser, required this.account, this.onEdit});
@@ -23,7 +24,7 @@ class _AccountUserDetailButtomSheetState extends State<AccountUserDetailButtomSh
   late final AccountUserDetailCubit _cubit;
   @override
   void initState() {
-    _cubit = AccountUserDetailCubit(widget.account, widget.accountUser)..fetchData();
+    _cubit = AccountUserDetailCubit(account: widget.account, widget.accountUser)..fetchData();
     super.initState();
   }
 
@@ -129,12 +130,13 @@ class _AccountUserDetailButtomSheetState extends State<AccountUserDetailButtomSh
   }
 
   void _onLookMore(TransactionModel? trans) {
-    DateTime startTime, endTime = DateTime.now();
+    TZDateTime startTime, endTime;
     if (trans == null) {
-      startTime = DateTime.now().add(const Duration(days: -7));
+      startTime = _cubit.nowTime.add(const Duration(days: -7));
     } else {
-      startTime = trans.tradeTime.add(const Duration(days: -7));
+      startTime = _cubit.getTZDateTime(trans.tradeTime).add(const Duration(days: -7));
     }
+    endTime = startTime.add(const Duration(days: 7));
 
     TransactionRoutes.pushFlow(context,
         account: _cubit.account,
