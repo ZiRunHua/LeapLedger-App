@@ -17,25 +17,13 @@ class _AccountMenuState extends State<AccountMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<ShareHomeBloc, ShareHomeState>(
-          listenWhen: (context, state) {
-            return state is AccountHaveChanged;
-          },
-          listener: (context, state) {
-            setState(() {});
-          },
-        ),
-        BlocListener<UserBloc, UserState>(
-          listenWhen: (context, state) {
-            return state is CurrentShareAccountChanged;
-          },
-          listener: (context, state) {
-            _bloc.add(ChangeAccountEvent(UserBloc.currentShareAccount));
-          },
-        ),
-      ],
+    return BlocListener<ShareHomeBloc, ShareHomeState>(
+      listenWhen: (context, state) {
+        return state is AccountHaveChanged;
+      },
+      listener: (context, state) {
+        setState(() {});
+      },
       child: BlocBuilder<ShareHomeBloc, ShareHomeState>(
         buildWhen: (context, state) {
           return state is AccountListLoaded || state is NoShareAccount;

@@ -114,8 +114,8 @@ class AccountApi {
         InExStatisticModel? todayTransTotal,
         InExStatisticModel? currentMonthTransTotal,
         List<TransactionModel>? recentTrans,
-      })> getUserInfo({required int id}) async {
-    ResponseBody response = await ApiServer.request(Method.get, '$baseUrl/user/$id/info', data: {
+      })> getUserInfo({required int id, required int accountId}) async {
+    ResponseBody response = await ApiServer.request(Method.get, '$baseUrl/$accountId/user/$id/info', data: {
       "Types": ['todayTransTotal', 'currentMonthTransTotal', 'recentTrans']
     });
     InExStatisticModel? todayTotal;

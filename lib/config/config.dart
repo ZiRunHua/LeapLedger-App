@@ -22,10 +22,4 @@ class Config {
   init() {
     server = Server()..init();
   }
-
-  readFromConfigYaml() {
-    // if (Current.env == ENV.dev) {}
-    // String currentPath = Directory.current.path;
-    // print(currentPath);
-  }
 }

@@ -129,6 +129,7 @@ class ShareHomeBloc extends Bloc<ShareHomeEvent, ShareHomeState> {
 
   Future<void> _changeAccount(AccountDetailModel account, emit) async {
     if (false == account.isValid) {
+      ShareHomeBloc.account = null;
       emit(NoShareAccount());
       return;
     }
@@ -136,7 +137,7 @@ class ShareHomeBloc extends Bloc<ShareHomeEvent, ShareHomeState> {
     if (ShareHomeBloc.account != null && account.id == ShareHomeBloc.account!.id) {
       ShareHomeBloc.account = account;
       emit(AccountHaveChanged(account));
-      await _handelAccountLoad(emit);
+      //await _handelAccountLoad(emit);
       return;
     }
     ShareHomeBloc.account = account;
@@ -158,6 +159,10 @@ class ShareHomeBloc extends Bloc<ShareHomeEvent, ShareHomeState> {
 
     emit(AccountUserLoading());
     userList = await AccountApi.getUserList(id: account!.id);
+    if (account == null) {
+      return;
+    }
+    userList.forEach((user) => user.createTime = account!.getTZDateTime(user.createTime));
     emit(AccountUserLoaded(userList));
   }
 
@@ -168,6 +173,9 @@ class ShareHomeBloc extends Bloc<ShareHomeEvent, ShareHomeState> {
     }
     var record = await AccountApi.getInfo(
         accountId: account!.id, types: [InfoType.todayTransTotal, InfoType.currentMonthTransTotal]);
+    if (account == null) {
+      return;
+    }
     record.todayTransTotal!.setLocation(account!.timeLocation);
     record.currentMonthTransTotal!.setLocation(account!.timeLocation);
     todayTransTotal = record.todayTransTotal;
@@ -198,6 +206,9 @@ class ShareHomeBloc extends Bloc<ShareHomeEvent, ShareHomeState> {
       return;
     }
     recentTrans = await AccountApi.getRecentTrans(accountId: account!.id);
+    if (account == null) {
+      return;
+    }
     recentTrans.forEach((trans) => trans.setLocation(account!.timeLocation));
     emit(AccountRecentTransLoaded(recentTrans));
   }

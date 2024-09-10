@@ -127,14 +127,12 @@ class ApiServer {
           Global.hideOverlayLoader();
         }
         if (!logining.isCompleted) {
-          if (await logining.future) {
-            return request(method, path, data: data, header: header);
-          }
+          return getResponseBody(response);
         } else if (response.requestOptions.headers[HttpHeaders.authorizationHeader]
                 .toString()
                 .compareTo(UserBloc.token) !=
             0) {
-          return request(method, path, data: data, header: header);
+          return getResponseBody(response);
         } else {
           logining = Completer<bool>();
           return await Global.navigatorKey.currentState!.pushNamed(UserRoutes.login).then((value) {
@@ -156,6 +154,12 @@ class ApiServer {
   }
 
   static ResponseBody getResponseBodyAndShowError(Response? response, {String? errorMsg}) {
+    ResponseBody responseBody = getResponseBody(response);
+    Toast.error(message: errorMsg ?? responseBody.msg);
+    return responseBody;
+  }
+
+  static ResponseBody getResponseBody(Response? response) {
     ResponseBody responseBody;
     if (response == null) {
       responseBody = ResponseBody(null, isSuccess: false);
@@ -164,7 +168,6 @@ class ApiServer {
     } else {
       responseBody = ResponseBody(response.data, isSuccess: false);
     }
-    Toast.error(message: errorMsg ?? responseBody.msg);
     return responseBody;
   }
 }

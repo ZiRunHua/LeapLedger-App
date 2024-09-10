@@ -58,47 +58,59 @@ class _HeaderCardState extends State<HeaderCard> {
             _buildDate(data.startTime, data.endTime),
           ],
         ),
-        UnequalHeightAmountTextSpan(
-          amount: data.expense.amount,
-          textStyle: const TextStyle(fontSize: 34.0, fontWeight: FontWeight.bold, color: Colors.black),
-          dollarSign: true,
-          tailReduction: false,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            UnequalHeightAmountTextSpan(
+              amount: data.expense.amount,
+              textStyle: const TextStyle(fontSize: 34.0, fontWeight: FontWeight.bold, color: Colors.black),
+              dollarSign: true,
+              tailReduction: false,
+            ),
+          ],
         ),
-        Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-          UnequalHeightAmountTextSpan(
-            amount: data.income.amount,
-            title: '本月收入',
-            dollarSign: true,
-            textStyle: const TextStyle(fontSize: ConstantFontSize.headline, color: Colors.black),
-            tailReduction: false,
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          UnequalHeightAmountTextSpan(
-            amount: data.dayAverageExpense,
-            title: '日均支出',
-            dollarSign: true,
-            textStyle: const TextStyle(fontSize: ConstantFontSize.headline, color: Colors.black),
-            tailReduction: false,
-          )
-        ]),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            UnequalHeightAmountTextSpan(
+              amount: data.income.amount,
+              title: '本月收入',
+              dollarSign: true,
+              textStyle: const TextStyle(fontSize: ConstantFontSize.headline, color: Colors.black),
+              tailReduction: false,
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            UnequalHeightAmountTextSpan(
+              amount: data.dayAverageExpense,
+              title: '日均支出',
+              dollarSign: true,
+              textStyle: const TextStyle(fontSize: ConstantFontSize.headline, color: Colors.black),
+              tailReduction: false,
+            )
+          ],
+        ),
       ],
     );
   }
 
   Widget _buildDate(DateTime start, DateTime end) {
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(Constant.smallPadding * 2),
-        color: ConstantColor.secondaryColor,
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
-      child: Text(
-        "${DateFormat('MM月dd日').format(_bloc.getTZDateTime(start))}-${DateFormat('MM月dd日').format(_bloc.getTZDateTime(end))}",
-        style: const TextStyle(fontSize: ConstantFontSize.body),
-      ),
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(Constant.smallPadding * 2),
+            color: ConstantColor.secondaryColor,
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
+          child: Text(
+            "${_bloc.account.timeLocation.name}  ${DateFormat.MMMd().format(_bloc.getTZDateTime(start))} - ${DateFormat.MMMd().format(_bloc.getTZDateTime(end))}",
+            style: const TextStyle(fontSize: ConstantFontSize.body),
+          ),
+        )
+      ],
     );
   }
 }

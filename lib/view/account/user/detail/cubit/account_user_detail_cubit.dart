@@ -11,7 +11,7 @@ class AccountUserDetailCubit extends AccountBasedCubit<AccountUserDetailState> {
   AccountUserDetailCubit(this.accountUser, {required super.account}) : super(AccountUserDetailInitial());
   late AccountUserModel accountUser;
   fetchData() async {
-    var record = await AccountApi.getUserInfo(id: accountUser.id!);
+    var record = await AccountApi.getUserInfo(id: accountUser.id!, accountId: accountUser.accountId);
     emit(AccountUserDetailLoad(
       todayTotal: record.todayTransTotal,
       monthTotal: record.currentMonthTransTotal,

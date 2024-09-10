@@ -12,7 +12,6 @@ import 'package:leap_ledger_app/common/global.dart';
 import 'package:leap_ledger_app/model/account/model.dart';
 import 'package:leap_ledger_app/model/user/model.dart';
 import 'package:leap_ledger_app/routes/routes.dart';
-import 'package:timezone/timezone.dart' as tz;
 part 'user_event.dart';
 part 'user_state.dart';
 
@@ -105,6 +104,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     UserBloc.currentShareAccount = AccountDetailModel.fromJson({});
     token = "";
     await UserBloc.saveToCache();
+    emit(CurrentAccountChanged());
+    emit(CurrentShareAccountChanged());
   }
 
   void _register(UserRegisterEvent event, Emitter<UserState> emit) async {

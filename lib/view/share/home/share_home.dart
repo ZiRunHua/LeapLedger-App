@@ -64,6 +64,18 @@ class _ShareHomeState extends State<ShareHome> {
               }
               return Scaffold(
                 appBar: AppBar(
+                  actions: [
+                    BlocBuilder<ShareHomeBloc, ShareHomeState>(buildWhen: (context, state) {
+                      return state is AccountListLoaded || state is NoShareAccount || state is AccountHaveChanged;
+                    }, builder: (context, state) {
+                      return ShareHomeBloc.account == null
+                          ? SizedBox()
+                          : Padding(
+                              padding: const EdgeInsets.all(Constant.padding),
+                              child: Text("${ShareHomeBloc.account!.timeLocation.name}"),
+                            );
+                    })
+                  ],
                   title: const AccountMenu(),
                   centerTitle: true,
                 ),

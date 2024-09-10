@@ -52,14 +52,23 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           supportedLocales: const [
             Locale('zh', 'CN'),
-            Locale('en'),
-            Locale('es'),
           ],
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
+          localeResolutionCallback: (locale, supportedLocales) {
+            for (var supportedLocale in supportedLocales) {
+              if (supportedLocale.languageCode == locale?.languageCode &&
+                  supportedLocale.countryCode == locale?.countryCode) {
+                Intl.defaultLocale = supportedLocale.languageCode;
+                return supportedLocale;
+              }
+            }
+            Intl.defaultLocale = supportedLocales.first.languageCode;
+            return supportedLocales.first;
+          },
           navigatorKey: Global.navigatorKey,
           title: 'Flutter Demo',
           theme: ThemeData(

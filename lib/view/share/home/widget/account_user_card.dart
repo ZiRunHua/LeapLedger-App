@@ -42,7 +42,9 @@ class _AccountUserCardState extends State<AccountUserCard> {
           },
         ),
         action: Offstage(
-          offstage: false == AccountRouterGuard.userInvite(account: ShareHomeBloc.account!),
+          offstage: ShareHomeBloc.account == null
+              ? true
+              : false == AccountRouterGuard.userInvite(account: ShareHomeBloc.account!),
           child: GestureDetector(
             onTap: () => onPressedAdd(ShareHomeBloc.account!),
             child: const Icon(ConstantIcon.add),

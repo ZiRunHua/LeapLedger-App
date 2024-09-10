@@ -1,11 +1,8 @@
 class Server {
   late final Network network;
-  late final String? timezone;
   Server();
   init() {
     network = Network();
-    var timezone = const String.fromEnvironment("config.server.timezone");
-    this.timezone = timezone.isEmpty ? null : timezone;
   }
 }
 
