@@ -1,5 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
+    <!-- Permissions options for the `manage external storage` group -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
+    <!-- Permissions options for the `manage external storage` group -->
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <!-- Permissions options for the `request install packages` group -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!-- Permissions options for the `alarm` group -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <application
         android:label="leap_ledger_app"
         android:name="${applicationName}"
