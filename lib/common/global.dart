@@ -10,7 +10,6 @@ import 'package:leap_ledger_app/routes/routes.dart';
 import 'package:leap_ledger_app/util/enter.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'package:timezone/timezone.dart' as tz;
 part 'constant.dart';
 part 'no_data.dart';
 

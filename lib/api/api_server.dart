@@ -18,8 +18,6 @@ import 'package:dio/dio.dart'
         QueuedInterceptor,
         RequestOptions,
         Response;
-import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
-import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 
 import 'package:leap_ledger_app/api/model/model.dart';
 import 'package:leap_ledger_app/bloc/user/user_bloc.dart';
