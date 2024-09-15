@@ -95,7 +95,9 @@ class _BottomState extends State<Bottom> {
           visible: _bloc.mode != TransactionEditMode.popTrans,
           child: _buildButton(
               onPressed: () async {
-                TransactionRoutes.timingNavigator(context, account: _bloc.account, trans: _bloc.transInfo);
+                var page = TransactionRoutes.timingNavigator(context, account: _bloc.account, trans: _bloc.transInfo);
+                Navigator.pop(context);
+                await page.push();
               },
               name: "定时",
               icon: Icons.timer_outlined),

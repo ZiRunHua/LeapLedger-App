@@ -8,14 +8,13 @@ class FromField extends StatefulWidget {
 }
 
 class _FromFieldState extends State<FromField> {
-  late TextEditingController _controller;
+  final TextEditingController _controller = TextEditingController();
   late final TransactionTimingCubit _cubit;
-  late final fromTimingPage;
 
   @override
   void initState() {
     _cubit = BlocProvider.of<TransactionTimingCubit>(context);
-    _controller = TextEditingController(text: _cubit.config.toDisplay());
+    _controller.text = _cubit.config.toDisplay();
     super.initState();
   }
 

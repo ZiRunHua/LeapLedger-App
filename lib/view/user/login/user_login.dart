@@ -37,11 +37,11 @@ class UserLoginState extends State<UserLogin> {
   bool displayCaptcha = false;
   @override
   Widget build(BuildContext context) {
-    return RawKeyboardListener(
+    return KeyboardListener(
       autofocus: true,
       focusNode: FocusNode(),
-      onKey: (RawKeyEvent event) {
-        if (event.runtimeType == RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.enter) {
+      onKeyEvent: (KeyEvent event) {
+        if (event.runtimeType == KeyDownEvent && event.logicalKey == LogicalKeyboardKey.enter) {
           onPressed();
         }
       },

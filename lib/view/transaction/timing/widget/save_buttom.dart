@@ -9,10 +9,8 @@ class SaveButtom extends StatelessWidget {
       decoration: ConstantDecoration.cardDecoration,
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: Constant.margin, horizontal: Constant.padding),
-        child: Expanded(
-          child: FormButton.mediumElevatedBtn(
-              context, "保存", () => BlocProvider.of<TransactionTimingCubit>(context).save()),
-        ),
+        child:
+            FormButton.mediumElevatedBtn(context, "保存", () => BlocProvider.of<TransactionTimingCubit>(context).save()),
       ),
     );
   }

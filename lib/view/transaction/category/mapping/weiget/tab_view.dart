@@ -37,14 +37,19 @@ class _TabViewState extends State<TabView> with AutomaticKeepAliveClientMixin {
       builder: (context, state) {
         if (state is TransactionCategoryMappingLoaded) {
           return Container(
-            padding: const EdgeInsets.all(Constant.padding),
             color: ConstantColor.greyBackground,
             child: CustomScrollView(
               slivers: <Widget>[
                 SliverToBoxAdapter(
-                  child: HeaderCard(state.unmapped),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(Constant.padding, Constant.padding, Constant.padding, 0),
+                    child: HeaderCard(state.unmapped),
+                  ),
                 ),
-                buildList(state.relation),
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
+                  sliver: buildList(state.relation),
+                ),
               ],
             ),
           );

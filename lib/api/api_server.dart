@@ -16,7 +16,6 @@ import 'package:dio/dio.dart'
         MultipartFile,
         Options,
         QueuedInterceptor,
-        RequestOptions,
         Response;
 
 import 'package:leap_ledger_app/api/model/model.dart';

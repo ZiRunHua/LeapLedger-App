@@ -169,7 +169,7 @@ class _ExpenseTabState extends State<ExpenseTab> with AutomaticKeepAliveClientMi
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Constant.padding, vertical: Constant.margin),
+          padding: const EdgeInsets.symmetric(horizontal: Constant.margin, vertical: Constant.margin),
           child: _buildContant(),
         ),
       ),
@@ -266,7 +266,7 @@ class _IncomeTabState extends State<IncomeTab> with AutomaticKeepAliveClientMixi
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Constant.padding, vertical: Constant.margin),
+          padding: const EdgeInsets.symmetric(horizontal: Constant.margin, vertical: Constant.margin),
           child: _buildContent(),
         ),
       ),
