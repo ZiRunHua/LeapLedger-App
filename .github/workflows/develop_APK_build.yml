@@ -25,10 +25,26 @@ jobs:
 
       - name: Install dependencies
         run: flutter pub get
-
+        
+      - name: Decode keystore
+        run: echo $KEY_STORE | base64 --decode > $GITHUB_WORKSPACE/release-key.jks
+        env:
+          KEY_STORE: ${{ secrets.KEY_STORE }}
+  
       - name: Build APK
         run: flutter build apk --release --dart-define=config.server.network.host=${{ vars.SERVER_HOST }} --dart-define=config.server.network.port=${{ vars.SERVER_PORT }}
-     
+
+      - name: Sign APK
+        run: |
+          jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore $GITHUB_WORKSPACE/release-key.jks -storepass $KEY_STORE_PASSWORD -keypass $KEY_PASSWORD build/app/outputs/flutter-apk/app-release-unsigned.apk $KEY_ALIAS
+        env:
+          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+
+      - name: Align APK
+        run: zipalign -v 4 build/app/outputs/flutter-apk/app-release-unsigned.apk build/app/outputs/flutter-apk/app-release.apk
+        
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
