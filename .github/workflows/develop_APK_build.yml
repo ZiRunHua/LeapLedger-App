@@ -1,9 +1,8 @@
-name: Flutter APK Build and Release
+name: Develop APK build
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
+    branches: [ "develop" ]
 
 jobs:
   build:
@@ -29,18 +28,12 @@ jobs:
 
       - name: Build APK
         run: flutter build apk --release --dart-define=config.server.network.host=${{ vars.SERVER_HOST }} --dart-define=config.server.network.port=${{ vars.SERVER_PORT }}
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+     
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
         with:
-          tag_name: ${{ github.ref_name }} 
-          release_name: Release ${{ github.ref_name }}
-          draft: false
-          prerelease: false
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-release
-          path: app/build/outputs/apk/release/app-release.apk
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/app/outputs/flutter-apk/app-release.apk
+          asset_name: app-release.apk
+          tag: develop
+          overwrite: true
