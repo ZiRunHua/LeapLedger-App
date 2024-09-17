@@ -24,20 +24,9 @@ jobs:
           flutter-version: 3.24.2
 
       - name: Install dependencies
-        run: flutter pub get
-        
-      - name: Decode keystore file
-        run: |
-          echo "$KEY_PASSWORD" | base64 --decode > release-key.jks
-        env:
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
       - name: Build signed APK
         run: flutter build apk --release --dart-define=config.server.network.host=${{ vars.SERVER_HOST }} --dart-define=config.server.network.port=${{ vars.SERVER_PORT }}
-        env:
-          KEYSTORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
