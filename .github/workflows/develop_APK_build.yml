@@ -21,7 +21,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.24.2
+          flutter-version: 3.24.1
 
       - name: Build APK
         run: flutter build apk --release --dart-define=config.server.network.host=${{ vars.SERVER_HOST }} --dart-define=config.server.network.port=${{ vars.SERVER_PORT }}
