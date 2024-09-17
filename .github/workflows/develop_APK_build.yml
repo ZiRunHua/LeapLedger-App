@@ -23,9 +23,7 @@ jobs:
         with:
           flutter-version: 3.24.2
 
-      - name: Install dependencies
-
-      - name: Build signed APK
+      - name: Build APK
         run: flutter build apk --release --dart-define=config.server.network.host=${{ vars.SERVER_HOST }} --dart-define=config.server.network.port=${{ vars.SERVER_PORT }}
 
       - name: Upload binaries to release
