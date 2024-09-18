@@ -96,10 +96,10 @@ class _TransactionTimingState extends State<TransactionTiming> {
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
-        // Padding(
-        //   padding: const EdgeInsets.only(bottom: Constant.padding),
-        //   child: DecoratedBox(decoration: ConstantDecoration.cardDecoration, child: FromField()),
-        // ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: Constant.padding),
+          child: DecoratedBox(decoration: ConstantDecoration.cardDecoration, child: FromField()),
+        ),
         Padding(
           padding: const EdgeInsets.only(bottom: Constant.padding),
           child: DecoratedBox(
