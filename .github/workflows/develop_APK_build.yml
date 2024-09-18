@@ -37,3 +37,9 @@ jobs:
           asset_name: app-release.apk
           tag: develop
           overwrite: true
+          
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: app/build/outputs/apk/release/app-release.apk
