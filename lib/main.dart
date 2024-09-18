@@ -24,10 +24,10 @@ Future<void> init() async {
   tzData.initializeTimeZones();
   await SharedPreferencesCache.init();
   await Global.init();
+  await Current.init();
   //await Global.cache.clear();
   await initCache();
   Routes.init();
-  await Current.init();
 }
 
 initCache() async {
