@@ -9,7 +9,6 @@ class Current {
   static const String cacheKey = 'current';
   static late String token;
   static late int accountId;
-  static late ENV env;
   static late String peratingSystem; //android ios window
   static late final String? deviceId;
   static init() async {

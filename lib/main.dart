@@ -21,8 +21,6 @@ Future<void> main() async {
 }
 
 Future<void> init() async {
-  const String envName = String.fromEnvironment("ENV");
-  Current.env = ENV.values.firstWhere((e) => e.toString().split('.').last == envName);
   tzData.initializeTimeZones();
   await SharedPreferencesCache.init();
   await Global.init();
