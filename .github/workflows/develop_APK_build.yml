@@ -23,6 +23,9 @@ jobs:
         with:
           flutter-version: 3.24.1
 
+      - name: Run flutter doctor
+        run: flutter doctor
+        
       - name: Build APK
         run: flutter build apk --release --dart-define=config.server.network.host=${{ vars.SERVER_HOST }} --dart-define=config.server.network.port=${{ vars.SERVER_PORT }}
 
