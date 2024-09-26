@@ -28,6 +28,23 @@ jobs:
         
       - name: Build APK
         run: flutter build apk --release --dart-define=config.server.network.host=${{ vars.SERVER_HOST }} --dart-define=config.server.network.port=${{ vars.SERVER_PORT }}
+      
+      - name: Delete specific release by tag
+        run: |
+          gh release delete develop -R ${{ github.repository }} --yes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: develop
+          release_name: Release develop
+          draft: false
+          prerelease: true
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
