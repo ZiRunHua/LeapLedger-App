@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:leap_ledger_app/api/api_server.dart';
 import 'package:leap_ledger_app/bloc/user/config/user_config_bloc.dart';
-import 'package:leap_ledger_app/common/global.dart';
 import 'package:leap_ledger_app/model/account/model.dart';
 import 'package:leap_ledger_app/model/transaction/model.dart';
 import 'package:leap_ledger_app/widget/common/common.dart';
@@ -75,28 +74,14 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   }
 
   bool _verificationData(TransactionEditModel data, emit) {
-    if (data.categoryId == 0) {
-      emit(TransactionDataVerificationFails("请选择交易类型"));
+    var tip = data.check();
+    if (tip != null) {
+      emit(TransactionDataVerificationFails(tip));
       return false;
+    } else {
+      emit(TransactionDataVerificationSuccess());
+      return true;
     }
-    if (data.accountId == 0) {
-      emit(TransactionDataVerificationFails("请选择账本"));
-      return false;
-    }
-    if (data.amount <= 0) {
-      emit(TransactionDataVerificationFails("金额需大于0"));
-      return false;
-    }
-    if (data.amount > Constant.maxAmount) {
-      emit(TransactionDataVerificationFails("金额过大"));
-      return false;
-    }
-    if (data.tradeTime.year > Constant.maxYear || data.tradeTime.year < Constant.minYear) {
-      emit(TransactionDataVerificationFails("时间超过范围"));
-      return false;
-    }
-    emit(TransactionDataVerificationSuccess());
-    return true;
   }
 
   _handleShare(TransactionShare event, emit) async {

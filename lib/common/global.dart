@@ -44,7 +44,9 @@ class Global {
 }
 
 enum IncomeExpense {
+  @JsonValue("income")
   income(label: "收入"),
+  @JsonValue("expense")
   expense(label: "支出");
 
   final String label;

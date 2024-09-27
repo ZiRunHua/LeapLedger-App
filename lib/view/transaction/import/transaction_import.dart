@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:leap_ledger_app/common/global.dart';
 import 'package:leap_ledger_app/model/account/model.dart';
 import 'package:leap_ledger_app/model/product/model.dart';
@@ -8,9 +9,13 @@ import 'package:leap_ledger_app/routes/routes.dart';
 import 'package:leap_ledger_app/util/enter.dart';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:leap_ledger_app/widget/amount/enter.dart';
+import 'package:leap_ledger_app/widget/category/enter.dart';
 import 'bloc/enter.dart';
 
 part 'widget/ptc_card.dart';
+part 'widget/exec_card.dart';
+part 'widget/fail_dialog.dart';
 
 class TransactionImport extends StatefulWidget {
   const TransactionImport({super.key, required this.account});
@@ -39,10 +44,11 @@ class _TransactionImportState extends State<TransactionImport> {
               length: state.list.length,
               child: Scaffold(
                 appBar: AppBar(
-                    title: const Text('导入账单'),
-                    bottom: TabBar(
-                      tabs: state.list.map((product) => Tab(text: product.name)).toList(),
-                    )),
+                  title: const Text('导入账单'),
+                  bottom: TabBar(
+                    tabs: state.list.map((product) => Tab(text: product.name)).toList(),
+                  ),
+                ),
                 body: buildPage(context, state),
               ),
             );
@@ -61,49 +67,30 @@ class _TransactionImportState extends State<TransactionImport> {
       bucket: PageStorageBucket(),
       child: TabBarView(
         children: List.generate(state.list.length, (index) {
-          return _buidlButtonGroup(context, state.list[index], state.tree);
+          return DecoratedBox(
+            decoration: BoxDecoration(color: ConstantColor.greyBackground),
+            child: Padding(
+              padding: const EdgeInsets.all(Constant.margin),
+              child: ExecCard(product: state.list[index], categoryTree: state.tree),
+            ),
+          );
         }),
       ),
     );
   }
+}
 
-  Widget _buidlButtonGroup(BuildContext context, ProductModel product,
-      List<MapEntry<TransactionCategoryFatherModel, List<TransactionCategoryModel>>> categoryTree) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          BlocProvider<PtcCardBloc>(
-            create: (context) => PtcCardBloc(product)..add(FetchPtcList()),
-            child: PtcCard(categoryTree),
-          ),
-          SizedBox(
-            width: 250,
-            child: ElevatedButton(
-              style: ButtonStyle(
-                  shape: WidgetStateProperty.all(const StadiumBorder(side: BorderSide(style: BorderStyle.none)))),
-              onPressed: () {
-                _uploadBillFile(product, context);
-              },
-              child: Text(
-                "导  入",
-                style: TextStyle(
-                  fontSize: Theme.of(context).primaryTextTheme.titleMedium!.fontSize,
-                ),
-              ),
-            ),
-          ),
-        ],
+class _Func {
+  _Func();
+  static Card _buildCard({required Widget child}) {
+    return Card(
+      color: Colors.white,
+      margin: const EdgeInsets.all(Constant.margin),
+      elevation: 0,
+      shape: const RoundedRectangleBorder(
+        borderRadius: ConstantDecoration.borderRadius,
       ),
+      child: child,
     );
-  }
-
-  void _uploadBillFile(ProductModel product, BuildContext context) async {
-    await FileOperation.selectFile(FileType.custom, ['xls', 'xlsx', 'csv']).then((value) {
-      if (value != null) {
-        BlocProvider.of<TransImportTabBloc>(context).add(TransactionImportUploadBillEvent(product, value.path));
-      }
-    });
   }
 }

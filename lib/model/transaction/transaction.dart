@@ -11,6 +11,7 @@ class TransactionEditModel {
   late int accountId;
   @JsonKey(defaultValue: 0)
   late int categoryId;
+  @JsonKey(unknownEnumValue: IncomeExpense.expense)
   late IncomeExpense incomeExpense;
   @JsonKey(defaultValue: 0)
   late int amount;
@@ -59,6 +60,25 @@ class TransactionEditModel {
   setLocation(Location l) {
     tradeTime = TZDateTime.from(tradeTime, l);
   }
+
+  String? check() {
+    if (categoryId == 0) {
+      return "请选择交易类型";
+    }
+    if (accountId == 0) {
+      return "请选择账本";
+    }
+    if (amount <= 0) {
+      return "金额需大于0";
+    }
+    if (amount > Constant.maxAmount) {
+      return "金额过大";
+    }
+    if (tradeTime.year > Constant.maxYear || tradeTime.year < Constant.minYear) {
+      return "时间超过范围";
+    }
+    return null;
+  }
 }
 
 /// 交易信息模型
@@ -92,6 +112,9 @@ class TransactionInfoModel extends TransactionEditModel {
   });
   factory TransactionInfoModel.fromJson(Map<String, dynamic> json) => _$TransactionInfoModelFromJson(json);
   Map<String, dynamic> toJson() => _$TransactionInfoModelToJson(this);
+
+  TransactionCategoryBaseModel get categoryBaseModel => TransactionCategoryBaseModel(
+      id: categoryId, name: categoryName, icon: categoryIcon, incomeExpense: incomeExpense);
 
   TransactionInfoModel.prototypeData() : this(tradeTime: DateTime.now().toLocal());
   setAccount(AccountModel account) {
@@ -164,9 +187,6 @@ class TransactionModel extends TransactionInfoModel {
 
   TransactionModel.prototypeData()
       : this(tradeTime: DateTime.now(), createTime: DateTime.now(), updateTime: DateTime.now());
-
-  TransactionCategoryBaseModel get categoryBaseModel =>
-      TransactionCategoryBaseModel(id: id, name: categoryName, icon: categoryIcon, incomeExpense: incomeExpense);
 
   TransactionShareModel getShareModelByConfig(UserTransactionShareConfigModel config) {
     TransactionShareModel model = TransactionShareModel(

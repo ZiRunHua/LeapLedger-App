@@ -40,9 +40,9 @@ class ProductApi {
     return response;
   }
 
-  static Future<ResponseBody> uploadBill(String productKey, String filePath, {required int accountId}) async {
-    ResponseBody response = await ApiServer.request(Method.post, '/account/$accountId/product/$productKey/bill/import',
-        data: FormData.fromMap({'File': await MultipartFile.fromFile(filePath)}));
-    return response;
+  static Future<IOWebSocketChannel> wsUploadBill(String productKey, {required int accountId}) async {
+    var url = Uri.parse(
+        Global.config.server.network.websocketAddress + "/account/$accountId/product/$productKey/bill/import");
+    return await IOWebSocketChannel.connect(url, headers: {HttpHeaders.authorizationHeader: UserBloc.token});
   }
 }

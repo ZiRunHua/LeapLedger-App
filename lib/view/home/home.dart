@@ -27,7 +27,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: Constant.padding, vertical: 0),
       color: ConstantColor.greyBackground,
       child: RefreshIndicator(
         onRefresh: () async => _bloc.add(HomeFetchDataEvent()),
@@ -72,15 +71,18 @@ class _HomeState extends State<Home> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SafeArea(
-          child: BlocBuilder<HomeBloc, HomeState>(
-            buildWhen: (_, state) => state is HomeHeaderLoaded,
-            builder: (context, state) {
-              if (state is HomeHeaderLoaded) {
-                return HeaderCard(data: state.data);
-              }
-              return HeaderCard();
-            },
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Constant.padding, vertical: 0),
+          child: SafeArea(
+            child: BlocBuilder<HomeBloc, HomeState>(
+              buildWhen: (_, state) => state is HomeHeaderLoaded,
+              builder: (context, state) {
+                if (state is HomeHeaderLoaded) {
+                  return HeaderCard(data: state.data);
+                }
+                return HeaderCard();
+              },
+            ),
           ),
         ),
         SizedBox(height: Constant.margin),
@@ -91,34 +93,43 @@ class _HomeState extends State<Home> {
           },
         ),
         SizedBox(height: Constant.margin),
-        BlocBuilder<HomeBloc, HomeState>(
-          buildWhen: (_, state) => state is HomeTimePeriodStatisticsLoaded,
-          builder: (context, state) {
-            if (state is HomeTimePeriodStatisticsLoaded) {
-              return TimePeriodStatistics(
-                data: state.data,
-              );
-            }
-            return TimePeriodStatistics();
-          },
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Constant.padding, vertical: 0),
+          child: BlocBuilder<HomeBloc, HomeState>(
+            buildWhen: (_, state) => state is HomeTimePeriodStatisticsLoaded,
+            builder: (context, state) {
+              if (state is HomeTimePeriodStatisticsLoaded) {
+                return TimePeriodStatistics(
+                  data: state.data,
+                );
+              }
+              return TimePeriodStatistics();
+            },
+          ),
         ),
-        BlocBuilder<HomeBloc, HomeState>(
-          buildWhen: (_, state) => state is HomeStatisticsLineChart,
-          builder: (context, state) {
-            if (state is HomeStatisticsLineChart) {
-              return StatisticsLineChart(data: state.expenseList);
-            }
-            return StatisticsLineChart(data: []);
-          },
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Constant.padding, vertical: 0),
+          child: BlocBuilder<HomeBloc, HomeState>(
+            buildWhen: (_, state) => state is HomeStatisticsLineChart,
+            builder: (context, state) {
+              if (state is HomeStatisticsLineChart) {
+                return StatisticsLineChart(data: state.expenseList);
+              }
+              return StatisticsLineChart(data: []);
+            },
+          ),
         ),
-        BlocBuilder<HomeBloc, HomeState>(
-          buildWhen: (_, state) => state is HomeCategoryAmountRank,
-          builder: (context, state) {
-            if (state is HomeCategoryAmountRank) {
-              return CategoryAmountRank(data: state.rankingList);
-            }
-            return CategoryAmountRank(data: []);
-          },
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Constant.padding, vertical: 0),
+          child: BlocBuilder<HomeBloc, HomeState>(
+            buildWhen: (_, state) => state is HomeCategoryAmountRank,
+            builder: (context, state) {
+              if (state is HomeCategoryAmountRank) {
+                return CategoryAmountRank(data: state.rankingList);
+              }
+              return CategoryAmountRank(data: []);
+            },
+          ),
         )
       ],
     );

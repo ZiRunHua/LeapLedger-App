@@ -2,41 +2,47 @@ part of '../transaction_import.dart';
 
 class PtcCard extends StatelessWidget {
   final List<MapEntry<TransactionCategoryFatherModel, List<TransactionCategoryModel>>> categoryTree;
-  const PtcCard(this.categoryTree, {super.key});
+  final AccountDetailModel account;
+  final ProductModel product;
+  final List<ProductTransactionCategoryModel> ptcList;
+  const PtcCard(this.ptcList, {required this.categoryTree, super.key, required this.account, required this.product});
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PtcCardBloc, PtcCardState>(builder: ((context, state) {
-      var account = BlocProvider.of<TransImportTabBloc>(context).account;
-      var product = BlocProvider.of<PtcCardBloc>(context).product;
-      if (state is PtcCardLoad) {
-        return Container(
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4)),
-          margin: EdgeInsets.zero,
-          child: Column(children: [
-            GridView.builder(
-                shrinkWrap: true, // 让网格视图适应内容大小
-                physics: const NeverScrollableScrollPhysics(), // 禁止滚动
-                padding: EdgeInsets.zero,
-                itemCount: state.ptcList.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  mainAxisSpacing: 0,
-                  crossAxisSpacing: 12,
-                  childAspectRatio: 2.5,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  return buildItem(state.ptcList[index]);
-                }),
-            Padding(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _Func._buildCard(
+            child: GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
+          itemCount: ptcList.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4,
+            mainAxisSpacing: 0,
+            crossAxisSpacing: 12,
+            childAspectRatio: 2.5,
+          ),
+          itemBuilder: (BuildContext context, int index) {
+            return buildItem(ptcList[index]);
+          },
+        )),
+        BlocBuilder<ImportCubit, ImportState>(
+          builder: (context, state) {
+            if (state is Importing) {
+              return SizedBox();
+            }
+            return Padding(
               padding: const EdgeInsets.all(Constant.margin),
               child: Offstage(
-                offstage: false ==
-                    TransactionCategoryRouterGuard.productMapping(
-                      account: account,
-                      product: product,
-                      categoryTree: categoryTree,
-                      ptcList: state.ptcList,
-                    ),
+                offstage: ptcList.length == 0 ||
+                    false ==
+                        TransactionCategoryRouterGuard.productMapping(
+                          account: account,
+                          product: product,
+                          categoryTree: categoryTree,
+                          ptcList: ptcList,
+                        ),
                 child: ElevatedButton(
                     onPressed: () {
                       TransactionCategoryRoutes.productMappingNavigator(
@@ -44,17 +50,16 @@ class PtcCard extends StatelessWidget {
                         account: account,
                         product: product,
                         categoryTree: categoryTree,
-                        ptcList: state.ptcList,
+                        ptcList: ptcList,
                       ).push();
                     },
                     child: const Text('设置交易类型关联', style: TextStyle(fontSize: ConstantFontSize.headline))),
               ),
-            )
-          ]),
-        );
-      }
-      return const SizedBox(height: 300, child: Center(child: CircularProgressIndicator()));
-    }));
+            );
+          },
+        )
+      ],
+    );
   }
 
   Widget buildItem(ProductTransactionCategoryModel model) {

@@ -29,14 +29,15 @@ class CategoryIconAndName<T extends TransactionCategoryBaseModel> extends Statel
             ),
           ),
         ),
-        SizedBox(height: Constant.margin / 2),
-        Text(
-          category.name,
-          style: TextStyle(
-            fontSize: ConstantFontSize.bodySmall,
-            color: isSelected ? ConstantColor.primaryColor : Colors.black,
-          ),
-        )
+        if (category.name.isNotEmpty) SizedBox(height: Constant.margin / 2),
+        if (category.name.isNotEmpty)
+          Text(
+            category.name,
+            style: TextStyle(
+              fontSize: ConstantFontSize.bodySmall,
+              color: isSelected ? ConstantColor.primaryColor : Colors.black,
+            ),
+          )
       ],
     );
     if (onTap != null) {
@@ -60,21 +61,19 @@ class LargeCategoryIconAndName extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         DecoratedBox(
-          decoration: BoxDecoration(
-            color: ConstantColor.primaryColor,
-            borderRadius: BorderRadius.circular(90),
-          ),
+          decoration: BoxDecoration(color: ConstantColor.primaryColor, borderRadius: BorderRadius.circular(90)),
           child: SizedBox(
             width: 48,
             height: 48,
             child: Icon(category.icon, size: 28, color: Colors.white),
           ),
         ),
-        SizedBox(height: Constant.margin / 2),
-        Text(
-          category.name,
-          style: TextStyle(fontSize: ConstantFontSize.bodySmall, color: ConstantColor.primaryColor),
-        )
+        if (category.name.isNotEmpty) SizedBox(height: Constant.margin / 2),
+        if (category.name.isNotEmpty)
+          Text(
+            category.name,
+            style: TextStyle(fontSize: ConstantFontSize.bodySmall, color: ConstantColor.primaryColor),
+          )
       ],
     );
   }

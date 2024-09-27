@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:core';
 import 'dart:io';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:leap_ledger_app/model/common/model.dart';
 import 'package:uuid/uuid.dart';
 
@@ -10,12 +12,11 @@ import 'package:dio/dio.dart'
         BaseOptions,
         Dio,
         DioException,
-        FormData,
         InterceptorsWrapper,
         LogInterceptor,
-        MultipartFile,
         Options,
         QueuedInterceptor,
+        RequestOptions,
         Response;
 
 import 'package:leap_ledger_app/api/model/model.dart';
@@ -30,6 +31,7 @@ import 'package:leap_ledger_app/model/user/model.dart';
 import 'package:leap_ledger_app/routes/routes.dart';
 import 'package:leap_ledger_app/util/enter.dart';
 import 'package:leap_ledger_app/widget/toast.dart';
+import 'package:web_socket_channel/io.dart';
 
 part 'common.dart';
 part 'user.dart';
@@ -50,7 +52,7 @@ const String pubilcBaseUrl = '/public';
 class ApiServer {
   static const _uuid = Uuid();
   static Dio dio = Dio(BaseOptions(
-    baseUrl: Global.config.server.network.address,
+    baseUrl: Global.config.server.network.httpAddress,
     headers: {'Content-Type': 'application/json', 'User-Agent': Current.peratingSystem},
   ))
     ..interceptors.add(InterceptorsWrapper(
@@ -59,18 +61,18 @@ class ApiServer {
         return handler.next(options);
       },
     ))
-    // ..interceptors.add(
-    //   DioCacheInterceptor(
-    //     options: CacheOptions(
-    //       maxStale: const Duration(days: 7),
-    //       keyBuilder: (RequestOptions request) {
-    //         return _uuid.v5(Namespace.url.value, request.uri.toString() + request.data.toString());
-    //       },
-    //       store: HiveCacheStore(Global.tempDirectory.path),
-    //       policy: CachePolicy.request,
-    //     ),
-    //   ),
-    // )
+    ..interceptors.add(
+      DioCacheInterceptor(
+        options: CacheOptions(
+          maxStale: const Duration(days: 7),
+          keyBuilder: (RequestOptions request) {
+            return _uuid.v5(Namespace.url.value, request.uri.toString() + request.data.toString());
+          },
+          store: HiveCacheStore(Global.tempDirectory.path),
+          policy: CachePolicy.request,
+        ),
+      ),
+    )
     ..interceptors.add(QueuedInterceptor())
     ..interceptors.add(LogInterceptor(
       request: true,
@@ -124,12 +126,12 @@ class ApiServer {
           Global.hideOverlayLoader();
         }
         if (!logining.isCompleted) {
-          return getResponseBody(response);
+          return ResponseBody({'Msg': '请重新登录'}, isSuccess: false);
         } else if (response.requestOptions.headers[HttpHeaders.authorizationHeader]
                 .toString()
                 .compareTo(UserBloc.token) !=
             0) {
-          return getResponseBody(response);
+          return ResponseBody({'Msg': '请重新登录'}, isSuccess: false);
         } else {
           logining = Completer<bool>();
           return await Global.navigatorKey.currentState!.pushNamed(UserRoutes.login).then((value) {

@@ -2,6 +2,7 @@ part of 'enter.dart';
 
 class CategoryRankingList {
   CategoryRankingList({required List<TransactionCategoryAmountRankApiModel> data}) {
+    data = data.where((e) => e.amount > 0).toList();
     int totalAmount = 0;
     for (var element in data) {
       totalAmount += element.amount;

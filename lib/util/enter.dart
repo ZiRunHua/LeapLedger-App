@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'dart:io';
 import 'dart:convert';
+import 'dart:async';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -18,3 +19,4 @@ part 'toast.dart';
 part 'shared_preferences_cache.dart';
 part 'time.dart';
 part 'data.dart';
+part 'throttle.dart';

@@ -4,6 +4,7 @@ import 'package:leap_ledger_app/model/account/model.dart';
 import 'package:leap_ledger_app/model/transaction/category/model.dart';
 import 'package:leap_ledger_app/model/transaction/model.dart';
 import 'package:leap_ledger_app/model/user/model.dart';
+import 'package:leap_ledger_app/widget/toast.dart';
 import 'package:meta/meta.dart';
 
 part 'edit_event.dart';
@@ -61,7 +62,11 @@ class EditBloc extends AccountBasedBloc<EditEvent, EditState> {
     if (event.amount != null) transInfo.amount = event.amount!;
     if (event.ie != null) transInfo.incomeExpense = event.ie!;
     var newTrans = transInfo.copy();
-
+    var checkTip = newTrans.check();
+    if (checkTip != null) {
+      tipToast(checkTip);
+      return;
+    }
     switch (mode) {
       case TransactionEditMode.update:
         emit(UpdateTransaction(_originalTrans!, newTrans));

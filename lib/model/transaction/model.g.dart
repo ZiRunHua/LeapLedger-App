@@ -11,7 +11,7 @@ TransactionEditModel _$TransactionEditModelFromJson(Map<String, dynamic> json) =
       userId: (json['UserId'] as num?)?.toInt() ?? 0,
       accountId: (json['AccountId'] as num?)?.toInt() ?? 0,
       categoryId: (json['CategoryId'] as num?)?.toInt() ?? 0,
-      incomeExpense: $enumDecode(_$IncomeExpenseEnumMap, json['IncomeExpense']),
+      incomeExpense: $enumDecode(_$IncomeExpenseEnumMap, json['IncomeExpense'], unknownValue: IncomeExpense.expense),
       amount: (json['Amount'] as num?)?.toInt() ?? 0,
       remark: json['Remark'] as String? ?? '',
       tradeTime: const UtcDateTimeConverter().fromJson(json['TradeTime'] as String?),
@@ -39,7 +39,9 @@ TransactionInfoModel _$TransactionInfoModelFromJson(Map<String, dynamic> json) =
       userName: json['UserName'] as String? ?? '',
       accountId: (json['AccountId'] as num?)?.toInt() ?? 0,
       accountName: json['AccountName'] as String? ?? '',
-      incomeExpense: $enumDecodeNullable(_$IncomeExpenseEnumMap, json['IncomeExpense']) ?? IncomeExpense.expense,
+      incomeExpense:
+          $enumDecodeNullable(_$IncomeExpenseEnumMap, json['IncomeExpense'], unknownValue: IncomeExpense.expense) ??
+              IncomeExpense.expense,
       categoryId: (json['CategoryId'] as num?)?.toInt() ?? 0,
       categoryIcon: json['CategoryIcon'] == null ? Json.defaultIconData : Json.iconDataFormJson(json['CategoryIcon']),
       categoryName: json['CategoryName'] as String? ?? '',
@@ -71,7 +73,9 @@ TransactionModel _$TransactionModelFromJson(Map<String, dynamic> json) => Transa
       userName: json['UserName'] as String? ?? '',
       accountId: (json['AccountId'] as num?)?.toInt() ?? 0,
       accountName: json['AccountName'] as String? ?? '',
-      incomeExpense: $enumDecodeNullable(_$IncomeExpenseEnumMap, json['IncomeExpense']) ?? IncomeExpense.expense,
+      incomeExpense:
+          $enumDecodeNullable(_$IncomeExpenseEnumMap, json['IncomeExpense'], unknownValue: IncomeExpense.expense) ??
+              IncomeExpense.expense,
       categoryId: (json['CategoryId'] as num?)?.toInt() ?? 0,
       categoryIcon: json['CategoryIcon'] == null ? Json.defaultIconData : Json.iconDataFormJson(json['CategoryIcon']),
       categoryName: json['CategoryName'] as String? ?? '',

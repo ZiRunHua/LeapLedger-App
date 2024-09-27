@@ -3,7 +3,6 @@ part of 'enter.dart';
 class TransImportTabBloc extends Bloc<TransImportTabEvent, TransImportTabState> {
   TransImportTabBloc({required this.account}) : super(TransImportTabInitial()) {
     on<TransImportTabLoadedEvent>(loadTab);
-    on<TransactionImportUploadBillEvent>(uploadFile);
   }
   final AccountDetailModel account;
   final List<ProductModel> _list = [];
@@ -37,14 +36,5 @@ class TransImportTabBloc extends Bloc<TransImportTabEvent, TransImportTabState> 
       }
       emit(TransImportTabLoaded(_list, _tree));
     }
-  }
-
-  uploadFile(TransactionImportUploadBillEvent event, Emitter<TransImportTabState> emit) async {
-    ResponseBody responseBody = await ProductApi.uploadBill(
-      event.product.uniqueKey,
-      event.filePath,
-      accountId: account.id,
-    );
-    if (responseBody.isSuccess) {}
   }
 }
