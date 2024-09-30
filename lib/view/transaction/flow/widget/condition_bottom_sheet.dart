@@ -109,7 +109,7 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
               visible: name != null,
               child: Text(
                 name ?? "",
-                style: const TextStyle(fontSize: ConstantFontSize.bodyLarge, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: ConstantFontSize.bodyLarge, fontWeight: FontWeight.w500),
               ),
             ),
           ),

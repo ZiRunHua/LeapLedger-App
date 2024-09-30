@@ -63,7 +63,7 @@ class _HeaderCardState extends State<HeaderCard> {
           children: [
             UnequalHeightAmountTextSpan(
               amount: data.expense.amount,
-              textStyle: const TextStyle(fontSize: 34.0, fontWeight: FontWeight.bold, color: Colors.black),
+              textStyle: const TextStyle(fontSize: 34.0, fontWeight: FontWeight.w500, color: Colors.black),
               dollarSign: true,
               tailReduction: false,
             ),

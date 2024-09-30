@@ -197,7 +197,7 @@ class _AccountUserDetailButtomSheetState extends State<AccountUserDetailButtomSh
     return Text.rich(
       TextSpan(
         style: TextStyle(
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w500,
           fontSize: ConstantFontSize.largeHeadline,
           color: ie == IncomeExpense.income ? ConstantColor.incomeAmount : ConstantColor.expenseAmount,
         ),

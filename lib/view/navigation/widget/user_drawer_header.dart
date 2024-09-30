@@ -71,7 +71,7 @@ class _UserDrawerHeaderState extends State<UserDrawerHeader> {
               children: [
                 Text(
                   user.username,
-                  style: const TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
+                  style: const TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.w500),
                 ),
                 GestureDetector(
                     onTap: () {

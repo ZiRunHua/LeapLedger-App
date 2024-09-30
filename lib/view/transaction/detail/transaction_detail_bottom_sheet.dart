@@ -91,7 +91,7 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
         padding: const EdgeInsets.all(Constant.padding),
         child: Text(
           title,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: ConstantFontSize.largeHeadline),
+          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: ConstantFontSize.largeHeadline),
         ),
       ),
     );
@@ -105,7 +105,7 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
             data.amount,
             textStyle: const TextStyle(
               fontSize: ConstantFontSize.body,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w500,
               color: Colors.black,
             ),
           )),

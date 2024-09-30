@@ -43,7 +43,7 @@ class TotalHeader extends StatelessWidget {
             )),
         AmountText.sameHeight(
           amount,
-          textStyle: const TextStyle(fontSize: 24, color: ConstantColor.primaryColor, fontWeight: FontWeight.bold),
+          textStyle: const TextStyle(fontSize: 24, color: ConstantColor.primaryColor, fontWeight: FontWeight.w500),
           dollarSign: true,
         ),
       ],

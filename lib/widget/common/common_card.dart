@@ -32,7 +32,7 @@ class CommonCard extends Card {
                 child: Text(
                   title,
                   style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                     fontSize: ConstantFontSize.headline,
                     letterSpacing: 2,
                   ),

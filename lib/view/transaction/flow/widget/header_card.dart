@@ -44,7 +44,7 @@ class _HeaderCardState extends State<HeaderCard> {
                               AmountTextSpan.sameHeight(
                                 totalData.income.amount - totalData.expense.amount,
                                 dollarSign: true,
-                                textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                                textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
                               ),
                               const WidgetSpan(child: SizedBox(width: Constant.margin)),
                               const TextSpan(text: "结余", style: TextStyle(fontSize: ConstantFontSize.body))

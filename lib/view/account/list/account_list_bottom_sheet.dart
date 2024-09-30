@@ -99,7 +99,7 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
                   padding: EdgeInsets.all(Constant.margin),
                   child: Text(
                     '选择账本',
-                    style: TextStyle(fontSize: ConstantFontSize.largeHeadline, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: ConstantFontSize.largeHeadline, fontWeight: FontWeight.w500),
                   ),
                 ),
               ),

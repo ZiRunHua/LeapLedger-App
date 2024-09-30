@@ -51,7 +51,7 @@ class _AccountMappingBottomSheetState extends State<AccountMappingBottomSheet> {
                   padding: EdgeInsets.fromLTRB(Constant.margin, Constant.margin, Constant.margin, 0),
                   child: Text(
                     '账本关联',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: ConstantFontSize.largeHeadline),
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: ConstantFontSize.largeHeadline),
                   ),
                 ),
               ),

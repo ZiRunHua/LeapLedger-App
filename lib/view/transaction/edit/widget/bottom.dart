@@ -48,7 +48,7 @@ class _BottomState extends State<Bottom> {
             _buildButtonGroup(),
             AmountText.sameHeight(
               _bloc.transInfo.amount,
-              textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
+              textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500, color: Colors.black),
               dollarSign: true,
             ),
             const Divider(),
@@ -69,7 +69,7 @@ class _BottomState extends State<Bottom> {
                     const SizedBox(width: 2),
                     Text(
                       keyboradInput,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: ConstantFontSize.headline),
+                      style: const TextStyle(fontWeight: FontWeight.w500, fontSize: ConstantFontSize.headline),
                     )
                   ],
                 ))

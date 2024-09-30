@@ -30,7 +30,7 @@ class _Func {
                 padding: const EdgeInsets.only(top: Constant.padding, left: Constant.padding),
                 child: Text(
                   title,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: ConstantFontSize.headline),
+                  style: const TextStyle(fontWeight: FontWeight.w500, fontSize: ConstantFontSize.headline),
                 ),
               ),
               child

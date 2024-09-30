@@ -56,7 +56,7 @@ class UserRegisterState extends State<UserRegister> {
                   child: Text(
                     "注册",
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w500,
                       fontSize: 42,
                     ),
                   ),

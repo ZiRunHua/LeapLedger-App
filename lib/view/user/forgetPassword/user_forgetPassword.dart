@@ -50,7 +50,7 @@ class UserForgetPasswordState extends State<UserForgetPassword> {
                   child: Text(
                     "忘记密码",
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w500,
                       fontSize: 42,
                     ),
                   ),

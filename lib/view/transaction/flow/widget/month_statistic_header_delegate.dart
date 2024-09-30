@@ -48,7 +48,7 @@ class MonthStatisticHeaderDelegate extends SliverPersistentHeaderDelegate {
       children: [
         Text.rich(
           TextSpan(
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.w500),
             children: [
               TextSpan(text: DateFormat("MM").format(data.startTime), style: const TextStyle(fontSize: 24)),
               const TextSpan(text: "月", style: TextStyle(fontSize: ConstantFontSize.body)),

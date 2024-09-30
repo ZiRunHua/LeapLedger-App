@@ -266,7 +266,7 @@ class _TextAmountKeyboardState extends State<TextAmountKeyboard> {
           child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
             AmountText.sameHeight(
               amount,
-              textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
+              textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500, color: Colors.black),
               dollarSign: true,
             ),
             SingleChildScrollView(
@@ -286,7 +286,7 @@ class _TextAmountKeyboardState extends State<TextAmountKeyboard> {
                     const SizedBox(width: 2),
                     Text(
                       input,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: ConstantFontSize.headline),
+                      style: const TextStyle(fontWeight: FontWeight.w500, fontSize: ConstantFontSize.headline),
                     )
                   ],
                 ))

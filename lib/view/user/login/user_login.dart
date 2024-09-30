@@ -68,7 +68,7 @@ class UserLoginState extends State<UserLogin> {
                     const SizedBox(height: 80),
                     const Padding(
                       padding: EdgeInsets.all(Constant.margin),
-                      child: Text("登录", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 42)),
+                      child: Text("登录", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 42)),
                     ),
                     const SizedBox(height: 20),
                     TextField(decoration: const InputDecoration(labelText: '邮箱'), controller: emailController),

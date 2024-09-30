@@ -71,7 +71,7 @@ class AccountTotal extends StatelessWidget {
       amount,
       textStyle: TextStyle(
         fontSize: ConstantFontSize.largeHeadline,
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w500,
       ),
       dollarSign: false,
       displayModel: IncomeExpenseDisplayModel.color,

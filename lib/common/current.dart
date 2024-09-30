@@ -8,7 +8,7 @@ class Current {
   static late String peratingSystem; //android ios window
   static late final String? deviceId;
   static init() async {
-    _initDeviceId();
+    await _initDeviceId();
 
     peratingSystem = Platform.operatingSystem;
   }

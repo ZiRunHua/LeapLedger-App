@@ -65,7 +65,7 @@ class _AccountOperationBottomSheetState extends State<AccountOperationBottomShee
               _buildButton(
                 context,
                 onTap: () => _onUpdateCurrentAccount(context),
-                child: const Text('设为当前账本', style: TextStyle(fontWeight: FontWeight.bold)),
+                child: const Text('设为当前账本', style: TextStyle(fontWeight: FontWeight.w500)),
               ),
               ConstantWidget.divider.list,
               _buildButton(

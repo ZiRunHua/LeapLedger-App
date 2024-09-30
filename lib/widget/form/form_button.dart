@@ -29,7 +29,7 @@ class FormButton {
         ),
         child: const Text(
           '保存',
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, letterSpacing: Constant.margin / 2),
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, letterSpacing: Constant.margin / 2),
         ),
       ),
     );

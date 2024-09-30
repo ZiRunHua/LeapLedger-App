@@ -13,7 +13,7 @@ class CommonAvatarPainter extends CustomPainter {
     TextPainter textPainter = TextPainter(
       text: TextSpan(
         text: getUsernameInitials(),
-        style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+        style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500),
       ),
       textDirection: TextDirection.ltr,
     );

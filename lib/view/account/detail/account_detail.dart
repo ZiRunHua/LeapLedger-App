@@ -22,7 +22,7 @@ class AccountDetail extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Text(
                 account.name,
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
               ),
             ),
             // Padding(
@@ -41,7 +41,7 @@ class AccountDetail extends StatelessWidget {
             //   padding: const EdgeInsets.all(16.0),
             //   child: Text(
             //     '总金额：${totalAmount.toStringAsFixed(2)}',
-            //     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            //     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
             //   ),
             // ),
             const Divider(
@@ -51,7 +51,7 @@ class AccountDetail extends StatelessWidget {
             //   padding: const EdgeInsets.all(16.0),
             //   child: Text(
             //     '最近交易记录',
-            //     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            //     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
             //   ),
             // ),
             // ListView.builder(

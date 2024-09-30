@@ -141,7 +141,7 @@ class TransactionShareDialog extends StatelessWidget {
           data.amount,
           incomeExpense: data.incomeExpense,
           displayModel: IncomeExpenseDisplayModel.symbols,
-          textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
+          textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500, color: Colors.black),
         ),
       ),
     );

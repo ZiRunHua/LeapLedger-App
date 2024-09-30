@@ -84,7 +84,7 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
             '月份选择',
             style: TextStyle(
               fontSize: ConstantFontSize.headline,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w500,
               letterSpacing: Constant.margin / 2,
             ),
           ),
@@ -98,7 +98,7 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
             '日期选择',
             style: TextStyle(
               fontSize: ConstantFontSize.headline,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w500,
               letterSpacing: Constant.margin / 2,
             ),
           ),
