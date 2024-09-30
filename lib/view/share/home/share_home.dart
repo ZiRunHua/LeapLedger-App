@@ -58,7 +58,7 @@ class _ShareHomeState extends State<ShareHome> {
               if (state is ShareHomeInitial) {
                 return const Center(child: ConstantWidget.activityIndicator);
               }
-              if (state is NoShareAccount) {
+              if (state is NoShareAccount || ShareHomeBloc.account == null || !ShareHomeBloc.account!.isValid) {
                 return const NoAccountPage();
               }
               return Scaffold(
