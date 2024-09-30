@@ -108,7 +108,7 @@ class ApiServer {
     return dataFormatFunc(response);
   }
 
-  static Completer<bool> logining = Completer()..complete(false);
+  static bool logining = false;
   static Future<ResponseBody> request(Method method, String path, {Object? data, Map<String, dynamic>? header}) async {
     Options options = Options(headers: header ?? {});
     Response? response = await _issueRequest(method, path, data, options);
@@ -125,24 +125,18 @@ class ApiServer {
         if (isShowOverlayLoader) {
           Global.hideOverlayLoader();
         }
-        if (!logining.isCompleted) {
-          return ResponseBody({'Msg': '请重新登录'}, isSuccess: false);
-        } else if (response.requestOptions.headers[HttpHeaders.authorizationHeader]
-                .toString()
-                .compareTo(UserBloc.token) !=
-            0) {
+        if (logining) {
           return ResponseBody({'Msg': '请重新登录'}, isSuccess: false);
         } else {
-          logining = Completer<bool>();
+          logining = true;
           return await Global.navigatorKey.currentState!.pushNamed(UserRoutes.login).then((value) {
+            logining = false;
             if (isShowOverlayLoader) {
               Global.showOverlayLoader();
             }
             if (value == true) {
-              logining.complete(true);
               return request(method, path, data: data, header: header);
             }
-            logining.complete(false);
             return getResponseBodyAndShowError(null, errorMsg: "未登录");
           });
         }

@@ -24,10 +24,10 @@ class _ShareHomeState extends State<ShareHome> {
   void initState() {
     _bloc = ShareHomeBloc(transactionBloc: BlocProvider.of<TransactionBloc>(context));
     // 当前账本为共享则加载当前
-    if (UserBloc.currentAccount.isValid && UserBloc.currentAccount.type == AccountType.share) {
-      _bloc.add(LoadShareHomeEvent(account: UserBloc.currentAccount));
-    } else if (UserBloc.currentShareAccount.isValid) {
+    if (UserBloc.currentShareAccount.isValid) {
       _bloc.add(LoadShareHomeEvent(account: UserBloc.currentShareAccount));
+    } else if (UserBloc.currentAccount.isValid && UserBloc.currentAccount.type == AccountType.share) {
+      _bloc.add(LoadShareHomeEvent(account: UserBloc.currentAccount));
     } else {
       // 否则交给bloc处理
       _bloc.add(LoadShareHomeEvent(account: UserBloc.currentAccount));
@@ -54,7 +54,6 @@ class _ShareHomeState extends State<ShareHome> {
             }
           },
           child: BlocBuilder<ShareHomeBloc, ShareHomeState>(
-            buildWhen: (previous, current) => current is ShareHomePageState,
             builder: (context, state) {
               if (state is ShareHomeInitial) {
                 return const Center(child: ConstantWidget.activityIndicator);
