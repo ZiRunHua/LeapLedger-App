@@ -10,7 +10,7 @@ class _TimingBottomSelecterState extends State<TimingBottomSelecter> {
   late final TransactionTimingCubit _cubit;
   TransactionTimingModel get _config => _cubit.config;
   bool get _isBuildTimeSelecter =>
-      _config.type == TransactionTimingType.everymonth || _config.type == TransactionTimingType.everyweek;
+      _config.type == TransactionTimingType.everyMonth || _config.type == TransactionTimingType.everyWeek;
   @override
   @override
   void initState() {
@@ -73,7 +73,7 @@ class _TimingBottomSelecterState extends State<TimingBottomSelecter> {
       ),
       AnimatedContainer(
         duration: _animatedDuration,
-        width: _config.type == TransactionTimingType.everyweek ? MediaQuery.of(context).size.width - _leftWidth : 0,
+        width: _config.type == TransactionTimingType.everyWeek ? MediaQuery.of(context).size.width - _leftWidth : 0,
         child: createBottomSelect(
             backgroundColor: ConstantColor.greyBackground,
             onTap: onDateTimeChanged,
@@ -84,7 +84,7 @@ class _TimingBottomSelecterState extends State<TimingBottomSelecter> {
       ),
       AnimatedContainer(
         duration: _animatedDuration,
-        width: _config.type == TransactionTimingType.everymonth ? MediaQuery.of(context).size.width - _leftWidth : 0,
+        width: _config.type == TransactionTimingType.everyMonth ? MediaQuery.of(context).size.width - _leftWidth : 0,
         child: createBottomSelect(
             backgroundColor: ConstantColor.greyBackground,
             onTap: onDateTimeChanged,

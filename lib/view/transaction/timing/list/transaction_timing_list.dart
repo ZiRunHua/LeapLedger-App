@@ -5,8 +5,8 @@ import 'package:leap_ledger_app/model/account/model.dart';
 import 'package:leap_ledger_app/model/transaction/model.dart';
 import 'package:leap_ledger_app/routes/routes.dart';
 import 'package:leap_ledger_app/view/transaction/timing/cubit/transaction_timing_cubit.dart';
-import 'package:leap_ledger_app/widget/common/common.dart';
 import 'package:leap_ledger_app/widget/transaction/enter.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class TransactionTimingList extends StatefulWidget {
   const TransactionTimingList({super.key, required this.account});
@@ -17,27 +17,16 @@ class TransactionTimingList extends StatefulWidget {
 
 class _TransactionTimingListState extends State<TransactionTimingList> {
   late final TransactionTimingCubit _cubit;
-  late final CommonPageController<({TransactionInfoModel trans, TransactionTimingModel config})> _pageController;
+
   @override
   void initState() {
-    _cubit = TransactionTimingCubit(account: widget.account);
-    _pageController = CommonPageController<({TransactionInfoModel trans, TransactionTimingModel config})>(
-      refreshListener: _cubit.loadList,
-      loadMoreListener: _cubit.loadList,
-    );
-
+    _cubit = TransactionTimingCubit(account: widget.account)..loadList();
     super.initState();
   }
 
   @override
-  void didUpdateWidget(covariant TransactionTimingList oldWidget) {
-    _pageController.refresh();
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
   void dispose() {
-    _pageController.dispose();
+    _cubit.close();
     super.dispose();
   }
 
@@ -50,32 +39,26 @@ class _TransactionTimingListState extends State<TransactionTimingList> {
           title: Text("交易定时"),
           actions: [
             Visibility(
-                visible: _cubit.canEdit,
-                child: IconButton(
-                  onPressed: onTapAdd,
-                  icon: Icon(ConstantIcon.add),
-                ))
+              visible: _cubit.canEdit,
+              child: IconButton(onPressed: onTapAdd, icon: Icon(ConstantIcon.add)),
+            )
           ],
         ),
         backgroundColor: ConstantColor.greyBackground,
-        body: BlocListener<TransactionTimingCubit, TransactionTimingState>(
-          listener: (context, state) {
-            if (state is TransactionTimingListLoaded && state.isCurrent(_cubit.account)) {
-              _pageController.addListData(state.list);
-            } else if (state is TransactionTimingConfigSaved && state.isCurrent(_cubit.account)) {
-              var result =
-                  _pageController.updateListItemWhere((item) => item.config.id == state.config.id, state.record);
-              if (!result) _pageController.addNewItemInHeader(state.record);
-            }
-          },
-          child: CommonPageList<({TransactionInfoModel trans, TransactionTimingModel config})>(
-            buildListOne: _buildListOne,
-            prototypeData: (
-              trans: TransactionInfoModel.prototypeData(),
-              config: TransactionTimingModel.prototypeData()
-            ),
-            initRefresh: true,
-            controller: _pageController,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
+          child: BlocBuilder<TransactionTimingCubit, TransactionTimingState>(
+            buildWhen: (context, state) => state is TransactionTimingListLoaded,
+            builder: (context, state) {
+              if (state is TransactionTimingListLoaded && _cubit.list.isNotEmpty) {
+                return ListView.builder(
+                  itemCount: _cubit.list.length,
+                  itemBuilder: (context, index) => _buildListOne(_cubit.list[index]),
+                );
+              } else {
+                return SizedBox(height: 64, child: Center(child: NoData.commonWidget));
+              }
+            },
           ),
         ),
       ),
@@ -91,18 +74,56 @@ class _TransactionTimingListState extends State<TransactionTimingList> {
   }
 
   Widget _buildListOne(({TransactionInfoModel trans, TransactionTimingModel config}) record) {
-    return GestureDetector(
-      onTap: () => TransactionRoutes.timingNavigator(
-        context,
-        account: _cubit.account,
-        trans: record.trans,
-        config: record.config,
-        cubit: _cubit,
-      ).push(),
-      child: Padding(
-        padding: const EdgeInsets.only(top: Constant.margin),
-        child: TransactionTimingContainer(trans: record.trans, config: record.config),
-      ),
+    return Padding(
+      padding: const EdgeInsets.only(top: Constant.margin),
+      child: Slidable(
+          key: Key("trans_config_slidable:" + record.config.id.toString()),
+          endActionPane: ActionPane(
+            motion: const ScrollMotion(),
+            children: [
+              record.config.close
+                  ? _buildBotton(
+                      name: "开启",
+                      color: Colors.blue,
+                      icon: Icons.start_rounded,
+                      onTap: () => _cubit.openeTiming(record.config))
+                  : _buildBotton(
+                      name: "关闭",
+                      color: Colors.blue,
+                      icon: Icons.close_rounded,
+                      onTap: () => _cubit.closeTiming(record.config)),
+              _buildBotton(
+                  name: "删除",
+                  color: Colors.red,
+                  icon: Icons.delete_outline_outlined,
+                  onTap: () => _cubit.deleteTiming(record.config)),
+            ],
+          ),
+          child: GestureDetector(
+            onTap: () => TransactionRoutes.timingNavigator(
+              context,
+              account: _cubit.account,
+              trans: record.trans,
+              config: record.config,
+              cubit: _cubit,
+            ).push(),
+            child: TransactionTimingContainer(
+              trans: record.trans,
+              config: record.config,
+              setAsh: record.config.close,
+            ),
+          )),
+    );
+  }
+
+  SlidableAction _buildBotton(
+      {required Color color, required IconData icon, required String name, required VoidCallback onTap}) {
+    return SlidableAction(
+      onPressed: (context) => onTap(),
+      backgroundColor: color,
+      foregroundColor: Colors.white,
+      icon: icon,
+      label: name,
     );
   }
 }

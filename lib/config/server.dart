@@ -14,7 +14,10 @@ class Network {
   Network() {
     host = const String.fromEnvironment("config.server.network.host", defaultValue: '10.0.2.2');
     port = const String.fromEnvironment("config.server.network.port", defaultValue: '8080');
-    httpAddress = "http://$host:$port";
+    if (port == 433)
+      httpAddress = "https://$host:$port";
+    else
+      httpAddress = "http://$host:$port";
     websocketAddress = "ws://$host:$port";
   }
   Network.fromJson(dynamic data) {

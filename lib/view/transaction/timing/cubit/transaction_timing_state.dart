@@ -3,24 +3,17 @@ part of 'transaction_timing_cubit.dart';
 @immutable
 sealed class TransactionTimingState {}
 
-abstract class AccountRelatedTransactionTimingState extends TransactionTimingState {
-  final int accountId;
-  AccountRelatedTransactionTimingState({required this.accountId});
-  bool isCurrent(AccountModel account) => accountId == account.id;
-}
-
 final class TransactionTimingInitial extends TransactionTimingState {}
 
-final class TransactionTimingConfigSaved extends AccountRelatedTransactionTimingState {
+final class TransactionTimingConfigSaved extends TransactionTimingState {
   final ({TransactionInfoModel trans, TransactionTimingModel config}) record;
   TransactionInfoModel get trans => record.trans;
   TransactionTimingModel get config => record.config;
-  TransactionTimingConfigSaved({required super.accountId, required this.record});
+  TransactionTimingConfigSaved({required this.record});
 }
 
-final class TransactionTimingListLoaded extends AccountRelatedTransactionTimingState {
-  final List<({TransactionInfoModel trans, TransactionTimingModel config})> list;
-  TransactionTimingListLoaded({required this.list, required super.accountId});
+final class TransactionTimingListLoaded extends TransactionTimingState {
+  TransactionTimingListLoaded();
 }
 
 final class TransactionTimingTypeChanged extends TransactionTimingState {
@@ -34,4 +27,16 @@ final class TransactionTimingNextTimeChanged extends TransactionTimingState {
 
 final class TransactionTimingTransChanged extends TransactionTimingState {
   TransactionTimingTransChanged();
+}
+
+final class TransactionTimingTransDeleted extends TransactionTimingState {
+  final TransactionTimingModel config;
+  TransactionTimingTransDeleted({required this.config});
+}
+
+final class TransactionTimingTransUpdated extends TransactionTimingState {
+  final ({TransactionInfoModel trans, TransactionTimingModel config}) record;
+  TransactionInfoModel get trans => record.trans;
+  TransactionTimingModel get config => record.config;
+  TransactionTimingTransUpdated({required this.record});
 }

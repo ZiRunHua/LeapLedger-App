@@ -92,6 +92,11 @@ class CommonPageController<T> extends ChangeNotifier {
     _changeState(PageState.loaded);
   }
 
+  removeWhere(bool test(T element)) {
+    _list.removeWhere(test);
+    notifyListeners();
+  }
+
   _changeState(PageState newState) {
     state = newState;
     notifyListeners();

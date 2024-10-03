@@ -387,12 +387,12 @@ class TransactionQueryCondModel {
 enum TransactionTimingType implements Comparable<TransactionTimingType> {
   @JsonValue("administrator")
   once(name: '执行一次', value: 'once'),
-  @JsonValue("everyday")
-  everyday(name: '每天', value: 'everyday'),
-  @JsonValue("everyweek")
-  everyweek(name: '每周', value: 'everyweek'),
-  @JsonValue("everymonth")
-  everymonth(name: '每月', value: 'everymonth'),
+  @JsonValue("everyDay")
+  everyDay(name: '每天', value: 'everyDay'),
+  @JsonValue("everyWeek")
+  everyWeek(name: '每周', value: 'everyWeek'),
+  @JsonValue("everyMonth")
+  everyMonth(name: '每月', value: 'everyMonth'),
   @JsonValue("lastDayOfMonth")
   lastDayOfMonth(name: '每月最后一天', value: 'lastDayOfMonth');
 
@@ -422,6 +422,7 @@ class TransactionTimingModel {
   int offsetDays;
   @UtcDateTimeConverter()
   DateTime nextTime;
+  bool close;
   @UtcDateTimeConverter()
   final DateTime updatedAt;
   @UtcDateTimeConverter()
@@ -433,6 +434,7 @@ class TransactionTimingModel {
     required this.type,
     required this.offsetDays,
     required this.nextTime,
+    required this.close,
     required this.updatedAt,
     required this.createdAt,
   });
@@ -441,9 +443,10 @@ class TransactionTimingModel {
           id: 0,
           accountId: 0,
           userId: 0,
-          type: TransactionTimingType.everyday,
+          type: TransactionTimingType.everyDay,
           offsetDays: 0,
           nextTime: DateTime.now(),
+          close: false,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         );
@@ -454,11 +457,11 @@ class TransactionTimingModel {
     switch (type) {
       case TransactionTimingType.once:
         return "执行一次";
-      case TransactionTimingType.everyday:
+      case TransactionTimingType.everyDay:
         return "每天";
-      case TransactionTimingType.everyweek:
+      case TransactionTimingType.everyWeek:
         return "每" + DateFormat("E").format(nextTime);
-      case TransactionTimingType.everymonth:
+      case TransactionTimingType.everyMonth:
         return "每月" + DateFormat("d").format(nextTime);
       case TransactionTimingType.lastDayOfMonth:
         return "每月最后一天";
@@ -469,11 +472,11 @@ class TransactionTimingModel {
     switch (type) {
       case TransactionTimingType.once:
         offsetDays = 0;
-      case TransactionTimingType.everyday:
+      case TransactionTimingType.everyDay:
         offsetDays = 1;
-      case TransactionTimingType.everyweek:
+      case TransactionTimingType.everyWeek:
         offsetDays = nextTime.weekday;
-      case TransactionTimingType.everymonth:
+      case TransactionTimingType.everyMonth:
         offsetDays = nextTime.day;
       case TransactionTimingType.lastDayOfMonth:
         offsetDays = 0;

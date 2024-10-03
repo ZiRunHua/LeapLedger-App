@@ -9,8 +9,6 @@ part 'transaction_timing_state.dart';
 
 class TransactionTimingCubit extends Cubit<TransactionTimingState> {
   TransactionTimingCubit({required this.account}) : super(TransactionTimingInitial());
-  TransactionInfoModel trans = TransactionInfoModel.prototypeData();
-  TransactionTimingModel config = TransactionTimingModel.prototypeData();
   AccountDetailModel account = AccountDetailModel.prototypeData();
 
   bool get canEdit => account.isAdministrator || account.isCreator;
@@ -23,11 +21,43 @@ class TransactionTimingCubit extends Cubit<TransactionTimingState> {
     this.config = config;
   }
 
-  loadList({int offset = 0, int limit = 20}) async {
-    var list = await TransactionApi.getTimingList(accountId: account.id, offset: offset, limit: limit);
-    emit(TransactionTimingListLoaded(accountId: account.id, list: list));
+  /* list operation */
+  List<({TransactionTimingModel config, TransactionInfoModel trans})> list = [];
+  int _offset = 0, _limit = 20;
+  Future<List<({TransactionInfoModel trans, TransactionTimingModel config})>> loadList() async {
+    _offset = 0;
+    _limit = 20;
+    list = await TransactionApi.getTimingList(accountId: account.id, offset: _offset, limit: _limit);
+    emit(TransactionTimingListLoaded());
+    return list;
   }
 
+  Future<List<({TransactionInfoModel trans, TransactionTimingModel config})>> loadMore() async {
+    _offset += _limit;
+    list.addAll(await TransactionApi.getTimingList(accountId: account.id, offset: _offset, limit: _limit));
+    emit(TransactionTimingListLoaded());
+    return list;
+  }
+
+  _updateListElement(({TransactionInfoModel trans, TransactionTimingModel config}) record) {
+    var index = list.indexWhere((element) => element.config.id == record.config.id);
+    if (index >= 0) {
+      list[index] = record;
+    } else {
+      list.insert(0, record);
+    }
+  }
+
+  _updateListElementConfig(TransactionTimingModel config) {
+    var index = list.indexWhere((element) => element.config.id == config.id);
+    if (index >= 0) {
+      list[index] = (trans: list[index].trans, config: config);
+    }
+  }
+
+  /* single operation */
+  TransactionInfoModel trans = TransactionInfoModel.prototypeData();
+  TransactionTimingModel config = TransactionTimingModel.prototypeData();
   changeTimingType(TransactionTimingType type) {
     if (config.type == type) return;
     config.type = type;
@@ -35,7 +65,7 @@ class TransactionTimingCubit extends Cubit<TransactionTimingState> {
       case TransactionTimingType.lastDayOfMonth:
         changeNextTime(Time.getLastSecondOfMonth());
         break;
-      case TransactionTimingType.everyday:
+      case TransactionTimingType.everyDay:
         changeNextTime(DateTime.now().add(Duration(days: 1)));
         break;
       default:
@@ -64,12 +94,43 @@ class TransactionTimingCubit extends Cubit<TransactionTimingState> {
     if (responseData == null) return;
     trans = responseData.trans;
     config = responseData.config;
-    emit(TransactionTimingConfigSaved(accountId: account.id, record: (trans: trans, config: config)));
-    emit(TransactionTimingTransChanged());
+    emit(TransactionTimingConfigSaved(record: (trans: trans, config: config)));
+    _updateListElement((trans: trans, config: config));
+    emit(TransactionTimingListLoaded());
   }
 
   changeTrans(TransactionInfoModel transInfo) {
     this.trans = transInfo;
     emit(TransactionTimingTransChanged());
+  }
+
+  deleteTiming(TransactionTimingModel timing) async {
+    if (!await TransactionApi.deleteTiming(accountId: timing.accountId, id: timing.id)) {
+      return;
+    }
+    emit(TransactionTimingTransDeleted(config: timing));
+    list.removeWhere((element) => element.config.id == timing.id);
+    emit(TransactionTimingListLoaded());
+  }
+
+  openeTiming(TransactionTimingModel timing) async {
+    var newTiming = await TransactionApi.openTiming(accountId: timing.accountId, id: timing.id);
+    if (newTiming == null) {
+      return;
+    }
+    emit(TransactionTimingTransUpdated(record: newTiming));
+
+    _updateListElement(newTiming);
+    emit(TransactionTimingListLoaded());
+  }
+
+  closeTiming(TransactionTimingModel timing) async {
+    var newTiming = await TransactionApi.closeTiming(accountId: timing.accountId, id: timing.id);
+    if (newTiming == null) {
+      return;
+    }
+    emit(TransactionTimingTransUpdated(record: newTiming));
+    _updateListElement(newTiming);
+    emit(TransactionTimingListLoaded());
   }
 }

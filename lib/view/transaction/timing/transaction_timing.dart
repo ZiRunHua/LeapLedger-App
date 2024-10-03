@@ -111,19 +111,3 @@ class _TransactionTimingState extends State<TransactionTiming> {
     );
   }
 }
-
-class TextTransactionTiming extends StatelessWidget {
-  const TextTransactionTiming({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return TransactionTiming(
-      account: UserBloc.currentAccount,
-      trans: TransactionModel.prototypeData()
-        ..categoryName = "测试"
-        ..userName = "测试"
-        ..categoryFatherName = "测试题目"
-        ..tradeTime = DateTime.now(),
-    );
-  }
-}

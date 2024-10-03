@@ -141,6 +141,17 @@ Json? _$JsonConverterToJson<Json, Value>(
 ) =>
     value == null ? null : toJson(value);
 
+TransactionQueryCondModel _$TransactionQueryCondModelFromJson(Map<String, dynamic> json) => TransactionQueryCondModel(
+      accountId: (json['AccountId'] as num).toInt(),
+      startTime: const UtcTZDateTimeConverter().fromJson(json['StartTime'] as String?),
+      endTime: const UtcTZDateTimeConverter().fromJson(json['EndTime'] as String?),
+      userIds: (json['UserIds'] as List<dynamic>?)?.map((e) => (e as num).toInt()).toSet(),
+      categoryIds: (json['CategoryIds'] as List<dynamic>?)?.map((e) => (e as num).toInt()).toSet(),
+      incomeExpense: $enumDecodeNullable(_$IncomeExpenseEnumMap, json['IncomeExpense']),
+      minimumAmount: (json['MinimumAmount'] as num?)?.toInt(),
+      maximumAmount: (json['MaximumAmount'] as num?)?.toInt(),
+    );
+
 Map<String, dynamic> _$TransactionQueryCondModelToJson(TransactionQueryCondModel instance) => <String, dynamic>{
       'AccountId': instance.accountId,
       'UserIds': toSet(instance.userIds),
@@ -159,6 +170,7 @@ TransactionTimingModel _$TransactionTimingModelFromJson(Map<String, dynamic> jso
       type: $enumDecode(_$TransactionTimingTypeEnumMap, json['Type']),
       offsetDays: (json['OffsetDays'] as num).toInt(),
       nextTime: const UtcDateTimeConverter().fromJson(json['NextTime'] as String?),
+      close: json['Close'] as bool,
       updatedAt: const UtcDateTimeConverter().fromJson(json['UpdatedAt'] as String?),
       createdAt: const UtcDateTimeConverter().fromJson(json['CreatedAt'] as String?),
     );
@@ -170,14 +182,15 @@ Map<String, dynamic> _$TransactionTimingModelToJson(TransactionTimingModel insta
       'Type': _$TransactionTimingTypeEnumMap[instance.type]!,
       'OffsetDays': instance.offsetDays,
       'NextTime': const UtcDateTimeConverter().toJson(instance.nextTime),
+      'Close': instance.close,
       'UpdatedAt': const UtcDateTimeConverter().toJson(instance.updatedAt),
       'CreatedAt': const UtcDateTimeConverter().toJson(instance.createdAt),
     };
 
 const _$TransactionTimingTypeEnumMap = {
   TransactionTimingType.once: 'administrator',
-  TransactionTimingType.everyday: 'everyday',
-  TransactionTimingType.everyweek: 'everyweek',
-  TransactionTimingType.everymonth: 'everymonth',
+  TransactionTimingType.everyDay: 'everyDay',
+  TransactionTimingType.everyWeek: 'everyWeek',
+  TransactionTimingType.everyMonth: 'everyMonth',
   TransactionTimingType.lastDayOfMonth: 'lastDayOfMonth',
 };

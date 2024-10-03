@@ -187,4 +187,29 @@ class TransactionApi {
     }
     return list;
   }
+
+  static Future<bool> deleteTiming({required int accountId, required int id}) async {
+    return (await ApiServer.request(Method.delete, _buildPrefix(accountId) + '/timing/${id}')).isSuccess;
+  }
+
+  static Future<({TransactionInfoModel trans, TransactionTimingModel config})?> closeTiming(
+      {required int accountId, required int id}) async {
+    var response = await ApiServer.request(Method.put, _buildPrefix(accountId) + '/timing/${id}/close');
+    if (!response.isSuccess) return null;
+
+    return (
+      trans: TransactionInfoModel.fromJson(response.data["Trans"]),
+      config: TransactionTimingModel.fromJson(response.data["Config"]),
+    );
+  }
+
+  static Future<({TransactionInfoModel trans, TransactionTimingModel config})?> openTiming(
+      {required int accountId, required int id}) async {
+    var response = await ApiServer.request(Method.put, _buildPrefix(accountId) + '/timing/${id}/open');
+    if (!response.isSuccess) return null;
+    return (
+      trans: TransactionInfoModel.fromJson(response.data["Trans"]),
+      config: TransactionTimingModel.fromJson(response.data["Config"]),
+    );
+  }
 }
