@@ -43,14 +43,14 @@ class NoAccountPage extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Padding(
-        padding: const EdgeInsets.all(Constant.margin),
+        padding: EdgeInsets.all(Constant.margin),
         child: GestureDetector(
             onTap: () => onTap(),
             child: DecoratedBox(
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey.shade200), borderRadius: ConstantDecoration.borderRadius),
               child: Padding(
-                padding: const EdgeInsets.all(Constant.padding),
+                padding: EdgeInsets.all(Constant.padding),
                 child: Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.center,

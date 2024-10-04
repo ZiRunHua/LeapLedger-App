@@ -33,7 +33,7 @@ class _AccountMenuState extends State<AccountMenu> {
             return _buildCreateBox();
           } else if (state is AccountListLoaded) {
             return DefaultTextStyle.merge(
-                style: const TextStyle(fontSize: ConstantFontSize.largeHeadline),
+                style: TextStyle(fontSize: ConstantFontSize.largeHeadline),
                 child: PopupMenuButton<AccountDetailModel>(
                   itemBuilder: (context) {
                     return List.generate(
@@ -68,7 +68,7 @@ class _AccountMenuState extends State<AccountMenu> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Icon(account.icon, size: ConstantFontSize.largeHeadline),
-        const SizedBox(width: Constant.margin / 2),
+        SizedBox(width: Constant.margin / 2),
         Text(account.name, textAlign: TextAlign.center)
       ],
     );
@@ -76,12 +76,12 @@ class _AccountMenuState extends State<AccountMenu> {
 
   Widget _buildCreateBox() {
     return Container(
-        margin: const EdgeInsets.all(Constant.margin),
+        margin: EdgeInsets.all(Constant.margin),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey.shade400),
           borderRadius: ConstantDecoration.borderRadius,
         ),
-        child: const Padding(
+        child: Padding(
           padding: EdgeInsets.all(Constant.padding),
           child: Column(
             children: [Text("新建共享账本"), Icon(ConstantIcon.add)],

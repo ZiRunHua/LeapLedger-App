@@ -55,12 +55,12 @@ class _AccountUserInviteDialogState extends State<AccountUserInviteDialog> {
       ListTile(leading: userInfo.avatarPainterWidget, title: Text(userInfo.username), subtitle: Text(userInfo.email)),
       ConstantWidget.divider.list,
       ListTile(
-        title: const Text("账本", style: TextStyle(fontSize: ConstantFontSize.body)),
-        trailing: Text(widget.account.name, style: const TextStyle(fontSize: ConstantFontSize.bodyLarge)),
+        title: Text("账本", style: TextStyle(fontSize: ConstantFontSize.body)),
+        trailing: Text(widget.account.name, style: TextStyle(fontSize: ConstantFontSize.bodyLarge)),
       ),
       ConstantWidget.divider.list,
       ListTile(
-        title: const Text("角色", style: TextStyle(fontSize: ConstantFontSize.body)),
+        title: Text("角色", style: TextStyle(fontSize: ConstantFontSize.body)),
         trailing: _buildDropdownButton(),
       ),
     ]);
@@ -72,14 +72,13 @@ class _AccountUserInviteDialogState extends State<AccountUserInviteDialog> {
         items: [
           DropdownMenuItem(
               value: AccountRole.administrator,
-              child:
-                  Text(AccountRole.administrator.name, style: const TextStyle(fontSize: ConstantFontSize.bodyLarge))),
+              child: Text(AccountRole.administrator.name, style: TextStyle(fontSize: ConstantFontSize.bodyLarge))),
           DropdownMenuItem(
               value: AccountRole.ownEditor,
-              child: Text(AccountRole.ownEditor.name, style: const TextStyle(fontSize: ConstantFontSize.bodyLarge))),
+              child: Text(AccountRole.ownEditor.name, style: TextStyle(fontSize: ConstantFontSize.bodyLarge))),
           DropdownMenuItem(
               value: AccountRole.reader,
-              child: Text(AccountRole.reader.name, style: const TextStyle(fontSize: ConstantFontSize.bodyLarge))),
+              child: Text(AccountRole.reader.name, style: TextStyle(fontSize: ConstantFontSize.bodyLarge))),
         ],
         onChanged: (data) {
           if (data == null) {
@@ -91,6 +90,6 @@ class _AccountUserInviteDialogState extends State<AccountUserInviteDialog> {
         value: selectedRole,
       );
     }
-    return Text(AccountRole.ownEditor.name, style: const TextStyle(fontSize: ConstantFontSize.bodyLarge));
+    return Text(AccountRole.ownEditor.name, style: TextStyle(fontSize: ConstantFontSize.bodyLarge));
   }
 }

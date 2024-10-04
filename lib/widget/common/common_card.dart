@@ -28,10 +28,10 @@ class CommonCard extends Card {
           ? [child]
           : [
               Padding(
-                padding: const EdgeInsets.only(top: Constant.padding, left: Constant.padding),
+                padding: EdgeInsets.only(top: Constant.padding, left: Constant.padding),
                 child: Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: ConstantFontSize.headline,
                     letterSpacing: 2,
@@ -49,9 +49,9 @@ class CommonCard extends Card {
     }
     return CommonCard(
       color: background ?? Colors.white,
-      margin: const EdgeInsets.all(Constant.margin),
+      margin: EdgeInsets.all(Constant.margin),
       elevation: 0,
-      shape: const RoundedRectangleBorder(
+      shape: RoundedRectangleBorder(
         borderRadius: ConstantDecoration.borderRadius,
       ),
       child: child,

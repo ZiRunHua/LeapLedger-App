@@ -3,7 +3,7 @@ part of 'form.dart';
 class FormInputField {
   static Widget string(String fieldName, String initialValue, void Function(String)? onChanged) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: Constant.margin, horizontal: Constant.padding),
+      padding: EdgeInsets.symmetric(vertical: Constant.margin, horizontal: Constant.padding),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -102,12 +102,11 @@ class FormInputField {
     void Function(String?)? onSave,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: Constant.margin),
-      margin: const EdgeInsets.only(right: Constant.margin),
-      decoration:
-          const BoxDecoration(color: ConstantColor.greyBackground, borderRadius: ConstantDecoration.borderRadius),
+      padding: EdgeInsets.symmetric(horizontal: Constant.margin),
+      margin: EdgeInsets.only(right: Constant.margin),
+      decoration: BoxDecoration(color: ConstantColor.greyBackground, borderRadius: ConstantDecoration.borderRadius),
       child: TextFormField(
-        decoration: const InputDecoration(
+        decoration: InputDecoration(
           icon: Icon(Icons.search_rounded),
           border: InputBorder.none,
         ),

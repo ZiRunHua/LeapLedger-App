@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/rendering.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 import 'package:leap_ledger_app/common/global.dart' show Constant, ConstantColor, ConstantDecoration, ConstantFontSize;
@@ -32,14 +33,14 @@ class TransactionShareDialog extends StatelessWidget {
           GestureDetector(
               onTap: () => _onSaveImage(),
               child: Container(
-                margin: const EdgeInsets.only(top: Constant.padding),
+                margin: EdgeInsets.only(top: Constant.padding),
                 decoration: BoxDecoration(
                   color: ConstantColor.greyButton,
                   borderRadius: BorderRadius.circular(90),
                 ),
-                width: 48,
-                height: 48,
-                child: const Icon(Icons.download_outlined, size: 28),
+                width: 48.sp,
+                height: 48.sp,
+                child: Icon(Icons.download_outlined, size: 28),
               )),
         ],
       ),
@@ -89,7 +90,7 @@ class TransactionShareDialog extends StatelessWidget {
         child: AspectRatio(
           aspectRatio: 0.6,
           child: DecoratedBox(
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 borderRadius: ConstantDecoration.borderRadius,
                 color: Colors.white,
                 image: DecorationImage(
@@ -122,12 +123,12 @@ class TransactionShareDialog extends StatelessWidget {
           height: 48,
           child: Icon(icon, size: 28),
         ),
-        const SizedBox(
+        SizedBox(
           height: Constant.margin,
         ),
         Text(
           name,
-          style: const TextStyle(fontSize: ConstantFontSize.headline),
+          style: TextStyle(fontSize: ConstantFontSize.headline),
         ),
       ],
     );
@@ -135,20 +136,20 @@ class TransactionShareDialog extends StatelessWidget {
 
   Widget _buildAmount() {
     return Padding(
-      padding: const EdgeInsets.only(top: Constant.smallPadding, bottom: Constant.padding),
+      padding: EdgeInsets.only(top: Constant.smallPadding, bottom: Constant.padding),
       child: Text.rich(
         AmountTextSpan.sameHeight(
           data.amount,
           incomeExpense: data.incomeExpense,
           displayModel: IncomeExpenseDisplayModel.symbols,
-          textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500, color: Colors.black),
+          textStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.w500, color: Colors.black),
         ),
       ),
     );
   }
 
   optionWidget _buildDetail(String title, String value) {
-    return optionWidget(title: Text(title, style: const TextStyle(color: Colors.black54)), value: Text(value));
+    return optionWidget(title: Text(title, style: TextStyle(color: Colors.black54)), value: Text(value));
   }
 
   Future<Uint8List?> _getImageData() async {

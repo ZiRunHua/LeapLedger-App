@@ -23,11 +23,11 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
   int touchedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    centerSpaceRadius = MediaQuery.of(context).size.width * 0.14;
+    centerSpaceRadius = MediaQuery.of(context).size.width * 0.14.sp;
     return Padding(
       padding: EdgeInsets.only(bottom: centerSpaceRadius * 0.62),
       child: SizedBox(
-        height: centerSpaceRadius * (1.3 + 1.61 * 0.61) * 2,
+        height: centerSpaceRadius * (1.3 + 1.61 * 0.61) * 2.sp,
         child: Stack(
           children: [
             Positioned(child: Center(child: _buildSelected())),
@@ -57,28 +57,28 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
   CategoryRank get selected => rankList[touchedIndex];
   Widget _buildSelected() {
     if (rankList.isEmpty) {
-      return const Text("无数据", style: TextStyle(letterSpacing: 4));
+      return Text("无数据", style: TextStyle(letterSpacing: 4.sp));
     }
     return DefaultTextStyle.merge(
-      style: const TextStyle(fontSize: ConstantFontSize.bodySmall),
+      style: TextStyle(fontSize: ConstantFontSize.bodySmall),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(selected.icon, size: 28),
+          Icon(selected.icon, size: Constant.iconlargeSize),
           Text(
             selected.name,
-            style: const TextStyle(fontSize: ConstantFontSize.body, letterSpacing: Constant.margin / 2),
+            style: TextStyle(fontSize: ConstantFontSize.body, letterSpacing: Constant.margin / 2),
           ),
           AmountText.sameHeight(
             selected.amount,
             unit: true,
-            textStyle: const TextStyle(fontSize: ConstantFontSize.body, fontWeight: FontWeight.w500),
+            textStyle: TextStyle(fontSize: ConstantFontSize.body, fontWeight: FontWeight.w500),
           ),
           Text(
             "${selected.count}笔",
-            style: const TextStyle(fontSize: ConstantFontSize.body, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: ConstantFontSize.body, fontWeight: FontWeight.w500),
           ),
         ],
       ),
@@ -127,7 +127,7 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
       value: rank.amountProportion / 100,
       title: rank.amountProportiontoString(),
       showTitle: isTouched,
-      titlePositionPercentageOffset: 1.55,
+      titlePositionPercentageOffset: 1.67,
       radius: isTouched ? centerSpaceRadius * 1.61 * 0.61 : centerSpaceRadius * 0.61,
       titleStyle: TextStyle(
         fontSize: isTouched ? ConstantFontSize.bodyLarge : ConstantFontSize.body,

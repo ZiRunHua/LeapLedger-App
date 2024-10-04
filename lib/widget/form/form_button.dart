@@ -9,9 +9,7 @@ class FormButton {
       ),
       child: const Text(
         '保 存',
-        style: TextStyle(
-          fontSize: 18.0,
-        ),
+        style: TextStyle(fontSize: ConstantFontSize.largeHeadline),
       ),
     );
   }
@@ -27,7 +25,7 @@ class FormButton {
             borderRadius: BorderRadius.circular(10.0),
           ),
         ),
-        child: const Text(
+        child: Text(
           '保存',
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, letterSpacing: Constant.margin / 2),
         ),

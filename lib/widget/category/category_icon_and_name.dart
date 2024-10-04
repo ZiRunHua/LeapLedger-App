@@ -20,13 +20,9 @@ class CategoryIconAndName<T extends TransactionCategoryBaseModel> extends Statel
             borderRadius: BorderRadius.circular(90),
           ),
           child: SizedBox(
-            width: 48,
-            height: 48,
-            child: Icon(
-              category.icon,
-              size: 28,
-              color: isSelected ? Colors.white : Colors.black,
-            ),
+            width: 48.sp,
+            height: 48.sp,
+            child: Icon(category.icon, size: 28, color: isSelected ? Colors.white : Colors.black),
           ),
         ),
         if (category.name.isNotEmpty) SizedBox(height: Constant.margin / 2),
@@ -63,8 +59,8 @@ class LargeCategoryIconAndName extends StatelessWidget {
         DecoratedBox(
           decoration: BoxDecoration(color: ConstantColor.primaryColor, borderRadius: BorderRadius.circular(90)),
           child: SizedBox(
-            width: 48,
-            height: 48,
+            width: 48.sp,
+            height: 48.sp,
             child: Icon(category.icon, size: 28, color: Colors.white),
           ),
         ),

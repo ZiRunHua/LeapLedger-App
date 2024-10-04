@@ -78,7 +78,7 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
     switch (widget.mode) {
       case Mode.month:
         child = _buildMonthPicker();
-        title = const Padding(
+        title = Padding(
           padding: EdgeInsets.fromLTRB(Constant.padding, Constant.padding, Constant.padding, 0),
           child: Text(
             '月份选择',
@@ -92,7 +92,7 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
         break;
       case Mode.dateRange:
         child = _buildDateRangePicker();
-        title = const Padding(
+        title = Padding(
           padding: EdgeInsets.fromLTRB(Constant.padding, Constant.padding, Constant.padding, 0),
           child: Text(
             '日期选择',
@@ -117,7 +117,7 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
       children: <Widget>[
         title,
         Container(
-          padding: const EdgeInsets.all(Constant.padding),
+          padding: EdgeInsets.all(Constant.padding),
           child: child,
         )
       ],
@@ -132,7 +132,7 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-            height: 300,
+            height: 300.sp,
             child: CupertinoDatePicker(
               mode: CupertinoDatePickerMode.monthYear,
               initialDateTime: selectedMonth,
@@ -157,17 +157,17 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: Constant.margin),
+          padding: EdgeInsets.only(top: Constant.margin),
           child: _buildButtonGroup(),
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: 20),
         // 时间输入框
         Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(flex: 5, child: _buildInputButton(isStartInputButton: true)),
-            const Expanded(
+            Expanded(
               child: Padding(padding: EdgeInsets.all(Constant.margin), child: Divider(color: Colors.black87)),
             ),
             Expanded(flex: 5, child: _buildInputButton(isStartInputButton: false)),
@@ -175,7 +175,7 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
         ),
         // 日期滚轮
         SizedBox(
-          height: 300,
+          height: 300.sp,
           child: CupertinoDatePicker(
             key: selectedStartInputButton ? startDatePickerKey : endDatePickerKey,
             mode: CupertinoDatePickerMode.date,
@@ -275,9 +275,9 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
         onSubmit();
       },
       child: Container(
-        height: 28,
-        margin: const EdgeInsets.all(Constant.margin / 2),
-        padding: const EdgeInsets.symmetric(horizontal: Constant.margin),
+        height: 28.sp,
+        margin: EdgeInsets.all(Constant.margin / 2),
+        padding: EdgeInsets.symmetric(horizontal: Constant.margin),
         decoration: BoxDecoration(
           border: Border.all(
             color: isSelected ? ConstantColor.primaryColor : Colors.grey,
@@ -305,7 +305,7 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
         selectedStartInputButton = isStartInputButton;
       }),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: Constant.padding),
+        padding: EdgeInsets.symmetric(vertical: Constant.padding),
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
@@ -318,7 +318,7 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
           child: Text(
             isStartInputButton ? DateFormat('yyyy-MM-dd').format(startDate) : DateFormat('yyyy-MM-dd').format(endDate),
             style: TextStyle(
-              fontSize: 18,
+              fontSize: ConstantFontSize.largeHeadline,
               color: selectedStartInputButton == isStartInputButton ? ConstantColor.primaryColor : Colors.black,
             ),
           ),
@@ -331,7 +331,7 @@ class _MonthOrDateRangePickerState extends State<MonthOrDateRangePicker> with Si
   Widget _buildSumbitButton() {
     return SizedBox(
       width: double.infinity,
-      child: ElevatedButton(onPressed: onSubmit, child: const Text('确定')),
+      child: ElevatedButton(onPressed: onSubmit, child: Text('确定')),
     );
   }
 

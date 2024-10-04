@@ -22,9 +22,8 @@ class UnequalHeightAmountTextSpan extends StatelessWidget {
     String formattedAmount = amountInDollars.toStringAsFixed(2);
     List<String> parts = formattedAmount.split('.');
     double? tailFontSize = tailReduction ? textStyle.fontSize! * 2 / 3 : textStyle.fontSize;
-    return RichText(
-      textScaler: MediaQuery.of(context).textScaler,
-      text: TextSpan(
+    return Text.rich(
+      TextSpan(
         children: [
           if (title != null)
             TextSpan(

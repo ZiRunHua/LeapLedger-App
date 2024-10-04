@@ -1,6 +1,7 @@
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:leap_ledger_app/bloc/category/category_bloc.dart';
 
 import 'package:leap_ledger_app/common/global.dart';

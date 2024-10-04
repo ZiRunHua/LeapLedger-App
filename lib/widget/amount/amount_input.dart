@@ -1,7 +1,7 @@
 part of 'enter.dart';
 
 class AmountInput extends StatelessWidget {
-  static const InputDecoration defaultDecoration = InputDecoration(
+  static InputDecoration defaultDecoration = InputDecoration(
     contentPadding: EdgeInsets.all(Constant.padding),
     prefixText: "￥",
     labelStyle: TextStyle(fontSize: ConstantFontSize.body),
@@ -10,25 +10,27 @@ class AmountInput extends StatelessWidget {
   );
   final Function(int?)? onSave;
   final Function(int?)? onChanged;
-  final InputDecoration decoration;
+  late final InputDecoration decoration;
   final int? initialValue;
   final TextEditingController? controller;
-  const AmountInput({
+  AmountInput({
     super.key,
     this.onSave,
     this.onChanged,
     this.initialValue,
-    this.decoration = defaultDecoration,
+    InputDecoration? decoration,
     this.controller,
-  });
+  }) {
+    this.decoration = decoration ?? defaultDecoration;
+  }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 48,
+      height: 48.sp,
       child: TextFormField(
         controller: controller,
-        style: const TextStyle(fontSize: 14),
+        style: const TextStyle(fontSize: ConstantFontSize.body),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: initialValue != null ? (initialValue! / 100).toStringAsFixed(2) : null,
         showCursor: true,

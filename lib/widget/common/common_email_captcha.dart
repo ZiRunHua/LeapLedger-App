@@ -60,33 +60,26 @@ class CommonEmailCaptchaFormState extends State<CommonEmailCaptchaForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 10),
-            CommonCaptcha(
-              key: captchaKey,
-            ),
+            SizedBox(height: Constant.margin),
+            CommonCaptcha(key: captchaKey),
             Visibility(
                 visible: emailTextVisibility(),
                 child: TextField(
-                  decoration: const InputDecoration(
-                    labelText: '邮箱',
-                  ),
+                  decoration: const InputDecoration(labelText: '邮箱'),
                   controller: emailController,
                 )),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: 200,
+                  width: 180.w,
                   child: TextField(
-                    decoration: const InputDecoration(
-                      labelText: '邮箱验证码',
-                    ),
+                    maxLength: 6,
+                    decoration: const InputDecoration(labelText: '邮箱验证码'),
                     controller: emailCaptchaController,
                   ),
                 ),
-                const SizedBox(
-                  width: 10,
-                ),
+                SizedBox(width: Constant.margin),
                 buildSendButton(),
               ],
             ),

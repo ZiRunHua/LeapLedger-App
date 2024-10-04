@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:leap_ledger_app/bloc/account/account_bloc.dart';
 import 'package:leap_ledger_app/common/global.dart';
@@ -18,11 +19,11 @@ enum ViewAccountListType { onlyCanEdit, all }
 Widget _buildLeading(AccountModel account, int selectAccountId) {
   return Row(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
     SizedBox(
-      width: 4,
+      width: Constant.margin / 2,
       child: Container(color: account.id == selectAccountId ? ConstantColor.primaryColor : Colors.white),
     ),
-    const SizedBox(width: Constant.margin),
-    Icon(account.icon, size: 32),
-    const SizedBox(width: Constant.margin),
+    SizedBox(width: Constant.margin),
+    Icon(account.icon, size: Constant.iconlargeSize),
+    SizedBox(width: Constant.margin),
   ]);
 }

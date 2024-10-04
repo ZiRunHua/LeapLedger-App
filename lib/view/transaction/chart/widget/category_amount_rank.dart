@@ -57,11 +57,11 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> with SingleTick
         children: [
           Text(
             '${data.name} （${data.amountProportiontoString()}）',
-            style: const TextStyle(fontSize: ConstantFontSize.body),
+            style: TextStyle(fontSize: ConstantFontSize.body),
           ),
           Text.rich(AmountTextSpan.sameHeight(
             data.amount,
-            textStyle: const TextStyle(fontSize: ConstantFontSize.body, fontWeight: FontWeight.w500),
+            textStyle: TextStyle(fontSize: ConstantFontSize.body, fontWeight: FontWeight.w500),
           ))
         ],
       ),

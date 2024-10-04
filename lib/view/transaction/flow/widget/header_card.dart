@@ -21,8 +21,8 @@ class _HeaderCardState extends State<HeaderCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.all(Constant.padding),
-        decoration: const BoxDecoration(
+        padding: EdgeInsets.all(Constant.padding),
+        decoration: BoxDecoration(
           color: ConstantColor.primaryColor,
           borderRadius: ConstantDecoration.borderRadius,
         ),
@@ -38,17 +38,19 @@ class _HeaderCardState extends State<HeaderCard> {
                     Row(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(Constant.margin),
+                          padding: EdgeInsets.all(Constant.margin),
                           child: Text.rich(
-                            TextSpan(children: [
-                              AmountTextSpan.sameHeight(
-                                totalData.income.amount - totalData.expense.amount,
-                                dollarSign: true,
-                                textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
-                              ),
-                              const WidgetSpan(child: SizedBox(width: Constant.margin)),
-                              const TextSpan(text: "结余", style: TextStyle(fontSize: ConstantFontSize.body))
-                            ]),
+                            TextSpan(
+                              children: [
+                                AmountTextSpan.sameHeight(
+                                  totalData.income.amount - totalData.expense.amount,
+                                  dollarSign: true,
+                                  textStyle: const TextStyle(fontSize: 26, fontWeight: FontWeight.w500),
+                                ),
+                                WidgetSpan(child: SizedBox(width: Constant.padding)),
+                                TextSpan(text: "结余", style: TextStyle(fontSize: ConstantFontSize.body))
+                              ],
+                            ),
                           ),
                         )
                       ],
@@ -90,14 +92,14 @@ class _HeaderCardState extends State<HeaderCard> {
     }
     return GestureDetector(
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
+        padding: EdgeInsets.symmetric(horizontal: Constant.padding),
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(32), color: ConstantColor.secondaryColor),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(dateText, style: const TextStyle(fontSize: ConstantFontSize.bodyLarge)),
-            const Icon(Icons.arrow_drop_down_outlined),
+            Text(dateText, style: TextStyle(fontSize: ConstantFontSize.bodyLarge)),
+            Icon(Icons.arrow_drop_down_outlined),
           ],
         ),
       ),
@@ -117,10 +119,10 @@ class _HeaderCardState extends State<HeaderCard> {
   Widget _buildTotalData(String title, int amount) {
     return Text.rich(
       TextSpan(
-        style: const TextStyle(fontSize: ConstantFontSize.body),
+        style: TextStyle(fontSize: ConstantFontSize.body),
         children: [
           TextSpan(text: title),
-          const WidgetSpan(child: SizedBox(width: Constant.margin)),
+          WidgetSpan(child: SizedBox(width: Constant.margin)),
           AmountTextSpan.sameHeight(amount)
         ],
       ),
@@ -128,7 +130,7 @@ class _HeaderCardState extends State<HeaderCard> {
   }
 
   Widget _buildVerticalDivider() {
-    return const VerticalDivider(
+    return VerticalDivider(
       color: Colors.black,
       width: Constant.padding,
       thickness: 1,

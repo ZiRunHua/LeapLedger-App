@@ -13,13 +13,11 @@ Widget saveButton(BuildContext context, Function(BuildContext context) submitFor
   return ElevatedButton(
     onPressed: () => submitForm(context),
     style: ElevatedButton.styleFrom(
-      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
+      padding: EdgeInsets.symmetric(vertical: Constant.padding, horizontal: Constant.padding * 2),
     ),
     child: const Text(
       '保 存',
-      style: TextStyle(
-        fontSize: 18.0,
-      ),
+      style: TextStyle(fontSize: ConstantFontSize.largeHeadline),
     ),
   );
 }

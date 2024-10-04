@@ -32,7 +32,7 @@ class _StatisticsLineChartState extends State<StatisticsLineChart> {
       child: AspectRatio(
         aspectRatio: 1.6,
         child: Padding(
-          padding: const EdgeInsets.all(Constant.padding),
+          padding: EdgeInsets.all(Constant.padding),
           child: _buildLineChart(),
         ),
       ),
@@ -97,7 +97,7 @@ class _StatisticsLineChartState extends State<StatisticsLineChart> {
               showTitles: true,
               getTitlesWidget: (value, context) {
                 return Text(DateFormat('d日').format(_bloc.getTZDateTime(data[value.toInt()].date)),
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.grey,
                       fontSize: ConstantFontSize.bodySmall,
                     ));

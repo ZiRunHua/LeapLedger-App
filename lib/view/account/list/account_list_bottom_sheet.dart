@@ -70,7 +70,7 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
                 return _buildAccount(list[index ~/ 2]);
               } else {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: Constant.margin),
+                  padding: EdgeInsets.symmetric(vertical: Constant.margin),
                   child: ConstantWidget.divider.indented,
                 );
               }
@@ -94,7 +94,7 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Center(
+              Center(
                 child: Padding(
                   padding: EdgeInsets.all(Constant.margin),
                   child: Text(
@@ -114,7 +114,7 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
   Widget _buildAccount(AccountDetailModel account) {
     return ListTile(
       horizontalTitleGap: 0,
-      contentPadding: const EdgeInsets.only(left: Constant.padding, right: Constant.smallPadding),
+      contentPadding: EdgeInsets.only(left: Constant.padding, right: Constant.smallPadding),
       leading: _buildLeading(account, selectedAccount.id),
       title: Row(
         children: [

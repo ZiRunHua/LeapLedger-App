@@ -57,25 +57,23 @@ class _AccountUserEditDialogState extends State<AccountUserEditDialog> {
           subtitle: Text(accountUser.info.email)),
       ConstantWidget.divider.list,
       ListTile(
-        title: const Text("账本", style: TextStyle(fontSize: ConstantFontSize.body)),
-        trailing: Text(widget.account.name, style: const TextStyle(fontSize: ConstantFontSize.bodyLarge)),
+        title: Text("账本", style: TextStyle(fontSize: ConstantFontSize.body)),
+        trailing: Text(widget.account.name, style: TextStyle(fontSize: ConstantFontSize.bodyLarge)),
       ),
       ConstantWidget.divider.list,
       ListTile(
-          title: const Text("角色", style: TextStyle(fontSize: ConstantFontSize.body)),
+          title: Text("角色", style: TextStyle(fontSize: ConstantFontSize.body)),
           trailing: DropdownButton<AccountRole>(
             items: [
               DropdownMenuItem(
                   value: AccountRole.administrator,
-                  child: Text(AccountRole.administrator.name,
-                      style: const TextStyle(fontSize: ConstantFontSize.bodyLarge))),
+                  child: Text(AccountRole.administrator.name, style: TextStyle(fontSize: ConstantFontSize.bodyLarge))),
               DropdownMenuItem(
                   value: AccountRole.ownEditor,
-                  child:
-                      Text(AccountRole.ownEditor.name, style: const TextStyle(fontSize: ConstantFontSize.bodyLarge))),
+                  child: Text(AccountRole.ownEditor.name, style: TextStyle(fontSize: ConstantFontSize.bodyLarge))),
               DropdownMenuItem(
                   value: AccountRole.reader,
-                  child: Text(AccountRole.reader.name, style: const TextStyle(fontSize: ConstantFontSize.bodyLarge))),
+                  child: Text(AccountRole.reader.name, style: TextStyle(fontSize: ConstantFontSize.bodyLarge))),
             ],
             onChanged: (data) {
               if (data == null) {

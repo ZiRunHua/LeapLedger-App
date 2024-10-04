@@ -1,25 +1,35 @@
 part of 'global.dart';
 
 class Constant {
-  static const double radius = 12.0;
-  static const double buttomSheetRadius = 28.0;
-  static const double smallPadding = 8.0;
-  static const double padding = 16.0;
-  static const double largePadding = 24.0;
-  static const double margin = 8.0;
+  static double radius = 12.0;
+  static double buttomSheetRadius = 28.0;
+  static double smallPadding = 8.0;
+  static double padding = 16.0;
+  static double largePadding = 24.0;
+  static double margin = 8.0;
 
-  static const double buttomHight = 320;
-  static const double buttomLetterSpacing = 4.0;
+  static double buttomHight = 320;
+  static double buttomLetterSpacing = 4.0;
 
-  static const double iconSize = 24;
-  static const double iconlargeSize = 32;
-  static const int maxAmount = 99999999; //最大金额为100万减一 存储单位为分
-  static const int minYear = 2000;
-  static const int maxYear = 2050;
+  static double iconSize = 24;
+  static double iconlargeSize = 32;
+  static int maxAmount = 99999999; //最大金额为100万减一 存储单位为分
+  static int minYear = 2000;
+  static int maxYear = 2050;
   static DateTime minDateTime = DateTime(minYear);
   static DateTime maxDateTime = DateTime(maxYear);
 
   static String defultLocation = 'Asia/Shanghai';
+  static init() {
+    radius = 12.0.sp;
+    buttomSheetRadius = 28.0.sp;
+    smallPadding = 8.0.sp;
+    padding = 16.0.sp;
+    largePadding = 24.0.sp;
+    margin = 8.0.sp;
+    buttomHight = 320.0.h;
+    buttomLetterSpacing = 4.0.sp;
+  }
 }
 
 class ConstantFontSize {
@@ -32,43 +42,50 @@ class ConstantFontSize {
   static const double bodySmall = 12;
 
   static const double letterSpacing = 2;
+  // static init() {
+  //   largeHeadline = largeHeadline.sp;
+  //   headline = headline.sp;
+  //   bodyLarge = bodyLarge.sp;
+  //   body = body.sp;
+  //   bodySmall = bodySmall.sp;
+  //   letterSpacing = letterSpacing.sp;
+  // }
 }
 
 class ConstantWidget {
   // ignore: library_private_types_in_public_api
-  static const _ConstantWidgetDivider divider = _ConstantWidgetDivider();
+  static _ConstantWidgetDivider divider = _ConstantWidgetDivider();
   static const Widget activityIndicator = CircularProgressIndicator();
 }
 
 class ConstantDecoration {
-  static const Radius radius = Radius.circular(Constant.radius);
-  static const BorderRadius borderRadius = BorderRadius.all(Radius.circular(Constant.radius));
-  static const BorderRadius bottomSheetBorderRadius =
-      BorderRadius.vertical(top: Radius.circular(Constant.buttomSheetRadius));
+  static Radius radius = Radius.circular(Constant.radius);
+  static BorderRadius borderRadius = BorderRadius.all(Radius.circular(Constant.radius));
+  static BorderRadius bottomSheetBorderRadius = BorderRadius.vertical(top: Radius.circular(Constant.buttomSheetRadius));
   //BoxDecoration
-  static const BoxDecoration cardDecoration = BoxDecoration(
+  static BoxDecoration cardDecoration = BoxDecoration(
     color: Colors.white,
     borderRadius: ConstantDecoration.borderRadius,
   );
-  static const BoxDecoration bottomSheet = BoxDecoration(
+  static BoxDecoration bottomSheet = BoxDecoration(
     color: Colors.white,
     borderRadius: bottomSheetBorderRadius,
   );
 }
 
 class _ConstantWidgetDivider {
-  const _ConstantWidgetDivider();
-  final Divider list = const Divider(
+  _ConstantWidgetDivider();
+  final Divider list = Divider(
     color: ConstantColor.listDividerColor,
-    height: 0.5,
-    thickness: 0.5,
+    height: 0.5.sp,
+    thickness: 0.5.sp,
   );
-  final Divider indented = const Divider(
+  final Divider indented = Divider(
     color: ConstantColor.listDividerColor,
     indent: Constant.margin,
     endIndent: Constant.margin,
-    height: 0.5,
-    thickness: 0.5,
+    height: 0.5.sp,
+    thickness: 0.5.sp,
   );
 }
 

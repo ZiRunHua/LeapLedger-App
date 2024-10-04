@@ -53,7 +53,7 @@ class _TimePeriodStatisticsState extends State<TimePeriodStatistics> {
     return _Func._buildCard(
       title: "收支报告",
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
+        padding: EdgeInsets.symmetric(horizontal: Constant.padding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -96,16 +96,16 @@ class _TimePeriodStatisticsState extends State<TimePeriodStatistics> {
             dense: true,
             leading: Icon(
               icon,
-              size: 30,
+              size: Constant.iconlargeSize,
               color: ConstantColor.primaryColor,
             ),
             title: Text(
               title,
-              style: const TextStyle(fontSize: ConstantFontSize.headline),
+              style: TextStyle(fontSize: ConstantFontSize.headline),
             ),
             subtitle: Text(
               date,
-              style: const TextStyle(fontSize: ConstantFontSize.bodySmall, color: ConstantColor.greyText),
+              style: TextStyle(fontSize: ConstantFontSize.bodySmall, color: ConstantColor.greyText),
             ),
             trailing: Column(
               mainAxisSize: MainAxisSize.min,
@@ -133,7 +133,7 @@ class _TimePeriodStatisticsState extends State<TimePeriodStatistics> {
             color: color,
           ),
         ),
-        const SizedBox(width: Constant.margin / 2),
+        SizedBox(width: Constant.margin / 2),
         Text(name, style: const TextStyle(color: ConstantColor.greyText)),
       ],
     );

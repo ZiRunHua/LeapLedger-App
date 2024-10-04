@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 import 'package:leap_ledger_app/bloc/account/account_bloc.dart';
 import 'package:leap_ledger_app/bloc/category/category_bloc.dart';
@@ -14,15 +13,21 @@ import 'package:leap_ledger_app/view/navigation/navigation.dart';
 import 'common/global.dart';
 import 'package:leap_ledger_app/common/current.dart';
 import 'package:timezone/data/latest_all.dart' as tzData;
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
   init().then((e) => runApp(MyApp()));
 }
 
 Future<void> init() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  //ScreenUtil
+  await ScreenUtil.ensureScreenSize();
+  //TimeZones
   tzData.initializeTimeZones();
+  //SharedPreferencesCache
   await SharedPreferencesCache.init();
+  //config
   await Global.init();
   await Current.init();
   //await Global.cache.clear();
@@ -39,6 +44,8 @@ class MyApp extends StatelessWidget {
   final AccountBloc _accountBloc = AccountBloc();
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context);
+
     return MultiRepositoryProvider(
         providers: [
           RepositoryProvider<UserBloc>(create: (context) => UserBloc(_accountBloc)),
@@ -47,73 +54,80 @@ class MyApp extends StatelessWidget {
           RepositoryProvider<TransactionBloc>(create: (context) => TransactionBloc()),
           RepositoryProvider<CategoryBloc>(create: (context) => CategoryBloc()),
         ],
-        child: MaterialApp(
-          supportedLocales: const [
-            Locale('zh', 'CN'),
-          ],
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          localeResolutionCallback: (locale, supportedLocales) {
-            for (var supportedLocale in supportedLocales) {
-              if (supportedLocale.languageCode == locale?.languageCode &&
-                  supportedLocale.countryCode == locale?.countryCode) {
-                Intl.defaultLocale = supportedLocale.languageCode;
-                return supportedLocale;
-              }
-            }
-            Intl.defaultLocale = supportedLocales.first.languageCode;
-            return supportedLocales.first;
-          },
-          navigatorKey: Global.navigatorKey,
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            tabBarTheme: const TabBarTheme(
-              dividerHeight: 0,
-              overlayColor: WidgetStatePropertyAll<Color>(
-                Colors.white,
+        child: ScreenUtilInit(
+          designSize: const Size(375, 667),
+          minTextAdapt: true,
+          splitScreenMode: true,
+          builder: (context, child) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              supportedLocales: const [
+                Locale('zh', 'CN'),
+              ],
+              localizationsDelegates: const [
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              localeResolutionCallback: (locale, supportedLocales) {
+                for (var supportedLocale in supportedLocales) {
+                  if (supportedLocale.languageCode == locale?.languageCode &&
+                      supportedLocale.countryCode == locale?.countryCode) {
+                    Intl.defaultLocale = supportedLocale.languageCode;
+                    return supportedLocale;
+                  }
+                }
+                Intl.defaultLocale = supportedLocales.first.languageCode;
+                return supportedLocales.first;
+              },
+              navigatorKey: Global.navigatorKey,
+              theme: ThemeData(
+                tabBarTheme: TabBarTheme(
+                  dividerHeight: 0,
+                  overlayColor: WidgetStatePropertyAll<Color>(Colors.white),
+                ),
+                colorScheme: const ColorScheme.light(
+                  primary: ConstantColor.primaryColor,
+                  secondary: ConstantColor.secondaryColor,
+                ),
+                primaryColor: ConstantColor.primaryColor,
+                dividerColor: Colors.transparent,
+                appBarTheme: AppBarTheme(
+                  color: Colors.white,
+                  shadowColor: ConstantColor.shadowColor,
+                  surfaceTintColor: Colors.white,
+                ),
+                elevatedButtonTheme: ElevatedButtonThemeData(
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(Colors.blue),
+                    foregroundColor: WidgetStatePropertyAll(Colors.white),
+                  ),
+                ),
+                floatingActionButtonTheme: const FloatingActionButtonThemeData(
+                  backgroundColor: Colors.blue,
+                  shape: CircleBorder(),
+                  // smallSizeConstraints: BoxConstraints(minWidth: 100),
+                  // extendedSizeConstraints: BoxConstraints(minWidth: 100),
+                ),
+                bottomSheetTheme: const BottomSheetThemeData(
+                  backgroundColor: Colors.white,
+                  surfaceTintColor: Colors.white,
+                ),
+                iconTheme: IconThemeData.fallback().copyWith(applyTextScaling: true),
+                useMaterial3: true,
               ),
-            ),
-            colorScheme: const ColorScheme.light(
-              primary: ConstantColor.primaryColor,
-              secondary: ConstantColor.secondaryColor,
-            ),
-            primaryColor: ConstantColor.primaryColor,
-            dividerColor: Colors.transparent,
-            appBarTheme: AppBarTheme(
-              color: Colors.white,
-              shadowColor: ConstantColor.shadowColor,
-              surfaceTintColor: Colors.white,
-            ),
-            elevatedButtonTheme: ElevatedButtonThemeData(
-              style: ButtonStyle(
-                backgroundColor: WidgetStatePropertyAll(Colors.blue),
-                foregroundColor: WidgetStatePropertyAll(Colors.white),
-              ),
-            ),
-            floatingActionButtonTheme: const FloatingActionButtonThemeData(
-              backgroundColor: Colors.blue,
-              shape: CircleBorder(),
-              // smallSizeConstraints: BoxConstraints(minWidth: 100),
-              // extendedSizeConstraints: BoxConstraints(minWidth: 100),
-            ),
-            bottomSheetTheme: const BottomSheetThemeData(
-              backgroundColor: Colors.white,
-              surfaceTintColor: Colors.white,
-            ),
-            useMaterial3: true,
-          ),
-          home: Navigation(),
-          builder: EasyLoading.init(builder: (context, child) {
-            return MediaQuery(
-              data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),
-              child: child!,
+              home: Navigation(),
+              builder: (context, widget) {
+                Constant.init();
+                return MediaQuery(
+                  data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(1.sp)),
+                  child: widget!,
+                );
+              },
+              routes: Routes.routes,
+              onGenerateRoute: Routes.generateRoute,
             );
-          }),
-          routes: Routes.routes,
-          onGenerateRoute: Routes.generateRoute,
+          },
         ));
   }
 }

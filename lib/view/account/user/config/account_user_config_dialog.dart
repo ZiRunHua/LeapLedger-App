@@ -28,7 +28,7 @@ class AccountUserConfigDialogState extends State<AccountUserConfigDialog> {
       child: BlocBuilder<AccountUserConfigCubit, AccountUserConfigState>(builder: (context, state) {
         if (state is AccountUserConfigLoaded) {
           return AlertDialog(
-              contentPadding: const EdgeInsets.all(Constant.margin),
+              contentPadding: EdgeInsets.all(Constant.margin),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [..._buildFlags()],
@@ -53,7 +53,7 @@ class AccountUserConfigDialogState extends State<AccountUserConfigDialog> {
 
   Widget _buildFlag({required String title, required String flagName, required bool value, IconData? iconData}) {
     return CheckboxListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: Constant.margin),
+      contentPadding: EdgeInsets.symmetric(horizontal: Constant.margin),
       value: value,
       title: Text(title),
       onChanged: (bool? value) {

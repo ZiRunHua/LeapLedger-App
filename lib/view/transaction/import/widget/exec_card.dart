@@ -100,14 +100,14 @@ class _ExecCardState extends State<ExecCard> {
           header.add(Text("忽略${_cubit.ignoreCount}笔"));
         }
         return Padding(
-          padding: const EdgeInsets.all(Constant.padding),
+          padding: EdgeInsets.all(Constant.padding),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (header.length > 0)
                 Padding(
-                  padding: const EdgeInsets.only(bottom: Constant.margin),
+                  padding: EdgeInsets.only(bottom: Constant.margin),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: header,

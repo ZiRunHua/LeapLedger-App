@@ -64,7 +64,7 @@ class _StatisticsLineChartState extends State<StatisticsLineChart> {
   LineTooltipItem _buildToolcontent(LineBarSpot touchedSpot) {
     return LineTooltipItem(
         list[touchedSpot.x.toInt()].getDateByType() + '\n' + touchedSpot.y.toStringAsFixed(2),
-        const TextStyle(
+        TextStyle(
           color: ConstantColor.primaryColor,
           fontSize: ConstantFontSize.body,
         ));
@@ -73,7 +73,7 @@ class _StatisticsLineChartState extends State<StatisticsLineChart> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(Constant.padding),
+      padding: EdgeInsets.all(Constant.padding),
       child: LineChart(
         LineChartData(
           lineTouchData: LineTouchData(
@@ -129,7 +129,7 @@ class _StatisticsLineChartState extends State<StatisticsLineChart> {
                   }
                   return Text(
                     dateTitle[value.toInt()]!,
-                    style: const TextStyle(color: ConstantColor.greyText, fontSize: ConstantFontSize.bodySmall),
+                    style: TextStyle(color: ConstantColor.greyText, fontSize: ConstantFontSize.bodySmall),
                   );
                 },
                 interval: 1,

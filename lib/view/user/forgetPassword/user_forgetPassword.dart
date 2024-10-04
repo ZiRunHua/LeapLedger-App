@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:leap_ledger_app/bloc/user/user_bloc.dart';
 import 'package:leap_ledger_app/common/global.dart';
 import 'package:leap_ledger_app/widget/common/common.dart';
@@ -44,7 +45,7 @@ class UserForgetPasswordState extends State<UserForgetPassword> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 80),
+                SizedBox(height: 80.h),
                 const Padding(
                   padding: EdgeInsets.all(10),
                   child: Text(
@@ -66,9 +67,7 @@ class UserForgetPasswordState extends State<UserForgetPassword> {
                   controller: pwdController,
                   obscureText: true,
                 ),
-                const SizedBox(
-                  height: 70,
-                ),
+                SizedBox(height: 70.h),
                 buildSubmitButton(),
               ],
             ),
@@ -81,8 +80,8 @@ class UserForgetPasswordState extends State<UserForgetPassword> {
   Widget buildSubmitButton() {
     return Align(
       child: SizedBox(
-        height: 45,
-        width: 270,
+        height: 45.h,
+        width: 270.w,
         child: ElevatedButton(
           style: ButtonStyle(
               shape: WidgetStateProperty.all(const StadiumBorder(side: BorderSide(style: BorderStyle.none)))),

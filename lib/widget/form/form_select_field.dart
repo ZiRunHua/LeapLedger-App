@@ -9,14 +9,14 @@ class BaseFormSelectField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: Constant.margin, horizontal: Constant.padding),
+      padding: EdgeInsets.symmetric(vertical: Constant.margin, horizontal: Constant.padding),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.all(Constant.margin),
+            padding: EdgeInsets.all(Constant.margin),
             child: Text(label, style: TextStyle(letterSpacing: Constant.margin / 2)),
           ),
           Expanded(

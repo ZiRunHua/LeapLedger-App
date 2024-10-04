@@ -3,7 +3,7 @@ part of 'enter.dart';
 class MonthStatisticHeaderDelegate extends SliverPersistentHeaderDelegate {
   MonthStatisticHeaderDelegate(this.data);
 
-  static TextStyle amountStyle = const TextStyle(color: Colors.black, fontSize: ConstantFontSize.headline);
+  static TextStyle amountStyle = TextStyle(color: Colors.black, fontSize: ConstantFontSize.headline);
   final double height = 56.5 + Constant.margin * 2;
 
   final InExStatisticWithTimeModel data;
@@ -11,7 +11,7 @@ class MonthStatisticHeaderDelegate extends SliverPersistentHeaderDelegate {
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
       height: height,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(Constant.radius),
@@ -21,8 +21,7 @@ class MonthStatisticHeaderDelegate extends SliverPersistentHeaderDelegate {
       child: Column(
         children: [
           Padding(
-              padding:
-                  const EdgeInsets.fromLTRB(Constant.padding, Constant.padding, Constant.padding, Constant.padding),
+              padding: EdgeInsets.fromLTRB(Constant.padding, Constant.padding, Constant.padding, Constant.padding),
               child: BlocBuilder<FlowListBloc, FlowListState>(
                 builder: (context, state) {
                   if (state is! FlowListLoading) {
@@ -48,14 +47,14 @@ class MonthStatisticHeaderDelegate extends SliverPersistentHeaderDelegate {
       children: [
         Text.rich(
           TextSpan(
-            style: const TextStyle(fontWeight: FontWeight.w500),
+            style: TextStyle(fontWeight: FontWeight.w500),
             children: [
-              TextSpan(text: DateFormat("MM").format(data.startTime), style: const TextStyle(fontSize: 24)),
-              const TextSpan(text: "月", style: TextStyle(fontSize: ConstantFontSize.body)),
-              const WidgetSpan(child: SizedBox(width: Constant.margin)),
+              TextSpan(text: DateFormat("MM").format(data.startTime), style: TextStyle(fontSize: 24)),
+              TextSpan(text: "月", style: TextStyle(fontSize: ConstantFontSize.body)),
+              WidgetSpan(child: SizedBox(width: Constant.margin)),
               TextSpan(
                 text: DateFormat("yyyy").format(data.startTime),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: ConstantFontSize.bodySmall,
                   fontWeight: FontWeight.normal,
                 ),
@@ -75,7 +74,7 @@ class MonthStatisticHeaderDelegate extends SliverPersistentHeaderDelegate {
                 _buildItem("支", data.expense.amount, ConstantColor.expenseAmount),
               ],
             ),
-            const SizedBox(width: Constant.padding),
+            SizedBox(width: Constant.padding),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -96,9 +95,9 @@ class MonthStatisticHeaderDelegate extends SliverPersistentHeaderDelegate {
       children: [
         Text(
           text,
-          style: const TextStyle(color: ConstantColor.greyText, fontSize: ConstantFontSize.bodySmall),
+          style: TextStyle(color: ConstantColor.greyText, fontSize: ConstantFontSize.bodySmall),
         ),
-        const SizedBox(width: Constant.margin / 2),
+        SizedBox(width: Constant.margin / 2),
         AmountText.sameHeight(
           amount,
           textStyle: TextStyle(color: amountColor, fontSize: ConstantFontSize.body),

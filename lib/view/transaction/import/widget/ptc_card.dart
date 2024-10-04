@@ -33,7 +33,7 @@ class PtcCard extends StatelessWidget {
               return SizedBox();
             }
             return Padding(
-              padding: const EdgeInsets.all(Constant.margin),
+              padding: EdgeInsets.all(Constant.margin),
               child: Offstage(
                 offstage: ptcList.length == 0 ||
                     false ==
@@ -53,7 +53,7 @@ class PtcCard extends StatelessWidget {
                         ptcList: ptcList,
                       ).push();
                     },
-                    child: const Text('设置交易类型关联', style: TextStyle(fontSize: ConstantFontSize.headline))),
+                    child: Text('设置交易类型关联', style: TextStyle(fontSize: ConstantFontSize.headline))),
               ),
             );
           },
@@ -65,7 +65,7 @@ class PtcCard extends StatelessWidget {
   Widget buildItem(ProductTransactionCategoryModel model) {
     return Chip(
       elevation: 0,
-      label: Text(model.name, style: const TextStyle(fontSize: ConstantFontSize.bodySmall)),
+      label: Text(model.name, style: TextStyle(fontSize: ConstantFontSize.bodySmall)),
       padding: EdgeInsets.zero,
       backgroundColor: Colors.white,
       side: BorderSide.none,

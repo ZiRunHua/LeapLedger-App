@@ -15,13 +15,9 @@ class CircularIcon extends StatelessWidget {
         color: backgroundColor,
         borderRadius: BorderRadius.circular(90),
       ),
-      width: 64,
-      height: 64,
-      child: Icon(
-        icon,
-        size: 32,
-        color: Colors.black87,
-      ),
+      width: 64.sp,
+      height: 64.sp,
+      child: Icon(icon, size: Constant.iconlargeSize, color: Colors.black87),
     );
   }
 }

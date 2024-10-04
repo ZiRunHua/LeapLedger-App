@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:leap_ledger_app/common/global.dart';
 import 'package:leap_ledger_app/model/account/model.dart';
 import 'package:leap_ledger_app/model/common/model.dart';
@@ -56,11 +57,11 @@ class _AccountUserDetailButtomSheetState extends State<AccountUserDetailButtomSh
           DecoratedBox(
             decoration: const BoxDecoration(color: Colors.white),
             child: Container(
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 borderRadius: ConstantDecoration.bottomSheetBorderRadius,
                 color: ConstantColor.greyBackground,
               ),
-              padding: const EdgeInsets.symmetric(
+              padding: EdgeInsets.symmetric(
                 vertical: Constant.buttomSheetRadius / 2,
                 horizontal: Constant.buttomSheetRadius / 2 - Constant.margin,
               ),
@@ -99,9 +100,9 @@ class _AccountUserDetailButtomSheetState extends State<AccountUserDetailButtomSh
           ],
         ),
         Padding(
-          padding: const EdgeInsets.all(Constant.margin),
+          padding: EdgeInsets.all(Constant.margin),
           child: DecoratedBox(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               borderRadius: ConstantDecoration.borderRadius,
               color: Colors.white,
             ),
@@ -153,9 +154,9 @@ class _AccountUserDetailButtomSheetState extends State<AccountUserDetailButtomSh
     }
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.all(Constant.padding),
-        margin: const EdgeInsets.all(Constant.margin),
-        decoration: const BoxDecoration(borderRadius: ConstantDecoration.borderRadius, color: Colors.white),
+        padding: EdgeInsets.all(Constant.padding),
+        margin: EdgeInsets.all(Constant.margin),
+        decoration: BoxDecoration(borderRadius: ConstantDecoration.borderRadius, color: Colors.white),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -164,7 +165,7 @@ class _AccountUserDetailButtomSheetState extends State<AccountUserDetailButtomSh
                 Icon(icon, size: 36, color: ConstantColor.primaryColor),
                 Text(
                   text,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: ConstantFontSize.body,
                     color: ConstantColor.greyText,
                     letterSpacing: ConstantFontSize.letterSpacing,
@@ -181,7 +182,7 @@ class _AccountUserDetailButtomSheetState extends State<AccountUserDetailButtomSh
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _buildAmount(amount: data.expense.amount, ie: IncomeExpense.expense),
-                    const SizedBox(height: Constant.margin / 2),
+                    SizedBox(height: Constant.margin / 2),
                     _buildAmount(amount: data.income.amount, ie: IncomeExpense.income),
                   ],
                 ),

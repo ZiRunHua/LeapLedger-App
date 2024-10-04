@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:async';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:leap_ledger_app/common/global.dart';
 import 'package:permission_handler/permission_handler.dart';

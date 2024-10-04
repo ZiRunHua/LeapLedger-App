@@ -65,7 +65,7 @@ class _CategoryPickerState extends State<CategoryPicker> with AutomaticKeepAlive
       child: child,
     );
     return Container(
-      padding: const EdgeInsets.fromLTRB(Constant.padding, Constant.padding, Constant.padding, 0),
+      padding: EdgeInsets.fromLTRB(Constant.padding, Constant.padding, Constant.padding, 0),
       color: ConstantColor.greyBackground,
       child: child,
     );
@@ -76,7 +76,7 @@ class _CategoryPickerState extends State<CategoryPicker> with AutomaticKeepAlive
         shrinkWrap: true,
         padding: EdgeInsets.zero,
         itemCount: categoryList.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 5,
           crossAxisSpacing: Constant.padding,
           mainAxisSpacing: Constant.padding,

@@ -10,14 +10,14 @@ class TotalHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.symmetric(vertical: Constant.padding),
+        padding: EdgeInsets.symmetric(vertical: Constant.padding),
         child: IntrinsicHeight(
           child: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Expanded(child: _buildColumn(title: "总${type.label}", amount: amount)),
-              const VerticalDivider(
+              VerticalDivider(
                 color: ConstantColor.greyText,
                 width: Constant.padding,
                 thickness: 1,
@@ -43,7 +43,7 @@ class TotalHeader extends StatelessWidget {
             )),
         AmountText.sameHeight(
           amount,
-          textStyle: const TextStyle(fontSize: 24, color: ConstantColor.primaryColor, fontWeight: FontWeight.w500),
+          textStyle: TextStyle(fontSize: 24, color: ConstantColor.primaryColor, fontWeight: FontWeight.w500),
           dollarSign: true,
         ),
       ],

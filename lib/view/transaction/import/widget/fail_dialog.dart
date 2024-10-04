@@ -67,16 +67,16 @@ class _FailDialogState extends State<FailDialog> {
     final trans = _cubit.currentFailTrans!;
     final tip = _cubit.currentFailTip;
     return Padding(
-      padding: const EdgeInsets.all(Constant.padding),
+      padding: EdgeInsets.all(Constant.padding),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
           Padding(
-            padding: const EdgeInsets.only(bottom: Constant.margin),
+            padding: EdgeInsets.only(bottom: Constant.margin),
             child: LargeCategoryIconAndName(trans.categoryBaseModel),
           ),
           Padding(
-              padding: const EdgeInsets.all(Constant.margin),
+              padding: EdgeInsets.all(Constant.margin),
               child: AmountText.sameHeight(
                 trans.amount,
                 textStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
@@ -85,7 +85,7 @@ class _FailDialogState extends State<FailDialog> {
           _buildInfoWidget(labal: "备注", content: trans.remark.isEmpty ? "无" : trans.remark),
           if (tip != null)
             Padding(
-              padding: const EdgeInsets.only(top: Constant.margin),
+              padding: EdgeInsets.only(top: Constant.margin),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:leap_ledger_app/bloc/transaction/transaction_bloc.dart';
 import 'package:leap_ledger_app/bloc/user/user_bloc.dart';
 import 'package:leap_ledger_app/common/global.dart';
@@ -70,7 +71,7 @@ class _ShareHomeState extends State<ShareHome> {
                       return ShareHomeBloc.account == null
                           ? SizedBox()
                           : Padding(
-                              padding: const EdgeInsets.all(Constant.padding),
+                              padding: EdgeInsets.all(Constant.padding),
                               child: Text("${ShareHomeBloc.account!.timeLocation.name}"),
                             );
                     })
@@ -82,7 +83,7 @@ class _ShareHomeState extends State<ShareHome> {
                 body: RefreshIndicator(
                   onRefresh: () async => _bloc.add(LoadShareHomeEvent()),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: Constant.margin),
+                    padding: EdgeInsets.symmetric(horizontal: Constant.margin),
                     child: _buildContent(),
                   ),
                 ),
@@ -95,7 +96,7 @@ class _ShareHomeState extends State<ShareHome> {
   Widget _buildContent() {
     return CustomScrollView(
       slivers: [
-        SliverPadding(padding: const EdgeInsets.only(top: Constant.margin)),
+        SliverPadding(padding: EdgeInsets.only(top: Constant.margin)),
         SliverToBoxAdapter(
           child: BlocBuilder<ShareHomeBloc, ShareHomeState>(
               buildWhen: (previous, current) => current is AccountTotalLoaded,
@@ -108,10 +109,10 @@ class _ShareHomeState extends State<ShareHome> {
               })),
         ),
         SliverPadding(
-          padding: const EdgeInsets.all(Constant.margin),
+          padding: EdgeInsets.all(Constant.margin),
           sliver: SliverToBoxAdapter(
               child: SizedBox(
-            height: 48,
+            height: 48.sp,
             width: MediaQuery.of(context).size.width,
             child: _buildOperationalNavigation(),
           )),
@@ -189,8 +190,8 @@ class _ShareHomeState extends State<ShareHome> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-          margin: const EdgeInsets.only(left: Constant.margin / 2, right: Constant.margin / 2),
-          padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
+          margin: EdgeInsets.only(left: Constant.margin / 2, right: Constant.margin / 2),
+          padding: EdgeInsets.symmetric(horizontal: Constant.padding),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(90)),
@@ -201,14 +202,8 @@ class _ShareHomeState extends State<ShareHome> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                icon,
-                color: ConstantColor.primaryColor,
-                size: 24,
-              ),
-              const SizedBox(
-                width: Constant.margin / 2,
-              ),
+              Icon(icon, color: ConstantColor.primaryColor, size: Constant.iconSize),
+              SizedBox(width: Constant.margin / 2),
               Text(text),
             ],
           )),
@@ -219,8 +214,8 @@ class _ShareHomeState extends State<ShareHome> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-          margin: const EdgeInsets.only(left: Constant.margin / 2, right: Constant.margin / 2),
-          padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
+          margin: EdgeInsets.only(left: Constant.margin / 2, right: Constant.margin / 2),
+          padding: EdgeInsets.symmetric(horizontal: Constant.padding),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(90)),
@@ -231,14 +226,8 @@ class _ShareHomeState extends State<ShareHome> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                icon,
-                color: ConstantColor.primaryColor,
-                size: 24,
-              ),
-              const SizedBox(
-                width: Constant.margin / 2,
-              ),
+              Icon(icon, color: ConstantColor.primaryColor, size: Constant.iconSize),
+              SizedBox(width: Constant.margin / 2),
               Text(text),
             ],
           )),

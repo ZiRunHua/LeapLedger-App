@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:leap_ledger_app/bloc/category/category_bloc.dart';
 import 'package:leap_ledger_app/common/global.dart';
 import 'package:leap_ledger_app/model/account/model.dart';
@@ -49,7 +50,7 @@ class _TransactionCategoryEditState extends State<TransactionCategoryEdit> {
             title: Text(data.isValid ? '编辑二级类型' : '新建二级类型'),
             actions: <Widget>[
               IconButton(
-                icon: const Icon(Icons.save_outlined, size: Constant.iconSize),
+                icon: Icon(Icons.save_outlined, size: Constant.iconSize),
                 onPressed: () => _bloc.add(CategorySaveEvent(widget.account, category: data)),
               ),
             ],
@@ -62,7 +63,7 @@ class _TransactionCategoryEditState extends State<TransactionCategoryEdit> {
     return Form(
         key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.all(Constant.padding),
+          padding: EdgeInsets.all(Constant.padding),
           child: Column(
             children: <Widget>[
               Container(
@@ -70,13 +71,13 @@ class _TransactionCategoryEditState extends State<TransactionCategoryEdit> {
                   color: Colors.blue,
                   borderRadius: BorderRadius.circular(90),
                 ),
-                margin: const EdgeInsets.only(bottom: Constant.padding),
-                width: 64,
-                height: 64,
-                child: Icon(data.icon, size: 32, color: Colors.black87),
+                margin: EdgeInsets.only(bottom: Constant.padding),
+                width: 64.sp,
+                height: 64.sp,
+                child: Icon(data.icon, size: Constant.iconlargeSize, color: Colors.black87),
               ),
               FormInputField.string('名称', data.name, (text) => data.name = text),
-              const SizedBox(height: Constant.padding),
+              SizedBox(height: Constant.padding),
               FormSelecter.transactionCategoryIcon(data.icon, onChanged: _onSelectIcon),
             ],
           ),

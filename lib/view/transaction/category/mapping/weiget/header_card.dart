@@ -26,7 +26,7 @@ class HeaderCard extends StatelessWidget {
     return Chip(
         label: Text(
           model.name,
-          style: const TextStyle(fontSize: ConstantFontSize.bodySmall),
+          style: TextStyle(fontSize: ConstantFontSize.bodySmall),
         ),
         padding: const EdgeInsets.all(0),
         backgroundColor: Colors.white,

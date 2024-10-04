@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:leap_ledger_app/common/global.dart';
 import 'package:leap_ledger_app/model/account/model.dart';
 import 'package:leap_ledger_app/model/transaction/model.dart';
 import 'package:leap_ledger_app/routes/routes.dart';
@@ -28,7 +29,7 @@ class TransList extends StatelessWidget {
       trailing: AmountText.sameHeight(
         model.amount,
         incomeExpense: model.incomeExpense,
-        textStyle: const TextStyle(fontSize: 18, color: Colors.black),
+        textStyle: TextStyle(fontSize: ConstantFontSize.largeHeadline, color: Colors.black),
         displayModel: IncomeExpenseDisplayModel.symbols,
       ),
     );

@@ -16,6 +16,7 @@ import 'package:leap_ledger_app/widget/amount/enter.dart';
 import 'package:leap_ledger_app/widget/common/common.dart';
 import 'package:timezone/timezone.dart';
 
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 part 'statistics_line_chart.dart';
 part 'header_card.dart';
 part 'time_period_statistics.dart';
@@ -28,10 +29,10 @@ class _Func {
     return Card(
       color: background ?? Colors.white,
       elevation: 0,
-      shape: const RoundedRectangleBorder(
+      shape: RoundedRectangleBorder(
         borderRadius: ConstantDecoration.borderRadius,
       ),
-      margin: const EdgeInsets.symmetric(vertical: Constant.margin),
+      margin: EdgeInsets.symmetric(vertical: Constant.margin),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,10 +40,10 @@ class _Func {
             ? [child]
             : [
                 Padding(
-                  padding: const EdgeInsets.only(top: Constant.padding / 4 * 3, left: Constant.padding),
+                  padding: EdgeInsets.only(top: Constant.padding / 4 * 3, left: Constant.padding),
                   child: Text(
                     title,
-                    style: const TextStyle(fontWeight: FontWeight.w500, fontSize: ConstantFontSize.headline),
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: ConstantFontSize.headline),
                   ),
                 ),
                 child

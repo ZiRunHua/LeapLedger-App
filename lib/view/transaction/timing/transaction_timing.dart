@@ -57,13 +57,13 @@ class _TransactionTimingState extends State<TransactionTiming> {
           ),
           backgroundColor: ConstantColor.greyBackground,
           body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
+            padding: EdgeInsets.symmetric(horizontal: Constant.padding),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: Constant.padding),
+                  padding: EdgeInsets.symmetric(vertical: Constant.padding),
                   child: BlocBuilder<TransactionTimingCubit, TransactionTimingState>(
                     buildWhen: (previous, current) => current is TransactionTimingTransChanged,
                     builder: (context, state) {
@@ -97,11 +97,11 @@ class _TransactionTimingState extends State<TransactionTiming> {
       mainAxisSize: MainAxisSize.max,
       children: [
         Padding(
-          padding: const EdgeInsets.only(bottom: Constant.padding),
+          padding: EdgeInsets.only(bottom: Constant.padding),
           child: DecoratedBox(decoration: ConstantDecoration.cardDecoration, child: FromField()),
         ),
         Padding(
-          padding: const EdgeInsets.only(bottom: Constant.padding),
+          padding: EdgeInsets.only(bottom: Constant.padding),
           child: DecoratedBox(
             decoration: ConstantDecoration.cardDecoration,
             child: SaveButtom(),

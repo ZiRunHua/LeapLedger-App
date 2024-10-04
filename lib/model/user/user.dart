@@ -78,8 +78,8 @@ class UserInfoModel {
         username = other.username;
 
   Widget get avatarPainterWidget => SizedBox(
-        width: 50,
-        height: 50,
+        width: 50.sp,
+        height: 50.sp,
         child: CustomPaint(painter: CommonAvatarPainter(username: username)),
       );
 

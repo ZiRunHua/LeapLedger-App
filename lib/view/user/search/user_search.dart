@@ -62,7 +62,7 @@ class _UserSearchState extends State<UserSearch> {
     return Scaffold(
       appBar: AppBar(
         title: DefaultTextStyle.merge(
-          style: const TextStyle(fontSize: ConstantFontSize.largeHeadline),
+          style: TextStyle(fontSize: ConstantFontSize.largeHeadline),
           child: FormInputField.searchInput(
             onChanged: (String? value) {
               _changeInputStr(value);

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';

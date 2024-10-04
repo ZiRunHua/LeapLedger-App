@@ -65,7 +65,7 @@ class _TransactionCategoryTemplateState extends State<TransactionCategoryTemplat
     }
     return Expanded(
         child: Padding(
-      padding: const EdgeInsets.all(Constant.padding),
+      padding: EdgeInsets.all(Constant.padding),
       child: GestureDetector(
         onTap: () => onSelect(account),
         child: DecoratedBox(
@@ -79,7 +79,7 @@ class _TransactionCategoryTemplateState extends State<TransactionCategoryTemplat
               Icon(account.icon, color: ConstantColor.primaryColor),
               Text(
                 account.name,
-                style: const TextStyle(fontSize: ConstantFontSize.headline),
+                style: TextStyle(fontSize: ConstantFontSize.headline),
               ),
             ]),
           ),

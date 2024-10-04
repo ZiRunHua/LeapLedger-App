@@ -18,9 +18,9 @@ class AccountTotal extends StatelessWidget {
   Widget _buildTotal(IconData icon, String text, InExStatisticModel data) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.all(Constant.padding),
-        margin: const EdgeInsets.all(Constant.margin),
-        decoration: const BoxDecoration(borderRadius: ConstantDecoration.borderRadius, color: Colors.white),
+        padding: EdgeInsets.all(Constant.padding),
+        margin: EdgeInsets.all(Constant.margin),
+        decoration: BoxDecoration(borderRadius: ConstantDecoration.borderRadius, color: Colors.white),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -30,7 +30,7 @@ class AccountTotal extends StatelessWidget {
                 Icon(icon, size: 36, color: ConstantColor.primaryColor),
                 Text(
                   text,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: ConstantFontSize.body,
                     color: ConstantColor.greyText,
                     letterSpacing: ConstantFontSize.letterSpacing,
@@ -51,7 +51,7 @@ class AccountTotal extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         _buildAmount(data.expense.amount, IncomeExpense.expense),
-                        const SizedBox(height: Constant.margin / 2),
+                        SizedBox(height: Constant.margin / 2),
                         _buildAmount(data.income.amount, IncomeExpense.income),
                       ],
                     ),
@@ -80,7 +80,7 @@ class AccountTotal extends StatelessWidget {
   }
 
   Widget _buildIe() {
-    return const Column(
+    return Column(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,

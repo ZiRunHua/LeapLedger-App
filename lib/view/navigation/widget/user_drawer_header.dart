@@ -25,7 +25,8 @@ class _UserDrawerHeaderState extends State<UserDrawerHeader> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              const CircleAvatar(backgroundImage: null, radius: 32.0, child: Icon(Icons.person, size: 32.0)),
+              CircleAvatar(
+                  backgroundImage: null, radius: 32.0.w, child: Icon(Icons.person, size: Constant.iconlargeSize)),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,18 +72,14 @@ class _UserDrawerHeaderState extends State<UserDrawerHeader> {
               children: [
                 Text(
                   user.username,
-                  style: const TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.w500),
+                  style: TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.w500),
                 ),
                 GestureDetector(
                     onTap: () {
                       Clipboard.setData(ClipboardData(text: user.uniqueUsername));
                       CommonToast.tipToast("用户名已复制");
                     },
-                    child: Icon(
-                      Icons.copy_outlined,
-                      color: Colors.white,
-                      size: 16,
-                    ))
+                    child: Icon(Icons.copy_outlined, color: Colors.white, size: 18))
               ],
             )));
   }
@@ -96,14 +93,14 @@ class _UserDrawerHeaderState extends State<UserDrawerHeader> {
             alignment: Alignment.centerLeft,
             child: Text(
               splitStrings[0],
-              style: const TextStyle(fontSize: ConstantFontSize.body),
+              style: TextStyle(fontSize: ConstantFontSize.body),
             ),
           ),
           Align(
               alignment: Alignment.centerRight,
               child: Text(
                 "@${splitStrings[1]}",
-                style: const TextStyle(fontSize: ConstantFontSize.bodySmall),
+                style: TextStyle(fontSize: ConstantFontSize.bodySmall),
               ))
         ],
       );
@@ -112,7 +109,7 @@ class _UserDrawerHeaderState extends State<UserDrawerHeader> {
         children: [
           Text(
             email,
-            style: const TextStyle(fontSize: ConstantFontSize.body),
+            style: TextStyle(fontSize: ConstantFontSize.body),
           )
         ],
       );

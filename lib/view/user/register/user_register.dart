@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:leap_ledger_app/bloc/user/user_bloc.dart';
 import 'package:leap_ledger_app/common/global.dart';
 import 'package:leap_ledger_app/routes/routes.dart';
@@ -46,12 +47,12 @@ class UserRegisterState extends State<UserRegister> {
             }
           },
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
+            padding: EdgeInsets.symmetric(horizontal: Constant.padding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 80),
-                const Padding(
+                SizedBox(height: 80.h),
+                Padding(
                   padding: EdgeInsets.all(Constant.margin),
                   child: Text(
                     "注册",
@@ -78,9 +79,7 @@ class UserRegisterState extends State<UserRegister> {
                   UserAction.register,
                   formKey: emailCaptchaKey,
                 ),
-                const SizedBox(
-                  height: 70,
-                ),
+                SizedBox(height: 70.h),
                 buildSubmitButton(),
               ],
             ),
@@ -93,8 +92,8 @@ class UserRegisterState extends State<UserRegister> {
   Widget buildSubmitButton() {
     return Align(
       child: SizedBox(
-        height: 45,
-        width: 270,
+        height: 45.h,
+        width: 270.w,
         child: ElevatedButton(
           style: ButtonStyle(
               shape: WidgetStateProperty.all(const StadiumBorder(side: BorderSide(style: BorderStyle.none)))),

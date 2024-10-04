@@ -66,8 +66,8 @@ class CaptchaPic extends StatelessWidget {
               Image.memory(
                 base64Decode(state.picBase64),
                 fit: BoxFit.cover,
-                width: 180,
-                height: 50,
+                width: 180.w,
+                height: 50.sp,
               ),
               CaptchaButton(0)
             ],
@@ -78,8 +78,8 @@ class CaptchaPic extends StatelessWidget {
           children: [
             Container(
               color: Colors.grey,
-              width: 180,
-              height: 50,
+              width: 180.w,
+              height: 50.sp,
             ),
             CaptchaButton(0)
           ],

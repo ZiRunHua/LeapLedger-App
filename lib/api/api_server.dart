@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:collection';
 import 'dart:core';
 import 'dart:io';
@@ -129,6 +128,7 @@ class ApiServer {
           return ResponseBody({'Msg': '请重新登录'}, isSuccess: false);
         } else {
           logining = true;
+          print("ok");
           return await Global.navigatorKey.currentState!.pushNamed(UserRoutes.login).then((value) {
             logining = false;
             if (isShowOverlayLoader) {

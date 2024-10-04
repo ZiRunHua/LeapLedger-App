@@ -42,7 +42,7 @@ class _HeaderCardState extends State<HeaderCard> {
       ),
       child: _Func._buildCard(
         background: ConstantColor.primaryColor,
-        child: Container(padding: const EdgeInsets.all(Constant.padding), child: _buildContent()),
+        child: Container(padding: EdgeInsets.all(Constant.padding), child: _buildContent()),
       ),
     );
   }
@@ -54,7 +54,7 @@ class _HeaderCardState extends State<HeaderCard> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('本月支出', style: TextStyle(fontSize: ConstantFontSize.headline)),
+            Text('本月支出', style: TextStyle(fontSize: ConstantFontSize.headline)),
             _buildDate(data.startTime, data.endTime),
           ],
         ),
@@ -63,7 +63,7 @@ class _HeaderCardState extends State<HeaderCard> {
           children: [
             UnequalHeightAmountTextSpan(
               amount: data.expense.amount,
-              textStyle: const TextStyle(fontSize: 34.0, fontWeight: FontWeight.w500, color: Colors.black),
+              textStyle: TextStyle(fontSize: 34, fontWeight: FontWeight.w500, color: Colors.black),
               dollarSign: true,
               tailReduction: false,
             ),
@@ -76,17 +76,15 @@ class _HeaderCardState extends State<HeaderCard> {
               amount: data.income.amount,
               title: '本月收入',
               dollarSign: true,
-              textStyle: const TextStyle(fontSize: ConstantFontSize.headline, color: Colors.black),
+              textStyle: TextStyle(fontSize: ConstantFontSize.headline, color: Colors.black),
               tailReduction: false,
             ),
-            const SizedBox(
-              width: 20,
-            ),
+            SizedBox(width: 20.w),
             UnequalHeightAmountTextSpan(
               amount: data.dayAverageExpense,
               title: '日均支出',
               dollarSign: true,
-              textStyle: const TextStyle(fontSize: ConstantFontSize.headline, color: Colors.black),
+              textStyle: TextStyle(fontSize: ConstantFontSize.headline, color: Colors.black),
               tailReduction: false,
             )
           ],
@@ -96,21 +94,17 @@ class _HeaderCardState extends State<HeaderCard> {
   }
 
   Widget _buildDate(DateTime start, DateTime end) {
-    return Column(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(Constant.smallPadding * 2),
-            color: ConstantColor.secondaryColor,
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
-          child: Text(
-            "${_bloc.account.timeLocation.name}  ${DateFormat.MMMd().format(_bloc.getTZDateTime(start))} - ${DateFormat.MMMd().format(_bloc.getTZDateTime(end))}",
-            style: const TextStyle(fontSize: ConstantFontSize.body),
-          ),
-        )
-      ],
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(Constant.smallPadding * 2),
+        color: ConstantColor.secondaryColor,
+      ),
+      padding: EdgeInsets.symmetric(horizontal: Constant.margin * 1.5),
+      child: Text(
+        "${_bloc.account.timeLocation.name}  ${DateFormat.MMMd().format(_bloc.getTZDateTime(start))} - ${DateFormat.MMMd().format(_bloc.getTZDateTime(end))}",
+        style: TextStyle(fontSize: ConstantFontSize.body),
+      ),
     );
   }
 }

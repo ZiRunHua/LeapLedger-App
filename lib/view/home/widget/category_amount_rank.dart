@@ -78,14 +78,15 @@ class _CategoryAmountRankState extends State<CategoryAmountRank> with SingleTick
           leading: Icon(data.category.icon, color: ConstantColor.primaryColor),
           title: Text(
             data.category.name,
-            style: const TextStyle(fontSize: ConstantFontSize.body),
+            style: TextStyle(fontSize: ConstantFontSize.body),
           ),
           subtitle: data.amount != 0 ? _buildProgress(data.amount / maxAmount) : _buildProgress(0),
           trailing: Padding(
             padding: EdgeInsets.zero,
             child: AmountText.sameHeight(
               data.amount,
-              textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black87),
+              textStyle:
+                  TextStyle(fontSize: ConstantFontSize.bodyLarge, fontWeight: FontWeight.normal, color: Colors.black87),
             ),
           ),
         ));
@@ -112,7 +113,7 @@ class AmountDivider extends StatelessWidget {
         double currentWidth = constraints.maxWidth;
         return Divider(
             color: ConstantColor.secondaryColor,
-            height: 0.5,
+            height: 0.5.sp,
             thickness: 5,
             endIndent: currentWidth - currentWidth * proportion);
       },

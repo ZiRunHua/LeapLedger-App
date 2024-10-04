@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:leap_ledger_app/bloc/account/account_bloc.dart';
 import 'package:leap_ledger_app/common/global.dart';
 import 'package:leap_ledger_app/model/account/model.dart';
@@ -69,12 +70,12 @@ class AccountEditState extends State<AccountEdit> {
           appBar: AppBar(
             title: Text(mode == AccountEditMode.add ? "添加账本" : "编辑账本"),
             actions: <Widget>[
-              IconButton(icon: const Icon(Icons.save, size: 24), onPressed: _onSave),
+              IconButton(icon: Icon(Icons.save, size: 24), onPressed: _onSave),
             ],
           ),
           body: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
+              padding: EdgeInsets.symmetric(horizontal: Constant.padding),
               child: buildForm(),
             ),
           ),
@@ -90,16 +91,16 @@ class AccountEditState extends State<AccountEdit> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: Constant.padding),
+            padding: EdgeInsets.symmetric(vertical: Constant.padding),
             child: CircularIcon(icon: account.icon),
           ),
           SizedBox(
-            width: 250,
+            width: 250.w,
             child: FormInputField.string('名称', account.name, (text) => account.name = text),
           ),
-          const SizedBox(height: Constant.padding),
+          SizedBox(height: Constant.padding),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Constant.margin),
+            padding: EdgeInsets.symmetric(horizontal: Constant.margin),
             child: FormSelecter.accountIcon(account.icon, onChanged: _onSelectIcon),
           ),
           _buildRadio(),
@@ -134,7 +135,7 @@ class AccountEditState extends State<AccountEdit> {
 
   Widget _buildRadio() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: Constant.margin, horizontal: Constant.padding),
+      padding: EdgeInsets.symmetric(vertical: Constant.margin, horizontal: Constant.padding),
       child: Align(
         alignment: Alignment.centerLeft,
         child: Row(
@@ -143,15 +144,15 @@ class AccountEditState extends State<AccountEdit> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.all(Constant.margin),
+              padding: EdgeInsets.all(Constant.margin),
               child: Text("类型", style: TextStyle(letterSpacing: Constant.margin / 2)),
             ),
             Padding(
-                padding: const EdgeInsets.all(Constant.margin),
+                padding: EdgeInsets.all(Constant.margin),
                 child: Row(
                   children: [
                     SizedBox(
-                      width: 100,
+                      width: 100.sp,
                       child: RadioListTile<AccountType>(
                         contentPadding: EdgeInsets.zero,
                         title: const Text("独立"),
@@ -161,7 +162,7 @@ class AccountEditState extends State<AccountEdit> {
                       ),
                     ),
                     SizedBox(
-                      width: 100,
+                      width: 100.sp,
                       child: RadioListTile<AccountType>(
                         title: const Text("共享"),
                         contentPadding: EdgeInsets.zero,

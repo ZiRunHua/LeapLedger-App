@@ -55,7 +55,7 @@ class _AccountOperationBottomSheetState extends State<AccountOperationBottomShee
       child: DecoratedBox(
         decoration: ConstantDecoration.bottomSheet,
         child: DefaultTextStyle.merge(
-          style: const TextStyle(fontSize: ConstantFontSize.bodyLarge),
+          style: TextStyle(fontSize: ConstantFontSize.bodyLarge),
           textAlign: TextAlign.center,
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -100,7 +100,7 @@ class _AccountOperationBottomSheetState extends State<AccountOperationBottomShee
 
   Widget _buildButton(BuildContext context, {required void Function() onTap, required Widget child}) {
     return Padding(
-        padding: const EdgeInsets.all(Constant.padding),
+        padding: EdgeInsets.all(Constant.padding),
         child: GestureDetector(
           onTap: () => onTap(),
           child: child,

@@ -23,18 +23,29 @@ class TransactionTimingCubit extends Cubit<TransactionTimingState> {
 
   /* list operation */
   List<({TransactionTimingModel config, TransactionInfoModel trans})> list = [];
-  int _offset = 0, _limit = 20;
+  int _offset = 0, _limit = 10;
   Future<List<({TransactionInfoModel trans, TransactionTimingModel config})>> loadList() async {
     _offset = 0;
-    _limit = 20;
-    list = await TransactionApi.getTimingList(accountId: account.id, offset: _offset, limit: _limit);
+    list = await TransactionApi.getTimingList(accountId: account.id, offset: 0, limit: _limit);
+    if (_limit != list.length) {
+      noMore = true;
+    } else {
+      noMore = false;
+      _offset == list.length;
+    }
     emit(TransactionTimingListLoaded());
     return list;
   }
 
+  bool noMore = false;
   Future<List<({TransactionInfoModel trans, TransactionTimingModel config})>> loadMore() async {
-    _offset += _limit;
-    list.addAll(await TransactionApi.getTimingList(accountId: account.id, offset: _offset, limit: _limit));
+    list.addAll(await TransactionApi.getTimingList(accountId: account.id, offset: list.length, limit: _limit));
+    if (_offset == list.length) {
+      noMore = true;
+    } else {
+      noMore = false;
+      _offset == list.length;
+    }
     emit(TransactionTimingListLoaded());
     return list;
   }
@@ -45,13 +56,6 @@ class TransactionTimingCubit extends Cubit<TransactionTimingState> {
       list[index] = record;
     } else {
       list.insert(0, record);
-    }
-  }
-
-  _updateListElementConfig(TransactionTimingModel config) {
-    var index = list.indexWhere((element) => element.config.id == config.id);
-    if (index >= 0) {
-      list[index] = (trans: list[index].trans, config: config);
     }
   }
 

@@ -115,7 +115,7 @@ class _TransactionFlowState extends State<TransactionFlow> {
               },
             ),
             body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
+              padding: EdgeInsets.symmetric(horizontal: Constant.padding),
               child: RefreshIndicator(
                 onRefresh: () async => _flowListBloc.add(FlowListDataFetchEvent(account: _conditionCubit.account)),
                 child: NotificationListener<ScrollNotification>(
@@ -164,7 +164,7 @@ class _TransactionFlowState extends State<TransactionFlow> {
             controller: _scrollController,
             slivers: [
               SliverToBoxAdapter(
-                child: Padding(padding: const EdgeInsets.symmetric(vertical: Constant.padding), child: headerCard),
+                child: Padding(padding: EdgeInsets.symmetric(vertical: Constant.padding), child: headerCard),
               ),
               ...buildMonthStatisticGroupList()
             ],
@@ -186,7 +186,10 @@ class _TransactionFlowState extends State<TransactionFlow> {
         child: BlocBuilder<FlowConditionCubit, FlowConditionState>(
           buildWhen: (_, state) => state is FlowCurrentAccountChanged,
           builder: (context, state) {
-            return Row(children: [Icon(_conditionCubit.account.icon, size: 18), Text(_conditionCubit.account.name)]);
+            return Row(children: [
+              Icon(_conditionCubit.account.icon, size: Constant.iconSize),
+              Text(_conditionCubit.account.name)
+            ]);
           },
         ),
       ),
@@ -198,9 +201,10 @@ class _TransactionFlowState extends State<TransactionFlow> {
           startDate: _conditionCubit.condition.startTime,
           endDate: _conditionCubit.condition.endTime,
         ).push(),
-        icon: const Icon(
+        icon: Icon(
           Icons.pie_chart_outline_outlined,
           color: ConstantColor.primaryColor,
+          size: Constant.iconSize,
         ),
       ),
       Builder(builder: (context) {
@@ -264,9 +268,9 @@ class _TransactionFlowState extends State<TransactionFlow> {
       widgetlist.addAll([_buildDateFunc(list[i], i == 0 ? null : list[i - 1]), _buildOneTransactionFunc(list[i])]);
     }
     return SliverPadding(
-      padding: const EdgeInsets.only(bottom: Constant.margin),
+      padding: EdgeInsets.only(bottom: Constant.margin),
       sliver: DecoratedSliver(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(Constant.radius),
@@ -306,7 +310,7 @@ class _TransactionFlowState extends State<TransactionFlow> {
       subtitle: Text(subtitleStr),
       trailing: AmountText.sameHeight(
         model.amount,
-        textStyle: const TextStyle(fontSize: ConstantFontSize.headline, fontWeight: FontWeight.normal),
+        textStyle: TextStyle(fontSize: ConstantFontSize.headline, fontWeight: FontWeight.normal),
         incomeExpense: model.incomeExpense,
         displayModel: IncomeExpenseDisplayModel.symbols,
       ),
@@ -319,7 +323,7 @@ class _TransactionFlowState extends State<TransactionFlow> {
       return ConstantWidget.divider.indented;
     } else {
       return Padding(
-        padding: const EdgeInsets.only(left: Constant.padding, top: Constant.margin),
+        padding: EdgeInsets.only(left: Constant.padding, top: Constant.margin),
         child: Text(
           DateFormat("dd日").format(widget.account.getTZDateTime(currentTrans.tradeTime)),
           style: const TextStyle(fontWeight: FontWeight.w500),

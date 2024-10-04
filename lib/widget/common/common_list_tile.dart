@@ -58,25 +58,25 @@ class CommonListTile extends ListTile {
                 ? Text("${model.categoryFatherName}  ${DateFormat('yyyy-MM-dd').format(model.tradeTime)}")
                 : Text(model.categoryFatherName),
             trailing: Text.rich(
-              style: const TextStyle(fontSize: ConstantFontSize.headline, fontWeight: FontWeight.normal),
+              style: TextStyle(fontSize: ConstantFontSize.headline, fontWeight: FontWeight.normal),
               TextSpan(
                 children: displayUser
                     ? [
                         AmountTextSpan.sameHeight(
                           model.amount,
-                          textStyle: const TextStyle(fontSize: ConstantFontSize.headline, fontWeight: FontWeight.w500),
+                          textStyle: TextStyle(fontSize: ConstantFontSize.headline, fontWeight: FontWeight.w500),
                           incomeExpense: model.incomeExpense,
                           displayModel: IncomeExpenseDisplayModel.symbols,
                         ),
                         TextSpan(
                           text: "\n${model.userName}",
-                          style: const TextStyle(fontSize: ConstantFontSize.body, fontWeight: FontWeight.normal),
+                          style: TextStyle(fontSize: ConstantFontSize.body, fontWeight: FontWeight.normal),
                         )
                       ]
                     : [
                         AmountTextSpan.sameHeight(
                           model.amount,
-                          textStyle: const TextStyle(fontSize: ConstantFontSize.headline, fontWeight: FontWeight.w500),
+                          textStyle:  TextStyle(fontSize: ConstantFontSize.headline, fontWeight: FontWeight.w500),
                           incomeExpense: model.incomeExpense,
                           displayModel: displayModel,
                         )
@@ -193,7 +193,7 @@ class _UserName extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(text),
-          const Padding(padding: EdgeInsets.only(left: Constant.margin / 2), child: CommonLabel(text: "我"))
+           Padding(padding: EdgeInsets.only(left: Constant.margin / 2), child: CommonLabel(text: "我"))
         ],
       );
     }

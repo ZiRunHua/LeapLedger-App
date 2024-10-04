@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:leap_ledger_app/bloc/user/user_bloc.dart';
 import 'package:leap_ledger_app/common/current.dart';
 import 'package:leap_ledger_app/common/global.dart';
@@ -61,18 +62,18 @@ class UserLoginState extends State<UserLogin> {
                 }
               },
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
+                padding: EdgeInsets.symmetric(horizontal: Constant.padding),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 80),
-                    const Padding(
+                    SizedBox(height: 80.h),
+                    Padding(
                       padding: EdgeInsets.all(Constant.margin),
                       child: Text("登录", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 42)),
                     ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20.h),
                     TextField(decoration: const InputDecoration(labelText: '邮箱'), controller: emailController),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20.h),
                     TextField(
                       decoration: const InputDecoration(labelText: '密码'),
                       controller: pwdController,
@@ -91,9 +92,9 @@ class UserLoginState extends State<UserLogin> {
                             child: const Text("忘记密码"))
                       ],
                     ),
-                    const SizedBox(height: 40),
-                    Padding(padding: const EdgeInsets.all(Constant.padding), child: _buildTourButton()),
-                    const SizedBox(height: 30),
+                    SizedBox(height: 40.h),
+                    Padding(padding: EdgeInsets.all(Constant.padding), child: _buildTourButton()),
+                    SizedBox(height: 30.h),
                     buildLoginButton(),
                   ],
                 ),
@@ -108,8 +109,8 @@ class UserLoginState extends State<UserLogin> {
   Widget buildLoginButton() {
     return Align(
       child: SizedBox(
-        height: 45,
-        width: 270,
+        height: 45.h,
+        width: 270.w,
         child: ElevatedButton(
           style: ButtonStyle(
               shape: WidgetStateProperty.all(const StadiumBorder(side: BorderSide(style: BorderStyle.none)))),

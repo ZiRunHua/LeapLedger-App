@@ -35,10 +35,7 @@ class _AccountUserCardState extends State<AccountUserCard> {
                 itemCount: state.list.length,
               );
             }
-            return const SizedBox(
-              width: double.infinity,
-              height: 50,
-            );
+            return SizedBox(width: double.infinity, height: 50.sp);
           },
         ),
         action: Offstage(

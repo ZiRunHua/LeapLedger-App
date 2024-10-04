@@ -38,8 +38,8 @@ class _BottomState extends State<Bottom> {
   Widget _buildCard() {
     return Container(
         decoration: ConstantDecoration.cardDecoration,
-        margin: const EdgeInsets.symmetric(horizontal: Constant.margin),
-        padding: const EdgeInsets.all(Constant.smallPadding),
+        margin: EdgeInsets.symmetric(horizontal: Constant.margin),
+        padding: EdgeInsets.all(Constant.smallPadding),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.end,
@@ -48,7 +48,7 @@ class _BottomState extends State<Bottom> {
             _buildButtonGroup(),
             AmountText.sameHeight(
               _bloc.transInfo.amount,
-              textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500, color: Colors.black),
+              textStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.w500, color: Colors.black),
               dollarSign: true,
             ),
             const Divider(),
@@ -64,12 +64,12 @@ class _BottomState extends State<Bottom> {
                       keyboradHistory,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
-                      style: const TextStyle(fontSize: ConstantFontSize.bodySmall),
+                      style: TextStyle(fontSize: ConstantFontSize.bodySmall),
                     ),
-                    const SizedBox(width: 2),
+                    SizedBox(width: Constant.margin / 4),
                     Text(
                       keyboradInput,
-                      style: const TextStyle(fontWeight: FontWeight.w500, fontSize: ConstantFontSize.headline),
+                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: ConstantFontSize.headline),
                     )
                   ],
                 ))
@@ -168,7 +168,7 @@ class _BottomState extends State<Bottom> {
 
   Widget _buildButton({required Function onPressed, required String name, IconData? icon}) {
     return Padding(
-      padding: const EdgeInsets.only(left: Constant.smallPadding),
+      padding: EdgeInsets.only(left: Constant.smallPadding),
       child: GestureDetector(
           onTap: () => onPressed(),
           child: Chip(
@@ -194,7 +194,7 @@ class _BottomState extends State<Bottom> {
                     ),
                   Text(
                     name,
-                    style: const TextStyle(color: ConstantColor.primaryColor, fontSize: ConstantFontSize.bodySmall),
+                    style: TextStyle(color: ConstantColor.primaryColor, fontSize: ConstantFontSize.bodySmall),
                   )
                 ],
               ))),

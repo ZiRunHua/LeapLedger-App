@@ -17,17 +17,26 @@ class TransactionTimingList extends StatefulWidget {
 
 class _TransactionTimingListState extends State<TransactionTimingList> {
   late final TransactionTimingCubit _cubit;
-
+  final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
-    _cubit = TransactionTimingCubit(account: widget.account)..loadList();
     super.initState();
+    _cubit = TransactionTimingCubit(account: widget.account)..loadList();
+    _scrollController.addListener(_scrollListener);
   }
 
   @override
   void dispose() {
     _cubit.close();
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      _cubit.loadMore();
+    }
   }
 
   @override
@@ -46,17 +55,23 @@ class _TransactionTimingListState extends State<TransactionTimingList> {
         ),
         backgroundColor: ConstantColor.greyBackground,
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
+          padding: EdgeInsets.symmetric(horizontal: Constant.padding, vertical: Constant.margin),
           child: BlocBuilder<TransactionTimingCubit, TransactionTimingState>(
             buildWhen: (context, state) => state is TransactionTimingListLoaded,
             builder: (context, state) {
               if (state is TransactionTimingListLoaded && _cubit.list.isNotEmpty) {
-                return ListView.builder(
-                  itemCount: _cubit.list.length,
-                  itemBuilder: (context, index) => _buildListOne(_cubit.list[index]),
-                );
+                return RefreshIndicator(
+                    onRefresh: () async => _cubit.loadList(),
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      itemCount: _cubit.list.length + 1,
+                      itemBuilder: (context, index) =>
+                          index == _cubit.list.length ? _buildLoadingIndicator() : _buildListOne(_cubit.list[index]),
+                    ));
               } else {
-                return SizedBox(height: 64, child: Center(child: NoData.commonWidget));
+                return ListView(
+                  children: [SizedBox(height: 64, child: Center(child: NoData.commonWidget))],
+                );
               }
             },
           ),
@@ -75,7 +90,7 @@ class _TransactionTimingListState extends State<TransactionTimingList> {
 
   Widget _buildListOne(({TransactionInfoModel trans, TransactionTimingModel config}) record) {
     return Padding(
-      padding: const EdgeInsets.only(top: Constant.margin),
+      padding: EdgeInsets.only(top: Constant.margin),
       child: Slidable(
           key: Key("trans_config_slidable:" + record.config.id.toString()),
           endActionPane: ActionPane(
@@ -124,6 +139,15 @@ class _TransactionTimingListState extends State<TransactionTimingList> {
       foregroundColor: Colors.white,
       icon: icon,
       label: name,
+    );
+  }
+
+  Widget _buildLoadingIndicator() {
+    return Padding(
+      padding: EdgeInsets.all(Constant.margin),
+      child: Center(
+        child: _cubit.noMore ? Text('没有更多数据了') : CircularProgressIndicator(),
+      ),
     );
   }
 }

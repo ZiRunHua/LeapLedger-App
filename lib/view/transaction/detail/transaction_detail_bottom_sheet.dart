@@ -24,6 +24,7 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
   String title = "详情";
   @override
   void initState() {
+    super.initState();
     if (widget.transaction == null) {
       if (widget.transactionId != null) {
         BlocProvider.of<TransactionBloc>(context).add(TransactionDataFetch(widget.account, widget.transactionId!));
@@ -31,7 +32,6 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
     } else {
       setTransactionData(widget.transaction!);
     }
-    super.initState();
   }
 
   void setTransactionData(TransactionModel trans) {
@@ -65,7 +65,7 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
             Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [_buildHeader(), detailWidget, const SizedBox(height: Constant.padding)],
+              children: [_buildHeader(), detailWidget, SizedBox(height: Constant.padding)],
             ),
           ])),
     );
@@ -88,10 +88,10 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
   Widget _buildHeader() {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(Constant.padding),
+        padding: EdgeInsets.all(Constant.padding),
         child: Text(
           title,
-          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: ConstantFontSize.largeHeadline),
+          style: TextStyle(fontWeight: FontWeight.w500, fontSize: ConstantFontSize.largeHeadline),
         ),
       ),
     );
@@ -103,7 +103,7 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
           leading: "金额",
           trailingWidget: AmountText.sameHeight(
             data.amount,
-            textStyle: const TextStyle(
+            textStyle: TextStyle(
               fontSize: ConstantFontSize.body,
               fontWeight: FontWeight.w500,
               color: Colors.black,
@@ -135,10 +135,10 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
 
   Widget _buildListTile({required String leading, String? trailing, Widget? trailingWidget}) {
     assert(trailing != null || trailingWidget != null);
-    trailingWidget ??= Text(trailing!, style: const TextStyle(fontSize: ConstantFontSize.body));
+    trailingWidget ??= Text(trailing!, style: TextStyle(fontSize: ConstantFontSize.body));
 
     return ListTile(
-      leading: Text(leading, style: const TextStyle(fontSize: ConstantFontSize.body)),
+      leading: Text(leading, style: TextStyle(fontSize: ConstantFontSize.body)),
       trailing: trailingWidget,
     );
   }
@@ -152,7 +152,7 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
             style: const ButtonStyle(
               side: WidgetStatePropertyAll<BorderSide>(BorderSide(color: ConstantColor.primaryColor)),
             ),
-            child: const Text(
+            child: Text(
               "删除",
               style: TextStyle(letterSpacing: Constant.buttomLetterSpacing),
             ),
@@ -161,7 +161,7 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
           offstage: false == canEdit,
           child: FilledButton(
             onPressed: _onUpdate,
-            child: const Text(
+            child: Text(
               "编辑",
               style: TextStyle(letterSpacing: Constant.buttomLetterSpacing),
             ),

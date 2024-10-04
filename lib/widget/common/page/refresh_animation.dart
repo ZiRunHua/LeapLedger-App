@@ -25,11 +25,11 @@ class _RefreshAnimationState extends State<RefreshAnimation> with SingleTickerPr
     );
     curvedAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
     _heightAnimation = Tween<double>(
-      begin: widget.height,
+      begin: widget.height.sp,
       end: 0,
     ).animate(curvedAnimation);
     _positionAnimation = Tween<double>(
-      begin: (widget.height - 36) / 2,
+      begin: (widget.height.sp - 36) / 2,
       end: 0,
     ).animate(curvedAnimation);
 
@@ -131,9 +131,7 @@ class _TestRefreshAnimationState extends State<TestRefreshAnimation> {
             RefreshAnimation(
               key: refreshAnimation,
             ),
-            const SizedBox(
-              height: 100,
-            ),
+            SizedBox(height: 100.sp),
             TextButton(
                 onPressed: () {
                   setState(() {

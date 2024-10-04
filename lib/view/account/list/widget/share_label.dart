@@ -5,6 +5,6 @@ class ShareLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(padding: EdgeInsets.only(left: Constant.margin), child: CommonLabel(text: "共享账本"));
+    return Padding(padding: EdgeInsets.only(left: Constant.margin), child: CommonLabel(text: "共享账本"));
   }
 }

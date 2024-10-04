@@ -46,7 +46,7 @@ class _AccountMappingBottomSheetState extends State<AccountMappingBottomSheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Center(
+              Center(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(Constant.margin, Constant.margin, Constant.margin, 0),
                   child: Text(

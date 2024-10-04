@@ -44,6 +44,7 @@ class _TransactionChartState extends State<TransactionChart> {
         child: Scaffold(
           backgroundColor: ConstantColor.greyBackground,
           appBar: AppBar(
+            titleSpacing: 0,
             title: const TabBar(tabs: <Widget>[
               Tab(child: Text('支出', softWrap: false, overflow: TextOverflow.clip)),
               Tab(child: Text('收入', softWrap: false, overflow: TextOverflow.clip)),
@@ -169,7 +170,7 @@ class _ExpenseTabState extends State<ExpenseTab> with AutomaticKeepAliveClientMi
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Constant.margin, vertical: Constant.margin),
+          padding: EdgeInsets.symmetric(horizontal: Constant.margin, vertical: Constant.margin),
           child: _buildContant(),
         ),
       ),
@@ -266,7 +267,7 @@ class _IncomeTabState extends State<IncomeTab> with AutomaticKeepAliveClientMixi
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Constant.margin, vertical: Constant.margin),
+          padding: EdgeInsets.symmetric(horizontal: Constant.margin, vertical: Constant.margin),
           child: _buildContent(),
         ),
       ),

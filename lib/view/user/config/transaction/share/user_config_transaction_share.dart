@@ -97,11 +97,11 @@ class _UserConfigTransactionShareState extends State<UserConfigTransactionShare>
 
   Widget _buildStatusSwitch({required String name, required bool value, Function(bool)? onChanged}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: Constant.margin),
+      padding: EdgeInsets.symmetric(vertical: Constant.margin),
       child: DecoratedBox(
           decoration: const BoxDecoration(color: Colors.white),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
+            padding: EdgeInsets.symmetric(horizontal: Constant.padding),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

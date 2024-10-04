@@ -67,7 +67,7 @@ class _TimingBottomSelecterState extends State<TimingBottomSelecter> {
           options: TransactionTimingType.selectOptions,
           backgroundColor: Colors.transparent,
           selected: _config.type,
-          height: _height,
+          height: _height.h,
           onTap: onTapType,
         ),
       ),
@@ -80,7 +80,7 @@ class _TimingBottomSelecterState extends State<TimingBottomSelecter> {
             selected: _config.nextTime,
             mode: DateSelectMode.week,
             type: BottomCupertinoSelecter,
-            height: _height),
+            height: _height.h),
       ),
       AnimatedContainer(
         duration: _animatedDuration,
@@ -91,7 +91,7 @@ class _TimingBottomSelecterState extends State<TimingBottomSelecter> {
             selected: _config.nextTime,
             mode: DateSelectMode.month,
             type: BottomCupertinoSelecter,
-            height: _height),
+            height: _height.h),
       )
     ]);
   }

@@ -53,7 +53,7 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
           builder: (context, state) {
             return Stack(children: [
               Container(
-                padding: const EdgeInsets.only(top: Constant.buttomSheetRadius),
+                padding: EdgeInsets.only(top: Constant.buttomSheetRadius),
                 decoration: ConstantDecoration.bottomSheet,
                 height: size.height * 0.8,
                 width: size.width,
@@ -98,18 +98,18 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
 
   Widget _buildOneConditon(List<Widget> widgetList, {String? name}) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(Constant.padding, Constant.padding, Constant.padding, 0),
+      padding: EdgeInsets.fromLTRB(Constant.padding, Constant.padding, Constant.padding, 0),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(bottom: Constant.padding),
+            padding: EdgeInsets.only(bottom: Constant.padding),
             child: Visibility(
               visible: name != null,
               child: Text(
                 name ?? "",
-                style: const TextStyle(fontSize: ConstantFontSize.bodyLarge, fontWeight: FontWeight.w500),
+                style: TextStyle(fontSize: ConstantFontSize.bodyLarge, fontWeight: FontWeight.w500),
               ),
             ),
           ),
@@ -135,7 +135,7 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
             ),
           ),
           SizedBox(
-              width: 32,
+              width: 32.w,
               child: Divider(
                 color: ConstantColor.greyText,
                 indent: Constant.margin,
@@ -182,19 +182,24 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
         segments: [
           ButtonSegment(
             value: IncomeExpense.income,
-            label: Text("收入",
-                style: TextStyle(
-                  fontSize: ConstantFontSize.body,
-                  color: selectedIncomeExpense == IncomeExpense.income ? Colors.white : null,
-                )),
+            label: Padding(
+              padding: EdgeInsets.symmetric(vertical: Constant.padding, horizontal: Constant.padding / 2),
+              child: Text("收入",
+                  style: TextStyle(
+                    fontSize: ConstantFontSize.body,
+                    color: selectedIncomeExpense == IncomeExpense.income ? Colors.white : null,
+                  )),
+            ),
           ),
           ButtonSegment(
             value: IncomeExpense.expense,
-            label: Text("支出",
-                style: TextStyle(
-                  fontSize: ConstantFontSize.body,
-                  color: selectedIncomeExpense == IncomeExpense.expense ? Colors.white : null,
-                )),
+            label: Padding(
+                padding: EdgeInsets.symmetric(vertical: Constant.padding, horizontal: Constant.padding / 2),
+                child: Text("支出",
+                    style: TextStyle(
+                      fontSize: ConstantFontSize.body,
+                      color: selectedIncomeExpense == IncomeExpense.expense ? Colors.white : null,
+                    ))),
           )
         ],
       ),
@@ -227,9 +232,11 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
       physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.zero,
       shrinkWrap: true,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 5,
-        mainAxisSpacing: 1,
+        crossAxisSpacing: Constant.padding,
+        mainAxisSpacing: Constant.padding,
+        childAspectRatio: 0.8,
       ),
       itemCount: list.length,
       itemBuilder: (context, index) => _buildCategoryIcon(list[index]),

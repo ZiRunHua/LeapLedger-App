@@ -42,12 +42,12 @@ class _TabViewState extends State<TabView> with AutomaticKeepAliveClientMixin {
               slivers: <Widget>[
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(Constant.padding, Constant.padding, Constant.padding, 0),
+                    padding: EdgeInsets.fromLTRB(Constant.padding, Constant.padding, Constant.padding, 0),
                     child: HeaderCard(state.unmapped),
                   ),
                 ),
                 SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
+                  padding: EdgeInsets.symmetric(horizontal: Constant.padding),
                   sliver: buildList(state.relation),
                 ),
               ],
@@ -81,13 +81,13 @@ class _TabViewState extends State<TabView> with AutomaticKeepAliveClientMixin {
       childrenWidget.add(buildCategory(childList[i], relation[childList[i].id]));
     }
     return Padding(
-      padding: const EdgeInsets.only(top: Constant.margin),
+      padding: EdgeInsets.only(top: Constant.margin),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(padding: const EdgeInsets.all(Constant.margin), child: Text(father.name)),
+          Padding(padding: EdgeInsets.all(Constant.margin), child: Text(father.name)),
           Container(
-            padding: const EdgeInsets.all(Constant.padding),
+            padding: EdgeInsets.all(Constant.padding),
             width: double.infinity,
             decoration: ConstantDecoration.cardDecoration,
             child: Column(
@@ -110,7 +110,7 @@ class _TabViewState extends State<TabView> with AutomaticKeepAliveClientMixin {
           ..layout())
         .size;
     return ListTile(
-        contentPadding: const EdgeInsets.all(0),
+        contentPadding: EdgeInsets.zero,
         minVerticalPadding: 0,
         dense: true,
         leading: Row(
@@ -130,9 +130,9 @@ class _TabViewState extends State<TabView> with AutomaticKeepAliveClientMixin {
               (index) => GestureDetector(
                   onTap: () => onDelete(category, relation[index]),
                   child: Chip(
-                    label: Text(relation![index].name, style: const TextStyle(fontSize: ConstantFontSize.bodySmall)),
-                    padding: const EdgeInsets.all(0),
-                    shape: const RoundedRectangleBorder(
+                    label: Text(relation![index].name, style: TextStyle(fontSize: ConstantFontSize.bodySmall)),
+                    padding: EdgeInsets.zero,
+                    shape: RoundedRectangleBorder(
                       borderRadius: ConstantDecoration.borderRadius,
                     ),
                     backgroundColor: ConstantColor.greyButton,

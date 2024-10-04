@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:leap_ledger_app/bloc/user/user_bloc.dart';
 import 'package:leap_ledger_app/common/global.dart';
 import 'package:leap_ledger_app/model/account/model.dart';
@@ -27,10 +28,10 @@ class _Func {
           ? [child]
           : [
               Padding(
-                padding: const EdgeInsets.only(top: Constant.padding, left: Constant.padding),
+                padding: EdgeInsets.only(top: Constant.padding, left: Constant.padding),
                 child: Text(
                   title,
-                  style: const TextStyle(fontWeight: FontWeight.w500, fontSize: ConstantFontSize.headline),
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: ConstantFontSize.headline),
                 ),
               ),
               child
@@ -44,11 +45,9 @@ class _Func {
     }
     return Card(
       color: background ?? Colors.white,
-      margin: const EdgeInsets.all(Constant.margin),
+      margin: EdgeInsets.all(Constant.margin),
       elevation: 0,
-      shape: const RoundedRectangleBorder(
-        borderRadius: ConstantDecoration.borderRadius,
-      ),
+      shape: RoundedRectangleBorder(borderRadius: ConstantDecoration.borderRadius),
       child: child,
     );
   }

@@ -6,11 +6,13 @@ class HomeNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 48,
+      height: 48.sp,
       width: MediaQuery.of(context).size.width,
       child: ListView(
         scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.zero,
         children: [
+          SizedBox(width: Constant.margin / 2),
           _navigatorButton(
             account.name,
             icon: Icons.sync_outlined,
@@ -38,7 +40,8 @@ class HomeNavigation extends StatelessWidget {
               icon: Icons.upload_outlined,
               onTap: () => TransactionRoutes.import(context, account: account).push(),
             ),
-          )
+          ),
+          SizedBox(width: Constant.margin / 2),
         ],
       ),
     );
@@ -48,27 +51,24 @@ class HomeNavigation extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-          margin: const EdgeInsets.only(left: Constant.margin / 2, right: Constant.margin / 2),
-          padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(90)),
-          ),
-          alignment: Alignment.center,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                icon,
-                color: ConstantColor.primaryColor,
-                size: 24,
-              ),
-              const SizedBox(width: Constant.margin / 2),
-              Text(title),
-            ],
-          )),
+        margin: EdgeInsets.only(left: Constant.margin / 2, right: Constant.margin / 2),
+        padding: EdgeInsets.symmetric(horizontal: Constant.padding),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(90.w)),
+        ),
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: ConstantColor.primaryColor, size: Constant.iconSize),
+            SizedBox(width: Constant.margin / 2),
+            Text(title),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +13,7 @@ import 'package:leap_ledger_app/util/enter.dart';
 import 'package:leap_ledger_app/view/home/home.dart';
 import 'package:leap_ledger_app/view/share/home/share_home.dart';
 import 'package:leap_ledger_app/widget/common/common.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'bloc/navigation_bloc.dart';
 
 part 'widget/user_drawer.dart';
@@ -31,11 +33,9 @@ class _NavigationState extends State<Navigation> {
 
   @override
   void initState() {
-    UserBloc.checkUserState(context);
+    super.initState();
     _bloc = NavigationBloc(account: UserBloc.currentAccount);
     _pages = [Home(), ShareHome()];
-
-    super.initState();
   }
 
   @override
@@ -134,7 +134,7 @@ class _BottomNavigationBarState extends State<_BottomNavigationBar> {
       surfaceTintColor: Colors.white,
       color: Colors.white,
       shadowColor: Colors.grey,
-      height: 52,
+      height: 52.sp,
       padding: EdgeInsets.zero,
       shape: CircularNotchedRectangle(),
       elevation: Constant.margin,

@@ -191,7 +191,7 @@ class _BottomSelecterState<T extends Comparable> extends State<BottomSelecter<T>
       );
     }
     child = Padding(
-      padding: const EdgeInsets.only(top: Constant.buttomSheetRadius, bottom: Constant.margin),
+      padding: EdgeInsets.only(top: Constant.buttomSheetRadius, bottom: Constant.margin),
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: widget.backgroundColor,
@@ -231,7 +231,7 @@ class BottomCupertinoSelecter<T extends Comparable> extends bottomSelecter<T> {
     required super.onTap,
     super.selected,
     super.backgroundColor,
-    double? height = Constant.buttomHight,
+    double? height,
   }) : super(height: height ?? Constant.buttomHight);
 
   @override
@@ -268,7 +268,7 @@ class _BottomCupertinoSelecterState<T extends Comparable> extends State<BottomCu
           borderRadius: ConstantDecoration.bottomSheetBorderRadius,
         ),
         child: Padding(
-          padding: const EdgeInsets.all(Constant.margin),
+          padding: EdgeInsets.all(Constant.margin),
           child: CupertinoPicker(
             magnification: 2,
             squeeze: 1,
@@ -316,7 +316,7 @@ class _FilterBottomSelecterState extends State<FilterBottomSelecter> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
+          padding: EdgeInsets.symmetric(horizontal: Constant.padding),
           child: FormInputField.general<String>(
             onChanged: (String? input) {
               this.input = input ?? "";

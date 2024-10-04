@@ -70,7 +70,7 @@ class _TransactionImportState extends State<TransactionImport> {
           return DecoratedBox(
             decoration: BoxDecoration(color: ConstantColor.greyBackground),
             child: Padding(
-              padding: const EdgeInsets.all(Constant.margin),
+              padding: EdgeInsets.all(Constant.margin),
               child: ExecCard(product: state.list[index], categoryTree: state.tree),
             ),
           );
@@ -85,9 +85,9 @@ class _Func {
   static Card _buildCard({required Widget child}) {
     return Card(
       color: Colors.white,
-      margin: const EdgeInsets.all(Constant.margin),
+      margin: EdgeInsets.all(Constant.margin),
       elevation: 0,
-      shape: const RoundedRectangleBorder(
+      shape: RoundedRectangleBorder(
         borderRadius: ConstantDecoration.borderRadius,
       ),
       child: child,

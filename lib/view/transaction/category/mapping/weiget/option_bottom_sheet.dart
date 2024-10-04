@@ -7,7 +7,7 @@ class OptionBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: ConstantDecoration.bottomSheetBorderRadius,
       ),
@@ -23,7 +23,7 @@ class OptionBottomSheet extends StatelessWidget {
           );
         },
         separatorBuilder: (BuildContext context, int index) {
-          return const Divider(color: Colors.grey, height: 0.5, thickness: 0.5, indent: 16, endIndent: 16);
+          return Divider(color: Colors.grey, height: 0.5.sp, thickness: 0.5.sp, indent: 16.sp, endIndent: 16.sp);
         },
         itemCount: unmapped.length,
       )),

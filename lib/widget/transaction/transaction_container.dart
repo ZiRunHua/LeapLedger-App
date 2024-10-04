@@ -8,13 +8,13 @@ class TransactionContainer extends StatelessWidget {
     return DecoratedBox(
       decoration: ConstantDecoration.cardDecoration,
       child: Padding(
-        padding: const EdgeInsets.all(Constant.padding),
+        padding: EdgeInsets.all(Constant.padding),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
-              padding: const EdgeInsets.all(Constant.padding),
+              padding: EdgeInsets.all(Constant.padding),
               child: Icon(
                 trans.categoryIcon,
                 color: ConstantColor.primaryColor,
@@ -27,7 +27,7 @@ class TransactionContainer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   DefaultTextStyle.merge(
-                    style: TextStyle(fontSize: ConstantFontSize.body, height: 1.5),
+                    style: TextStyle(fontSize: ConstantFontSize.body, height: 1.5.sp),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,7 +39,7 @@ class TransactionContainer extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(Constant.padding),
+                    padding: EdgeInsets.all(Constant.padding),
                     child: Text.rich(
                       AmountTextSpan.sameHeight(
                         trans.amount,
@@ -78,7 +78,7 @@ class TransactionTimingContainer extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Padding(
-          padding: const EdgeInsets.all(Constant.padding),
+          padding: EdgeInsets.all(Constant.padding),
           child: Icon(
             trans.categoryIcon,
             color: ConstantColor.primaryColor,
@@ -91,7 +91,7 @@ class TransactionTimingContainer extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               DefaultTextStyle.merge(
-                style: TextStyle(fontSize: ConstantFontSize.body, height: 1.5),
+                style: TextStyle(fontSize: ConstantFontSize.body, height: 1.5.sp),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,13 +103,11 @@ class TransactionTimingContainer extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(Constant.margin),
+                padding: EdgeInsets.all(Constant.margin),
                 child: Text.rich(
                   AmountTextSpan.sameHeight(
                     trans.amount,
-                    textStyle: TextStyle(
-                      fontSize: ConstantFontSize.largeHeadline,
-                    ),
+                    textStyle: TextStyle(fontSize: ConstantFontSize.largeHeadline),
                     incomeExpense: trans.incomeExpense,
                     displayModel: IncomeExpenseDisplayModel.symbols,
                   ),
@@ -129,7 +127,7 @@ class TransactionTimingContainer extends StatelessWidget {
           child: DecoratedBox(
             decoration: BoxDecoration(color: Colors.white),
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: Constant.margin, horizontal: Constant.margin),
+              padding: EdgeInsets.symmetric(vertical: Constant.margin, horizontal: Constant.margin),
               child: child,
             ),
           ),
@@ -139,7 +137,7 @@ class TransactionTimingContainer extends StatelessWidget {
     return DecoratedBox(
       decoration: ConstantDecoration.cardDecoration,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: Constant.margin, horizontal: Constant.margin),
+        padding: EdgeInsets.symmetric(vertical: Constant.margin, horizontal: Constant.margin),
         child: child,
       ),
     );
@@ -149,9 +147,9 @@ class TransactionTimingContainer extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const VerticalDivider(color: ConstantColor.greyText, width: Constant.margin, thickness: 1),
+        VerticalDivider(color: ConstantColor.greyText, width: Constant.margin, thickness: 1),
         Center(
-          child: SizedBox(width: 64, child: Text(config.toDisplay(), textAlign: TextAlign.center)),
+          child: SizedBox(width: 64.sp, child: Text(config.toDisplay(), textAlign: TextAlign.center)),
         )
       ],
     );

@@ -25,7 +25,7 @@ class _DragAndDropListsState extends State<_DragAndDropLists> with AutomaticKeep
     return BlocBuilder<TransactionCategoryTreeBloc, TransactionCategoryTreeState>(
       builder: (context, state) {
         if (state is LoadingState) {
-          return buildShimmerList();
+          return ShimmerList();
         } else if (state is LoadedState) {
           return _buildDragAndDropLists();
         }
@@ -37,13 +37,13 @@ class _DragAndDropListsState extends State<_DragAndDropLists> with AutomaticKeep
   _buildDragAndDropLists() {
     return Container(
       color: ConstantColor.greyBackground,
-      padding: const EdgeInsets.symmetric(horizontal: Constant.padding),
+      padding: EdgeInsets.symmetric(horizontal: Constant.padding),
       child: DragAndDropLists(
           children: List.generate(
               _bloc.list.length, (index) => _buildChildrenList(_bloc.list[index].father, _bloc.list[index].children)),
           onItemReorder: _onItemReorder,
           onListReorder: _onListReorder,
-          listPadding: const EdgeInsets.only(top: Constant.margin),
+          listPadding: EdgeInsets.only(top: Constant.margin),
           listGhost: Container(
             padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 10.0),
             decoration: BoxDecoration(
@@ -72,12 +72,12 @@ class _DragAndDropListsState extends State<_DragAndDropLists> with AutomaticKeep
       canDrag: _bloc.canEdit,
       initiallyExpanded: true,
       disableTopAndBottomBorders: true,
-      title: Text(father.name, style: const TextStyle(color: ConstantColor.greyText, fontSize: ConstantFontSize.body)),
+      title: Text(father.name, style: TextStyle(color: ConstantColor.greyText, fontSize: ConstantFontSize.body)),
       trailing: _actionButtons(() => _updateFather(father), () => _deleteFather(father)),
       children: List.generate(children.length, (index) => _buildChild(children[index])),
       listKey: ObjectKey(father),
       lastTarget: _buildAddButton(father),
-      contentsWhenEmpty: const SizedBox(height: 1),
+      contentsWhenEmpty: SizedBox(height: 1.sp),
     );
   }
 
@@ -85,7 +85,7 @@ class _DragAndDropListsState extends State<_DragAndDropLists> with AutomaticKeep
     if (!_bloc.canEdit) return null;
     return Center(
         child: TextButton(
-      child: const Row(
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(ConstantIcon.add, size: ConstantFontSize.body, color: ConstantColor.greyText),

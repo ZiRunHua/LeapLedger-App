@@ -51,14 +51,14 @@ class AccountListState extends State<AccountList> {
         final account = list[index];
         return ListTile(
           leading: _buildLeading(account, selectedAccount.id),
-          contentPadding: const EdgeInsets.only(left: Constant.padding, right: Constant.smallPadding),
+          contentPadding: EdgeInsets.only(left: Constant.padding, right: Constant.smallPadding),
           horizontalTitleGap: 0,
           title: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 account.name,
-                style: const TextStyle(fontSize: ConstantFontSize.largeHeadline),
+                style: TextStyle(fontSize: ConstantFontSize.largeHeadline),
               ),
               Visibility(visible: account.type == AccountType.share, child: const ShareLabel()),
             ],
@@ -71,7 +71,7 @@ class AccountListState extends State<AccountList> {
             ),
             IconButton(
               onPressed: () async => _onClickAccount(list[index]),
-              icon: const Icon(Icons.more_vert, size: 32),
+              icon: Icon(Icons.more_vert, size: Constant.iconlargeSize),
             )
           ]),
         );

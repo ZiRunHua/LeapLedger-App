@@ -37,7 +37,7 @@ class _AmountKeyboardState extends State<AmountKeyboard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: Constant.margin / 2, vertical: Constant.margin / 2),
+      margin: EdgeInsets.symmetric(horizontal: Constant.margin / 2, vertical: Constant.margin / 2),
       width: MediaQuery.sizeOf(context).width,
       color: ConstantColor.greyBackground,
       child: Row(
@@ -98,10 +98,9 @@ class _AmountKeyboardState extends State<AmountKeyboard> {
     return AspectRatio(
       aspectRatio: 1.6,
       child: Container(
-        margin: const EdgeInsets.all(Constant.margin / 2),
+        margin: EdgeInsets.all(Constant.margin / 2),
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(Constant.radius), color: backgroundColor),
         child: Ink(
-            height: 50,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(Constant.radius)),
             child: Material(
               color: Colors.transparent,
@@ -110,9 +109,7 @@ class _AmountKeyboardState extends State<AmountKeyboard> {
                   onTap: () {
                     onTap();
                   },
-                  child: Center(
-                    child: name,
-                  )),
+                  child: Center(child: name)),
             )),
       ),
     );
@@ -260,8 +257,8 @@ class _TextAmountKeyboardState extends State<TextAmountKeyboard> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Container(
-          padding: const EdgeInsets.all(Constant.margin),
-          margin: const EdgeInsets.all(Constant.margin),
+          padding: EdgeInsets.all(Constant.margin),
+          margin: EdgeInsets.all(Constant.margin),
           alignment: Alignment.centerRight,
           child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
             AmountText.sameHeight(
@@ -281,12 +278,12 @@ class _TextAmountKeyboardState extends State<TextAmountKeyboard> {
                       history,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
-                      style: const TextStyle(fontSize: ConstantFontSize.bodySmall),
+                      style: TextStyle(fontSize: ConstantFontSize.bodySmall),
                     ),
                     const SizedBox(width: 2),
                     Text(
                       input,
-                      style: const TextStyle(fontWeight: FontWeight.w500, fontSize: ConstantFontSize.headline),
+                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: ConstantFontSize.headline),
                     )
                   ],
                 ))
