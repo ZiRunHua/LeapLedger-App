@@ -29,7 +29,7 @@ class EditBloc extends AccountBasedBloc<EditEvent, EditState> {
         assert(mode == TransactionEditMode.update && trans != null);
         canAgain = false;
         _originalTrans = trans!;
-        this.transInfo = _originalTrans!.copy();
+        this.transInfo = _originalTrans!.copyWith();
         break;
       case TransactionEditMode.popTrans:
         canAgain = false;
@@ -61,7 +61,7 @@ class EditBloc extends AccountBasedBloc<EditEvent, EditState> {
   _save(TransactionSave event, emit) {
     if (event.amount != null) transInfo.amount = event.amount!;
     if (event.ie != null) transInfo.incomeExpense = event.ie!;
-    var newTrans = transInfo.copy();
+    var newTrans = transInfo.copyWith();
     var checkTip = newTrans.check();
     if (checkTip != null) {
       tipToast(checkTip);

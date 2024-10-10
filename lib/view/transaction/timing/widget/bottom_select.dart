@@ -14,12 +14,12 @@ class _TimingBottomSelecterState extends State<TimingBottomSelecter> {
   @override
   @override
   void initState() {
-    _cubit = BlocProvider.of<TransactionTimingCubit>(context);
     super.initState();
+    _cubit = BlocProvider.of<TransactionTimingCubit>(context);
   }
 
-  final double _leftWidth = 160;
-  final double _height = 320;
+  final double _leftWidth = 160.w;
+  final double _height = 280.sp;
   final Duration _animatedDuration = Duration(milliseconds: 300);
   @override
   Widget build(BuildContext context) {
@@ -59,41 +59,45 @@ class _TimingBottomSelecterState extends State<TimingBottomSelecter> {
   }
 
   Widget _buildContent() {
-    return Row(children: [
-      AnimatedContainer(
-        duration: _animatedDuration,
-        width: _isBuildTimeSelecter ? _leftWidth : MediaQuery.of(context).size.width,
-        child: BottomSelecter(
-          options: TransactionTimingType.selectOptions,
-          backgroundColor: Colors.transparent,
-          selected: _config.type,
-          height: _height.h,
-          onTap: onTapType,
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        AnimatedContainer(
+          duration: _animatedDuration,
+          width: _isBuildTimeSelecter ? _leftWidth : MediaQuery.of(context).size.width,
+          child: BottomSelecter(
+            options: TransactionTimingType.selectOptions,
+            backgroundColor: Colors.transparent,
+            selected: _config.type,
+            height: _height + 20.h * 2,
+            onTap: onTapType,
+          ),
         ),
-      ),
-      AnimatedContainer(
-        duration: _animatedDuration,
-        width: _config.type == TransactionTimingType.everyWeek ? MediaQuery.of(context).size.width - _leftWidth : 0,
-        child: createBottomSelect(
-            backgroundColor: ConstantColor.greyBackground,
-            onTap: onDateTimeChanged,
-            selected: _config.nextTime,
-            mode: DateSelectMode.week,
-            type: BottomCupertinoSelecter,
-            height: _height.h),
-      ),
-      AnimatedContainer(
-        duration: _animatedDuration,
-        width: _config.type == TransactionTimingType.everyMonth ? MediaQuery.of(context).size.width - _leftWidth : 0,
-        child: createBottomSelect(
-            backgroundColor: ConstantColor.greyBackground,
-            onTap: onDateTimeChanged,
-            selected: _config.nextTime,
-            mode: DateSelectMode.month,
-            type: BottomCupertinoSelecter,
-            height: _height.h),
-      )
-    ]);
+        AnimatedContainer(
+          duration: _animatedDuration,
+          width: _config.type == TransactionTimingType.everyWeek ? MediaQuery.of(context).size.width - _leftWidth : 0,
+          child: createBottomSelect(
+              backgroundColor: ConstantColor.greyBackground,
+              onTap: onDateTimeChanged,
+              selected: _config.nextTime,
+              mode: DateSelectMode.week,
+              type: BottomCupertinoSelecter,
+              height: _height),
+        ),
+        AnimatedContainer(
+          duration: _animatedDuration,
+          width: _config.type == TransactionTimingType.everyMonth ? MediaQuery.of(context).size.width - _leftWidth : 0,
+          child: createBottomSelect(
+              backgroundColor: ConstantColor.greyBackground,
+              onTap: onDateTimeChanged,
+              selected: _config.nextTime,
+              mode: DateSelectMode.month,
+              type: BottomCupertinoSelecter,
+              height: _height),
+        )
+      ],
+    );
   }
 
   onTapType(SelectOption<TransactionTimingType> selected) {

@@ -13,9 +13,9 @@ import 'package:leap_ledger_app/widget/amount/enter.dart';
 import 'package:leap_ledger_app/widget/category/enter.dart';
 import 'bloc/enter.dart';
 
-part 'widget/ptc_card.dart';
+part 'widget/transaction_category_card.dart';
 part 'widget/exec_card.dart';
-part 'widget/fail_dialog.dart';
+part 'widget/hand_fail_dialog.dart';
 
 class TransactionImport extends StatefulWidget {
   const TransactionImport({super.key, required this.account});

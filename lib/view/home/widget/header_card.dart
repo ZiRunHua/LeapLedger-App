@@ -53,6 +53,8 @@ class _HeaderCardState extends State<HeaderCard> {
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
           children: [
             Text('本月支出', style: TextStyle(fontSize: ConstantFontSize.headline)),
             _buildDate(data.startTime, data.endTime),
@@ -97,13 +99,13 @@ class _HeaderCardState extends State<HeaderCard> {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(Constant.smallPadding * 2),
+        borderRadius: BorderRadius.circular(Constant.padding * 2),
         color: ConstantColor.secondaryColor,
       ),
-      padding: EdgeInsets.symmetric(horizontal: Constant.margin * 1.5),
+      padding: EdgeInsets.symmetric(horizontal: Constant.padding),
       child: Text(
         "${_bloc.account.timeLocation.name}  ${DateFormat.MMMd().format(_bloc.getTZDateTime(start))} - ${DateFormat.MMMd().format(_bloc.getTZDateTime(end))}",
-        style: TextStyle(fontSize: ConstantFontSize.body),
+        style: TextStyle(fontSize: ConstantFontSize.bodySmall),
       ),
     );
   }

@@ -44,18 +44,6 @@ class TransactionEditModel {
 
   factory TransactionEditModel.fromJson(Map<String, dynamic> json) => _$TransactionEditModelFromJson(json);
   Map<String, dynamic> toJson() => _$TransactionEditModelToJson(this);
-  TransactionEditModel copy() {
-    return TransactionEditModel(
-      id: id,
-      userId: userId,
-      accountId: accountId,
-      categoryId: categoryId,
-      incomeExpense: incomeExpense,
-      amount: amount,
-      remark: remark,
-      tradeTime: tradeTime,
-    );
-  }
 
   setLocation(Location l) {
     tradeTime = TZDateTime.from(tradeTime, l);
@@ -135,21 +123,35 @@ class TransactionInfoModel extends TransactionEditModel {
     incomeExpense = category.incomeExpense;
   }
 
-  TransactionInfoModel copy() {
+  TransactionInfoModel copyWith({
+    int? id,
+    int? userId,
+    String? userName,
+    int? accountId,
+    String? accountName,
+    IncomeExpense? incomeExpense,
+    int? categoryId,
+    IconData? categoryIcon,
+    String? categoryName,
+    String? categoryFatherName,
+    int? amount,
+    String? remark,
+    DateTime? tradeTime,
+  }) {
     return TransactionInfoModel(
-      id: id,
-      userId: userId,
-      userName: userName,
-      accountId: accountId,
-      accountName: accountName,
-      incomeExpense: incomeExpense,
-      categoryId: categoryId,
-      categoryIcon: categoryIcon,
-      categoryName: categoryName,
-      categoryFatherName: categoryFatherName,
-      amount: amount,
-      remark: remark,
-      tradeTime: tradeTime,
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      userName: userName ?? this.userName,
+      accountId: accountId ?? this.accountId,
+      accountName: accountName ?? this.accountName,
+      incomeExpense: incomeExpense ?? this.incomeExpense,
+      categoryId: categoryId ?? this.categoryId,
+      categoryIcon: categoryIcon ?? this.categoryIcon,
+      categoryName: categoryName ?? this.categoryName,
+      categoryFatherName: categoryFatherName ?? this.categoryFatherName,
+      amount: amount ?? this.amount,
+      remark: remark ?? this.remark,
+      tradeTime: tradeTime ?? this.tradeTime,
     );
   }
 
@@ -266,7 +268,7 @@ class TransactionShareModel {
   Map<String, dynamic> toJson() => _$TransactionShareModelToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.pascal)
+@JsonSerializable(fieldRename: FieldRename.pascal, createFactory: false)
 class TransactionQueryCondModel {
   int accountId;
   @JsonKey(toJson: toSet)
@@ -355,7 +357,6 @@ class TransactionQueryCondModel {
   Map<String, dynamic> toJson() => _$TransactionQueryCondModelToJson(this);
 
   @override
-  // ignore: unnecessary_overrides
   int get hashCode => super.hashCode;
 
   bool checkTrans(TransactionModel trans) {
@@ -482,6 +483,29 @@ class TransactionTimingModel {
         offsetDays = 0;
     }
   }
+
+  TransactionTimingModel copyWith({
+    int? id,
+    int? accountId,
+    int? userId,
+    TransactionTimingType? type,
+    int? offsetDays,
+    DateTime? nextTime,
+    bool? close,
+    DateTime? updatedAt,
+    DateTime? createdAt,
+  }) =>
+      TransactionTimingModel(
+        id: id ?? this.id,
+        accountId: accountId ?? this.accountId,
+        userId: userId ?? this.userId,
+        type: type ?? this.type,
+        offsetDays: offsetDays ?? this.offsetDays,
+        nextTime: nextTime ?? this.nextTime,
+        close: close ?? this.close,
+        updatedAt: updatedAt ?? this.updatedAt,
+        createdAt: createdAt ?? this.createdAt,
+      );
 
   setUser(UserModel user) {
     userId = user.id;

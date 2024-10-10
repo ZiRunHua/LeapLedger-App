@@ -23,16 +23,14 @@ class _ExecCardState extends State<ExecCard> {
       value: _cubit,
       child: BlocListener<ImportCubit, ImportState>(
         listenWhen: (_, state) => state is FailTransProgressing,
-        listener: (context, state) {
-          showDialog(context: context, builder: (context) => FailDialog(_cubit));
-        },
+        listener: (context, state) => showDialog(context: context, builder: (context) => HandFailDialog(_cubit)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             BlocBuilder<ImportCubit, ImportState>(
               buildWhen: (_, state) => state is PtcDataLoad,
               builder: (_, state) {
-                return PtcCard(
+                return TransactionCategoryCard(
                   _cubit.ptcList,
                   categoryTree: widget.categoryTree,
                   account: _cubit.account,

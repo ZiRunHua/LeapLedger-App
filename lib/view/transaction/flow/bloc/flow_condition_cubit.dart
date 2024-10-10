@@ -84,6 +84,7 @@ class FlowConditionCubit extends AccountBasedCubit<FlowConditionState> {
     if (condition.accountId == account.id) {
       return;
     }
+    this.account = account;
     condition.accountId = account.id;
     _condition.accountId = account.id;
     condition.categoryIds.clear();

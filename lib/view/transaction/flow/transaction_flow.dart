@@ -6,7 +6,6 @@ import 'package:leap_ledger_app/bloc/transaction/transaction_bloc.dart';
 import 'package:leap_ledger_app/common/global.dart';
 import 'package:leap_ledger_app/model/account/model.dart';
 import 'package:leap_ledger_app/model/common/model.dart';
-import 'package:leap_ledger_app/model/transaction/category/model.dart';
 import 'package:leap_ledger_app/model/transaction/model.dart';
 import 'package:leap_ledger_app/routes/routes.dart';
 import 'package:leap_ledger_app/util/enter.dart';
@@ -277,12 +276,7 @@ class _TransactionFlowState extends State<TransactionFlow> {
             bottomRight: Radius.circular(Constant.radius),
           ),
         ),
-        sliver: SliverToBoxAdapter(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: widgetlist,
-          ),
-        ),
+        sliver: SliverToBoxAdapter(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: widgetlist)),
       ),
     );
   }
@@ -296,18 +290,20 @@ class _TransactionFlowState extends State<TransactionFlow> {
     String subtitleStr = model.categoryFatherName;
     if (isShareAccount) subtitleStr += "  ${model.userName}";
     return ListTile(
+      dense: true,
       onTap: () => TransactionRoutes.detailNavigator(
         context,
         account: _conditionCubit.account,
         transaction: model,
       ).showModalBottomSheet(),
-      dense: true,
       titleAlignment: ListTileTitleAlignment.center,
       leading: Icon(model.categoryIcon, color: ConstantColor.primaryColor),
       title: Text(
         model.categoryName,
       ),
-      subtitle: Text(subtitleStr),
+      subtitle: Text(
+        subtitleStr,
+      ),
       trailing: AmountText.sameHeight(
         model.amount,
         textStyle: TextStyle(fontSize: ConstantFontSize.headline, fontWeight: FontWeight.normal),
@@ -323,17 +319,16 @@ class _TransactionFlowState extends State<TransactionFlow> {
       return ConstantWidget.divider.indented;
     } else {
       return Padding(
-        padding: EdgeInsets.only(left: Constant.padding, top: Constant.margin),
+        padding: EdgeInsets.only(left: Constant.padding),
         child: Text(
-          DateFormat("dd日").format(widget.account.getTZDateTime(currentTrans.tradeTime)),
-          style: const TextStyle(fontWeight: FontWeight.w500),
+          DateFormat.d().format(widget.account.getTZDateTime(currentTrans.tradeTime)),
+          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: ConstantFontSize.body),
         ),
       );
     }
   }
 
   /// Shimmer
-  final List<MapEntry<TransactionCategoryFatherModel, List<TransactionCategoryModel>>> categoryShimmerData = [];
   final Map<InExStatisticWithTimeModel, List<TransactionModel>> shimmerData = {
     InExStatisticWithTimeModel(startTime: Time.getFirstSecondOfMonth(), endTime: Time.getLastSecondOfMonth()): [
       TransactionModel.prototypeData(),

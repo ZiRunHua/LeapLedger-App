@@ -42,18 +42,9 @@ class ConstantFontSize {
   static const double bodySmall = 12;
 
   static const double letterSpacing = 2;
-  // static init() {
-  //   largeHeadline = largeHeadline.sp;
-  //   headline = headline.sp;
-  //   bodyLarge = bodyLarge.sp;
-  //   body = body.sp;
-  //   bodySmall = bodySmall.sp;
-  //   letterSpacing = letterSpacing.sp;
-  // }
 }
 
 class ConstantWidget {
-  // ignore: library_private_types_in_public_api
   static _ConstantWidgetDivider divider = _ConstantWidgetDivider();
   static const Widget activityIndicator = CircularProgressIndicator();
 }

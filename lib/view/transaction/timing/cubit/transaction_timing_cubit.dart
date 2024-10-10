@@ -90,6 +90,8 @@ class TransactionTimingCubit extends Cubit<TransactionTimingState> {
 
   save() async {
     late final ({TransactionInfoModel trans, TransactionTimingModel config})? responseData;
+    config = this.config.copyWith(nextTime: Tz.getNewByDate(config.nextTime, account.timeLocation));
+    trans = this.trans.copyWith(tradeTime: Tz.getNewByDate(trans.tradeTime, account.timeLocation));
     if (config.id > 0) {
       responseData = await TransactionApi.updateTiming(accountId: account.id, trans: trans, config: config);
     } else {

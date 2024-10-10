@@ -202,7 +202,7 @@ class _BottomSelecterState<T extends Comparable> extends State<BottomSelecter<T>
     );
     if (widget.height != null) {
       child = SizedBox(height: widget.height, child: child);
-    } else {
+    } else if (widget.options.length > 5) {
       child = SizedBox(height: MediaQuery.of(context).size.height / 2, child: child);
     }
     return child;

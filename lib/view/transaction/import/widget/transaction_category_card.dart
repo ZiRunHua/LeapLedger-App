@@ -1,11 +1,12 @@
 part of '../transaction_import.dart';
 
-class PtcCard extends StatelessWidget {
+class TransactionCategoryCard extends StatelessWidget {
   final List<MapEntry<TransactionCategoryFatherModel, List<TransactionCategoryModel>>> categoryTree;
   final AccountDetailModel account;
   final ProductModel product;
   final List<ProductTransactionCategoryModel> ptcList;
-  const PtcCard(this.ptcList, {required this.categoryTree, super.key, required this.account, required this.product});
+  const TransactionCategoryCard(this.ptcList,
+      {required this.categoryTree, super.key, required this.account, required this.product});
   @override
   Widget build(BuildContext context) {
     return Column(

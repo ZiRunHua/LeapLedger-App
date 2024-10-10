@@ -44,8 +44,6 @@ class MyApp extends StatelessWidget {
   final AccountBloc _accountBloc = AccountBloc();
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context);
-
     return MultiRepositoryProvider(
         providers: [
           RepositoryProvider<UserBloc>(create: (context) => UserBloc(_accountBloc)),
@@ -108,10 +106,6 @@ class MyApp extends StatelessWidget {
                   shape: CircleBorder(),
                   // smallSizeConstraints: BoxConstraints(minWidth: 100),
                   // extendedSizeConstraints: BoxConstraints(minWidth: 100),
-                ),
-                bottomSheetTheme: const BottomSheetThemeData(
-                  backgroundColor: Colors.white,
-                  surfaceTintColor: Colors.white,
                 ),
                 iconTheme: IconThemeData.fallback().copyWith(applyTextScaling: true),
                 useMaterial3: true,

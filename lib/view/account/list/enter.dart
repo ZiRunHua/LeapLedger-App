@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:leap_ledger_app/bloc/account/account_bloc.dart';
 import 'package:leap_ledger_app/common/global.dart';

@@ -78,7 +78,7 @@ class TransactionTimingContainer extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Padding(
-          padding: EdgeInsets.all(Constant.padding),
+          padding: EdgeInsets.only(right: Constant.margin),
           child: Icon(
             trans.categoryIcon,
             color: ConstantColor.primaryColor,
@@ -103,7 +103,7 @@ class TransactionTimingContainer extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(Constant.margin),
+                padding: EdgeInsets.only(left: Constant.margin),
                 child: Text.rich(
                   AmountTextSpan.sameHeight(
                     trans.amount,
@@ -127,7 +127,7 @@ class TransactionTimingContainer extends StatelessWidget {
           child: DecoratedBox(
             decoration: BoxDecoration(color: Colors.white),
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: Constant.margin, horizontal: Constant.margin),
+              padding: EdgeInsets.all(Constant.margin),
               child: child,
             ),
           ),
@@ -137,7 +137,7 @@ class TransactionTimingContainer extends StatelessWidget {
     return DecoratedBox(
       decoration: ConstantDecoration.cardDecoration,
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: Constant.margin, horizontal: Constant.margin),
+        padding: EdgeInsets.all(Constant.padding),
         child: child,
       ),
     );
@@ -145,7 +145,7 @@ class TransactionTimingContainer extends StatelessWidget {
 
   Widget _buildTailing() {
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.max,
       children: [
         VerticalDivider(color: ConstantColor.greyText, width: Constant.margin, thickness: 1),
         Center(

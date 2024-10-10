@@ -4,7 +4,7 @@ class MonthStatisticHeaderDelegate extends SliverPersistentHeaderDelegate {
   MonthStatisticHeaderDelegate(this.data);
 
   static TextStyle amountStyle = TextStyle(color: Colors.black, fontSize: ConstantFontSize.headline);
-  final double height = 56.5 + Constant.margin * 2;
+  final double height = 56.5.sp + Constant.margin * 2.sp;
 
   final InExStatisticWithTimeModel data;
   @override
@@ -21,7 +21,7 @@ class MonthStatisticHeaderDelegate extends SliverPersistentHeaderDelegate {
       child: Column(
         children: [
           Padding(
-              padding: EdgeInsets.fromLTRB(Constant.padding, Constant.padding, Constant.padding, Constant.padding),
+              padding: EdgeInsets.fromLTRB(Constant.padding, Constant.padding, Constant.padding, Constant.margin),
               child: BlocBuilder<FlowListBloc, FlowListState>(
                 builder: (context, state) {
                   if (state is! FlowListLoading) {
@@ -49,15 +49,11 @@ class MonthStatisticHeaderDelegate extends SliverPersistentHeaderDelegate {
           TextSpan(
             style: TextStyle(fontWeight: FontWeight.w500),
             children: [
-              TextSpan(text: DateFormat("MM").format(data.startTime), style: TextStyle(fontSize: 24)),
-              TextSpan(text: "月", style: TextStyle(fontSize: ConstantFontSize.body)),
-              WidgetSpan(child: SizedBox(width: Constant.margin)),
+              TextSpan(text: DateFormat.M().format(data.startTime), style: TextStyle(fontSize: 22)),
+              WidgetSpan(child: SizedBox(width: Constant.margin / 2)),
               TextSpan(
-                text: DateFormat("yyyy").format(data.startTime),
-                style: TextStyle(
-                  fontSize: ConstantFontSize.bodySmall,
-                  fontWeight: FontWeight.normal,
-                ),
+                text: DateFormat.y().format(data.startTime),
+                style: TextStyle(fontSize: ConstantFontSize.bodySmall, fontWeight: FontWeight.normal),
               )
             ],
           ),
