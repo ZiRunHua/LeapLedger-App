@@ -2,7 +2,7 @@ part of 'enter.dart';
 
 class FileOperation {
   static Future<File?> selectFile(FileType type, List<String>? allowedExtensions) async {
-    if ((await Permission.manageExternalStorage.request()).isGranted) {
+    if (await requestStoragePermission()) {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: type,
         allowedExtensions: allowedExtensions,
@@ -39,5 +39,18 @@ class FileOperation {
     } catch (e) {
       return null;
     }
+  }
+
+  static Future<bool> requestStoragePermission() async {
+    if (Platform.isAndroid) {
+      if ((await Global.deviceInfo.androidInfo).version.sdkInt >= 33) {
+        PermissionStatus status = await Permission.manageExternalStorage.request();
+        return status == PermissionStatus.granted;
+      } else {
+        PermissionStatus status = await Permission.storage.request();
+        return status == PermissionStatus.granted;
+      }
+    }
+    return false;
   }
 }

@@ -120,20 +120,12 @@ class ApiServer {
       return ResponseBody(response.data);
     } else if (code == 401 || code == 403) {
       if (Global.navigatorKey.currentState != null) {
-        bool isShowOverlayLoader = Global.isShowOverlayLoader();
-        if (isShowOverlayLoader) {
-          Global.hideOverlayLoader();
-        }
         if (logining) {
           return ResponseBody({'Msg': '请重新登录'}, isSuccess: false);
         } else {
           logining = true;
-          print("ok");
           return await Global.navigatorKey.currentState!.pushNamed(UserRoutes.login).then((value) {
             logining = false;
-            if (isShowOverlayLoader) {
-              Global.showOverlayLoader();
-            }
             if (value == true) {
               return request(method, path, data: data, header: header);
             }

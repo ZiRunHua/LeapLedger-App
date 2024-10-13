@@ -28,7 +28,6 @@ dependencies:
   crypto: ^3.0.3
   json_annotation: ^4.9.0
   shimmer: ^3.0.0
-  flutter_easyloading: ^3.0.5
   file_picker: ^8.1.2
   permission_handler: ^11.3.1
   build_runner: ^2.4.5

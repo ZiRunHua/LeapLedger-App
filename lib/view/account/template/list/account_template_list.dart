@@ -38,7 +38,6 @@ class _AccountTemplateListBodyState extends State<AccountTemplateListBody> {
     return BlocListener<AccountTemplateListBloc, AccountTemplateListState>(
         listener: (context, state) {
           if (state is AddAccountSuccess) {
-            Global.hideOverlayLoader();
             BlocProvider.of<UserBloc>(context).add(SetCurrentAccount(state.account));
             Navigator.pop(context);
           }
@@ -102,7 +101,6 @@ class _AccountTemplateListBodyState extends State<AccountTemplateListBody> {
   }
 
   void triggerAddEvent(AccountTemplateModel model) {
-    Global.showOverlayLoader();
     BlocProvider.of<AccountTemplateListBloc>(context).add(UseAccountTemplate(model));
   }
 }

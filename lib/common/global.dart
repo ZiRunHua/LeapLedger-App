@@ -1,10 +1,10 @@
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:leap_ledger_app/config/config.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:leap_ledger_app/model/account/model.dart';
 import 'package:leap_ledger_app/routes/routes.dart';
 import 'package:leap_ledger_app/util/enter.dart';
@@ -23,24 +23,12 @@ class Global {
   static OverlayEntry? overlayEntry;
   static bool get isRelease => const bool.fromEnvironment("dart.vm.product");
   static late final Directory tempDirectory;
-
+  static DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   static Future init() async {
     config.init();
     getTemporaryDirectory().then((dir) {
       tempDirectory = dir;
     });
-  }
-
-  static void showOverlayLoader() {
-    EasyLoading.show(status: 'Loading...');
-  }
-
-  static void hideOverlayLoader() {
-    EasyLoading.dismiss();
-  }
-
-  static bool isShowOverlayLoader() {
-    return EasyLoading.isShow;
   }
 }
 
