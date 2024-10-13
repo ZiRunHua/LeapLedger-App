@@ -39,7 +39,9 @@ class TransactionTimingCubit extends Cubit<TransactionTimingState> {
 
   bool noMore = false;
   Future<List<({TransactionInfoModel trans, TransactionTimingModel config})>> loadMore() async {
-    list.addAll(await TransactionApi.getTimingList(accountId: account.id, offset: list.length, limit: _limit));
+    if(noMore == true) return [];
+    _offset = list.length;
+    list.addAll(await TransactionApi.getTimingList(accountId: account.id, offset: _offset, limit: _limit));
     if (_offset == list.length) {
       noMore = true;
     } else {

@@ -55,7 +55,7 @@ class _TransactionTimingListState extends State<TransactionTimingList> {
         ),
         backgroundColor: ConstantColor.greyBackground,
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: Constant.padding, vertical: Constant.margin),
+          padding: EdgeInsets.symmetric(horizontal: Constant.padding),
           child: BlocBuilder<TransactionTimingCubit, TransactionTimingState>(
             buildWhen: (context, state) => state is TransactionTimingListLoaded,
             builder: (context, state) {

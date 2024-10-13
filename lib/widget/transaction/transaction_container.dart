@@ -127,7 +127,7 @@ class TransactionTimingContainer extends StatelessWidget {
           child: DecoratedBox(
             decoration: BoxDecoration(color: Colors.white),
             child: Padding(
-              padding: EdgeInsets.all(Constant.margin),
+              padding: EdgeInsets.all(Constant.padding),
               child: child,
             ),
           ),
