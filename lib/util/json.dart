@@ -59,7 +59,7 @@ const Map<String, IconData> _iconMap = {
   'content_paste': Icons.content_paste_outlined,
   'receipt_long': Icons.receipt_long_outlined,
   'auto_stories': Icons.auto_stories_outlined,
-  'restaurant': Icons.restaurant_outlined,
+  'restaurant_outlined': Icons.restaurant_outlined,
   'run_circle': Icons.run_circle_outlined,
   'home': Icons.home_outlined,
   'directions_bus': Icons.directions_bus_outlined,

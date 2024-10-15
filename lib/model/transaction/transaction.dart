@@ -104,7 +104,7 @@ class TransactionInfoModel extends TransactionEditModel {
   TransactionCategoryBaseModel get categoryBaseModel => TransactionCategoryBaseModel(
       id: categoryId, name: categoryName, icon: categoryIcon, incomeExpense: incomeExpense);
 
-  TransactionInfoModel.prototypeData() : this(tradeTime: DateTime.now().toLocal());
+  TransactionInfoModel.prototypeData({DateTime? tradeTime}) : this(tradeTime: tradeTime??DateTime.now().toLocal());
   setAccount(AccountModel account) {
     accountId = account.id;
     accountName = account.name;
@@ -513,6 +513,9 @@ class TransactionTimingModel {
 
   setAccount(AccountModel account) {
     accountId = account.id;
+  }
+  setLocation(Location l){
+    this.nextTime = TZDateTime.from(this.nextTime, l);
   }
 }
 

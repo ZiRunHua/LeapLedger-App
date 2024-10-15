@@ -53,7 +53,6 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
           builder: (context, state) {
             return Stack(children: [
               Container(
-                padding: EdgeInsets.only(top: Constant.buttomSheetRadius),
                 decoration: ConstantDecoration.bottomSheet,
                 height: size.height * 0.8,
                 width: size.width,
@@ -218,7 +217,7 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
               [_buildCategoryChildren(_conditionCubit.categorytree[index].value)],
               name: _conditionCubit.categorytree[index].key.name,
             ),
-          ),
+          )..add(SizedBox(height:Constant.padding,)),
         );
       },
     );

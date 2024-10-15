@@ -117,7 +117,7 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
       ConstantWidget.divider.list,
       _buildListTile(
         leading: "时间",
-        trailing: DateFormat("yyyy-MM-dd").format(data.tradeTime),
+        trailing: DateFormat.yMd().format(data.tradeTime),
       ),
       ConstantWidget.divider.list,
       _buildListTile(
@@ -128,6 +128,11 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
       _buildListTile(
         leading: "备注",
         trailing: data.remark.isEmpty ? "无" : data.remark,
+      ),
+      ConstantWidget.divider.list,
+      _buildListTile(
+        leading: "新建时间",
+        trailing: DateFormat.yMd().add_Hms().format(data.createTime),
       ),
       _buildButtomButtonGroup(TransactionRouterGuard.edit(mode: TransactionEditMode.update, account: widget.account)),
     ]);

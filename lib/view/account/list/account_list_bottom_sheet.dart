@@ -103,7 +103,7 @@ class _AccountListBottomSheetState extends State<AccountListBottomSheet> {
                   ),
                 ),
               ),
-              listWidget
+              Padding(padding: EdgeInsets.only(bottom: Constant.padding), child: listWidget)
             ],
           ),
         );

@@ -64,7 +64,8 @@ class _TransactionCategoryEditState extends State<TransactionCategoryEdit> {
         key: _formKey,
         child: Padding(
           padding: EdgeInsets.all(Constant.padding),
-          child: Column(
+          child: SingleChildScrollView(
+              child: Column(
             children: <Widget>[
               Container(
                 decoration: BoxDecoration(
@@ -80,7 +81,7 @@ class _TransactionCategoryEditState extends State<TransactionCategoryEdit> {
               SizedBox(height: Constant.padding),
               FormSelecter.transactionCategoryIcon(data.icon, onChanged: _onSelectIcon),
             ],
-          ),
+          )),
         ));
   }
 
