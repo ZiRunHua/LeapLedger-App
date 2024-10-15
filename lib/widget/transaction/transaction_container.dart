@@ -14,7 +14,7 @@ class TransactionContainer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
-              padding: EdgeInsets.all(Constant.padding),
+              padding: EdgeInsets.all(Constant.margin),
               child: Icon(
                 trans.categoryIcon,
                 color: ConstantColor.primaryColor,
@@ -97,23 +97,22 @@ class TransactionTimingContainer extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(trans.categoryFatherName + " · " + trans.categoryName),
-                    Text(trans.userName + " · " + DateFormat('yyyy-MM-dd').format(trans.tradeTime))
+                    Text(trans.categoryFatherName + " · " + trans.categoryName + " · " +trans.userName),
+                    Text(DateFormat.yMd().format(trans.tradeTime)+ " · " +config.toDisplay())
                   ],
                 ),
               ),
               Padding(
                 padding: EdgeInsets.only(left: Constant.margin),
-                child: Text.rich(
-                  AmountTextSpan.sameHeight(
-                    trans.amount,
-                    textStyle: TextStyle(fontSize: ConstantFontSize.largeHeadline),
-                    incomeExpense: trans.incomeExpense,
-                    displayModel: IncomeExpenseDisplayModel.symbols,
+                child:  Text.rich(
+                    AmountTextSpan.sameHeight(
+                      trans.amount,
+                      textStyle: TextStyle(fontSize: ConstantFontSize.largeHeadline),
+                      incomeExpense: trans.incomeExpense,
+                      displayModel: IncomeExpenseDisplayModel.symbols,
+                    ),
                   ),
-                ),
               ),
-              _buildTailing()
             ],
           ),
         )
@@ -140,18 +139,6 @@ class TransactionTimingContainer extends StatelessWidget {
         padding: EdgeInsets.all(Constant.padding),
         child: child,
       ),
-    );
-  }
-
-  Widget _buildTailing() {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        VerticalDivider(color: ConstantColor.greyText, width: Constant.margin, thickness: 1),
-        Center(
-          child: SizedBox(width: 64.sp, child: Text(config.toDisplay(), textAlign: TextAlign.center)),
-        )
-      ],
     );
   }
 }

@@ -19,6 +19,8 @@ class TransactionTimingCubit extends Cubit<TransactionTimingState> {
     this.account = account;
     this.trans = trans;
     this.config = config;
+    //amend next time
+    _updateNextTime(trans.tradeTime);
   }
 
   /* list operation */
@@ -27,6 +29,10 @@ class TransactionTimingCubit extends Cubit<TransactionTimingState> {
   Future<List<({TransactionInfoModel trans, TransactionTimingModel config})>> loadList() async {
     _offset = 0;
     list = await TransactionApi.getTimingList(accountId: account.id, offset: 0, limit: _limit);
+    list.forEach((element) {
+      element.config.setLocation(account.timeLocation);
+      element.trans.setLocation(account.timeLocation);
+    });
     if (_limit != list.length) {
       noMore = true;
     } else {
@@ -62,7 +68,7 @@ class TransactionTimingCubit extends Cubit<TransactionTimingState> {
   }
 
   /* single operation */
-  TransactionInfoModel trans = TransactionInfoModel.prototypeData();
+  TransactionInfoModel trans = TransactionInfoModel.prototypeData(tradeTime: DateTime.now().add(const Duration(days: 1)));
   TransactionTimingModel config = TransactionTimingModel.prototypeData();
   changeTimingType(TransactionTimingType type) {
     if (config.type == type) return;
@@ -75,19 +81,39 @@ class TransactionTimingCubit extends Cubit<TransactionTimingState> {
         changeNextTime(DateTime.now().add(Duration(days: 1)));
         break;
       default:
-        changeNextTime(DateTime.now());
+        changeNextTime(DateTime.now().add(Duration(days: 1)));
     }
 
     emit(TransactionTimingTypeChanged(config));
   }
 
   changeNextTime(DateTime date) {
-    date = Time.getFirstSecondOfDay(date: date);
+    _updateNextTime(date);
+    emit(TransactionTimingTransChanged());
+    emit(TransactionTimingNextTimeChanged());
+  }
+
+  _updateNextTime(DateTime date){
+        date = Time.getFirstSecondOfDay(date: date);
+    var now = Time.getFirstSecondOfDay(date: DateTime.now());
+    if(!now.isBefore(date)){
+    switch (config.type) {
+      case TransactionTimingType.once:
+        date = now.add(Duration(days: 1));
+      case TransactionTimingType.everyDay:
+        date = now.add(Duration(days: 1));
+      case TransactionTimingType.everyWeek:
+        date = now.add(Duration(days: 7));
+      case TransactionTimingType.everyMonth:
+        date = DateTime(date.year, date.month +1, date.day);
+      case TransactionTimingType.lastDayOfMonth:
+        date = DateTime(date.year, date.month +1, 1).add(Duration(hours: -24));
+        if(!now.isBefore(date)) date = DateTime(date.year, date.month +1, 1).add(Duration(hours: -24));
+    }
+    }
     config.nextTime = date;
     trans.tradeTime = date;
     config.updateoffsetDaysByNextTime();
-    emit(TransactionTimingTransChanged());
-    emit(TransactionTimingNextTimeChanged());
   }
 
   save() async {
@@ -100,6 +126,8 @@ class TransactionTimingCubit extends Cubit<TransactionTimingState> {
       responseData = await TransactionApi.addTiming(accountId: account.id, trans: trans, config: config);
     }
     if (responseData == null) return;
+    responseData.trans.setLocation(account.timeLocation);
+    responseData.config.setLocation(account.timeLocation);
     trans = responseData.trans;
     config = responseData.config;
     emit(TransactionTimingConfigSaved(record: (trans: trans, config: config)));

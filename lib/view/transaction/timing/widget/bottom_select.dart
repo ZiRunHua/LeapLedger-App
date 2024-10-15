@@ -33,7 +33,7 @@ class _TimingBottomSelecterState extends State<TimingBottomSelecter> {
                 final DateTime? dateTime = await showDatePicker(
                   context: context,
                   initialDate: _config.nextTime,
-                  firstDate: Constant.minDateTime,
+                  firstDate: DateTime.now().add(const Duration(days: 1)),
                   lastDate: Constant.maxDateTime,
                 );
                 if (dateTime == null) {
@@ -70,7 +70,7 @@ class _TimingBottomSelecterState extends State<TimingBottomSelecter> {
             options: TransactionTimingType.selectOptions,
             backgroundColor: Colors.transparent,
             selected: _config.type,
-            height: _height + 20.h * 2,
+            height: _height,
             onTap: onTapType,
           ),
         ),
@@ -79,7 +79,10 @@ class _TimingBottomSelecterState extends State<TimingBottomSelecter> {
           width: _config.type == TransactionTimingType.everyWeek ? MediaQuery.of(context).size.width - _leftWidth : 0,
           child: createBottomSelect(
               backgroundColor: ConstantColor.greyBackground,
-              onTap: onDateTimeChanged,
+              onTap: (SelectOption<DateTime> selectDate){
+                if(_config.type != TransactionTimingType.everyWeek) return;
+                onDateTimeChanged(selectDate);
+              },
               selected: _config.nextTime,
               mode: DateSelectMode.week,
               type: BottomCupertinoSelecter,
@@ -90,7 +93,10 @@ class _TimingBottomSelecterState extends State<TimingBottomSelecter> {
           width: _config.type == TransactionTimingType.everyMonth ? MediaQuery.of(context).size.width - _leftWidth : 0,
           child: createBottomSelect(
               backgroundColor: ConstantColor.greyBackground,
-              onTap: onDateTimeChanged,
+              onTap: (SelectOption<DateTime> selectDate){
+                if(_config.type != TransactionTimingType.everyMonth) return;
+                onDateTimeChanged(selectDate);
+              },
               selected: _config.nextTime,
               mode: DateSelectMode.month,
               type: BottomCupertinoSelecter,
@@ -100,7 +106,7 @@ class _TimingBottomSelecterState extends State<TimingBottomSelecter> {
     );
   }
 
-  onTapType(SelectOption<TransactionTimingType> selected) {
+ void onTapType(SelectOption<TransactionTimingType> selected) {
     _cubit.changeTimingType(selected.value);
   }
 

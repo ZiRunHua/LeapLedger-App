@@ -98,14 +98,11 @@ bottomSelecter createBottomSelect({
     options = Time.getDays(now, now.add(Duration(days: 27)))
         .map((e) => SelectOption<DateTime>(name: DateFormat('d').format(e), value: e))
         .toList();
-    if (selected != null) options[0] = SelectOption<DateTime>(name: DateFormat('d').format(selected), value: selected);
   } else {
-    var now = selected ?? DateTime.now();
+    var now = DateTime.now();
     options = Time.getDays(now, now.add(Duration(days: 6)))
         .map((e) => SelectOption<DateTime>(name: DateFormat('EEE').format(e), value: e))
         .toList();
-    if (selected != null)
-      options[0] = SelectOption<DateTime>(name: DateFormat('EEE').format(selected), value: selected);
   }
   switch (type) {
     case BottomSelecter:
@@ -270,8 +267,8 @@ class _BottomCupertinoSelecterState<T extends Comparable> extends State<BottomCu
         child: Padding(
           padding: EdgeInsets.all(Constant.margin),
           child: CupertinoPicker(
-            magnification: 2,
-            squeeze: 1,
+            magnification: (2.35/2.1),
+            squeeze: 1.25,
             scrollController: selected != null ? FixedExtentScrollController(initialItem: selectedIndext) : null,
             itemExtent: 32,
             onSelectedItemChanged: (int index) => widget.onTap(widget.options[index]),
@@ -286,7 +283,7 @@ class _BottomCupertinoSelecterState<T extends Comparable> extends State<BottomCu
 
   Widget itemBuilder(BuildContext context, SelectOption<T> option) {
     if (widget.selected != null && widget.selected == option.value) {}
-    return Text(option.name);
+    return Padding(padding:  EdgeInsets.only(left:Constant.padding),child: Text(option.name),);
   }
 }
 

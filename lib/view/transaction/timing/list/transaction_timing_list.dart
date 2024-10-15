@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:leap_ledger_app/common/global.dart';
 import 'package:leap_ledger_app/model/account/model.dart';
 import 'package:leap_ledger_app/model/transaction/model.dart';
@@ -49,7 +50,7 @@ class _TransactionTimingListState extends State<TransactionTimingList> {
           actions: [
             Visibility(
               visible: _cubit.canEdit,
-              child: IconButton(onPressed: onTapAdd, icon: Icon(ConstantIcon.add)),
+              child: IconButton(onPressed: _onTapAdd, icon: Icon(ConstantIcon.add)),
             )
           ],
         ),
@@ -70,7 +71,7 @@ class _TransactionTimingListState extends State<TransactionTimingList> {
                     ));
               } else {
                 return ListView(
-                  children: [SizedBox(height: 64, child: Center(child: NoData.commonWidget))],
+                  children: [SizedBox(height: 64.sp, child: Center(child: NoData.commonWidget))],
                 );
               }
             },
@@ -80,8 +81,8 @@ class _TransactionTimingListState extends State<TransactionTimingList> {
     );
   }
 
-  onTapAdd() async {
-    var page = TransactionRoutes.editNavigator(context, mode: TransactionEditMode.popTrans, account: _cubit.account);
+  _onTapAdd() async {
+    var page = TransactionRoutes.editNavigator(context, mode: TransactionEditMode.popTrans, account: _cubit.account,transInfo:_cubit.trans);
     await page.push();
     var transInfo = page.getPopTransInfo();
     if (transInfo == null) return;
