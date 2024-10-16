@@ -439,17 +439,17 @@ class TransactionTimingModel {
     required this.updatedAt,
     required this.createdAt,
   });
-  TransactionTimingModel.prototypeData()
+  TransactionTimingModel.prototypeData({DateTime? nextTime,DateTime? createdAt,DateTime? updatedAt})
       : this(
           id: 0,
           accountId: 0,
           userId: 0,
           type: TransactionTimingType.everyDay,
           offsetDays: 0,
-          nextTime: DateTime.now(),
+          nextTime: nextTime??DateTime.now(),
           close: false,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
+          createdAt: createdAt??DateTime.now(),
+          updatedAt: updatedAt??DateTime.now(),
         );
   factory TransactionTimingModel.fromJson(Map<String, dynamic> json) => _$TransactionTimingModelFromJson(json);
   Map<String, dynamic> toJson() => _$TransactionTimingModelToJson(this);

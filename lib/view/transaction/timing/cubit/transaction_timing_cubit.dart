@@ -1,15 +1,20 @@
-import 'package:bloc/bloc.dart';
 import 'package:leap_ledger_app/api/api_server.dart';
+import 'package:leap_ledger_app/bloc/common/enter.dart';
 import 'package:leap_ledger_app/model/account/model.dart';
 import 'package:leap_ledger_app/model/transaction/model.dart';
 import 'package:leap_ledger_app/util/enter.dart';
 import 'package:meta/meta.dart';
+import 'package:timezone/timezone.dart';
 
 part 'transaction_timing_state.dart';
 
-class TransactionTimingCubit extends Cubit<TransactionTimingState> {
-  TransactionTimingCubit({required this.account}) : super(TransactionTimingInitial());
-  AccountDetailModel account = AccountDetailModel.prototypeData();
+class TransactionTimingCubit extends AccountBasedCubit<TransactionTimingState> {
+  TransactionTimingCubit( {required super.account}) : super(TransactionTimingInitial()) {
+    var now = nowTime;
+    trans = TransactionInfoModel.prototypeData(tradeTime: now.add(const Duration(days: 1)));
+    config = TransactionTimingModel.prototypeData(
+        nextTime: now.add(const Duration(days: 1)), createdAt: now, updatedAt: now);
+  }
 
   bool get canEdit => account.isAdministrator || account.isCreator;
   initEdit(
@@ -45,7 +50,7 @@ class TransactionTimingCubit extends Cubit<TransactionTimingState> {
 
   bool noMore = false;
   Future<List<({TransactionInfoModel trans, TransactionTimingModel config})>> loadMore() async {
-    if(noMore == true) return [];
+    if (noMore == true) return [];
     _offset = list.length;
     list.addAll(await TransactionApi.getTimingList(accountId: account.id, offset: _offset, limit: _limit));
     if (_offset == list.length) {
@@ -68,20 +73,23 @@ class TransactionTimingCubit extends Cubit<TransactionTimingState> {
   }
 
   /* single operation */
-  TransactionInfoModel trans = TransactionInfoModel.prototypeData(tradeTime: DateTime.now().add(const Duration(days: 1)));
-  TransactionTimingModel config = TransactionTimingModel.prototypeData();
+  late TransactionInfoModel trans;
+  late TransactionTimingModel config;
   changeTimingType(TransactionTimingType type) {
-    if (config.type == type) return;
+    if (config.type == type) {
+      emit(TransactionTimingTypeChanged(config));
+      return;
+    };
     config.type = type;
     switch (config.type) {
       case TransactionTimingType.lastDayOfMonth:
-        changeNextTime(Time.getLastSecondOfMonth());
+        changeNextTime(Tz.getLastSecondOfMonth(date: nowTime));
         break;
       case TransactionTimingType.everyDay:
-        changeNextTime(DateTime.now().add(Duration(days: 1)));
+        changeNextTime(nowTime.add(Duration(days: 1)));
         break;
       default:
-        changeNextTime(DateTime.now().add(Duration(days: 1)));
+        changeNextTime(nowTime.add(Duration(days: 1)));
     }
 
     emit(TransactionTimingTypeChanged(config));
@@ -93,23 +101,23 @@ class TransactionTimingCubit extends Cubit<TransactionTimingState> {
     emit(TransactionTimingNextTimeChanged());
   }
 
-  _updateNextTime(DateTime date){
-        date = Time.getFirstSecondOfDay(date: date);
-    var now = Time.getFirstSecondOfDay(date: DateTime.now());
-    if(!now.isBefore(date)){
-    switch (config.type) {
-      case TransactionTimingType.once:
-        date = now.add(Duration(days: 1));
-      case TransactionTimingType.everyDay:
-        date = now.add(Duration(days: 1));
-      case TransactionTimingType.everyWeek:
-        date = now.add(Duration(days: 7));
-      case TransactionTimingType.everyMonth:
-        date = DateTime(date.year, date.month +1, date.day);
-      case TransactionTimingType.lastDayOfMonth:
-        date = DateTime(date.year, date.month +1, 1).add(Duration(hours: -24));
-        if(!now.isBefore(date)) date = DateTime(date.year, date.month +1, 1).add(Duration(hours: -24));
-    }
+  _updateNextTime(DateTime date) {
+    date = Tz.getFirstSecondOfDay(date: getTZDateTime(date));
+    var now = Tz.getFirstSecondOfDay(date: nowTime);
+    if (!now.isBefore(date)) {
+      switch (config.type) {
+        case TransactionTimingType.once:
+          date = now.add(Duration(days: 1));
+        case TransactionTimingType.everyDay:
+          date = now.add(Duration(days: 1));
+        case TransactionTimingType.everyWeek:
+          date = now.add(Duration(days: 7));
+        case TransactionTimingType.everyMonth:
+          date = TZDateTime(location,date.year, date.month + 1, date.day);
+        case TransactionTimingType.lastDayOfMonth:
+          date = TZDateTime(location,date.year, date.month + 1, 1).add(Duration(hours: -24));
+          if (!now.isBefore(date)) date = TZDateTime(location,date.year, date.month + 1, 1).add(Duration(hours: -24));
+      }
     }
     config.nextTime = date;
     trans.tradeTime = date;

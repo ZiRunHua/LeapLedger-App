@@ -88,18 +88,24 @@ bottomSelecter createBottomSelect({
   required DateSelectMode mode,
   required Type type,
   required Color backgroundColor,
+  Location? location,
   double? height,
 }) {
   assert(mode == DateSelectMode.week || mode == DateSelectMode.month);
   List<SelectOption<DateTime>> options;
+  DateTime now;
+  if(location!=null){
+    now = TZDateTime.from(DateTime.now(), location);
+  }else{
+    now = DateTime.now();
+  }
   if (mode == DateSelectMode.month) {
-    var now = Time.getFirstSecondOfMonth(date: selected ?? DateTime.now());
+     now = Time.getFirstSecondOfMonth(date: selected ?? now);
     // The month has 28 days
     options = Time.getDays(now, now.add(Duration(days: 27)))
         .map((e) => SelectOption<DateTime>(name: DateFormat('d').format(e), value: e))
         .toList();
   } else {
-    var now = DateTime.now();
     options = Time.getDays(now, now.add(Duration(days: 6)))
         .map((e) => SelectOption<DateTime>(name: DateFormat('EEE').format(e), value: e))
         .toList();
