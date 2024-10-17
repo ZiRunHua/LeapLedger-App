@@ -26,8 +26,12 @@ jobs:
       - name: Run flutter doctor
         run: flutter doctor
         
-      - name: Build APK
-        run: flutter build apk --release --dart-define=config.server.network.host=${{ vars.SERVER_HOST }} --dart-define=config.server.network.port=${{ vars.SERVER_PORT }}
+      - name: Build APK (Unsigned)
+        run: |
+          flutter build apk --release \
+            --no-shrink \
+            --dart-define=config.server.network.host=${{ vars.SERVER_HOST }} \
+            --dart-define=config.server.network.port=${{ vars.SERVER_PORT }}
       
       - name: Delete specific release by tag
         run: |
