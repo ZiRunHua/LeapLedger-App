@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:intl/intl.dart';
 import 'package:leap_ledger_app/bloc/account/account_bloc.dart';
 import 'package:leap_ledger_app/bloc/category/category_bloc.dart';
@@ -16,11 +17,12 @@ import 'package:timezone/data/latest_all.dart' as tzData;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Future<void> main() async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   init().then((e) => runApp(MyApp()));
 }
 
 Future<void> init() async {
-  WidgetsFlutterBinding.ensureInitialized();
   //ScreenUtil
   await ScreenUtil.ensureScreenSize();
   //TimeZones
@@ -58,6 +60,7 @@ class MyApp extends StatelessWidget {
           splitScreenMode: true,
           builder: (context, child) {
             return MaterialApp(
+              title: "LeapLedger",
               debugShowCheckedModeBanner: false,
               supportedLocales: const [
                 Locale('zh', 'CN'),
@@ -113,6 +116,7 @@ class MyApp extends StatelessWidget {
               home: Navigation(),
               builder: (context, widget) {
                 Constant.init();
+                FlutterNativeSplash.remove();
                 return MediaQuery(
                   data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(1.sp)),
                   child: widget!,

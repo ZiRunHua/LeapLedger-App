@@ -43,6 +43,8 @@ dependencies:
   web_socket_channel: ^3.0.1
   flutter_slidable: ^3.1.1
   flutter_screenutil: ^5.9.3
+  flutter_native_splash: ^2.4.1
+  flutter_launcher_icons: ^0.14.1
   
 dev_dependencies:
   flutter_test:
@@ -52,8 +54,4 @@ flutter:
 
   uses-material-design: true
   assets:
-      - assets/image/share_bg.png
-fonts:
-  - family: SourceHanSerifCN
-    fonts:
-      - asset: assets/fonts/SourceHanSerifCN-Regular.otf
+      - assets/
