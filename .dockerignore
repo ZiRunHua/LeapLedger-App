@@ -1,0 +1,49 @@
+# Dart & Flutter 的生成文件和缓存
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Generated.xcconfig
+pubspec.lock
+
+# iOS 的构建输出
+ios/Runner.xcworkspace/
+ios/build/
+ios/DerivedData/
+
+# Android 的构建输出
+android/.gradle/
+android/app/build/
+android/local.properties
+android/.idea/
+
+# MacOS 的构建输出
+macos/Flutter/ephemeral/
+macos/build/
+
+# Windows 的构建输出
+windows/flutter/ephemeral/
+windows/build/
+
+# Linux 的构建输出
+linux/flutter/ephemeral/
+linux/build/
+
+# Web 构建输出
+web/compile/
+web/generated_plugin_registrant.dart
+
+# 临时文件
+*.log
+*.tmp
+*.swp
+*.lock
+*.bak
+
+# Version control system
+.git/

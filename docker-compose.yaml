@@ -1,0 +1,19 @@
+version: "3.3"
+services:
+  build_apk:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ./docker/build:/app/build/app/outputs/flutter-apk
+    command:
+      [
+        "flutter",
+        "build",
+        "apk",
+        "--release",
+        "--no-shrink",
+        "--verbose",
+        "--dart-define=config.server.network.host=${SERVER_HOST}",
+        "--dart-define=config.server.network.port=${SERVER_PORT}",
+      ]
