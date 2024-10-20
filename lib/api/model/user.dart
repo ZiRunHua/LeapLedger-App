@@ -14,7 +14,7 @@ class UserInfoUpdateModel {
 class UserHomeApiModel {
   late InExStatisticWithTimeModel? headerCard;
   late UserHomeTimePeriodStatisticsApiModel? timePeriodStatistics;
-  UserHomeApiModel();
+  UserHomeApiModel({this.headerCard,this.timePeriodStatistics});
   factory UserHomeApiModel.fromJson(Map<String, dynamic> json) => _$UserHomeApiModelFromJson(json);
   Map<String, dynamic> toJson() => _$UserHomeApiModelToJson(this);
 }

@@ -23,7 +23,7 @@ class HomeBloc extends AccountBasedBloc<HomeEvent, HomeState> {
   }
 
   /// 日统计列表
-  late List<DayAmountStatisticApiModel> dayStatistic;
+  List<DayAmountStatisticApiModel> dayStatistic = [];
 
   /// 类型统计排行
   List<TransactionCategoryAmountRankApiModel> _rankingList = [];
@@ -31,7 +31,7 @@ class HomeBloc extends AccountBasedBloc<HomeEvent, HomeState> {
       _rankingList.where((element) => element.amount > 0).toList();
 
   /// 首页数据
-  late UserHomeApiModel homeData;
+  UserHomeApiModel homeData = UserHomeApiModel();
   late TZDateTime startTime, endTime;
   _fetchData(HomeFetchDataEvent event, emit) async {
     if (false == UserBloc.checkAccount()) {

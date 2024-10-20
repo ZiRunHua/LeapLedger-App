@@ -43,7 +43,8 @@ class _HomeState extends State<Home> {
           BlocListener<CategoryBloc, CategoryState>(
             listenWhen: (_, state) => state is CategoryUpdatedState && state.account.id == _bloc.account.id,
             listener: (context, state) {
-              if (state is CategoryUpdatedState && state.account.id == _bloc.account.id) _bloc.add(HomeFetchCategoryAmountRankDataEvent());
+              if (state is CategoryUpdatedState && state.account.id == _bloc.account.id)
+                _bloc.add(HomeFetchCategoryAmountRankDataEvent());
             },
           ),
           BlocListener<TransactionBloc, TransactionState>(
@@ -73,8 +74,8 @@ class _HomeState extends State<Home> {
                   child: BlocBuilder<HomeBloc, HomeState>(
                     buildWhen: (_, state) => state is HomeHeaderLoaded,
                     builder: (context, state) {
-                      if (state is HomeHeaderLoaded) {
-                        return HeaderCard(data: state.data);
+                      if (_bloc.homeData.headerCard != null) {
+                        return HeaderCard(data: _bloc.homeData.headerCard);
                       }
                       return HeaderCard();
                     },
@@ -94,9 +95,9 @@ class _HomeState extends State<Home> {
                 child: BlocBuilder<HomeBloc, HomeState>(
                   buildWhen: (_, state) => state is HomeTimePeriodStatisticsLoaded,
                   builder: (context, state) {
-                    if (state is HomeTimePeriodStatisticsLoaded) {
+                    if (_bloc.homeData.timePeriodStatistics != null) {
                       return TimePeriodStatistics(
-                        data: state.data,
+                        data: _bloc.homeData.timePeriodStatistics,
                       );
                     }
                     return TimePeriodStatistics();
@@ -108,8 +109,8 @@ class _HomeState extends State<Home> {
                 child: BlocBuilder<HomeBloc, HomeState>(
                   buildWhen: (_, state) => state is HomeStatisticsLineChart,
                   builder: (context, state) {
-                    if (state is HomeStatisticsLineChart) {
-                      return StatisticsLineChart(data: state.expenseList);
+                    if (_bloc.dayStatistic.isNotEmpty) {
+                      return StatisticsLineChart(data: _bloc.dayStatistic);
                     }
                     return StatisticsLineChart(data: []);
                   },
@@ -120,8 +121,8 @@ class _HomeState extends State<Home> {
                 child: BlocBuilder<HomeBloc, HomeState>(
                   buildWhen: (_, state) => state is HomeCategoryAmountRank,
                   builder: (context, state) {
-                    if (state is HomeCategoryAmountRank) {
-                      return CategoryAmountRank(data: state.rankingList);
+                    if (_bloc.rankingList.isNotEmpty) {
+                      return CategoryAmountRank(data: _bloc.rankingList);
                     }
                     return CategoryAmountRank(data: []);
                   },
