@@ -41,9 +41,9 @@ class _HomeState extends State<Home> {
             },
           ),
           BlocListener<CategoryBloc, CategoryState>(
-            listenWhen: (_, state) => state is CategoryOfAccountState && state.account.id == _bloc.account.id,
+            listenWhen: (_, state) => state is CategoryUpdatedState && state.account.id == _bloc.account.id,
             listener: (context, state) {
-              if (state is CategoryOfAccountState) _bloc.add(HomeFetchCategoryAmountRankDataEvent());
+              if (state is CategoryUpdatedState && state.account.id == _bloc.account.id) _bloc.add(HomeFetchCategoryAmountRankDataEvent());
             },
           ),
           BlocListener<TransactionBloc, TransactionState>(

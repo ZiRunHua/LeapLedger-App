@@ -8,6 +8,10 @@ abstract class CategoryOfAccountState extends CategoryState {
   final AccountDetailModel account;
   CategoryOfAccountState(this.account);
 }
+abstract class CategoryUpdatedState extends CategoryState {
+  final AccountDetailModel account;
+  CategoryUpdatedState(this.account);
+}
 
 class CategoryListLoadedState extends CategoryOfAccountState {
   final CategoryQueryCond cond;
@@ -29,7 +33,7 @@ class CategoryTreeLoadedState extends CategoryOfAccountState {
   }
 }
 
-class SaveSuccessState extends CategoryOfAccountState {
+class SaveSuccessState extends CategoryUpdatedState {
   final TransactionCategoryModel category;
   SaveSuccessState(super.account, {required this.category});
 }
@@ -39,7 +43,7 @@ class SaveFailState extends CategoryOfAccountState {
   SaveFailState(super.account, {required this.category});
 }
 
-class DeleteSuccessState extends CategoryOfAccountState {
+class DeleteSuccessState extends CategoryUpdatedState {
   final int categoryId;
   DeleteSuccessState(super.account, {required this.categoryId});
 }
@@ -61,7 +65,7 @@ class CategoryMoveFailState extends CategoryOfAccountState {
   CategoryMoveFailState(super.account, {required this.categoryId, this.previousId});
 }
 
-class CategoryParentSaveSuccessState extends CategoryOfAccountState {
+class CategoryParentSaveSuccessState extends CategoryUpdatedState {
   final TransactionCategoryFatherModel parent;
   CategoryParentSaveSuccessState(super.account, {required this.parent});
 }
@@ -71,7 +75,7 @@ class CategoryParentSaveFailState extends CategoryOfAccountState {
   CategoryParentSaveFailState(super.account, {required this.parent});
 }
 
-class CategoryParentDeleteSuccessState extends CategoryOfAccountState {
+class CategoryParentDeleteSuccessState extends CategoryUpdatedState {
   final int parentId;
   CategoryParentDeleteSuccessState(super.account, {required this.parentId});
 }

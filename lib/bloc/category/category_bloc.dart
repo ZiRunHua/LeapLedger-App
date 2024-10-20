@@ -6,7 +6,10 @@ import 'package:leap_ledger_app/model/transaction/category/model.dart';
 
 part 'category_event.dart';
 part 'category_state.dart';
-
+/// There will only be one [CategoryBloc] in the app context, 
+/// so that when the Category is updated, the status can be synchronized to the entire app.
+/// However, the app has categories from different books 
+/// so [CategoryOfAccountState] to identify the change of state belongs to that account
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   CategoryBloc() : super(TransactionCategoryInitial()) {
     on<CategoryListLoadEvent>(_loadList);
