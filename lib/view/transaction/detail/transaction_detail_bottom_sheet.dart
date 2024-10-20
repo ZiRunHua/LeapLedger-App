@@ -129,6 +129,13 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
         leading: "备注",
         trailing: data.remark.isEmpty ? "无" : data.remark,
       ),
+      if (data.recordType != RecordType.manual) ...[
+        ConstantWidget.divider.list,
+        _buildListTile(
+          leading: "记录方式",
+          trailing: data.recordType.label,
+        ),
+      ],
       ConstantWidget.divider.list,
       _buildListTile(
         leading: "新建时间",

@@ -104,7 +104,7 @@ class TransactionInfoModel extends TransactionEditModel {
   TransactionCategoryBaseModel get categoryBaseModel => TransactionCategoryBaseModel(
       id: categoryId, name: categoryName, icon: categoryIcon, incomeExpense: incomeExpense);
 
-  TransactionInfoModel.prototypeData({DateTime? tradeTime}) : this(tradeTime: tradeTime??DateTime.now().toLocal());
+  TransactionInfoModel.prototypeData({DateTime? tradeTime}) : this(tradeTime: tradeTime ?? DateTime.now().toLocal());
   setAccount(AccountModel account) {
     accountId = account.id;
     accountName = account.name;
@@ -160,9 +160,24 @@ class TransactionInfoModel extends TransactionEditModel {
   }
 }
 
+enum RecordType {
+  @JsonValue(0)
+  manual(label: "手动"),
+  @JsonValue(1)
+  timing(label: "定时"),
+  @JsonValue(2)
+  sync(label: "自动同步"),
+  @JsonValue(3)
+  import(label: "导入");
+
+  final String label;
+  const RecordType({required this.label});
+}
+
 /// 交易模型
 @JsonSerializable(fieldRename: FieldRename.pascal)
 class TransactionModel extends TransactionInfoModel {
+  late RecordType recordType;
   @UtcDateTimeConverter()
   late DateTime createTime;
   @UtcDateTimeConverter()
@@ -180,6 +195,7 @@ class TransactionModel extends TransactionInfoModel {
     super.categoryFatherName = '',
     super.amount = 0,
     super.remark = '',
+    this.recordType = RecordType.manual,
     required super.tradeTime,
     required this.createTime,
     required this.updateTime,
@@ -439,17 +455,17 @@ class TransactionTimingModel {
     required this.updatedAt,
     required this.createdAt,
   });
-  TransactionTimingModel.prototypeData({DateTime? nextTime,DateTime? createdAt,DateTime? updatedAt})
+  TransactionTimingModel.prototypeData({DateTime? nextTime, DateTime? createdAt, DateTime? updatedAt})
       : this(
           id: 0,
           accountId: 0,
           userId: 0,
           type: TransactionTimingType.everyDay,
           offsetDays: 0,
-          nextTime: nextTime??DateTime.now(),
+          nextTime: nextTime ?? DateTime.now(),
           close: false,
-          createdAt: createdAt??DateTime.now(),
-          updatedAt: updatedAt??DateTime.now(),
+          createdAt: createdAt ?? DateTime.now(),
+          updatedAt: updatedAt ?? DateTime.now(),
         );
   factory TransactionTimingModel.fromJson(Map<String, dynamic> json) => _$TransactionTimingModelFromJson(json);
   Map<String, dynamic> toJson() => _$TransactionTimingModelToJson(this);
@@ -514,7 +530,8 @@ class TransactionTimingModel {
   setAccount(AccountModel account) {
     accountId = account.id;
   }
-  setLocation(Location l){
+
+  setLocation(Location l) {
     this.nextTime = TZDateTime.from(this.nextTime, l);
   }
 }

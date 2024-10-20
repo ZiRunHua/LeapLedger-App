@@ -100,6 +100,9 @@ TransactionModel _$TransactionModelFromJson(Map<String, dynamic> json) =>
       categoryFatherName: json['CategoryFatherName'] as String? ?? '',
       amount: (json['Amount'] as num?)?.toInt() ?? 0,
       remark: json['Remark'] as String? ?? '',
+      recordType:
+          $enumDecodeNullable(_$RecordTypeEnumMap, json['RecordType']) ??
+              RecordType.manual,
       tradeTime:
           const UtcDateTimeConverter().fromJson(json['TradeTime'] as String?),
       createTime:
@@ -123,9 +126,17 @@ Map<String, dynamic> _$TransactionModelToJson(TransactionModel instance) =>
       'CategoryIcon': Json.iconDataToJson(instance.categoryIcon),
       'CategoryName': instance.categoryName,
       'CategoryFatherName': instance.categoryFatherName,
+      'RecordType': _$RecordTypeEnumMap[instance.recordType]!,
       'CreateTime': const UtcDateTimeConverter().toJson(instance.createTime),
       'UpdateTime': const UtcDateTimeConverter().toJson(instance.updateTime),
     };
+
+const _$RecordTypeEnumMap = {
+  RecordType.manual: 0,
+  RecordType.timing: 1,
+  RecordType.sync: 2,
+  RecordType.import: 3,
+};
 
 TransactionShareModel _$TransactionShareModelFromJson(
         Map<String, dynamic> json) =>
