@@ -10,7 +10,7 @@
     <!-- Permissions options for the `alarm` group -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <application
-        android:label="leap_ledger_app"
+        android:label="LeapLedger"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
