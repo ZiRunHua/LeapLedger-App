@@ -289,7 +289,7 @@ class AccountApi {
 
   /// 返回null表示失败
   static Future<AccountUserConfigModel?> getAccountUserConfig({required int accountId}) async {
-    ResponseBody response = await ApiServer.request(Method.get, '$baseUrl/user/config', data: {"AccountId": accountId});
+    ResponseBody response = await ApiServer.request(Method.get, '$baseUrl/$accountId/user/config', data: {"AccountId": accountId});
     if (response.isSuccess) {
       return AccountUserConfigModel.fromJson(response.data);
     }
@@ -302,7 +302,7 @@ class AccountApi {
     required int accountId,
     required bool status,
   }) async {
-    ResponseBody response = await ApiServer.request(Method.put, '$baseUrl/user/config/flag/$flagName',
+    ResponseBody response = await ApiServer.request(Method.put, '$baseUrl/$accountId/user/config/flag/$flagName',
         data: {"AccountId": accountId, "Status": status});
     if (response.isSuccess) {
       return AccountUserConfigModel.fromJson(response.data);
