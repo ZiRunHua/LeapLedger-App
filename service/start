@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+serviceVersion="${1:-v1.0}"
+# Check server version
+if ! [[ $serviceVersion =~ ^v[0-9]+\.[0-9]+(\.[0-9]+)?$ ]] && [[ $serviceVersion != "latest" && $serviceVersion != "develop" ]]; then
+    echo "Invalid version format. Expected 'v*.*' or 'v*.*.*' or develop or latest."
+    exit 1
+fi
+
+# Ensure curl and jq are installed
+if ! command -v curl &> /dev/null || ! command -v jq &> /dev/null; then
+    echo "Error: curl and jq are required but not installed." >&2
+    exit 1
+fi
+
+dockerTagQueryUrl="https://hub.docker.com/v2/repositories/xiaozirun/leap-ledger/tags?page_size=25&page=1&ordering=last_updated&name=$serviceVersion"
+imageUrl="xiaozirun/leap-ledger"
+
+function find_latest_available_service_image {
+    local url="$1"
+    
+    response=$(curl -s "$url")
+    if [[ $(echo "$response" | jq '.results | length') -ne 0 ]]; then
+        latestTag=$(echo "$response" | jq -r '.results[0].name')
+        echo "$latestTag"
+    else
+        echo "No available service image found. Please submit an issue: https://github.com/ZiRunHua/LeapLedger-App/issues" >&2
+        exit 1
+    fi
+}
+
+# If the provided version is 'latest' or 'develop', use it directly.
+# Otherwise, find the latest available patch version for the provided major.minor version.
+if [[ "$serviceVersion" == "latest" || "$serviceVersion" == "develop" ]]; then
+    version="$serviceVersion"
+else
+    # Note: The actual version to be used might differ from the provided version.
+    # For example, if the input is 'v1.0', this script will look for the latest 'v1.0.x' patch version.
+    version="$(find_latest_available_service_image "$dockerTagQueryUrl")"
+fi
+
+export SERVICE_VERSION="$version"
+echo "Found service image version: $version"
+
+imageUrl="$imageUrl:$version"
+# Pull the Docker image.
+docker pull "$imageUrl"
+
+# Run the Docker container in detached mode and capture the container ID.
+dockerID=$(docker run -d "$imageUrl")
+dockerID=$(echo "$dockerID" | tr -d '\n')
+
+# Copy necessary configuration files from the Docker container.
+docker cp "$dockerID:go/LeapLedger/docs" ./docs || { echo "Error copying docs"; exit 1; }
+docker cp "$dockerID:go/LeapLedger/docker" ./docker || { echo "Error copying docker directory"; exit 1; }
+docker cp "$dockerID:go/LeapLedger/docker-compose.yaml" ./docker-compose.yaml || { echo "Error copying docker-compose.yaml"; exit 1; }
+
+
+# Stop and remove the temporary container.
+docker stop "$dockerID"
+docker rm "$dockerID"
+
+# Start the MySQL server and the main application.
+docker-compose up -d leap-ledger-mysql
+sleep 5
+docker-compose up -d
+
+echo "Server started"

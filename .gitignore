@@ -29,3 +29,8 @@ doc/api/
 .vscode/
 .idea/
 .metadata
+
+
+service/*
+!service/start.ps1
+!service/start
