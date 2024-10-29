@@ -54,7 +54,6 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
             return Stack(children: [
               Container(
                 decoration: ConstantDecoration.bottomSheet,
-                height: size.height * 0.8,
                 width: size.width,
                 child: _buildForm(),
               ),
@@ -75,21 +74,18 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            flex: 11,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildOneConditon(name: "金额", _buildAmountInput()),
-                  _buildOneConditon(name: "收支", _buildIncomeExpense()),
-                  _buildCategory()
-                ],
-              ),
+          SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildOneConditon(name: "金额", _buildAmountInput()),
+                _buildOneConditon(name: "收支", _buildIncomeExpense()),
+                _buildCategory()
+              ],
             ),
           ),
-          Expanded(flex: 1, child: _buildButtonGroup()),
+          _buildButtonGroup(),
         ],
       ),
     );
@@ -99,7 +95,7 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
     return Padding(
       padding: EdgeInsets.fromLTRB(Constant.padding, Constant.padding, Constant.padding, 0),
       child: Column(
-        mainAxisSize: MainAxisSize.max,
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
@@ -108,7 +104,7 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
               visible: name != null,
               child: Text(
                 name ?? "",
-                style: TextStyle(fontSize: ConstantFontSize.bodyLarge, fontWeight: FontWeight.w500),
+                style: TextStyle(fontSize: ConstantFontSize.body, fontWeight: FontWeight.w500),
               ),
             ),
           ),
@@ -126,27 +122,30 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
       Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Flexible(
-            child: AmountInput(
-              controller: _minAmountController,
-              onChanged: (amount) => _conditionCubit.updateMinimumAmount(amount: amount),
-              decoration: AmountInput.defaultDecoration.copyWith(labelText: "最低金额"),
+          AmountInput(
+            controller: _minAmountController,
+            onChanged: (amount) => _conditionCubit.updateMinimumAmount(amount: amount),
+            decoration: AmountInput.defaultDecoration.copyWith(
+              labelText: "最低金额",
+              labelStyle: TextStyle(fontSize: ConstantFontSize.bodySmall),
             ),
           ),
           SizedBox(
-              width: 32.w,
-              child: Divider(
-                color: ConstantColor.greyText,
-                indent: Constant.margin,
-                endIndent: Constant.margin,
-                height: 0.5,
-                thickness: 0.5,
-              )),
-          Flexible(
-            child: AmountInput(
-              controller: _maxAmountController,
-              onChanged: (amount) => _conditionCubit.updateMaximumAmount(amount: amount),
-              decoration: AmountInput.defaultDecoration.copyWith(labelText: "最高金额"),
+            width: 32,
+            child: Divider(
+              color: ConstantColor.greyText,
+              indent: Constant.margin,
+              endIndent: Constant.margin,
+              height: 0.5,
+              thickness: 0.5,
+            ),
+          ),
+          AmountInput(
+            controller: _maxAmountController,
+            onChanged: (amount) => _conditionCubit.updateMaximumAmount(amount: amount),
+            decoration: AmountInput.defaultDecoration.copyWith(
+              labelText: "最高金额",
+              labelStyle: TextStyle(fontSize: ConstantFontSize.bodySmall),
             ),
           ),
         ],
@@ -182,23 +181,28 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
           ButtonSegment(
             value: IncomeExpense.income,
             label: Padding(
-              padding: EdgeInsets.symmetric(vertical: Constant.padding, horizontal: Constant.padding / 2),
-              child: Text("收入",
-                  style: TextStyle(
-                    fontSize: ConstantFontSize.body,
-                    color: selectedIncomeExpense == IncomeExpense.income ? Colors.white : null,
-                  )),
+              padding: EdgeInsets.symmetric(vertical: Constant.padding, horizontal: Constant.margin),
+              child: Text(
+                "收入",
+                style: TextStyle(
+                  fontSize: ConstantFontSize.bodySmall,
+                  color: selectedIncomeExpense == IncomeExpense.income ? Colors.white : null,
+                ),
+              ),
             ),
           ),
           ButtonSegment(
             value: IncomeExpense.expense,
             label: Padding(
-                padding: EdgeInsets.symmetric(vertical: Constant.padding, horizontal: Constant.padding / 2),
-                child: Text("支出",
-                    style: TextStyle(
-                      fontSize: ConstantFontSize.body,
-                      color: selectedIncomeExpense == IncomeExpense.expense ? Colors.white : null,
-                    ))),
+              padding: EdgeInsets.symmetric(vertical: Constant.padding, horizontal: Constant.margin),
+              child: Text(
+                "支出",
+                style: TextStyle(
+                  fontSize: ConstantFontSize.bodySmall,
+                  color: selectedIncomeExpense == IncomeExpense.expense ? Colors.white : null,
+                ),
+              ),
+            ),
           )
         ],
       ),
@@ -210,15 +214,12 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
     return BlocBuilder<FlowConditionCubit, FlowConditionState>(
       buildWhen: (_, state) => state is FlowConditionCategoryLoaded,
       builder: (context, state) {
-        return Column(
-          children: List.generate(
-            _conditionCubit.categorytree.length,
-            (index) => _buildOneConditon(
-              [_buildCategoryChildren(_conditionCubit.categorytree[index].value)],
-              name: _conditionCubit.categorytree[index].key.name,
-            ),
-          )..add(SizedBox(height:Constant.padding,)),
+        List<TransactionCategoryModel> list = [];
+        List.generate(
+          _conditionCubit.categorytree.length,
+          (index) => list.addAll(_conditionCubit.categorytree[index].value),
         );
+        return _buildOneConditon([_buildCategoryChildren(list)], name: "类型");
       },
     );
   }
@@ -253,35 +254,31 @@ class _ConditionBottomSheetState extends State<ConditionBottomSheet> {
 
   /// 按钮组
   Widget _buildButtonGroup() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(
-            width: 100,
-            child: OutlinedButton(
-              style: ButtonStyle(
-                  shape: WidgetStateProperty.all(const StadiumBorder(side: BorderSide(style: BorderStyle.none)))),
-              onPressed: () {
-                _minAmountController.clear();
-                _maxAmountController.clear();
-                _conditionCubit.setOptionalFieldsToEmpty();
-              },
-              child: const Text("重 置"),
-            )),
-        SizedBox(
-          width: 100,
-          child: ElevatedButton(
+    return Padding(
+      padding: EdgeInsets.all(Constant.padding),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          OutlinedButton(
+            onPressed: () {
+              _minAmountController.clear();
+              _maxAmountController.clear();
+              _conditionCubit.setOptionalFieldsToEmpty();
+            },
+            child: Text("重置", style: TextStyle(letterSpacing: Constant.buttomLetterSpacing)),
+          ),
+          ElevatedButton(
             style: ButtonStyle(
                 shape: WidgetStateProperty.all(const StadiumBorder(side: BorderSide(style: BorderStyle.none)))),
             onPressed: () {
               _conditionCubit.save();
               Navigator.of(context).pop();
             },
-            child: const Text("确 定"),
-          ),
-        )
-      ],
+            child: Text("确定", style: TextStyle(letterSpacing: Constant.buttomLetterSpacing)),
+          )
+        ],
+      ),
     );
   }
 }

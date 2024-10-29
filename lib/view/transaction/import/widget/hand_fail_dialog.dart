@@ -23,18 +23,21 @@ class _HandFailDialogState extends State<HandFailDialog> {
         child: BlocProvider.value(
           value: _cubit,
           child: AlertDialog(
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                BlocListener<ImportCubit, ImportState>(
-                  listener: (context, state) {
-                    if (state is ProgressingFailTransChanged)
-                      setState(() {});
-                    else if (state is FailTransProgressFinished) Navigator.pop(context);
-                  },
-                  child: _buildContent(),
-                ),
-              ],
+            content: SizedBox(
+              width: 300.w,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  BlocListener<ImportCubit, ImportState>(
+                    listener: (context, state) {
+                      if (state is ProgressingFailTransChanged)
+                        setState(() {});
+                      else if (state is FailTransProgressFinished) Navigator.pop(context);
+                    },
+                    child: _buildContent(),
+                  ),
+                ],
+              ),
             ),
             actions: [
               TextButton(
@@ -110,7 +113,20 @@ class _HandFailDialogState extends State<HandFailDialog> {
     return Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [Text(labal), Text(content)],
+      children: [
+        Padding(
+          padding: EdgeInsets.all(Constant.margin),
+          child: Text(labal),
+        ),
+        Padding(
+            padding: EdgeInsets.all(Constant.margin),
+            child: Text(
+              content,
+              maxLines: 3,
+              softWrap: true,
+              overflow: TextOverflow.ellipsis,
+            ))
+      ],
     );
   }
 }

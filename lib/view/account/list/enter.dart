@@ -22,7 +22,7 @@ Widget _buildLeading(AccountModel account, int selectAccountId) {
       child: Container(color: account.id == selectAccountId ? ConstantColor.primaryColor : Colors.white),
     ),
     SizedBox(width: Constant.margin),
-    Icon(account.icon, size: Constant.iconlargeSize),
+    Icon(account.icon, size: Constant.iconSize),
     SizedBox(width: Constant.margin),
   ]);
 }

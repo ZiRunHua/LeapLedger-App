@@ -27,7 +27,8 @@ class AmountInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 48.sp,
+      width: 132.sp,
+      height: 48,
       child: TextFormField(
         controller: controller,
         style: const TextStyle(fontSize: ConstantFontSize.body),

@@ -113,14 +113,14 @@ class DateButton extends StatelessWidget {
     late String text;
     if (isFirstSecondOfMonth && isLastSecondOfMonth) {
       if (start.year == end.year && start.month == end.month) {
-        text = DateFormat('yyyy年MM月').format(start);
+        text = DateFormat.yM().format(start);
       } else if (start.month == 0 && end.month == 12) {
-        text = DateFormat('yyyy年').format(start);
+        text = DateFormat.y().format(start);
       } else {
-        text = '${DateFormat('yyyy年MM月').format(start)} 至 ${DateFormat('yyyy年MM月').format(end)}';
+        text = '${DateFormat.yM().format(start)} - ${DateFormat.yM().format(end)}';
       }
     } else {
-      text = '${DateFormat('yyyy-MM-dd').format(start)} 至 ${DateFormat('yyyy-MM-dd').format(end)}';
+      text = '${DateFormat.yMd().format(start)} - ${DateFormat.yMd().format(end)}';
     }
 
     return TextButton(

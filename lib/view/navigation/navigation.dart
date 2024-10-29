@@ -94,7 +94,7 @@ class _NavigationState extends State<Navigation> {
           return IndexedStack(index: index, children: _pages);
         },
       ),
-      floatingActionButton: FloatingActionButton(onPressed: _onAdd, child: const Icon(Icons.add)),
+      floatingActionButton: FloatingActionButton(onPressed: _onAdd, child: Icon(Icons.add, size: Constant.iconSize)),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: const _BottomNavigationBar(),
       endDrawer: const UserDrawer(),

@@ -402,7 +402,7 @@ class TransactionQueryCondModel {
 }
 
 enum TransactionTimingType implements Comparable<TransactionTimingType> {
-  @JsonValue("administrator")
+  @JsonValue("once")
   once(name: '执行一次', value: 'once'),
   @JsonValue("everyDay")
   everyDay(name: '每天', value: 'everyDay'),

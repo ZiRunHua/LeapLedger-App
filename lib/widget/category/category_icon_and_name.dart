@@ -22,7 +22,7 @@ class CategoryIconAndName<T extends TransactionCategoryBaseModel> extends Statel
           child: SizedBox(
             width: 48.sp,
             height: 48.sp,
-            child: Icon(category.icon, size: 28, color: isSelected ? Colors.white : Colors.black),
+            child: Icon(category.icon, size: Constant.iconSize, color: isSelected ? Colors.white : Colors.black),
           ),
         ),
         if (category.name.isNotEmpty) SizedBox(height: Constant.margin / 2),
@@ -61,7 +61,7 @@ class LargeCategoryIconAndName extends StatelessWidget {
           child: SizedBox(
             width: 48.sp,
             height: 48.sp,
-            child: Icon(category.icon, size: 28, color: Colors.white),
+            child: Icon(category.icon, size: Constant.iconSize, color: Colors.white),
           ),
         ),
         if (category.name.isNotEmpty) SizedBox(height: Constant.margin / 2),

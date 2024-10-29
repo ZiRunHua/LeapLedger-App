@@ -46,12 +46,12 @@ class _CommonExpansionListState extends State<CommonExpansionList> with SingleTi
     late List<Widget> list;
     if (!stateOfExpansion) {
       list = [
-        Icon(Icons.keyboard_double_arrow_down_outlined, size: ConstantFontSize.body + 2),
+        Icon(Icons.keyboard_double_arrow_down_outlined, size: ConstantFontSize.body),
         Text("展开", style: TextStyle(fontSize: ConstantFontSize.body)),
       ];
     } else {
       list = [
-        Icon(Icons.keyboard_double_arrow_up_outlined, size: ConstantFontSize.body + 2),
+        Icon(Icons.keyboard_double_arrow_up_outlined, size: ConstantFontSize.body),
         Text("合起", style: TextStyle(fontSize: ConstantFontSize.body)),
       ];
     }

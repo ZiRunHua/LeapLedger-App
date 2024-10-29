@@ -70,7 +70,7 @@ class AccountEditState extends State<AccountEdit> {
           appBar: AppBar(
             title: Text(mode == AccountEditMode.add ? "添加账本" : "编辑账本"),
             actions: <Widget>[
-              IconButton(icon: Icon(Icons.save, size: 24), onPressed: _onSave),
+              IconButton(icon: Icon(Icons.save, size: Constant.iconSize), onPressed: _onSave),
             ],
           ),
           body: SingleChildScrollView(
@@ -103,7 +103,7 @@ class AccountEditState extends State<AccountEdit> {
             padding: EdgeInsets.symmetric(horizontal: Constant.margin),
             child: FormSelecter.accountIcon(account.icon, onChanged: _onSelectIcon),
           ),
-          _buildRadio(),
+          if (mode == AccountEditMode.add) _buildTypeSelectRadio(),
           FormSelectField<String>(
             options: _options(),
             label: "地区",
@@ -133,50 +133,46 @@ class AccountEditState extends State<AccountEdit> {
     return list;
   }
 
-  Widget _buildRadio() {
+  Widget _buildTypeSelectRadio() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: Constant.margin, horizontal: Constant.padding),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.all(Constant.margin),
-              child: Text("类型", style: TextStyle(letterSpacing: Constant.margin / 2)),
-            ),
-            Padding(
-                padding: EdgeInsets.all(Constant.margin),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 100.sp,
-                      child: RadioListTile<AccountType>(
-                        contentPadding: EdgeInsets.zero,
-                        title: const Text("独立"),
-                        value: AccountType.independent,
-                        groupValue: account.type,
-                        onChanged: _onClickRadio,
+        padding: EdgeInsets.symmetric(vertical: Constant.margin, horizontal: Constant.padding),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(Constant.margin),
+                  child: Text("类型", style: TextStyle(letterSpacing: Constant.margin / 2)),
+                ),
+                Padding(
+                    padding: EdgeInsets.all(Constant.margin),
+                    child: Row(children: [
+                      SizedBox(
+                        width: 100.sp,
+                        child: RadioListTile<AccountType>(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text("独立"),
+                          value: AccountType.independent,
+                          groupValue: account.type,
+                          onChanged: _onClickRadio,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 100.sp,
-                      child: RadioListTile<AccountType>(
-                        title: const Text("共享"),
-                        contentPadding: EdgeInsets.zero,
-                        value: AccountType.share,
-                        groupValue: account.type,
-                        onChanged: _onClickRadio,
-                      ),
-                    ),
-                  ],
-                ))
-          ],
-        ),
-      ),
-    );
+                      SizedBox(
+                        width: 100.sp,
+                        child: RadioListTile<AccountType>(
+                          title: const Text("共享"),
+                          contentPadding: EdgeInsets.zero,
+                          value: AccountType.share,
+                          groupValue: account.type,
+                          onChanged: _onClickRadio,
+                        ),
+                      )
+                    ]))
+              ]),
+        ));
   }
 
   void _onClickRadio(AccountType? value) {

@@ -76,11 +76,11 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        IconButton(
-          padding: EdgeInsets.zero,
-          icon: const Icon(Icons.share_outlined),
-          onPressed: _onShare,
-        ),
+        // IconButton(
+        //   padding: EdgeInsets.zero,
+        //   icon: const Icon(Icons.share_outlined),
+        //   onPressed: _onShare,
+        // ),
       ],
     );
   }
@@ -98,60 +98,86 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
   }
 
   Widget _buildDetail(TransactionModel data) {
-    return Column(mainAxisSize: MainAxisSize.min, children: [
-      _buildListTile(
-          leading: "金额",
-          trailingWidget: AmountText.sameHeight(
-            data.amount,
-            textStyle: TextStyle(
-              fontSize: ConstantFontSize.body,
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
-            ),
-          )),
-      ConstantWidget.divider.list,
-      _buildListTile(
-        leading: "分类",
-        trailing: data.categoryName,
-      ),
-      ConstantWidget.divider.list,
-      _buildListTile(
-        leading: "时间",
-        trailing: DateFormat.yMd().format(data.tradeTime),
-      ),
-      ConstantWidget.divider.list,
-      _buildListTile(
-        leading: "账本",
-        trailing: data.accountName,
-      ),
-      ConstantWidget.divider.list,
-      _buildListTile(
-        leading: "备注",
-        trailing: data.remark.isEmpty ? "无" : data.remark,
-      ),
-      if (data.recordType != RecordType.manual) ...[
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: Constant.margin),
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
+        _buildListTile(
+            leading: "金额",
+            trailingWidget: Align(
+              alignment: Alignment.centerRight,
+              child: AmountText.sameHeight(
+                data.amount,
+                textStyle: TextStyle(
+                  fontSize: ConstantFontSize.body,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                ),
+              ),
+            )),
         ConstantWidget.divider.list,
         _buildListTile(
-          leading: "记录方式",
-          trailing: data.recordType.label,
+          leading: "分类",
+          trailing: data.categoryName,
         ),
-      ],
-      ConstantWidget.divider.list,
-      _buildListTile(
-        leading: "新建时间",
-        trailing: DateFormat.yMd().add_Hms().format(data.createTime),
-      ),
-      _buildButtomButtonGroup(TransactionRouterGuard.edit(mode: TransactionEditMode.update, account: widget.account)),
-    ]);
+        ConstantWidget.divider.list,
+        _buildListTile(
+          leading: "时间",
+          trailing: DateFormat.yMd().format(data.tradeTime),
+        ),
+        ConstantWidget.divider.list,
+        _buildListTile(
+          leading: "账本",
+          trailing: data.accountName,
+        ),
+        ConstantWidget.divider.list,
+        _buildListTile(
+          leading: "备注",
+          trailing: data.remark.isEmpty ? "无" : data.remark,
+        ),
+        if (data.recordType != RecordType.manual) ...[
+          ConstantWidget.divider.list,
+          _buildListTile(leading: "记录方式", trailing: data.recordType.label),
+        ],
+        if (widget.account.isShare) ...[
+          ConstantWidget.divider.list,
+          _buildListTile(leading: "记录人", trailing: data.userName),
+        ],
+        ConstantWidget.divider.list,
+        _buildListTile(
+          leading: "新建时间",
+          trailing: DateFormat.yMd().add_Hms().format(data.createTime),
+        ),
+        _buildButtomButtonGroup(TransactionRouterGuard.edit(mode: TransactionEditMode.update, account: widget.account)),
+      ]),
+    );
   }
 
   Widget _buildListTile({required String leading, String? trailing, Widget? trailingWidget}) {
     assert(trailing != null || trailingWidget != null);
-    trailingWidget ??= Text(trailing!, style: TextStyle(fontSize: ConstantFontSize.body));
-
-    return ListTile(
-      leading: Text(leading, style: TextStyle(fontSize: ConstantFontSize.body)),
-      trailing: trailingWidget,
+    trailingWidget ??= Text(trailing!,
+        style: TextStyle(fontSize: ConstantFontSize.body),
+        textAlign: TextAlign.right,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis);
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          flex: 3,
+          child: Padding(
+            padding: EdgeInsets.all(Constant.padding),
+            child: Text(leading, style: TextStyle(fontSize: ConstantFontSize.body)),
+          ),
+        ),
+        Expanded(
+          flex: 9,
+          child: Padding(
+            padding: EdgeInsets.all(Constant.padding),
+            child: trailingWidget,
+          ),
+        )
+      ],
     );
   }
 
@@ -161,9 +187,6 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
           offstage: false == canEdit,
           child: OutlinedButton(
             onPressed: _onDelete,
-            style: const ButtonStyle(
-              side: WidgetStatePropertyAll<BorderSide>(BorderSide(color: ConstantColor.primaryColor)),
-            ),
             child: Text(
               "删除",
               style: TextStyle(letterSpacing: Constant.buttomLetterSpacing),
@@ -205,7 +228,7 @@ class _TransactionDetailBottomSheetState extends State<TransactionDetailBottomSh
     }
   }
 
-  void _onShare() {
-    BlocProvider.of<TransactionBloc>(context).add(TransactionShare(transaction));
-  }
+  // void _onShare() {
+  //   BlocProvider.of<TransactionBloc>(context).add(TransactionShare(transaction));
+  // }
 }

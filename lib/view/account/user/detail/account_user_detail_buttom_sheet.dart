@@ -119,7 +119,7 @@ class _AccountUserDetailButtomSheetState extends State<AccountUserDetailButtomSh
                     textAlign: TextAlign.right,
                   ),
                   trailing: const Icon(Icons.chevron_right_outlined),
-                  onTap: () => _onLookMore(recentTrans?.lastOrNull),
+                  onTap: () => _onLookMore(recentTrans?.firstOrNull),
                 )
               ],
             ),
@@ -161,7 +161,7 @@ class _AccountUserDetailButtomSheetState extends State<AccountUserDetailButtomSh
           children: [
             Column(
               children: [
-                Icon(icon, size: 36, color: ConstantColor.primaryColor),
+                Icon(icon, size: Constant.iconlargeSize, color: ConstantColor.primaryColor),
                 Text(
                   text,
                   style: TextStyle(

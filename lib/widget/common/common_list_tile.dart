@@ -76,7 +76,7 @@ class CommonListTile extends ListTile {
                     : [
                         AmountTextSpan.sameHeight(
                           model.amount,
-                          textStyle:  TextStyle(fontSize: ConstantFontSize.headline, fontWeight: FontWeight.w500),
+                          textStyle: TextStyle(fontSize: ConstantFontSize.headline, fontWeight: FontWeight.w500),
                           incomeExpense: model.incomeExpense,
                           displayModel: displayModel,
                         )
@@ -165,19 +165,15 @@ class CommonListTile extends ListTile {
     bool onSelect = false,
   }) : this(
           key: key,
-          leading: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 4,
-                height: double.infinity,
-                color: onSelect ? Colors.blue : Colors.white,
-              ),
-              Icon(model.icon),
-            ],
-          ),
+          leading: Row(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
+            SizedBox(
+              width: Constant.margin / 2,
+              child: Container(color: onSelect ? ConstantColor.primaryColor : Colors.white),
+            ),
+            SizedBox(width: Constant.margin),
+            Icon(model.icon, size: Constant.iconSize),
+          ]),
           title: Text(model.name),
-          subtitle: Text(DateFormat('yyyy-MM-dd HH:mm:ss').format(model.createTime)),
           onTap: ontap,
         );
 }
@@ -193,7 +189,7 @@ class _UserName extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(text),
-           Padding(padding: EdgeInsets.only(left: Constant.margin / 2), child: CommonLabel(text: "我"))
+          Padding(padding: EdgeInsets.only(left: Constant.margin / 2), child: CommonLabel(text: "我"))
         ],
       );
     }

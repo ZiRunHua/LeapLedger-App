@@ -98,6 +98,13 @@ class MyApp extends StatelessWidget {
                   shadowColor: ConstantColor.shadowColor,
                   surfaceTintColor: Colors.white,
                 ),
+                outlinedButtonTheme: OutlinedButtonThemeData(
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: Colors.grey),
+                    foregroundColor: Colors.grey,
+                    shape: const StadiumBorder(side: BorderSide(style: BorderStyle.none)),
+                  ),
+                ),
                 elevatedButtonTheme: ElevatedButtonThemeData(
                   style: ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(Colors.blue),

@@ -19,6 +19,8 @@ class FlowConditionCubit extends AccountBasedCubit<FlowConditionState> {
       );
     } else {
       _condition = condition;
+      condition.startTime = account.getTZDateTime(Time.getFirstSecondOfDay(date: condition.startTime));
+      condition.endTime = account.getTZDateTime(Time.getLastSecondOfDay(date: condition.endTime));
     }
     this.condition = _condition.copyWith();
   }

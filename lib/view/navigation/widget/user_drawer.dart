@@ -30,14 +30,14 @@ class UserDrawer extends StatelessWidget {
               contentPadding: EdgeInsets.only(left: leftPadding),
               onTap: () => AccountRoutes.list(context, selectedCurrentAccount: true).push(),
             ),
-            ListTile(
-              leading: Icon(Icons.toggle_on_outlined, color: iconColor),
-              title: const Text('分享配置'),
-              contentPadding: EdgeInsets.only(left: leftPadding),
-              onTap: () {
-                Navigator.pushNamed(context, UserRoutes.configTransactionShare);
-              },
-            ),
+            // ListTile(
+            //   leading: Icon(Icons.toggle_on_outlined, color: iconColor),
+            //   title: const Text('分享配置'),
+            //   contentPadding: EdgeInsets.only(left: leftPadding),
+            //   onTap: () {
+            //     Navigator.pushNamed(context, UserRoutes.configTransactionShare);
+            //   },
+            // ),
             ListTile(
               leading: Icon(Icons.send_outlined, color: iconColor),
               title: const Text('邀请'),

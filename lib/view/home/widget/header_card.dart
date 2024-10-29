@@ -105,7 +105,7 @@ class _HeaderCardState extends State<HeaderCard> {
       padding: EdgeInsets.symmetric(horizontal: Constant.padding),
       child: Text(
         "${_bloc.account.timeLocation.name}  ${DateFormat.Md().format(_bloc.getTZDateTime(start))} - ${DateFormat.Md().format(_bloc.getTZDateTime(end))}",
-        style: TextStyle(fontSize: ConstantFontSize.bodySmall),
+        style: TextStyle(fontSize: ConstantFontSize.body),
       ),
     );
   }

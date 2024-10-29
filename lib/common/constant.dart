@@ -23,12 +23,11 @@ class Constant {
   static init() {
     radius = 12.0.sp;
     buttomSheetRadius = 28.0.sp;
-    smallPadding = 8.0.sp;
-    padding = 16.0.sp;
-    largePadding = 24.0.sp;
-    margin = 8.0.sp;
-    buttomHight = 320.0.h;
+    buttomHight = 320.h;
     buttomLetterSpacing = 4.0.sp;
+
+    iconSize = 24;
+    iconlargeSize = 32;
   }
 }
 

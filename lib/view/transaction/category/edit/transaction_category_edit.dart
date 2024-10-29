@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:leap_ledger_app/bloc/category/category_bloc.dart';
 import 'package:leap_ledger_app/common/global.dart';
 import 'package:leap_ledger_app/model/account/model.dart';
 import 'package:leap_ledger_app/model/transaction/category/model.dart';
 import 'package:leap_ledger_app/widget/form/form.dart';
+import 'package:leap_ledger_app/widget/icon/enter.dart';
 
 class TransactionCategoryEdit extends StatefulWidget {
   const TransactionCategoryEdit({super.key, this.transactionCategory, required this.account});
@@ -67,16 +67,7 @@ class _TransactionCategoryEditState extends State<TransactionCategoryEdit> {
           child: SingleChildScrollView(
               child: Column(
             children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(90),
-                ),
-                margin: EdgeInsets.only(bottom: Constant.padding),
-                width: 64.sp,
-                height: 64.sp,
-                child: Icon(data.icon, size: Constant.iconlargeSize, color: Colors.black87),
-              ),
+              CircularIcon(icon: data.icon),
               FormInputField.string('名称', data.name, (text) => data.name = text),
               SizedBox(height: Constant.padding),
               FormSelecter.transactionCategoryIcon(data.icon, onChanged: _onSelectIcon),

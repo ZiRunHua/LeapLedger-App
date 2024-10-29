@@ -185,10 +185,13 @@ class _TransactionFlowState extends State<TransactionFlow> {
         child: BlocBuilder<FlowConditionCubit, FlowConditionState>(
           buildWhen: (_, state) => state is FlowCurrentAccountChanged,
           builder: (context, state) {
-            return Row(children: [
-              Icon(_conditionCubit.account.icon, size: Constant.iconSize),
-              Text(_conditionCubit.account.name)
-            ]);
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(_conditionCubit.account.icon, size: Constant.iconSize),Text(_conditionCubit.account.name)
+              ],
+            );
           },
         ),
       ),
@@ -200,11 +203,7 @@ class _TransactionFlowState extends State<TransactionFlow> {
           startDate: _conditionCubit.condition.startTime,
           endDate: _conditionCubit.condition.endTime,
         ).push(),
-        icon: Icon(
-          Icons.pie_chart_outline_outlined,
-          color: ConstantColor.primaryColor,
-          size: Constant.iconSize,
-        ),
+        icon: Icon(Icons.pie_chart_outline_outlined, color: ConstantColor.primaryColor, size: Constant.iconSize),
       ),
       Builder(builder: (context) {
         return IconButton(
@@ -213,6 +212,11 @@ class _TransactionFlowState extends State<TransactionFlow> {
             showModalBottomSheet(
                 isScrollControlled: true,
                 context: context,
+                transitionAnimationController: AnimationController(
+                  animationBehavior: AnimationBehavior.preserve,
+                  vsync: Scaffold.of(context),
+                  duration: Duration(milliseconds: 600),
+                )..drive(CurveTween(curve: Curves.easeInOut)),
                 builder: (BuildContext context) {
                   return BlocProvider.value(
                     value: _conditionCubit,

@@ -48,17 +48,14 @@ class _AccountMappingBottomSheetState extends State<AccountMappingBottomSheet> {
             children: [
               Center(
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(Constant.margin, Constant.margin, Constant.margin, 0),
+                  padding: EdgeInsets.all(Constant.padding),
                   child: Text(
-                    '账本关联',
+                    '选择关联账本',
                     style: TextStyle(fontWeight: FontWeight.w500, fontSize: ConstantFontSize.largeHeadline),
                   ),
                 ),
               ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 2.0,
-                child: _buildContent(),
-              ),
+             _buildContent(),
             ],
           ),
         ),
@@ -68,34 +65,48 @@ class _AccountMappingBottomSheetState extends State<AccountMappingBottomSheet> {
 
   Widget _buildContent() {
     return BlocBuilder<AccountMappingCubit, AccountMappingState>(builder: (context, state) {
-      if (state is AccountListLoad || state is AccountMappingChanged) {
-        if (_cubit.list.isNotEmpty) {
-          return ListView.separated(
-            itemBuilder: (_, int index) {
-              var account = _cubit.list[index];
-              return CommonListTile.fromAccountDetailModel(
-                account,
-                onSelect: _cubit.isCurrentMappingAccount(account),
-                ontap: () {
-                  if (_cubit.isCurrentMappingAccount(account)) {
-                    // 确认删除
-                    CommonDialog.showDeleteConfirmationDialog(context, () => _cubit.changeMapping(account));
-                  } else {
-                    _cubit.changeMapping(account);
-                  }
-                },
-              );
-            },
-            separatorBuilder: (BuildContext context, int index) {
-              return ConstantWidget.divider.list;
-            },
-            itemCount: _cubit.list.length,
-          );
-        } else {
-          return Center(child: NoData.accountText(context));
-        }
+      if (state is! AccountListLoad && state is! AccountMappingChanged) {
+        return const Center(child: ConstantWidget.activityIndicator);
       }
-      return const Center(child: ConstantWidget.activityIndicator);
+      if (_cubit.list.isEmpty) {
+        return Center(child: NoData.accountText(context));
+      }
+      if (_cubit.list.length <= 5) {
+        return Column(
+          children: List.generate(
+            _cubit.list.length * 2 - 1,
+            (index) {
+              if (index % 2 != 0) {
+                return ConstantWidget.divider.list;
+              }
+              return _buildOne(_cubit.list[index~/2]);
+            },
+          ),
+        );
+      }
+      return SizedBox(
+                height: MediaQuery.of(context).size.height / 2.0,
+                child:ListView.separated(
+        itemBuilder: (_, int index) => _buildOne(_cubit.list[index]),
+        separatorBuilder: (BuildContext context, int index) {
+          return ConstantWidget.divider.list;
+        },
+        itemCount: _cubit.list.length,
+      ));
     });
+  }
+
+  _buildOne(AccountDetailModel account) {
+    return CommonListTile.fromAccountDetailModel(
+      account,
+      onSelect: _cubit.isCurrentMappingAccount(account),
+      ontap: () {
+        if (_cubit.isCurrentMappingAccount(account)) {
+          CommonDialog.showDeleteConfirmationDialog(context, () => _cubit.changeMapping(account));
+        } else {
+          _cubit.changeMapping(account);
+        }
+      },
+    );
   }
 }

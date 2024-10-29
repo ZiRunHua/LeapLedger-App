@@ -79,7 +79,7 @@ class _UserDrawerHeaderState extends State<UserDrawerHeader> {
                       Clipboard.setData(ClipboardData(text: user.uniqueUsername));
                       CommonToast.tipToast("用户名已复制");
                     },
-                    child: Icon(Icons.copy_outlined, color: Colors.white, size: 18))
+                    child: Icon(Icons.copy_outlined, color: Colors.white, size: ConstantFontSize.body))
               ],
             )));
   }

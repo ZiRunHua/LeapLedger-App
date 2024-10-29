@@ -40,7 +40,7 @@ class TransactionShareDialog extends StatelessWidget {
                 ),
                 width: 48.sp,
                 height: 48.sp,
-                child: Icon(Icons.download_outlined, size: 28),
+                child: Icon(Icons.download_outlined, size: Constant.iconSize),
               )),
         ],
       ),
@@ -121,7 +121,7 @@ class TransactionShareDialog extends StatelessWidget {
           ),
           width: 48,
           height: 48,
-          child: Icon(icon, size: 28),
+          child: Icon(icon, size: Constant.iconSize),
         ),
         SizedBox(
           height: Constant.margin,

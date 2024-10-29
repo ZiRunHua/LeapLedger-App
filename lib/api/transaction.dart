@@ -150,9 +150,10 @@ class TransactionApi {
       "Config": config.toJson(),
     });
     if (!responseBody.isSuccess) return null;
-    trans = TransactionInfoModel.fromJson(responseBody.data["Trans"]);
-    config = TransactionTimingModel.fromJson(responseBody.data["Config"]);
-    return (trans: trans, config: config);
+    return (
+      trans: TransactionInfoModel.fromJson(responseBody.data["Trans"]),
+      config: TransactionTimingModel.fromJson(responseBody.data["Config"])
+    );
   }
 
   static Future<({TransactionInfoModel trans, TransactionTimingModel config})?> updateTiming({
@@ -165,9 +166,10 @@ class TransactionApi {
       "Config": config.toJson(),
     });
     if (!responseBody.isSuccess) return null;
-    trans = TransactionInfoModel.fromJson(responseBody.data["Trans"]);
-    config = TransactionTimingModel.fromJson(responseBody.data["Config"]);
-    return (trans: trans, config: config);
+    return (
+      trans: TransactionInfoModel.fromJson(responseBody.data["Trans"]),
+      config: TransactionTimingModel.fromJson(responseBody.data["Config"])
+    );
   }
 
   static Future<List<({TransactionInfoModel trans, TransactionTimingModel config})>> getTimingList(
