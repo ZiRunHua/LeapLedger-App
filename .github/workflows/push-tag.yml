@@ -1,0 +1,17 @@
+name: Push Tag
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  create-release:
+    uses: ./.github/workflows/common-create-release.yml
+    with:
+      tag: ${{ github.ref_name }} 
+      release_name: ${{ github.ref_name }}
+      server_host: ${{ vars.SERVER_HOST }}
+      server_port: ${{ vars.SERVER_PORT }}
+    secrets: 
+       SERVER_SIGN_KEY: ${{ secrets.SERVER_SIGN_KEY }}
