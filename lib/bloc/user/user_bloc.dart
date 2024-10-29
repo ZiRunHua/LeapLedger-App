@@ -12,6 +12,7 @@ import 'package:leap_ledger_app/common/global.dart';
 import 'package:leap_ledger_app/model/account/model.dart';
 import 'package:leap_ledger_app/model/user/model.dart';
 import 'package:leap_ledger_app/routes/routes.dart';
+import 'package:leap_ledger_app/widget/common/common.dart';
 part 'user_event.dart';
 part 'user_state.dart';
 
@@ -127,7 +128,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       return;
     }
     var response = await UserApi.requestTour(deviceNumber: Current.deviceId!);
-    if (false == response.isSuccess) return;
+    if (false == response.isSuccess) {
+      CommonToast.tipToast(response.msg);
+      return;
+    };
     UserBloc.currentAccount = AccountDetailModel.fromJson(response.data['CurrentAccount']);
     UserBloc.currentShareAccount = AccountDetailModel.fromJson(response.data['CurrentShareAccount']);
     token = response.data['Token'];

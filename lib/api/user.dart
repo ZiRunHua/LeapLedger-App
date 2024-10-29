@@ -5,18 +5,23 @@ class UserApi {
   static Future<ResponseBody> login(String email, String password, String captchaId, String captcha) async {
     ResponseBody response = await ApiServer.request(Method.post, '$pubilcBaseUrl$baseUrl/login',
         data: {'Email': email, 'Password': password, 'CaptchaId': captchaId, 'Captcha': captcha});
+    if (response.isSuccess) ApiServer.logining = false;
     return response;
   }
 
   static Future<ResponseBody> register(String username, String password, String email, String captcha) async {
     ResponseBody response = await ApiServer.request(Method.post, '$pubilcBaseUrl$baseUrl/register',
         data: {'Username': username, 'Password': password, 'Email': email, 'Captcha': captcha});
+    if (response.isSuccess) ApiServer.logining = false;
     return response;
   }
 
   static Future<ResponseBody> requestTour({required String deviceNumber}) async {
-    ResponseBody response =
-        await ApiServer.request(Method.post, '$pubilcBaseUrl$baseUrl/tour', data: {'DeviceNumber': deviceNumber});
+    final String uuid = ApiServer._uuid.v4();
+    final sign = Hmac(sha256, utf8.encode(Global.config.server.signKey)).convert(utf8.encode(deviceNumber + uuid));
+    ResponseBody response = await ApiServer.request(Method.post, '$pubilcBaseUrl$baseUrl/tour',
+        data: {'DeviceNumber': deviceNumber, 'Key': uuid, 'Sign': sign.toString()});
+    if (response.isSuccess) ApiServer.logining = false;
     return response;
   }
 

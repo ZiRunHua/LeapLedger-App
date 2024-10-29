@@ -1,11 +1,12 @@
 import 'dart:collection';
+import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:leap_ledger_app/model/common/model.dart';
 import 'package:uuid/uuid.dart';
-
+import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart'
     show
         BaseOptions,
