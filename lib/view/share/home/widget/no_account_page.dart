@@ -1,8 +1,8 @@
 part of 'enter.dart';
 
 class NoAccountPage extends StatelessWidget {
-  const NoAccountPage({super.key});
-
+  const NoAccountPage({super.key,required this.bloc});
+  final ShareHomeBloc bloc;
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -19,18 +19,15 @@ class NoAccountPage extends StatelessWidget {
               _buildButton(
                 ConstantIcon.add,
                 "新建共享账本",
-                () {
-                  var page =
-                      AccountRoutes.edit(context, account: AccountDetailModel.fromJson({})..type = AccountType.share);
-                  page.push();
-                  if (page.getReturn() != null) {
-                    BlocProvider.of<UserBloc>(context).add(SetCurrentShareAccount(page.getReturn()!));
-                  }
+                () async {
+                  await AccountRoutes.edit(context, account: AccountDetailModel.fromJson({})..type = AccountType.share)
+                      .push();
+                  bloc.add(SetAccountMappingEvent(null));
                 },
               ),
               _buildButton(Icons.send_outlined, "查看邀请", () {
                 UserRoutes.pushNamed(context, UserRoutes.accountInvitation)
-                    .then((value) => BlocProvider.of<ShareHomeBloc>(context).add(LoadAccountListEvent()));
+                    .then((value) => bloc.add(LoadAccountListEvent()));
               })
             ],
           ),

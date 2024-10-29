@@ -114,6 +114,8 @@ class ShareHomeBloc extends Bloc<ShareHomeEvent, ShareHomeState> {
   }
 
   AccountMappingModel? accountMapping;
+  List<int> alreadyShownTips = [];
+  bool notDisturb = false;
   Future<void> _getAccountMapping(emit) async {
     if (account == null) {
       return;

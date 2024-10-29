@@ -23,7 +23,7 @@ class _AccountTransListState extends State<AccountTransList> {
                     ListTile(
                       title: const Text("查看更多交易", textAlign: TextAlign.right),
                       trailing: const Icon(Icons.chevron_right_outlined),
-                      onTap: () => _onLookMore(account, state.list.lastOrNull),
+                      onTap: () => _onLookMore(account, state.list.firstOrNull),
                     ),
                   ],
                 ));

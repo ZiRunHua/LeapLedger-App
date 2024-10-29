@@ -7,6 +7,8 @@ import 'package:leap_ledger_app/common/global.dart';
 import 'package:leap_ledger_app/model/account/model.dart';
 import 'package:leap_ledger_app/model/common/model.dart';
 import 'package:leap_ledger_app/routes/routes.dart';
+import 'package:leap_ledger_app/view/navigation/bloc/navigation_bloc.dart'
+    show NavigationBloc, TabPage, NavigationState, InSharePage;
 import 'package:leap_ledger_app/view/share/home/bloc/share_home_bloc.dart';
 import 'package:leap_ledger_app/widget/common/common.dart';
 
@@ -40,27 +42,45 @@ class _ShareHomeState extends State<ShareHome> {
   Widget build(BuildContext context) {
     return BlocProvider.value(
         value: _bloc,
-        child: BlocListener<UserBloc, UserState>(
-          listenWhen: (context, state) {
-            return state is CurrentShareAccountChanged || state is CurrentAccountChanged;
-          },
-          listener: (context, state) {
-            if (UserBloc.currentShareAccount.isValid) {
-              _bloc.add(ChangeAccountEvent(UserBloc.currentShareAccount));
-            } else if (UserBloc.currentAccount.isValid && UserBloc.currentAccount.type == AccountType.share) {
-              _bloc.add(ChangeAccountEvent(UserBloc.currentAccount));
-            } else {
-              // 否则只能传递无效的共享账本 交给bloc处理
-              _bloc.add(ChangeAccountEvent(UserBloc.currentShareAccount));
-            }
-          },
+        child: MultiBlocListener(
+          listeners: [
+            BlocListener<NavigationBloc, NavigationState>(listenWhen: (context, state) {
+              return state is InSharePage;
+            }, listener: (context, state) {
+              if (state is InSharePage) {
+                showMappingAccountTip();
+              }
+            }),
+            BlocListener<ShareHomeBloc, ShareHomeState>(listenWhen: (context, state) {
+              return state is AccountMappingLoad;
+            }, listener: (context, state) {
+              if (state is AccountMappingLoad) {
+                if (BlocProvider.of<NavigationBloc>(context).currentDisplayPage != TabPage.share) {
+                  return;
+                }
+                showMappingAccountTip();
+              }
+            }),
+            BlocListener<UserBloc, UserState>(listenWhen: (context, state) {
+              return state is CurrentShareAccountChanged || state is CurrentAccountChanged;
+            }, listener: (context, state) {
+              if (UserBloc.currentShareAccount.isValid) {
+                _bloc.add(ChangeAccountEvent(UserBloc.currentShareAccount));
+              } else if (UserBloc.currentAccount.isValid && UserBloc.currentAccount.type == AccountType.share) {
+                _bloc.add(ChangeAccountEvent(UserBloc.currentAccount));
+              } else {
+                // 否则只能传递无效的共享账本 交给bloc处理
+                _bloc.add(ChangeAccountEvent(UserBloc.currentShareAccount));
+              }
+            })
+          ],
           child: BlocBuilder<ShareHomeBloc, ShareHomeState>(
             builder: (context, state) {
               if (state is ShareHomeInitial) {
                 return const Center(child: ConstantWidget.activityIndicator);
               }
               if (state is NoShareAccount || ShareHomeBloc.account == null || !ShareHomeBloc.account!.isValid) {
-                return const NoAccountPage();
+                return  NoAccountPage(bloc:_bloc);
               }
               return Scaffold(
                 appBar: AppBar(
@@ -179,7 +199,11 @@ class _ShareHomeState extends State<ShareHome> {
         context,
         mainAccount: ShareHomeBloc.account!,
         mapping: _bloc.accountMapping,
-        onMappingChange: (mapping) => _bloc.add(SetAccountMappingEvent(mapping)),
+        onMappingChange: (mapping) {
+          _bloc.add(SetAccountMappingEvent(mapping));
+          if (mapping == null) return;
+          showDialog(context: context, builder: (context) => _buildMappingCategoryTipDialog(mapping));
+        },
       ).showModalBottomSheet();
     } else {
       CommonToast.tipToast("只读，不可关联账本");
@@ -231,6 +255,55 @@ class _ShareHomeState extends State<ShareHome> {
               Text(text),
             ],
           )),
+    );
+  }
+
+  showMappingAccountTip() {
+    if (_bloc.accountMapping != null) return;
+    if (ShareHomeBloc.account == null || ShareHomeBloc.account!.isReader) return;
+    if (_bloc.alreadyShownTips.contains(ShareHomeBloc.account!.id)) return;
+    print(ModalRoute.of(context)?.isCurrent ?? false);
+    if((ModalRoute.of(context)?.isCurrent ?? false) == false) return;
+    _bloc.alreadyShownTips.add(ShareHomeBloc.account!.id);
+    showDialog(context: context, builder: (context) => _buildMappingAccountTipDialog());
+  }
+
+  _buildMappingAccountTipDialog() {
+    return AlertDialog(
+      contentPadding: EdgeInsets.all( Constant.padding),
+      content: Text("设置“关联账本”来开启交易同步"),
+      actions: <Widget>[
+        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('下次设置')),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+            _clickMapping();
+          },
+          child: const Text('设置'),
+        ),
+      ],
+    );
+  }
+
+  _buildMappingCategoryTipDialog(AccountMappingModel accountMapping) {
+    return AlertDialog(
+      contentPadding: EdgeInsets.all( Constant.padding),
+      content: Text("设置两个账本间的“交易类型关联”来定义同步类型"),
+      actions: <Widget>[
+        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('下次设置')),
+        ElevatedButton(
+          onPressed: () {
+            if (ShareHomeBloc.account == null) return;
+            Navigator.pop(context);
+            TransactionCategoryRoutes.accountMappingNavigator(
+              context,
+              parentAccount: ShareHomeBloc.account!,
+              childAccount: accountMapping.relatedAccount,
+            ).push();
+          },
+          child: const Text('设置'),
+        ),
+      ],
     );
   }
 }

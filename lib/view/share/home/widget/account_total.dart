@@ -27,7 +27,7 @@ class AccountTotal extends StatelessWidget {
           children: [
             Column(
               children: [
-                Icon(icon, size: 36, color: ConstantColor.primaryColor),
+                Icon(icon, size: Constant.iconlargeSize, color: ConstantColor.primaryColor),
                 Text(
                   text,
                   style: TextStyle(
