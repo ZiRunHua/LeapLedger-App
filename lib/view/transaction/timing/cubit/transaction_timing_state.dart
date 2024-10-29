@@ -16,6 +16,10 @@ final class TransactionTimingListLoaded extends TransactionTimingState {
   TransactionTimingListLoaded();
 }
 
+final class TransactionTimingListLoadingMore extends TransactionTimingListLoaded {
+  TransactionTimingListLoadingMore();
+}
+
 final class TransactionTimingTypeChanged extends TransactionTimingState {
   final TransactionTimingModel config;
   TransactionTimingTypeChanged(this.config);

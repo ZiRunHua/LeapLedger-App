@@ -66,8 +66,18 @@ class _TransactionTimingListState extends State<TransactionTimingList> {
                     child: ListView.builder(
                       controller: _scrollController,
                       itemCount: _cubit.list.length + 1,
-                      itemBuilder: (context, index) =>
-                          index == _cubit.list.length ? _buildLoadingIndicator() : _buildListOne(_cubit.list[index]),
+                      itemBuilder: (context, index) => index == _cubit.list.length
+                          ? Padding(
+                              padding: EdgeInsets.all(Constant.margin),
+                              child: Center(
+                                child: _cubit.noMore
+                                    ? Text('没有更多数据了')
+                                    : (state is TransactionTimingListLoadingMore
+                                        ? CircularProgressIndicator()
+                                        : SizedBox()),
+                              ),
+                            )
+                          : _buildListOne(_cubit.list[index]),
                     ));
               } else {
                 return ListView(
@@ -82,7 +92,8 @@ class _TransactionTimingListState extends State<TransactionTimingList> {
   }
 
   _onTapAdd() async {
-    var page = TransactionRoutes.editNavigator(context, mode: TransactionEditMode.popTrans, account: _cubit.account,transInfo:_cubit.trans);
+    var page = TransactionRoutes.editNavigator(context,
+        mode: TransactionEditMode.popTrans, account: _cubit.account, transInfo: _cubit.trans);
     await page.push();
     var transInfo = page.getPopTransInfo();
     if (transInfo == null) return;
@@ -140,15 +151,6 @@ class _TransactionTimingListState extends State<TransactionTimingList> {
       foregroundColor: Colors.white,
       icon: icon,
       label: name,
-    );
-  }
-
-  Widget _buildLoadingIndicator() {
-    return Padding(
-      padding: EdgeInsets.all(Constant.margin),
-      child: Center(
-        child: _cubit.noMore ? Text('没有更多数据了') : CircularProgressIndicator(),
-      ),
     );
   }
 }

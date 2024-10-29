@@ -9,7 +9,7 @@ import 'package:timezone/timezone.dart';
 part 'transaction_timing_state.dart';
 
 class TransactionTimingCubit extends AccountBasedCubit<TransactionTimingState> {
-  TransactionTimingCubit( {required super.account}) : super(TransactionTimingInitial()) {
+  TransactionTimingCubit({required super.account}) : super(TransactionTimingInitial()) {
     var now = nowTime;
     trans = TransactionInfoModel.prototypeData(tradeTime: now.add(const Duration(days: 1)));
     config = TransactionTimingModel.prototypeData(
@@ -22,8 +22,8 @@ class TransactionTimingCubit extends AccountBasedCubit<TransactionTimingState> {
       required TransactionInfoModel trans,
       required TransactionTimingModel config}) {
     this.account = account;
-    this.trans = trans;
-    this.config = config;
+    this.trans = trans.copyWith();
+    this.config = config.copyWith();
     //amend next time
     _updateNextTime(trans.tradeTime);
   }
@@ -50,7 +50,11 @@ class TransactionTimingCubit extends AccountBasedCubit<TransactionTimingState> {
 
   bool noMore = false;
   Future<List<({TransactionInfoModel trans, TransactionTimingModel config})>> loadMore() async {
-    if (noMore == true) return [];
+    emit(TransactionTimingListLoadingMore());
+    if (noMore == true) {
+      emit(TransactionTimingListLoaded());
+      return [];
+    }
     _offset = list.length;
     list.addAll(await TransactionApi.getTimingList(accountId: account.id, offset: _offset, limit: _limit));
     if (_offset == list.length) {
@@ -79,17 +83,25 @@ class TransactionTimingCubit extends AccountBasedCubit<TransactionTimingState> {
     if (config.type == type) {
       emit(TransactionTimingTypeChanged(config));
       return;
-    };
+    }
     config.type = type;
     switch (config.type) {
-      case TransactionTimingType.lastDayOfMonth:
-        changeNextTime(Tz.getLastSecondOfMonth(date: nowTime));
+      case TransactionTimingType.once:
+        changeNextTime(nowTime.add(Duration(days: 1)));
         break;
       case TransactionTimingType.everyDay:
         changeNextTime(nowTime.add(Duration(days: 1)));
         break;
-      default:
-        changeNextTime(nowTime.add(Duration(days: 1)));
+      case TransactionTimingType.everyWeek:
+        break;
+      case TransactionTimingType.everyMonth:
+        if (config.nextTime.day > 28) {
+          changeNextTime(nowTime.add(Duration(days: 1)));
+        }
+        break;
+      case TransactionTimingType.lastDayOfMonth:
+        changeNextTime(Tz.getLastSecondOfMonth(date: nowTime));
+        break;
     }
 
     emit(TransactionTimingTypeChanged(config));
@@ -102,26 +114,30 @@ class TransactionTimingCubit extends AccountBasedCubit<TransactionTimingState> {
   }
 
   _updateNextTime(DateTime date) {
-    date = Tz.getFirstSecondOfDay(date: getTZDateTime(date));
-    var now = Tz.getFirstSecondOfDay(date: nowTime);
-    if (!now.isBefore(date)) {
-      switch (config.type) {
-        case TransactionTimingType.once:
-          date = now.add(Duration(days: 1));
-        case TransactionTimingType.everyDay:
-          date = now.add(Duration(days: 1));
-        case TransactionTimingType.everyWeek:
-          date = now.add(Duration(days: 7));
-        case TransactionTimingType.everyMonth:
-          date = TZDateTime(location,date.year, date.month + 1, date.day);
-        case TransactionTimingType.lastDayOfMonth:
-          date = TZDateTime(location,date.year, date.month + 1, 1).add(Duration(hours: -24));
-          if (!now.isBefore(date)) date = TZDateTime(location,date.year, date.month + 1, 1).add(Duration(hours: -24));
-      }
-    }
     config.nextTime = date;
     trans.tradeTime = date;
     config.updateoffsetDaysByNextTime();
+  }
+
+  onOffsetDaysChanged(int offsetDays) {
+    switch (config.type) {
+      case TransactionTimingType.everyWeek:
+        if (nowTime.weekday < offsetDays) {
+          changeNextTime(nowTime.add(Duration(days: offsetDays - nowTime.weekday)));
+        } else {
+          changeNextTime(nowTime.add(Duration(days: offsetDays - nowTime.weekday + DateTime.daysPerWeek)));
+        }
+        break;
+      case TransactionTimingType.everyMonth:
+        if (nowTime.day < offsetDays) {
+          changeNextTime(nowTime.add(Duration(days: offsetDays - nowTime.day)));
+        } else {
+          final date = nowTime;
+          changeNextTime(TZDateTime(date.location, date.year, date.month + 1, offsetDays));
+        }
+        break;
+      default:
+    }
   }
 
   save() async {

@@ -19,7 +19,7 @@ class _TimingBottomSelecterState extends State<TimingBottomSelecter> {
   }
 
   final double _leftWidth = 160.w;
-  final double _height = 280.sp;
+  final double _height = 300.sp;
   final Duration _animatedDuration = Duration(milliseconds: 300);
   @override
   Widget build(BuildContext context) {
@@ -79,31 +79,31 @@ class _TimingBottomSelecterState extends State<TimingBottomSelecter> {
           duration: _animatedDuration,
           width: _config.type == TransactionTimingType.everyWeek ? MediaQuery.of(context).size.width - _leftWidth : 0,
           child: createBottomSelect(
-              backgroundColor: ConstantColor.greyBackground,
-              onTap: (SelectOption<DateTime> selectDate) {
-                if (_config.type != TransactionTimingType.everyWeek) return;
-                onDateTimeChanged(selectDate);
-              },
-              selected: _config.nextTime,
-              mode: DateSelectMode.week,
-              type: BottomCupertinoSelecter,
-              height: _height,
-              location: _cubit.location),
+            backgroundColor: ConstantColor.greyBackground,
+            onTap: (SelectOption<int> selectDate) {
+              if (_config.type != TransactionTimingType.everyWeek) return;
+              onDateTimeChanged(selectDate);
+            },
+            selected: _config.nextTime.weekday,
+            mode: DateSelectMode.week,
+            type: BottomCupertinoSelecter,
+            height: _height,
+          ),
         ),
         AnimatedContainer(
           duration: _animatedDuration,
           width: _config.type == TransactionTimingType.everyMonth ? MediaQuery.of(context).size.width - _leftWidth : 0,
           child: createBottomSelect(
-              backgroundColor: ConstantColor.greyBackground,
-              onTap: (SelectOption<DateTime> selectDate) {
-                if (_config.type != TransactionTimingType.everyMonth) return;
-                onDateTimeChanged(selectDate);
-              },
-              selected: _config.nextTime,
-              mode: DateSelectMode.month,
-              type: BottomCupertinoSelecter,
-              height: _height,
-              location: _cubit.location),
+            backgroundColor: ConstantColor.greyBackground,
+            onTap: (SelectOption<int> selectDate) {
+              if (_config.type != TransactionTimingType.everyMonth) return;
+              onDateTimeChanged(selectDate);
+            },
+            selected: _config.nextTime.day,
+            mode: DateSelectMode.month,
+            type: BottomCupertinoSelecter,
+            height: _height,
+          ),
         )
       ],
     );
@@ -113,7 +113,52 @@ class _TimingBottomSelecterState extends State<TimingBottomSelecter> {
     _cubit.changeTimingType(selected.value);
   }
 
-  onDateTimeChanged(SelectOption<DateTime> selectDate) {
-    _cubit.changeNextTime(selectDate.value);
+  onDateTimeChanged(SelectOption<int> selectDate) {
+    _cubit.onOffsetDaysChanged(selectDate.value);
+  }
+
+  bottomSelecter createBottomSelect({
+    int? selected,
+    required ValueChanged<SelectOption<int>> onTap,
+    required DateSelectMode mode,
+    required Type type,
+    required Color backgroundColor,
+    double? height,
+  }) {
+    assert(mode == DateSelectMode.week || mode == DateSelectMode.month);
+    List<SelectOption<int>> options = [];
+    if (mode == DateSelectMode.month) {
+      selected = selected ?? 1;
+      var date = Tz.getFirstSecondOfDay(date: _cubit.nowTime).add(Duration(days: selected - 1));
+      // The month has 28 days
+      for (var i = selected; i <= 28; i++) {
+        date = date.add(Duration(days: 1));
+        options.add(SelectOption<int>(name: DateFormat.d().format(date), value: date.day));
+      }
+      date.add(Duration(days: 1 - date.day));
+      for (var i = 1; i < selected; i++) {
+        date = date.add(Duration(days: 1));
+        options.add(SelectOption<int>(name: DateFormat.d().format(date), value: date.day));
+      }
+    } else {
+      selected = selected ?? 1;
+      var date = DateTime.now();
+      date = date.add(Duration(days: selected - date.weekday));
+      for (var i = 0; i < 7; i++) {
+        date = date.add(Duration(days: 1));
+        options.add(SelectOption<int>(name: DateFormat.E().format(date), value: date.weekday));
+      }
+    }
+    switch (type) {
+      case BottomSelecter:
+        return BottomSelecter<int>(
+            options: options, onTap: onTap, selected: selected, backgroundColor: backgroundColor, height: height);
+      case BottomCupertinoSelecter:
+        return BottomCupertinoSelecter<int>(
+            options: options, onTap: onTap, selected: selected, backgroundColor: backgroundColor, height: height);
+      default:
+        return BottomSelecter<int>(
+            options: options, onTap: onTap, selected: selected, backgroundColor: backgroundColor, height: height);
+    }
   }
 }

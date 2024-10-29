@@ -82,46 +82,7 @@ abstract class bottomSelecter<T extends Comparable> extends StatefulWidget {
   });
 }
 
-bottomSelecter createBottomSelect({
-  DateTime? selected,
-  required ValueChanged<SelectOption<DateTime>> onTap,
-  required DateSelectMode mode,
-  required Type type,
-  required Color backgroundColor,
-  Location? location,
-  double? height,
-}) {
-  assert(mode == DateSelectMode.week || mode == DateSelectMode.month);
-  List<SelectOption<DateTime>> options;
-  DateTime now;
-  if(location!=null){
-    now = TZDateTime.from(DateTime.now(), location);
-  }else{
-    now = DateTime.now();
-  }
-  if (mode == DateSelectMode.month) {
-     now = Time.getFirstSecondOfMonth(date: selected ?? now);
-    // The month has 28 days
-    options = Time.getDays(now, now.add(Duration(days: 27)))
-        .map((e) => SelectOption<DateTime>(name: DateFormat('d').format(e), value: e))
-        .toList();
-  } else {
-    options = Time.getDays(now, now.add(Duration(days: 6)))
-        .map((e) => SelectOption<DateTime>(name: DateFormat('EEE').format(e), value: e))
-        .toList();
-  }
-  switch (type) {
-    case BottomSelecter:
-      return BottomSelecter<DateTime>(
-          options: options, onTap: onTap, selected: selected, backgroundColor: backgroundColor, height: height);
-    case BottomCupertinoSelecter:
-      return BottomCupertinoSelecter<DateTime>(
-          options: options, onTap: onTap, selected: selected, backgroundColor: backgroundColor, height: height);
-    default:
-      return BottomSelecter<DateTime>(
-          options: options, onTap: onTap, selected: selected, backgroundColor: backgroundColor, height: height);
-  }
-}
+
 
 enum DateSelectMode {
   day,
@@ -273,7 +234,7 @@ class _BottomCupertinoSelecterState<T extends Comparable> extends State<BottomCu
         child: Padding(
           padding: EdgeInsets.all(Constant.margin),
           child: CupertinoPicker(
-            magnification: (2.35/2.1),
+            magnification: (2.35 / 2.1),
             squeeze: 1.25,
             scrollController: selected != null ? FixedExtentScrollController(initialItem: selectedIndext) : null,
             itemExtent: 32,
@@ -289,7 +250,10 @@ class _BottomCupertinoSelecterState<T extends Comparable> extends State<BottomCu
 
   Widget itemBuilder(BuildContext context, SelectOption<T> option) {
     if (widget.selected != null && widget.selected == option.value) {}
-    return Padding(padding:  EdgeInsets.only(left:Constant.padding),child: Text(option.name),);
+    return Padding(
+      padding: EdgeInsets.only(left: Constant.padding),
+      child: Text(option.name),
+    );
   }
 }
 
