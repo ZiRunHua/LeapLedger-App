@@ -85,10 +85,10 @@ class UserLoginState extends State<UserLogin> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TextButton(
-                            onPressed: () => Navigator.pushNamed(context, UserRoutes.register),
+                            onPressed: () => CommonToast.tipToast("不开放注册，请点击“游客模式”"),
                             child: const Text("注册账号")),
                         TextButton(
-                            onPressed: () => Navigator.pushNamed(context, UserRoutes.forgetPassword),
+                            onPressed: () => CommonToast.tipToast("不开放注册，请点击“游客模式”"),
                             child: const Text("忘记密码"))
                       ],
                     ),
@@ -109,7 +109,7 @@ class UserLoginState extends State<UserLogin> {
   Widget buildLoginButton() {
     return Align(
       child: SizedBox(
-        height: 45.h,
+        height: 36.h,
         width: 270.w,
         child: ElevatedButton(
           style: ButtonStyle(
