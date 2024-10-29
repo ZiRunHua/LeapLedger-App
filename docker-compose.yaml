@@ -12,8 +12,8 @@ services:
         "build",
         "apk",
         "--release",
-        "--no-shrink",
         "--verbose",
         "--dart-define=config.server.network.host=${SERVER_HOST}",
         "--dart-define=config.server.network.port=${SERVER_PORT}",
+        "--dart-define=config.server.signKey=${SERVER_SIGN_KEY}",
       ]
