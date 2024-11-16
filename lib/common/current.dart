@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:android_id/android_id.dart';
 
 enum ENV { dev, release }
 
@@ -17,8 +18,7 @@ class Current {
     var deviceInfo = DeviceInfoPlugin();
 
     if (Platform.isAndroid) {
-      var androidInfo = await deviceInfo.androidInfo;
-      deviceId = androidInfo.id;
+      deviceId = await AndroidId().getId();
     } else if (Platform.isIOS) {
       var iosInfo = await deviceInfo.iosInfo;
       deviceId = iosInfo.identifierForVendor;
