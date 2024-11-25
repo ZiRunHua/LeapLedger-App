@@ -11,6 +11,7 @@ import 'package:leap_ledger_app/routes/routes.dart';
 import 'package:leap_ledger_app/util/enter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:leap_ledger_app/view/navigation/navigation.dart';
+import 'package:leap_ledger_app/widget/form/dynamic_form/enter.dart';
 import 'common/global.dart';
 import 'package:leap_ledger_app/common/current.dart';
 import 'package:timezone/data/latest_all.dart' as tzData;
@@ -120,7 +121,7 @@ class MyApp extends StatelessWidget {
                 iconTheme: IconThemeData.fallback().copyWith(applyTextScaling: true),
                 useMaterial3: true,
               ),
-              home: Navigation(),
+              home: ExampleDynamicForm(model: ExampleFormDataModel(),),
               builder: (context, widget) {
                 Constant.init();
                 FlutterNativeSplash.remove();
