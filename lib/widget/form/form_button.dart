@@ -34,19 +34,16 @@ class FormButton {
   }
 
   static Widget mediumElevatedBtn(BuildContext context, String text, Function() submitForm) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        style:
-            ButtonStyle(shape: WidgetStateProperty.all(const StadiumBorder(side: BorderSide(style: BorderStyle.none)))),
-        onPressed: () {
-          submitForm();
-        },
-        child: Text(
-          text,
-          style: TextStyle(
-              fontSize: Theme.of(context).primaryTextTheme.titleMedium!.fontSize, letterSpacing: Constant.margin / 2),
-        ),
+    return ElevatedButton(
+      style:
+          ButtonStyle(shape: WidgetStateProperty.all(const StadiumBorder(side: BorderSide(style: BorderStyle.none)))),
+      onPressed: () {
+        submitForm();
+      },
+      child: Text(
+        text,
+        style: TextStyle(
+            fontSize: Theme.of(context).primaryTextTheme.titleMedium!.fontSize, letterSpacing: Constant.margin / 2),
       ),
     );
   }

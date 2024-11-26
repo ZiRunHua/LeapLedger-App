@@ -11,6 +11,8 @@ class Constant {
   static double buttomHight = 320;
   static double buttomLetterSpacing = 4.0;
 
+  static double elevation = 8.0;
+
   static double iconSize = 24;
   static double iconlargeSize = 32;
   static int maxAmount = 99999999; //最大金额为100万减一 存储单位为分

@@ -1,25 +1,26 @@
 part of 'enter.dart';
 
 class ExampleFormDataModel extends FormDataModel {
-  Map<String, dynamic> data = {};
+  @override
+  final String name = "动态表单示例";
   @override
   Future<Map<String, dynamic>> fetchData() {
     return Future.value(<String, dynamic>{
-      'Name': '姓名',
+      'Name': '李华',
       'AcceptTerms': true,
-      'Hobbies': 'read',
+      'Hobbies': ['read'],
       'Gender': 'Female',
       'VacationDates': DateTimeRange(
-          start: DateTime(2024, 1, 1),
-          end: DateTime(2024, 1, 7),
-        ),
+        start: DateTime(2024, 1, 1),
+        end: DateTime(2024, 1, 7),
+      ),
       'Appointment': DateTime(2024, 2, 20, 14, 0),
       'Country': 'CN',
       'Skills': ['Golang'],
       'PaymentMethod': 'AliPay',
       'PriceRange': RangeValues(200, 800),
       'Rating': 4.0,
-      'Newsletter': false,
+      'Newsletter': true,
     });
   }
 
@@ -60,7 +61,6 @@ class ExampleFormDataModel extends FormDataModel {
           SelectOption(name: "女", value: "Female"),
           SelectOption(name: "其他", value: "Other"),
         ],
-        value: 'Male',
       ),
       DateRangePickerForm(
         key: 'VacationDates',
@@ -85,7 +85,6 @@ class ExampleFormDataModel extends FormDataModel {
           SelectOption(value: 'US', name: '美国'),
           SelectOption(value: 'CA', name: '加拿大'),
         ],
-        initialValue: 'CN',
       ),
       FilterChipForm<String>(
         key: 'Skills',
@@ -96,15 +95,10 @@ class ExampleFormDataModel extends FormDataModel {
           SelectOption(value: 'Golang', name: 'Golang'),
         ],
       ),
-      RadioGroupForm<String>(
-        key: 'PaymentMethod',
-        label: '首选付款方式',
-        required: true,
-        options: [
-          SelectOption(value: 'AliPay', name: '支付宝'),
-          SelectOption(value: 'WeChatPay', name: '微信支付'),
-        ]
-      ),
+      RadioGroupForm<String>(key: 'PaymentMethod', label: '首选付款方式', required: true, options: [
+        SelectOption(value: 'AliPay', name: '支付宝'),
+        SelectOption(value: 'WeChatPay', name: '微信支付'),
+      ]),
       RangeSliderForm(
         key: 'PriceRange',
         label: '价格范围',
@@ -142,6 +136,6 @@ class ExampleDynamicForm extends StatefulWidget {
 class _ExampleDynamicFormState extends State<ExampleDynamicForm> {
   @override
   Widget build(BuildContext context) {
-    return DynamicFormPage(model: widget.model);
+    return ManualSaveDynamicForm(model: widget.model);
   }
 }

@@ -1,7 +1,9 @@
 part of 'enter.dart';
 
 abstract class FormDataModel {
-  late Map<String, dynamic> data;
+  Map<String, dynamic> data = {};
+  abstract final String name;
+
   List<FormFieldBase> buildFileds();
   Future<Map<String, dynamic>> fetchData();
   Future<void> fetchAndSaveData() async => data = await fetchData();
@@ -14,6 +16,13 @@ abstract class FormDataModel {
           'Start': value.start,
           'End': value.end,
         };
+      } else if (value is DateTimeRange) {
+        jsonData[key] = {
+          'Start': value.start.toUtc().toIso8601String(),
+          'End': value.end.toUtc().toIso8601String(),
+        };
+      } else if (value is DateTime) {
+        jsonData[key] = value.toUtc().toIso8601String();
       } else {
         jsonData[key] = value;
       }
@@ -27,55 +36,160 @@ abstract class FormDataModel {
   }
 }
 
-class DynamicForm extends StatelessWidget {
+class AutoSaveDynamicForm extends StatefulWidget {
   final FormDataModel model;
+
+  AutoSaveDynamicForm({Key? key, required this.model}) : super(key: key);
+
+  @override
+  State<AutoSaveDynamicForm> createState() => _AutoSaveDynamicFormState();
+}
+
+class _AutoSaveDynamicFormState extends State<AutoSaveDynamicForm> {
   final _formKey = GlobalKey<FormBuilderState>();
-  DynamicForm({Key? key, required this.model}) : super(key: key);
+
+  @override
+  initState() {
+    super.initState();
+    _fetchData();
+  }
+
+  @override
+  void didUpdateWidget(AutoSaveDynamicForm oldWidget) {
+    _fetchData();
+    super.didUpdateWidget(oldWidget);
+  }
+
+  _fetchData() async {
+    if (widget.model.data.length > 0) return;
+    await widget.model.fetchAndSaveData();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FormBuilder(
-      key: _formKey,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      onChanged: () {
-        Future.microtask(() {
+    return Scaffold(
+      appBar: AppBar(title: Text(widget.model.name)),
+      body: FormBuilder(
+        key: _formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        onChanged: () {
           if (_formKey.currentState?.saveAndValidate() ?? false) {
-            model.data = _formKey.currentState!.value;
-            model.save();
-          } else {
-            print('实时保存失败: 表单验证未通过');
+            widget.model.data = _formKey.currentState!.value;
+            widget.model.save();
           }
-        });
-      },
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(Constant.padding),
-          child: Column(
-            children: model.buildFileds().map((field) => field.build()).toList(),
-          ),
+        },
+        child: SingleChildScrollView(
+          child: widget.model.data.length > 0
+              ? Padding(
+                  padding: EdgeInsets.all(Constant.margin),
+                  child: Column(
+                    children: widget.model
+                        .buildFileds()
+                        .map(
+                          (field) => Padding(
+                            padding: EdgeInsets.all(Constant.margin),
+                            child: field.build(),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                )
+              : SizedBox(),
         ),
       ),
     );
   }
 }
 
-class DynamicFormPage extends StatelessWidget {
+class ManualSaveDynamicForm extends StatefulWidget {
   final FormDataModel model;
-  DynamicFormPage({Key? key, required this.model}) : super(key: key);
+
+  ManualSaveDynamicForm({Key? key, required this.model}) : super(key: key);
+
+  @override
+  State<ManualSaveDynamicForm> createState() => _ManualSaveDynamicFormState();
+}
+
+class _ManualSaveDynamicFormState extends State<ManualSaveDynamicForm> {
+  final _formKey = GlobalKey<FormBuilderState>();
+
+  @override
+  initState() {
+    super.initState();
+    _fetchData();
+  }
+
+  @override
+  void didUpdateWidget(ManualSaveDynamicForm oldWidget) {
+    _fetchData();
+    super.didUpdateWidget(oldWidget);
+  }
+
+  _fetchData() async {
+    if (widget.model.data.length > 0) return;
+    await widget.model.fetchAndSaveData();
+    setState(() {});
+  }
+
+  void _submit() {
+    if (!(_formKey.currentState?.saveAndValidate() ?? false)) return;
+    widget.model.data = _formKey.currentState!.value;
+    widget.model.save();
+  }
+
+  void _reset() {
+    _formKey.currentState?.reset();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: DynamicForm(model: model),
+      appBar: AppBar(title: Text(widget.model.name)),
+      body: FormBuilder(
+        key: _formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: Column(
+          children: [
+            Expanded(
+                child: SingleChildScrollView(
+              child: widget.model.data.length > 0
+                  ? Padding(
+                      padding: EdgeInsets.all(Constant.margin),
+                      child: Column(
+                        children: widget.model
+                            .buildFileds()
+                            .map(
+                              (field) => Padding(
+                                padding: EdgeInsets.all(Constant.margin),
+                                child: field.build(),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    )
+                  : SizedBox(),
+            )),
+            _buildButton()
+          ],
+        ),
+      ),
     );
   }
-}
 
-extension RangeValuesToJson on RangeValues {
-  Map<String, double> toJson() {
-    return {
-      'start': this.start,
-      'end': this.end,
-    };
+  Widget _buildButton() {
+    return Material(
+      elevation: Constant.elevation,
+      child: Padding(
+        padding: EdgeInsets.all(Constant.margin),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            FormButton.mediumElevatedBtn(context, "保存", _submit),
+            FormButton.mediumElevatedBtn(context, "重置", _reset),
+          ],
+        ),
+      ),
+    );
   }
 }
