@@ -4,6 +4,12 @@ abstract class FormDataModel {
   Map<String, dynamic> data = {};
   abstract final String name;
 
+  List<FormFieldBase> _buildFileds(){
+    var list = buildFileds();
+    list.forEach((action) => action.value = data[action.key]);
+    return list;
+  }
+
   List<FormFieldBase> buildFileds();
   Future<Map<String, dynamic>> fetchData();
   Future<void> fetchAndSaveData() async => data = await fetchData();
@@ -85,7 +91,7 @@ class _AutoSaveDynamicFormState extends State<AutoSaveDynamicForm> {
                   padding: EdgeInsets.all(Constant.margin),
                   child: Column(
                     children: widget.model
-                        .buildFileds()
+                        ._buildFileds()
                         .map(
                           (field) => Padding(
                             padding: EdgeInsets.all(Constant.margin),
@@ -136,6 +142,7 @@ class _ManualSaveDynamicFormState extends State<ManualSaveDynamicForm> {
     if (!(_formKey.currentState?.saveAndValidate() ?? false)) return;
     widget.model.data = _formKey.currentState!.value;
     widget.model.save();
+    Navigator.pop(context);
   }
 
   void _reset() {
@@ -158,7 +165,7 @@ class _ManualSaveDynamicFormState extends State<ManualSaveDynamicForm> {
                       padding: EdgeInsets.all(Constant.margin),
                       child: Column(
                         children: widget.model
-                            .buildFileds()
+                            ._buildFileds()
                             .map(
                               (field) => Padding(
                                 padding: EdgeInsets.all(Constant.margin),

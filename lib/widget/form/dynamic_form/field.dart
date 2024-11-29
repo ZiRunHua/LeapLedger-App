@@ -4,13 +4,16 @@ abstract class FormFieldBase<T> {
   final String key;
   final String label;
   final bool required;
+  final bool enabled;
+  final Function(T?)? onChange;
   T? value;
-  FormFieldBase({
-    required this.key,
-    required this.label,
-    this.required = false,
-    this.value = null,
-  });
+  FormFieldBase(
+      {required this.key,
+      required this.label,
+      this.required = false,
+      this.value = null,
+      this.enabled = true,
+      this.onChange});
 
   Widget build();
 }
@@ -20,14 +23,17 @@ class TextFieldForm extends FormFieldBase<String?> {
   String? value;
   final String? hint;
   final List<Map<String, dynamic>>? validators;
-
+  final int? maxLines;
   TextFieldForm({
     required super.key,
     required super.label,
     super.required,
     super.value,
+    super.enabled,
+    super.onChange,
     this.hint,
     this.validators,
+    this.maxLines,
   });
 
   @override
@@ -37,6 +43,9 @@ class TextFieldForm extends FormFieldBase<String?> {
       decoration: InputDecoration(labelText: label, hintText: hint),
       initialValue: value,
       validator: required == true ? FormBuilderValidators.required() : null,
+      enabled: enabled,
+      onChanged: onChange,
+      maxLines: maxLines,
     );
   }
 }
@@ -59,6 +68,8 @@ class CheckboxForm extends FormFieldBase<bool?> {
       title: Text(label),
       initialValue: value,
       validator: required == true ? FormBuilderValidators.required() : null,
+      enabled: enabled,
+      onChanged: onChange,
     );
   }
 }
@@ -86,7 +97,8 @@ class CheckboxGroupForm<T extends Comparable> extends FormFieldBase<List<T>?> {
               [],
       initialValue: value,
       validator: required == true ? FormBuilderValidators.required() : null,
-      onChanged: (value) {},
+      enabled: enabled,
+      onChanged: onChange,
     );
   }
 }
@@ -115,6 +127,8 @@ class ChoiceChipForm<T extends Comparable> extends FormFieldBase<T?> {
               [],
       initialValue: value,
       validator: required == true ? FormBuilderValidators.required() : null,
+      enabled: enabled,
+      onChanged: onChange,
     );
   }
 }
@@ -142,6 +156,8 @@ class DateRangePickerForm extends FormFieldBase<DateTimeRange?> {
       firstDate: firstDate ?? Constant.minDateTime,
       lastDate: lastDate ?? Constant.maxDateTime,
       validator: required == true ? FormBuilderValidators.required() : null,
+      enabled: enabled,
+      onChanged: onChange,
     );
   }
 }
@@ -170,6 +186,8 @@ class DateTimePickerForm extends FormFieldBase<DateTime?> {
       firstDate: firstDate ?? Constant.minDateTime,
       lastDate: lastDate ?? Constant.maxDateTime,
       validator: required == true ? FormBuilderValidators.required() : null,
+      enabled: enabled,
+      onChanged: onChange,
     );
   }
 }
@@ -195,6 +213,8 @@ class DropdownForm<T extends Comparable> extends FormFieldBase<T?> {
       initialValue: value,
       items: items.map((item) => DropdownMenuItem<T>(value: item.value, child: Text(item.name))).toList(),
       validator: required == true ? FormBuilderValidators.required() : null,
+      enabled: enabled,
+      onChanged: onChange,
     );
   }
 }
@@ -221,6 +241,8 @@ class FilterChipForm<T extends Comparable> extends FormFieldBase<List<T>?> {
       options: options.map((item) => FormBuilderChipOption<T>(value: item.value, child: Text(item.name))).toList(),
       initialValue: value,
       validator: required == true ? FormBuilderValidators.required() : null,
+      enabled: enabled,
+      onChanged: onChange,
     );
   }
 }
@@ -248,6 +270,8 @@ class RadioGroupForm<T extends Comparable> extends FormFieldBase<T?> {
       }).toList(),
       initialValue: value,
       validator: required == true ? FormBuilderValidators.required() : null,
+      enabled: enabled,
+      onChanged: onChange,
     );
   }
 }
@@ -277,6 +301,8 @@ class RangeSliderForm extends FormFieldBase<RangeValues?> {
       max: max,
       initialValue: value,
       divisions: divisions.toInt(),
+      enabled: enabled,
+      onChanged: onChange,
     );
   }
 }
@@ -306,6 +332,8 @@ class SliderForm extends FormFieldBase<double> {
       max: max,
       initialValue: value ?? 0,
       divisions: divisions,
+      enabled: enabled,
+      onChanged: onChange,
     );
   }
 }
@@ -326,6 +354,8 @@ class SwitchForm extends FormFieldBase<bool?> {
       name: key,
       title: Text(label),
       initialValue: value,
+      enabled: enabled,
+      onChanged: onChange,
     );
   }
 }

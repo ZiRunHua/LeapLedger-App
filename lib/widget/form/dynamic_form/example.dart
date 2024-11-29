@@ -30,7 +30,7 @@ class ExampleFormDataModel extends FormDataModel {
   }
 
   List<FormFieldBase> buildFileds() {
-    var fileds = <FormFieldBase>[
+    return <FormFieldBase>[
       TextFieldForm(
         key: 'Name',
         label: '姓名',
@@ -118,10 +118,6 @@ class ExampleFormDataModel extends FormDataModel {
         label: '订阅通讯',
       ),
     ];
-    for (var filed in fileds) {
-      filed.value = data[filed.key];
-    }
-    return fileds;
   }
 }
 
