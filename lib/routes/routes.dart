@@ -21,6 +21,7 @@ import 'package:leap_ledger_app/view/account/user/detail/account_user_detail_but
 import 'package:leap_ledger_app/view/account/user/edit/user_detail_edit.dart';
 import 'package:leap_ledger_app/view/account/user/invitation/account_user_invitation.dart';
 import 'package:leap_ledger_app/view/account/user/invite/account_user_invite_dialog.dart';
+import 'package:leap_ledger_app/view/app/setting/app_setting.dart';
 import 'package:leap_ledger_app/view/transaction/category/father/edit/transaction_category_father_edit_dialog.dart';
 import 'package:leap_ledger_app/view/transaction/category/mapping/transaction_category_mapping.dart';
 import 'package:leap_ledger_app/view/transaction/category/template/transaction_category_template.dart';
@@ -45,6 +46,7 @@ import 'package:leap_ledger_app/view/user/forgetPassword/user_forgetPassword.dar
 import 'package:leap_ledger_app/view/user/search/user_search.dart';
 import 'package:leap_ledger_app/widget/common/common.dart';
 
+part 'app_routes.dart';
 part "animation.dart";
 part 'account_routes.dart';
 part 'transaction_category_routes.dart';

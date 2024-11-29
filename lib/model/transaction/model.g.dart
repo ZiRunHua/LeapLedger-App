@@ -232,7 +232,7 @@ Map<String, dynamic> _$TransactionTimingModelToJson(
     };
 
 const _$TransactionTimingTypeEnumMap = {
-  TransactionTimingType.once: 'administrator',
+  TransactionTimingType.once: 'once',
   TransactionTimingType.everyDay: 'everyDay',
   TransactionTimingType.everyWeek: 'everyWeek',
   TransactionTimingType.everyMonth: 'everyMonth',

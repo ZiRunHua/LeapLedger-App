@@ -51,37 +51,42 @@ const String pubilcBaseUrl = '/public';
 
 class ApiServer {
   static const _uuid = Uuid();
-  static Dio dio = Dio(BaseOptions(
-    baseUrl: Global.config.server.network.httpAddress,
-    headers: {'Content-Type': 'application/json', 'User-Agent': Current.peratingSystem},
-  ))
-    ..interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) {
-        options.headers[HttpHeaders.authorizationHeader] = UserBloc.token;
-        return handler.next(options);
-      },
+  static Dio dio = _newDio();
+  static reset() => dio = _newDio();
+  static Dio _newDio() {
+    return Dio(BaseOptions(
+      baseUrl: Global.config.server.network.httpAddress,
+      headers: {'Content-Type': 'application/json', 'User-Agent': Current.peratingSystem},
     ))
-    ..interceptors.add(
-      DioCacheInterceptor(
-        options: CacheOptions(
-          maxStale: const Duration(days: 7),
-          keyBuilder: (RequestOptions request) {
-            return _uuid.v5(Namespace.url.value, request.uri.toString() + request.data.toString());
-          },
-          store: HiveCacheStore(Global.tempDirectory.path),
-          policy: CachePolicy.request,
+      ..interceptors.add(InterceptorsWrapper(
+        onRequest: (options, handler) {
+          options.headers[HttpHeaders.authorizationHeader] = UserBloc.token;
+          return handler.next(options);
+        },
+      ))
+      ..interceptors.add(
+        DioCacheInterceptor(
+          options: CacheOptions(
+            maxStale: const Duration(days: 7),
+            keyBuilder: (RequestOptions request) {
+              return _uuid.v5(Namespace.url.value, request.uri.toString() + request.data.toString());
+            },
+            store: HiveCacheStore(Global.tempDirectory.path),
+            policy: CachePolicy.request,
+          ),
         ),
-      ),
-    )
-    ..interceptors.add(QueuedInterceptor())
-    ..interceptors.add(LogInterceptor(
-      request: true,
-      requestHeader: false,
-      requestBody: true,
-      responseHeader: true,
-      responseBody: true,
-      error: true,
-    ));
+      )
+      ..interceptors.add(QueuedInterceptor())
+      ..interceptors.add(LogInterceptor(
+        request: true,
+        requestHeader: false,
+        requestBody: true,
+        responseHeader: true,
+        responseBody: true,
+        error: true,
+      ));
+  }
+
   static Future<Response?> _issueRequest(Method method, String path, Object? data, Options options) async {
     Response response;
     try {

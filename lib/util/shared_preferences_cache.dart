@@ -8,8 +8,8 @@ class SharedPreferencesCache {
     _prefs = await SharedPreferences.getInstance();
   }
 
-  save(String key, Map<String, dynamic> data) {
-    _prefs.setString(key, jsonEncode(data));
+  Future<void> save(String key, Map<String, dynamic> data) async {
+    await _prefs.setString(key, jsonEncode(data));
   }
 
   Map<String, dynamic> getData(String key) {

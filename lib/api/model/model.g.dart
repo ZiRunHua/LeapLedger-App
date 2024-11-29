@@ -41,15 +41,16 @@ Map<String, dynamic> _$UserInfoUpdateModelToJson(
     };
 
 UserHomeApiModel _$UserHomeApiModelFromJson(Map<String, dynamic> json) =>
-    UserHomeApiModel()
-      ..headerCard = json['HeaderCard'] == null
+    UserHomeApiModel(
+      headerCard: json['HeaderCard'] == null
           ? null
           : InExStatisticWithTimeModel.fromJson(
-              json['HeaderCard'] as Map<String, dynamic>)
-      ..timePeriodStatistics = json['TimePeriodStatistics'] == null
+              json['HeaderCard'] as Map<String, dynamic>),
+      timePeriodStatistics: json['TimePeriodStatistics'] == null
           ? null
           : UserHomeTimePeriodStatisticsApiModel.fromJson(
-              json['TimePeriodStatistics'] as Map<String, dynamic>);
+              json['TimePeriodStatistics'] as Map<String, dynamic>),
+    );
 
 Map<String, dynamic> _$UserHomeApiModelToJson(UserHomeApiModel instance) =>
     <String, dynamic>{

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:leap_ledger_app/config/config.dart';
 import 'package:leap_ledger_app/model/account/model.dart';
@@ -15,9 +16,11 @@ part 'constant.dart';
 part 'no_data.dart';
 
 class Global {
-  static SharedPreferencesCache cache = SharedPreferencesCache();
+  static SharedPreferencesCache storage = SharedPreferencesCache();
+  static FlutterSecureStorage secureStorage =
+      FlutterSecureStorage(aOptions: const AndroidOptions(encryptedSharedPreferences: true));
 
-  static Config config = Config();
+  static Config config = Config()..load();
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   static final GlobalKey<OverlayState> overlayKey = GlobalKey<OverlayState>();
   static OverlayEntry? overlayEntry;
@@ -25,7 +28,6 @@ class Global {
   static late final Directory tempDirectory;
   static DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   static Future init() async {
-    config.init();
     getTemporaryDirectory().then((dir) {
       tempDirectory = dir;
     });

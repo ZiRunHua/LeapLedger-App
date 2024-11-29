@@ -50,56 +50,70 @@ class UserLoginState extends State<UserLogin> {
         resizeToAvoidBottomInset: false,
         body: PopScope(
           canPop: UserBloc.isLogin,
-          child: SingleChildScrollView(
-            child: BlocListener<UserBloc, UserState>(
-              listener: (context, state) {
-                if (state is UserLoginedState) {
-                  if (UserBloc.currentAccount.isValid) {
-                    Navigator.pop(context, true);
-                  } else {
-                    Navigator.pushReplacementNamed(context, AccountRoutes.templateList);
-                  }
-                }
-              },
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: Constant.padding),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 80.h),
-                    Padding(
-                      padding: EdgeInsets.all(Constant.margin),
-                      child: Text("登录", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 42)),
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: BlocListener<UserBloc, UserState>(
+                    listener: (context, state) {
+                      if (state is UserLoginedState) {
+                        if (UserBloc.currentAccount.isValid) {
+                          Navigator.pop(context, true);
+                        } else {
+                          Navigator.pushReplacementNamed(context, AccountRoutes.templateList);
+                        }
+                      }
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: Constant.padding),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 80.h),
+                          Padding(
+                            padding: EdgeInsets.all(Constant.margin),
+                            child: Text("登录", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 42)),
+                          ),
+                          SizedBox(height: 20.h),
+                          TextField(decoration: const InputDecoration(labelText: '邮箱'), controller: emailController),
+                          SizedBox(height: 20.h),
+                          TextField(
+                            decoration: const InputDecoration(labelText: '密码'),
+                            controller: pwdController,
+                            obscureText: true,
+                            onTap: () => setState(() => displayCaptcha = true),
+                          ),
+                          Offstage(offstage: !displayCaptcha, child: CommonCaptcha(key: captchaKey)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TextButton(
+                                  onPressed: () => CommonToast.tipToast("不开放注册，请点击“游客模式”"), child: const Text("注册账号")),
+                              TextButton(
+                                  onPressed: () => CommonToast.tipToast("不开放注册，请点击“游客模式”"), child: const Text("忘记密码"))
+                            ],
+                          ),
+                          SizedBox(height: 40.h),
+                          Padding(padding: EdgeInsets.all(Constant.padding), child: _buildTourButton()),
+                          SizedBox(height: 30.h),
+                          buildLoginButton(),
+                        ],
+                      ),
                     ),
-                    SizedBox(height: 20.h),
-                    TextField(decoration: const InputDecoration(labelText: '邮箱'), controller: emailController),
-                    SizedBox(height: 20.h),
-                    TextField(
-                      decoration: const InputDecoration(labelText: '密码'),
-                      controller: pwdController,
-                      obscureText: true,
-                      onTap: () => setState(() => displayCaptcha = true),
-                    ),
-                    Offstage(offstage: !displayCaptcha, child: CommonCaptcha(key: captchaKey)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
-                            onPressed: () => CommonToast.tipToast("不开放注册，请点击“游客模式”"),
-                            child: const Text("注册账号")),
-                        TextButton(
-                            onPressed: () => CommonToast.tipToast("不开放注册，请点击“游客模式”"),
-                            child: const Text("忘记密码"))
-                      ],
-                    ),
-                    SizedBox(height: 40.h),
-                    Padding(padding: EdgeInsets.all(Constant.padding), child: _buildTourButton()),
-                    SizedBox(height: 30.h),
-                    buildLoginButton(),
-                  ],
+                  ),
                 ),
               ),
-            ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: EdgeInsets.all(Constant.margin),
+                  child: IconButton(
+                    onPressed: () => AppRoutes.setting(context).push(),
+                    icon: Icon(Icons.settings_outlined, color: ConstantColor.primaryColor, size: Constant.iconSize),
+                  ),
+                ),
+              )
+            ],
           ),
         ),
       ),

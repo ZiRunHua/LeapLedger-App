@@ -233,7 +233,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     emit(UserFriendLoaded(_friendList));
   }
 
-  static saveToCache() => Global.cache.save('User', {
+  static saveToCache() => Global.storage.save('User', {
         'User': user.toJson(),
         'CurrentShareAccount': UserBloc.currentShareAccount.toJson(),
         'CurrentAccount': UserBloc.currentAccount.toJson(),
@@ -241,7 +241,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       });
 
   static getToCache() {
-    Map<String, dynamic> prefsData = Global.cache.getData('User');
+    Map<String, dynamic> prefsData = Global.storage.getData('User');
     user = UserModel.fromJson(prefsData['User'] ?? {});
     UserBloc.currentShareAccount = AccountDetailModel.fromJson(prefsData['CurrentShareAccount'] ?? {});
     UserBloc.currentAccount = AccountDetailModel.fromJson(prefsData['CurrentAccount'] ?? {});
